@@ -14606,48 +14606,48 @@ var obShareChart=null, obPrecoChart=null, obVendasChart=null;
 
 /* ═══════════ SELL IN FARMA SUL ═══════════ */
 const SELLIN_DATA = [
-  { nome:'São João', label:'São João', cor:'#60a5fa', canal:'Rede', hist:29814, plan:32064, meta:23301, real:23010, hist_per:29814, verba:662905,
+  { nome:'São João', label:'São João', cor:'#60a5fa', canal:'Rede', hist:29814, plan:32064, meta:22651, real:23010, hist_per:29814, verba:662905,
     hist_m:[1281,5598,1015,9960,5409,3435,497,915,317,75,533,779],
-    plan_m:[8500,0,0,10707,5815,3693,534,984,341,81,573,837],
-    meta_m:[1158,3483,1867,4226,3428,3967,1540,1253,1085,644,650,0],
+    plan_m:[8500,0,0,10707,5814.68,3692.62,534.27,983.62,340.77,80.62,572.98,837.42],
+    meta_m:[1158,3483,1867,4226,3428,3967,1540,1253,1085,644,0,0],
     real_m:[0,8132,3549,1659,1550,4571,1330,0,519,699,1001,null] },
-  { nome:'DD-Gaúcha', label:'DD-Gaúcha', cor:'#f97316', canal:'Indireto', hist:24177, plan:29460.4, meta:14099, real:16011, hist_per:24177, verba:285636,
+  { nome:'DD-Gaúcha', label:'DD-Gaúcha', cor:'#f97316', canal:'Indireto', hist:24177, plan:25433.05, meta:13440, real:16011, hist_per:24177, verba:285636,
     hist_m:[1441,11854,1041,765,2026,2293,1990,490,944,960,193,180],
-    plan_m:[15100,0,0,803,2127,2408,1576,2292,3700,183,1067,204],
-    meta_m:[1707,2251,2213,1286,1096,1226,1023,1177,730,731,659,0],
+    plan_m:[15100,0,0,803.25,2127.3,2407.65,2089.5,514.5,991.2,1008,202.65,189],
+    meta_m:[1707,2251,2213,1286,1096,1226,1023,1177,730,731,0,0],
     real_m:[5094,2523,335,436,252,1102,1752,3585,165,484,283,null] },
-  { nome:'Panvel', label:'Panvel', cor:'#2dd4bf', canal:'Rede', hist:11158, plan:18456, meta:9233, real:11347, hist_per:11158, verba:690168,
+  { nome:'Panvel', label:'Panvel', cor:'#2dd4bf', canal:'Rede', hist:11158, plan:13177.2, meta:8596, real:11347, hist_per:11158, verba:690168,
     hist_m:[997,0,0,826,482,651,1433,2084,3364,166,970,185],
-    plan_m:[500,500,1000,909,530,716,4577,1786,5865,976,106,990],
-    meta_m:[173,268,838,643,452,579,1769,2062,1081,731,637,0],
+    plan_m:[500,500,1000,909,530,716,1576.3,2292.4,3700.4,182.6,1067,203.5],
+    meta_m:[173,268,838,643,452,579,1769,2062,1081,731,0,0],
     real_m:[0,0,1573,213,465,1744,3869,2265,698,346,174,null] },
-  { nome:'DD-GAM', label:'DD-GAM', cor:'#34d399', canal:'Indireto', hist:36721, plan:27706.98, meta:25964, real:49823, hist_per:36721, verba:493402,
+  { nome:'DD-GAM', label:'DD-GAM', cor:'#34d399', canal:'Indireto', hist:36721, plan:38657.2, meta:24667, real:49823, hist_per:36721, verba:493402,
     hist_m:[0,10211,170,3536,5744,3440,4359,1701,5586,930,101,943],
-    plan_m:[0,11000,0,3713,6031,3612,0,930,791,531,851,247],
-    meta_m:[1539,1803,2293,3122,2495,2954,3125,3690,2197,1449,1297,0],
+    plan_m:[0,11000,0,3713,6031.2,3612,4576.95,1786.05,5865.3,976.5,106.05,990.15],
+    meta_m:[1539,1803,2293,3122,2495,2954,3125,3690,2197,1449,0,0],
     real_m:[0,5256,7808,7258,5620,3096,11589,5598,2390,0,1208,null] },
-  { nome:'Nissei', label:'Nissei', cor:'#a78bfa', canal:'Rede', hist:9805, plan:7825.3, meta:6252, real:10805, hist_per:9805, verba:414000,
+  { nome:'Nissei', label:'Nissei', cor:'#a78bfa', canal:'Rede', hist:9805, plan:10539.78, meta:5629, real:10805, hist_per:9805, verba:414000,
     hist_m:[0,0,3831,593,1133,1131,0,865,736,494,792,230],
-    plan_m:[0,4118,0,637,1218,1216,24,13,0,203,397,0],
-    meta_m:[523,699,699,653,572,644,412,472,257,698,623,0],
+    plan_m:[0,4118,0,637,1218,1216,0,929.88,791.2,531.05,851.4,247.25],
+    meta_m:[523,699,699,653,572,644,412,472,257,698,0,0],
     real_m:[0,3490,2145,1476,1170,90,2242,54,56,0,82,null] },
-  { nome:'DD-Riomed', label:'DD-Riomed', cor:'#fb923c', canal:'Indireto', hist:7100, plan:7159.85, meta:4138, real:6332, hist_per:7100, verba:200479,
+  { nome:'DD-Riomed', label:'DD-Riomed', cor:'#fb923c', canal:'Indireto', hist:7100, plan:7482.2, meta:3847, real:6332, hist_per:7100, verba:200479,
     hist_m:[0,1852,2884,1758,0,0,23,12,0,193,378,0],
-    plan_m:[0,5000,0,1846,0,0,0,314,0,0,0,0],
-    meta_m:[713,899,724,357,309,347,43,71,55,333,287,0],
+    plan_m:[0,5000,0,1845.9,0,0,24.15,12.6,0,202.65,396.9,0],
+    meta_m:[713,899,724,357,309,347,43,71,55,329,0,0],
     real_m:[0,3743,296,0,1650,238,0,0,405,0,0,null] },
-  { nome:'Clamed', label:'Clamed', cor:'#f472b6', canal:'Rede', hist:7945, plan:8411, meta:3740, real:5135, hist_per:7945, verba:125250,
-    hist_m:[0,0,7456,190,0,0,0,299,0,0,0,0],
+  { nome:'Clamed', label:'Clamed', cor:'#f472b6', canal:'Rede', hist:7646, plan:8411, meta:3639, real:5135, hist_per:7646, verba:125250,
+    hist_m:[0,0,7456,190,0,0,0,0,0,0,0,0],
     plan_m:[0,0,8202,209,0,0,0,0,0,0,0,0],
-    meta_m:[995,1261,906,54,44,51,7,85,132,104,101,0],
+    meta_m:[995,1261,906,54,44,51,7,85,132,104,0,0],
     real_m:[0,0,4731,80,0,24,300,0,0,0,0,null] },
-  { nome:'Peniel', label:'Peniel', cor:'#94a3b8', canal:'Indireto', hist:2227, plan:2407, meta:1166, real:240, hist_per:2227, verba:7500,
+  { nome:'Peniel', label:'Peniel', cor:'#94a3b8', canal:'Indireto', hist:2227, plan:2407.2, meta:1166, real:240, hist_per:2227, verba:7500,
     hist_m:[210,0,1153,460,105,0,0,299,0,0,0,0],
-    plan_m:[0,1500,0,483,110,0,0,314,0,0,0,0],
+    plan_m:[0,1500,0,483,110.25,0,0,313.95,0,0,0,0],
     meta_m:[205,273,206,87,68,82,86,104,51,4,0,0],
     real_m:[0,0,0,240,0,0,0,0,0,0,0,null] }
 ];const SELLIN_MONTHS = ['JUL','AGO','SET','OUT','NOV','DEZ','JAN','FEV','MAR','ABR','MAI','JUN'];
-const SELLIN_TOTAL = {hist:128947, plan:133491, meta:87893, real:122703, hist_per:128947, cres_hist:-4.8, cres_meta:39.7, cx_falt:-34810};
+const SELLIN_TOTAL = {hist:128648, plan:138172, meta:83635, real:122703, hist_per:128648, cres_hist:-4.6, cres_meta:46.7, cx_falt:-39068};
 var VERBAS_TOTAL = 2879340;
 
 var sellinFilter  = 'todos';
@@ -31775,54 +31775,869 @@ body { background: #0D1117 !important; }
   });
   document.addEventListener('mouseleave', function(){ tip.style.display='none'; }, true);
 })();
+</script>
 
-/* C1: Botão exportar resumo */
-(function addExportBtn(){
-  function exportSummary(){
-    var rows = [];
-    var clientes = ['São João','Nissei','Clamed','Panvel','GAM','Gaúcha','Riomed'];
-    rows.push('<tr><th>Cliente</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Acum. 2026</th></tr>');
 
-    var data = {
-      'São João': SJ_REC&&SJ_REC['2026'] ? SJ_REC['2026'] : [],
-      'Nissei':   (typeof NS!=='undefined'&&NS.total&&NS.total.rec&&NS.total.rec['2026']) ? NS.total.rec['2026'] : [],
-      'Clamed':   (typeof CL_REC_2026!=='undefined') ? CL_REC_2026 : [],
-      'Panvel':   PV_REC&&PV_REC['2026'] ? PV_REC['2026'] : [],
-      'GAM':      GAM_REC&&GAM_REC['2026'] ? GAM_REC['2026'] : [],
-      'Gaúcha':   GAUCHA_REC&&GAUCHA_REC['2026'] ? GAUCHA_REC['2026'] : [],
-      'Riomed':   (typeof RIOMED_REC_2026!=='undefined') ? RIOMED_REC_2026 : []
-    };
-    function fmt(v){ return v!=null?'R$ '+v.toLocaleString('pt-BR'):'-'; }
-    clientes.forEach(function(c){
-      var arr = data[c]||[];
-      var acum = arr.slice(0,4).reduce(function(s,v){return s+(v||0);},0);
-      rows.push('<tr><td>'+c+'</td><td>'+fmt(arr[0])+'</td><td>'+fmt(arr[1])+'</td><td>'+fmt(arr[2])+'</td><td>'+fmt(arr[3])+'</td><td><strong>'+fmt(acum)+'</strong></td></tr>');
-    });
+<script>
+/* ═══════════ NIELSEN EXCEL EXPORT ═══════════ */
+(function(){
+'use strict';
 
-    var html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Resumo Farma Sul — Abr/2026</title>'
-      +'<style>body{font-family:sans-serif;background:#0D1117;color:#e2e8f0;padding:24px;}h1{color:#F5E1A4;margin-bottom:16px;}table{border-collapse:collapse;width:100%;}th,td{padding:8px 12px;text-align:right;border-bottom:1px solid #2d3748;}th{color:#94A3B8;font-size:12px;text-transform:uppercase;}td:first-child,th:first-child{text-align:left;}tr:hover{background:rgba(255,255,255,0.04);}.footer{margin-top:16px;font-size:11px;color:#64748B;}</style>'
-      +'</head><body><h1>Resumo Sell Out — Farma Sul · Jan–Abr 2026</h1><table>'+rows.join('')+'</table>'
-      +'<div class="footer">Gerado em: '+new Date().toLocaleString('pt-BR')+'</div></body></html>';
+/* ── 1. Injetar botão em TODOS os 3 cards Nielsen ── */
+function injectBtn(){
+  var cards = [
+    {selId:'msoMarketSel',  btnId:'btn-nielsen-xls-1'},
+    {selId:'mso2MarketSel', btnId:'btn-nielsen-xls-2'},
+    {selId:'mso3MarketSel', btnId:'btn-nielsen-xls-3'}
+  ];
+  var CSS = 'display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;'
+    +'background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.35);color:#fbbf24;'
+    +'border-radius:6px;padding:6px 14px;cursor:pointer;font-family:inherit;transition:background 0.2s;';
+  cards.forEach(function(c){
+    var sel = document.getElementById(c.selId);
+    if(!sel || document.getElementById(c.btnId)) return;
+    var btn = document.createElement('button');
+    btn.id = c.btnId;
+    btn.innerHTML = '&#128229; Exportar Nielsen Excel';
+    btn.title = 'Exporta relatório executivo .xlsx com 5 abas analíticas';
+    btn.style.cssText = CSS;
+    btn.onmouseover = function(){ this.style.background='rgba(251,191,36,0.22)'; };
+    btn.onmouseout  = function(){ this.style.background='rgba(251,191,36,0.1)'; };
+    (function(sId, bId){ btn.onclick = function(){ triggerExport(sId, bId); }; })(c.selId, c.btnId);
+    sel.parentNode.appendChild(btn);
+  });
+}
 
-    var blob = new Blob([html], {type:'text/html;charset=utf-8'});
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'Resumo_FarmaSul_Abr2026.html';
-    a.click();
+/* ── 2. Toast de notificação ── */
+function showToast(msg, type){
+  var el = document.getElementById('_nxlsToast');
+  if(!el){
+    el = document.createElement('div');
+    el.id = '_nxlsToast';
+    el.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:99999;padding:11px 20px;'
+      +'border-radius:9px;font-size:12px;font-weight:600;font-family:inherit;max-width:340px;'
+      +'transition:opacity 0.4s;pointer-events:none;box-shadow:0 4px 24px rgba(0,0,0,0.5);';
+    document.body.appendChild(el);
+  }
+  var styles = {
+    info   : ['rgba(255,251,235,0.98)','rgba(180,83,9,0.4)' ,'#B45309'],
+    success: ['rgba(240,253,244,0.98)','rgba(22,101,52,0.45)','#166534'],
+    error  : ['rgba(255,241,242,0.98)','rgba(185,28,28,0.45)','#B91C1C']
+  };
+  var s = styles[type||'info'];
+  el.style.background = s[0]; el.style.border = '1px solid '+s[1]; el.style.color = s[2];
+  el.style.opacity = '1'; el.textContent = msg;
+  clearTimeout(el._t);
+  if(type==='success'||type==='error') el._t = setTimeout(function(){ el.style.opacity='0'; }, 4000);
+}
+
+/* ── 3. Carregar ExcelJS do CDN (lazy, só ao clicar) ── */
+function loadExcelJS(cb){
+  if(window.ExcelJS){ cb(); return; }
+  showToast('⏳ Carregando biblioteca Excel…', 'info');
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';
+  s.onload = function(){ cb(); };
+  s.onerror = function(){ showToast('❌ Erro ao carregar ExcelJS. Verifique a conexão com a internet.', 'error'); };
+  document.head.appendChild(s);
+}
+
+/* ── 4. Capturar estado atual ── */
+function getState(selId){
+  var sel = document.getElementById(selId || 'msoMarketSel');
+  var market = sel ? sel.value : 'T.BR Farma';
+  /* Ler modo R$/Un do card 3 */
+  var mode = 'val';
+  if(selId === 'mso3MarketSel' && typeof mso3Mode !== 'undefined') mode = mso3Mode;
+  var msoD = (typeof MKTSHARE_OVERVIEW!=='undefined') ? MKTSHARE_OVERVIEW[market] : null;
+  var valD = (typeof NIELSEN_BRAND_VAL!=='undefined')  ? NIELSEN_BRAND_VAL[market]  : null;
+  var totD = (typeof FYTD_MARKET_TOTAL!=='undefined')  ? FYTD_MARKET_TOTAL[market]  : null;
+  /* Base completa (todos os mercados) para 1-Tabela-1 */
+  var allNBV = (typeof NIELSEN_BRAND_VAL!=='undefined') ? NIELSEN_BRAND_VAL : null;
+  var allMSO = (typeof MKTSHARE_OVERVIEW!=='undefined') ? MKTSHARE_OVERVIEW : null;
+  var brands = (typeof MSO_BRANDS!=='undefined')
+    ? MSO_BRANDS.filter(function(b){ return b!=='ALL OTHERS CAMP'; })
+    : ['OFF!','EXPOSIS','XO INSETO','SUPER REPELEX','SBP'];
+  var allBrands = (typeof MSO_BRANDS!=='undefined') ? MSO_BRANDS : brands;
+  var months = (typeof MSO_MONTHS!=='undefined') ? MSO_MONTHS
+    : ['Jul/25','Ago/25','Set/25','Out/25','Nov/25','Dez/25','Jan/26','Fev/26','Mar/26'];
+  if(!msoD){ showToast('❌ Nenhum dado disponível para exportação.', 'error'); return null; }
+  return { market:market, mode:mode, msoD:msoD, valD:valD, totD:totD,
+           brands:brands, allBrands:allBrands, months:months,
+           allNBV:allNBV, allMSO:allMSO };
+}
+
+/* ── 5. Trigger principal ── */
+function triggerExport(selId, btnId){
+  selId = selId || 'msoMarketSel';
+  btnId = btnId || 'btn-nielsen-xls-1';
+  var state = getState(selId);
+  if(!state) return;
+  var btn = document.getElementById(btnId);
+  if(btn){ btn.disabled=true; btn.textContent='⏳ Gerando…'; }
+  loadExcelJS(function(){
+    showToast('⏳ Gerando relatório Nielsen…', 'info');
+    setTimeout(function(){ buildExcel(state, btn); }, 80);
+  });
+}
+
+/* ── 6. Helpers de estilo ── */
+var C = { dark:'FFFFFF', hdr:'D9E1F2', card:'EEF2FF',
+          gold:'B45309', white:'1E293B', gray:'64748B', dim:'94A3B8',
+          teal:'0E7490', green:'166534', red:'B91C1C', amber:'B45309',
+          blue:'1D4ED8', orange:'C2410C' };
+var BRAND_COL = {'OFF!':'B45309','EXPOSIS':'1D4ED8','XO INSETO':'B91C1C',
+                 'SUPER REPELEX':'C2410C','SBP':'0E7490'};
+
+function cell(ws, r, c, val, o){
+  o = o||{};
+  var cl = ws.getCell(r,c);
+  cl.value = val;
+  cl.fill  = { type:'pattern', pattern:'solid', fgColor:{ argb:'FF'+(o.bg||C.dark) } };
+  cl.font  = { name:'Calibri', size:o.sz||10, bold:!!o.bold,
+               color:{ argb:'FF'+(o.fg||C.white) } };
+  cl.alignment = { vertical:'middle', horizontal:o.align||'left', wrapText:!!o.wrap };
+  if(o.bord){
+    var br={style:'thin',color:{argb:'FFCBD5E1'}};
+    cl.border = {top:br,left:br,bottom:br,right:br};
+  }
+  return cl;
+}
+function hdr(ws, r, c, val, bg, fg){
+  return cell(ws,r,c,val,{bg:bg||C.hdr,fg:fg||C.gold,bold:true,sz:11,align:'center',bord:true});
+}
+function fillBg(ws, rows, cols){
+  for(var r=1;r<=rows;r++) for(var c=1;c<=cols;c++){
+    var cc=ws.getCell(r,c);
+    if(!cc.fill||!cc.fill.fgColor) cc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF'+C.dark}};
+  }
+}
+function colLetter(n){
+  var s=''; while(n>0){ var r=(n-1)%26; s=String.fromCharCode(65+r)+s; n=Math.floor((n-1)/26); } return s;
+}
+function deltaColor(d){ return d>=0.5?C.green:d<=-0.5?C.red:C.amber; }
+function fmtPct(v,d){ return (v==null?'—':(v>=0?'+':'')+v.toFixed(d||2)+'%'); }
+function fmtPp(v) { return (v==null?'—':(v>=0?'+':'')+v.toFixed(2)+'pp'); }
+
+/* ── 7. SHEET 1 — CAPA ── */
+function sheetCapa(wb, st){
+  var ws = wb.addWorksheet('📋 Capa');
+  ws.views = [{showGridLines:false}];
+  ws.getRow(1).height=52; ws.getRow(2).height=28; ws.getRow(3).height=16; ws.getRow(4).height=4;
+  ws.getColumn(1).width=2; ws.getColumn(2).width=24; ws.getColumn(3).width=14;
+  ws.getColumn(4).width=14; ws.getColumn(5).width=12; ws.getColumn(6).width=18;
+  ws.getColumn(7).width=14; ws.getColumn(8).width=14; ws.getColumn(9).width=6;
+
+  /* Título */
+  ws.mergeCells('B1:H1');
+  var t=ws.getCell('B1');
+  t.value='NIELSEN PERFORMANCE REPORT — FARMA SUL';
+  t.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  t.font={name:'Calibri',size:22,bold:true,color:{argb:'FFB45309'}};
+  t.alignment={vertical:'middle',horizontal:'center'};
+
+  ws.mergeCells('B2:H2');
+  var s2=ws.getCell('B2');
+  s2.value='FY26 · Jul/2025–Mar/2026 · Market: '+st.market+' · SC Johnson | NielsenIQ Retail Measurement';
+  s2.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  s2.font={name:'Calibri',size:12,color:{argb:'FF94A3B8'}};
+  s2.alignment={vertical:'middle',horizontal:'center'};
+
+  ws.mergeCells('B3:H3');
+  var s3=ws.getCell('B3');
+  s3.value='Extraído em: '+new Date().toLocaleString('pt-BR');
+  s3.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  s3.font={name:'Calibri',size:10,color:{argb:'FF94A3B8'}};
+  s3.alignment={vertical:'middle',horizontal:'center'};
+
+  /* Barra dourada */
+  for(var c=1;c<=9;c++){
+    var bc=ws.getCell(4,c);
+    bc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFB45309'}};
   }
 
-  window.addEventListener('DOMContentLoaded', function(){
-    var headerBtns = document.querySelector('.header [style*="display:flex"][style*="margin-top"]');
-    if(!headerBtns) return;
-    var btn = document.createElement('button');
-    btn.innerHTML = '&#8681; Exportar Resumo';
-    btn.title = 'Gera HTML leve com KPIs de todos os clientes';
-    btn.style.cssText='display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.4);color:#a5b4fc;border-radius:6px;padding:6px 12px;cursor:pointer;';
-    btn.onmouseover=function(){this.style.background='rgba(99,102,241,0.25)';};
-    btn.onmouseout=function(){this.style.background='rgba(99,102,241,0.15)';};
-    btn.onclick = exportSummary;
-    headerBtns.appendChild(btn);
+  /* Header KPIs */
+  ['','Marca','Share FY25','Share FY26','Δ pp','Status','Valor FY26 R$M','Vol FY26 Kun',''].forEach(function(v,i){
+    hdr(ws,5,i+1,v,C.hdr,C.gold);
   });
+  ws.getRow(5).height=22;
+
+  /* Dados por marca */
+  st.brands.forEach(function(b,i){
+    var rd=st.msoD[b]; var vd=st.valD?st.valD[b]:null; if(!rd) return;
+    var r=6+i; ws.getRow(r).height=20;
+    var d=rd.delta||0; var dc=deltaColor(d); var bc=BRAND_COL[b]||C.white;
+    var statusTxt=d>=0.5?'▲ CRESCENDO':d<=-0.5?'▼ RECUANDO':'≈ ESTÁVEL';
+    cell(ws,r,1,'',{bord:true});
+    cell(ws,r,2,b,{bg:C.card,fg:bc,bold:true,sz:11,bord:true});
+    cell(ws,r,3,(rd.fytd25||0).toFixed(2)+'%',{fg:C.gray,align:'center',bord:true});
+    cell(ws,r,4,(rd.fytd26||0).toFixed(2)+'%',{fg:bc,bold:true,align:'center',bord:true});
+    cell(ws,r,5,fmtPp(d),{fg:dc,bold:true,align:'center',bord:true});
+    cell(ws,r,6,statusTxt,{fg:dc,bold:true,align:'center',bord:true});
+    cell(ws,r,7,vd?(vd.fytd26_val||0).toFixed(2):'—',{align:'right',bord:true});
+    cell(ws,r,8,vd?((vd.fytd26_un||0)/1000).toFixed(1):'—',{align:'right',bord:true});
+    cell(ws,r,9,'',{bord:true});
+  });
+
+  /* Total mercado */
+  var tr=6+st.brands.length+1; ws.getRow(tr).height=22;
+  if(st.totD){
+    ws.mergeCells(tr,2,tr,5);
+    cell(ws,tr,2,'TOTAL MERCADO — '+st.market,{bg:C.card,fg:C.teal,bold:true,sz:11,bord:true});
+    cell(ws,tr,6,'',{bg:C.card,bord:true});
+    cell(ws,tr,7,(st.totD.fytd26_val||0).toFixed(2)+' R$M',{bg:C.card,fg:C.teal,bold:true,align:'right',bord:true});
+    cell(ws,tr,8,st.totD.fytd26_un?((st.totD.fytd26_un||0)/1000).toFixed(1)+' Kun':'—',{bg:C.card,align:'right',bord:true});
+    cell(ws,tr,9,'',{bg:C.card,bord:true});
+  }
+
+  /* Nota de rodapé */
+  var nr=tr+2;
+  ws.mergeCells(nr,2,nr,8);
+  var fn=ws.getCell(nr,2);
+  fn.value='Fonte: NielsenIQ Retail Measurement · PS · GBL · SC JOHNSON · BR · PEST CONTROL';
+  fn.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  fn.font={name:'Calibri',size:9,italic:true,color:{argb:'FF94A3B8'}};
+  fn.alignment={horizontal:'center'};
+
+  fillBg(ws,50,10);
+}
+
+/* ── 8. SHEET 2 — BASE ANALÍTICA ── */
+function sheetBase(wb, st){
+  var ws=wb.addWorksheet('📊 Base Analítica');
+  ws.views=[{state:'frozen',xSplit:1,ySplit:3,showGridLines:false}];
+  var widths=[2,22,13,13,10,14,14,11,14,14,11,12,12,12];
+  widths.forEach(function(w,i){ ws.getColumn(i+1).width=w; });
+
+  /* Título */
+  ws.mergeCells('B1:N1');
+  var t=ws.getCell('B1');
+  t.value='BASE ANALÍTICA NIELSEN — '+st.market+' — FY26 vs FY25';
+  t.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  t.font={name:'Calibri',size:14,bold:true,color:{argb:'FFB45309'}};
+  t.alignment={vertical:'middle',horizontal:'center'};
+  ws.getRow(1).height=28;
+
+  ws.mergeCells('B2:N2');
+  var s2=ws.getCell('B2');
+  s2.value='Jul/2025–Mar/2026 · Market: '+st.market+' · Exportado: '+new Date().toLocaleDateString('pt-BR');
+  s2.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  s2.font={name:'Calibri',size:10,color:{argb:'FF94A3B8'}};
+  s2.alignment={vertical:'middle',horizontal:'center'};
+  ws.getRow(2).height=18;
+
+  /* Headers */
+  var hdrs=['','Marca','Share FY25%','Share FY26%','Δ pp','Val FY25 R$M','Val FY26 R$M','Δ Val%',
+            'Vol FY25 Kun','Vol FY26 Kun','Δ Vol%','Jan/26 R$M','Fev/26 R$M','Mar/26 R$M'];
+  hdrs.forEach(function(v,i){ hdr(ws,3,i+1,v,C.hdr,C.gold); });
+  ws.getRow(3).height=22;
+
+  st.brands.forEach(function(b,i){
+    var rd=st.msoD[b]; var vd=st.valD?st.valD[b]:null; if(!rd) return;
+    var r=4+i; ws.getRow(r).height=18;
+    var d=rd.delta||0; var bc=BRAND_COL[b]||C.white; var dc=deltaColor(d);
+    var dv=vd&&vd.fytd25_val>0?(vd.fytd26_val-vd.fytd25_val)/vd.fytd25_val*100:null;
+    var du=vd&&vd.fytd25_un >0?(vd.fytd26_un -vd.fytd25_un )/vd.fytd25_un *100:null;
+    cell(ws,r,1,'',{bord:true});
+    cell(ws,r,2,b,{fg:bc,bold:true,bord:true});
+    cell(ws,r,3,(rd.fytd25||0).toFixed(2)+'%',{fg:C.gray,align:'center',bord:true});
+    cell(ws,r,4,(rd.fytd26||0).toFixed(2)+'%',{fg:bc,bold:true,align:'center',bord:true});
+    cell(ws,r,5,fmtPp(d),{fg:dc,bold:true,align:'center',bord:true});
+    cell(ws,r,6,vd?(vd.fytd25_val||0).toFixed(3):'—',{fg:C.gray,align:'right',bord:true});
+    cell(ws,r,7,vd?(vd.fytd26_val||0).toFixed(3):'—',{fg:bc,align:'right',bord:true});
+    cell(ws,r,8,dv!=null?fmtPct(dv,1):'—',{fg:dv!=null?(dv>=0?C.green:C.red):C.gray,align:'center',bord:true});
+    cell(ws,r,9, vd?((vd.fytd25_un||0)/1000).toFixed(1):'—',{fg:C.gray,align:'right',bord:true});
+    cell(ws,r,10,vd?((vd.fytd26_un||0)/1000).toFixed(1):'—',{fg:bc,align:'right',bord:true});
+    cell(ws,r,11,du!=null?fmtPct(du,1):'—',{fg:du!=null?(du>=0?C.green:C.red):C.gray,align:'center',bord:true});
+    cell(ws,r,12,vd?(vd.jan_val||0).toFixed(3):'—',{align:'right',bord:true});
+    cell(ws,r,13,vd?(vd.fev_val||0).toFixed(3):'—',{align:'right',bord:true});
+    cell(ws,r,14,vd?(vd.mar_val||0).toFixed(3):'—',{align:'right',bord:true});
+  });
+
+  ws.autoFilter={from:{row:3,column:2},to:{row:3+st.brands.length,column:14}};
+  fillBg(ws,20,15);
+}
+
+/* ── 9. SHEET 3 — EVOLUÇÃO MENSAL ── */
+function sheetEvolucao(wb, st){
+  var ws=wb.addWorksheet('📈 Evolução Mensal');
+  ws.views=[{state:'frozen',xSplit:1,ySplit:3,showGridLines:false}];
+  ws.getColumn(1).width=2; ws.getColumn(2).width=22;
+  st.months.forEach(function(_,i){ ws.getColumn(3+i).width=10; });
+  ws.getColumn(3+st.months.length).width=11;
+  ws.getColumn(4+st.months.length).width=11;
+
+  var endCol=colLetter(4+st.months.length);
+  ws.mergeCells('B1:'+endCol+'1');
+  var t=ws.getCell('B1');
+  t.value='EVOLUÇÃO MENSAL — SHARE % · '+st.market+' · Jul/25 a Mar/26';
+  t.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  t.font={name:'Calibri',size:14,bold:true,color:{argb:'FF0E7490'}};
+  t.alignment={vertical:'middle',horizontal:'center'};
+  ws.getRow(1).height=28;
+
+  ws.mergeCells('B2:'+endCol+'2');
+  var s2=ws.getCell('B2');
+  s2.value='Série mensal Jul/25–Mar/26 · Share de mercado por marca (%) · Fonte: NielsenIQ Retail Measurement';
+  s2.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  s2.font={name:'Calibri',size:10,color:{argb:'FF94A3B8'}};
+  s2.alignment={vertical:'middle',horizontal:'center'};
+  ws.getRow(2).height=16;
+
+  /* Header */
+  var hdrs=['','Marca'].concat(st.months).concat(['FYTD25','FYTD26']);
+  hdrs.forEach(function(v,i){ hdr(ws,3,i+1,v,C.hdr,C.teal); });
+  ws.getRow(3).height=22;
+
+  st.brands.forEach(function(b,i){
+    var rd=st.msoD[b]; if(!rd) return;
+    var r=4+i; ws.getRow(r).height=18;
+    var bc=BRAND_COL[b]||C.white; var monthly=rd.monthly||[];
+    cell(ws,r,1,'',{bord:true});
+    cell(ws,r,2,b,{fg:bc,bold:true,bord:true});
+    st.months.forEach(function(_,mi){
+      var v=monthly[mi]; var prev=mi>0?monthly[mi-1]:null;
+      var fg=v!=null&&prev!=null?(v>prev?C.green:v<prev?C.red:C.white):C.white;
+      cell(ws,r,3+mi,v!=null?v.toFixed(2)+'%':'—',{align:'center',bord:true,fg:fg});
+    });
+    cell(ws,r,3+st.months.length,  (rd.fytd25||0).toFixed(2)+'%',{fg:C.gray,align:'center',bord:true});
+    cell(ws,r,4+st.months.length,(rd.fytd26||0).toFixed(2)+'%',{fg:bc,bold:true,align:'center',bord:true});
+  });
+
+  fillBg(ws,20,5+st.months.length);
+}
+
+/* ── 10. SHEET 4 — COMPARATIVO FYTD ── */
+function sheetFYTD(wb, st){
+  var ws=wb.addWorksheet('⚖️ Comparativo FYTD');
+  ws.views=[{state:'frozen',xSplit:1,ySplit:4,showGridLines:false}];
+  [2,22,12,12,10,13,13,10,13,13,10,10].forEach(function(w,i){ ws.getColumn(i+1).width=w; });
+
+  ws.mergeCells('B1:L1');
+  var t=ws.getCell('B1');
+  t.value='COMPARATIVO FYTD25 vs FYTD26 — '+st.market;
+  t.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  t.font={name:'Calibri',size:14,bold:true,color:{argb:'FF166534'}};
+  t.alignment={vertical:'middle',horizontal:'center'};
+  ws.getRow(1).height=28;
+
+  /* Sub-grupos */
+  var grpBg=C.card;
+  for(var c=1;c<=12;c++) cell(ws,2,c,'',{bg:C.card});
+  ws.mergeCells('C2:E2');
+  var gA=ws.getCell('C2'); gA.value='─── SHARE % ───';
+  gA.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF'+C.card}};
+  gA.font={name:'Calibri',size:9,bold:true,color:{argb:'FF'+C.green}};
+  gA.alignment={horizontal:'center'};
+  ws.mergeCells('F2:H2');
+  var gB=ws.getCell('F2'); gB.value='─── VALOR R$M ───';
+  gB.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF'+C.card}};
+  gB.font={name:'Calibri',size:9,bold:true,color:{argb:'FF'+C.blue}};
+  gB.alignment={horizontal:'center'};
+  ws.mergeCells('I2:K2');
+  var gC=ws.getCell('I2'); gC.value='─── VOL Kun ───';
+  gC.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF'+C.card}};
+  gC.font={name:'Calibri',size:9,bold:true,color:{argb:'FF'+C.amber}};
+  gC.alignment={horizontal:'center'};
+  ws.getRow(2).height=14;
+
+  /* Header linha 3 */
+  ['','Marca','FY25%','FY26%','Δ pp','FY25 R$M','FY26 R$M','Δ Val%','FY25 Kun','FY26 Kun','Δ Vol%','Rank'].forEach(function(v,i){
+    hdr(ws,3,i+1,v,C.hdr,C.green);
+  });
+  ws.getRow(3).height=22;
+
+  /* Dados ordenados por FYTD26 desc */
+  var ranked=st.brands.filter(function(b){ return !!st.msoD[b]; })
+    .sort(function(a,b){ return (st.msoD[b].fytd26||0)-(st.msoD[a].fytd26||0); });
+
+  ranked.forEach(function(b,i){
+    var rd=st.msoD[b]; var vd=st.valD?st.valD[b]:null;
+    var r=4+i; ws.getRow(r).height=20;
+    var d=rd.delta||0; var bc=BRAND_COL[b]||C.white; var dc=deltaColor(d);
+    var dv=vd&&vd.fytd25_val>0?(vd.fytd26_val-vd.fytd25_val)/vd.fytd25_val*100:null;
+    var du=vd&&vd.fytd25_un >0?(vd.fytd26_un -vd.fytd25_un )/vd.fytd25_un *100:null;
+    var rankLbl=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'º';
+    cell(ws,r,1,'',{bord:true});
+    cell(ws,r,2,b,{fg:bc,bold:true,bord:true});
+    cell(ws,r,3,(rd.fytd25||0).toFixed(2)+'%',{fg:C.gray,align:'center',bord:true});
+    cell(ws,r,4,(rd.fytd26||0).toFixed(2)+'%',{fg:bc,bold:true,align:'center',bord:true});
+    cell(ws,r,5,fmtPp(d),{fg:dc,bold:true,align:'center',bord:true});
+    cell(ws,r,6,vd?(vd.fytd25_val||0).toFixed(3):'—',{fg:C.gray,align:'right',bord:true});
+    cell(ws,r,7,vd?(vd.fytd26_val||0).toFixed(3):'—',{fg:bc,align:'right',bord:true});
+    cell(ws,r,8,dv!=null?fmtPct(dv,1):'—',{fg:dv!=null?(dv>=0?C.green:C.red):C.gray,align:'center',bord:true});
+    cell(ws,r,9, vd?((vd.fytd25_un||0)/1000).toFixed(1):'—',{fg:C.gray,align:'right',bord:true});
+    cell(ws,r,10,vd?((vd.fytd26_un||0)/1000).toFixed(1):'—',{fg:bc,align:'right',bord:true});
+    cell(ws,r,11,du!=null?fmtPct(du,1):'—',{fg:du!=null?(du>=0?C.green:C.red):C.gray,align:'center',bord:true});
+    cell(ws,r,12,rankLbl,{align:'center',bold:true,bord:true});
+  });
+
+  fillBg(ws,20,13);
+}
+
+/* ── 11. SHEET 5 — MEMÓRIA DE CÁLCULO ── */
+function sheetMemCalculo(wb, st){
+  var ws = wb.addWorksheet('📐 Memória de Cálculo');
+  ws.views = [{showGridLines:false}];
+  var nM = st.months.length; /* 9 meses Jul-Mar */
+
+  /* Larguras: margem | marca | 9 meses | FYTD25 | FYTD26 | delta | margem */
+  ws.getColumn(1).width = 2;
+  ws.getColumn(2).width = 24;
+  for(var mi=0;mi<nM;mi++) ws.getColumn(3+mi).width = 8;
+  ws.getColumn(3+nM).width = 11;
+  ws.getColumn(4+nM).width = 11;
+  ws.getColumn(5+nM).width = 10;
+  ws.getColumn(6+nM).width = 2;
+  var lastC = 6+nM;
+
+  /* ── helpers locais ── */
+  function secTitle(r, txt, col){
+    ws.getRow(r).height = 21;
+    for(var c2=1;c2<=lastC;c2++) cell(ws,r,c2,'',{bg:C.hdr});
+    ws.mergeCells(r,2,r,lastC-1);
+    var sc = ws.getCell(r,2);
+    sc.value = txt;
+    sc.fill = {type:'pattern',pattern:'solid',fgColor:{argb:'FF'+C.hdr}};
+    sc.font = {name:'Calibri',size:10,bold:true,color:{argb:'FF'+(col||C.gold)}};
+    sc.alignment = {vertical:'middle',horizontal:'left'};
+  }
+  function note(r, txt){
+    ws.getRow(r).height = 13;
+    ws.mergeCells(r,2,r,lastC-1);
+    var nc = ws.getCell(r,2);
+    nc.value = txt;
+    nc.fill = {type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+    nc.font = {name:'Calibri',size:8,italic:true,color:{argb:'FF94A3B8'}};
+    nc.alignment = {horizontal:'left'};
+  }
+  function hdrRow(r, col1Label, colLabel, lastLbl1, lastLbl2, deltaLbl){
+    ws.getRow(r).height = 20;
+    hdr(ws,r,1,'',C.hdr,C.gold);
+    hdr(ws,r,2,col1Label,C.hdr,colLabel||C.gold);
+    st.months.forEach(function(m,i){ hdr(ws,r,3+i,m,C.hdr,C.gold); });
+    hdr(ws,r,3+nM,lastLbl1||'FYTD25',C.hdr,C.gray);
+    hdr(ws,r,4+nM,lastLbl2||'FYTD26',C.hdr,colLabel||C.teal);
+    hdr(ws,r,5+nM,deltaLbl||'Δ',C.hdr,C.gold);
+    hdr(ws,r,6+nM,'',C.hdr,C.gold);
+  }
+
+  var row = 1;
+
+  /* ══ Título principal ══ */
+  ws.getRow(row).height = 28;
+  ws.mergeCells(row,2,row,lastC-1);
+  var tit = ws.getCell(row,2);
+  tit.value = 'MEMÓRIA DE CÁLCULO — ' + st.market + ' — FY26 (Jul/25–Mar/26)';
+  tit.fill = {type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  tit.font = {name:'Calibri',size:14,bold:true,color:{argb:'FFB45309'}};
+  tit.alignment = {vertical:'middle',horizontal:'center'};
+  row++;
+  ws.getRow(row).height = 14;
+  ws.mergeCells(row,2,row,lastC-1);
+  var sub = ws.getCell(row,2);
+  sub.value = 'Detalhamento dos cálculos que geram os indicadores do relatório Nielsen · NielsenIQ Retail Measurement · SC Johnson';
+  sub.fill = {type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  sub.font = {name:'Calibri',size:9,italic:true,color:{argb:'FF94A3B8'}};
+  sub.alignment = {horizontal:'center'};
+  row += 2;
+
+  /* ══════════════════════════════════════════════
+     SEÇÃO 1 — VALOR R$M MENSAL
+  ══════════════════════════════════════════════ */
+  secTitle(row, '① VALOR R$M MENSAL  —  numerador do cálculo de Share%', C.teal);
+  row++;
+  hdrRow(row, 'Marca / Fonte', C.teal, 'FYTD25 R$M', 'FYTD26 R$M', 'Δ Val%');
+  row++;
+
+  st.brands.forEach(function(b){
+    var vd = st.valD ? st.valD[b] : null; if(!vd) return;
+    var bc = BRAND_COL[b]||C.white;
+    var mv = vd.monthly_val||[];
+    var dv = vd.fytd25_val>0 ? (vd.fytd26_val-vd.fytd25_val)/vd.fytd25_val*100 : null;
+    ws.getRow(row).height = 17;
+    cell(ws,row,1,'',{bord:true});
+    cell(ws,row,2,b,{fg:bc,bold:true,bord:true});
+    for(var i=0;i<nM;i++){
+      var v = mv[i];
+      cell(ws,row,3+i, v!=null?+v.toFixed(4):0, {align:'right',bord:true});
+    }
+    cell(ws,row,3+nM, vd.fytd25_val!=null?+vd.fytd25_val.toFixed(4):0, {fg:C.gray,align:'right',bord:true});
+    cell(ws,row,4+nM, vd.fytd26_val!=null?+vd.fytd26_val.toFixed(4):0, {fg:bc,bold:true,align:'right',bord:true});
+    cell(ws,row,5+nM, dv!=null?fmtPct(dv,1):'—', {fg:dv!=null?(dv>=0?C.green:C.red):C.gray,align:'center',bord:true});
+    cell(ws,row,6+nM,'',{bord:true});
+    row++;
+  });
+
+  /* Linha total mercado */
+  if(st.totD){
+    var totMonths = [null,null,null,null,null,null,
+      st.totD.jan26_val||null, st.totD.fev26_val||null, st.totD.mar26_val||null];
+    var dtot = st.totD.fytd25_val>0
+      ? (st.totD.fytd26_val-st.totD.fytd25_val)/st.totD.fytd25_val*100 : null;
+    ws.getRow(row).height = 18;
+    cell(ws,row,1,'',{bg:C.card,bord:true});
+    cell(ws,row,2,'= TOTAL MERCADO (denominador)',{bg:C.card,fg:C.teal,bold:true,bord:true});
+    for(var i=0;i<nM;i++){
+      var tv = totMonths[i];
+      cell(ws,row,3+i, tv!=null?+tv.toFixed(4):'—', {bg:C.card,fg:tv!=null?C.teal:C.dim,align:'right',bord:true});
+    }
+    cell(ws,row,3+nM, st.totD.fytd25_val!=null?+st.totD.fytd25_val.toFixed(4):0, {bg:C.card,fg:C.gray,align:'right',bord:true});
+    cell(ws,row,4+nM, st.totD.fytd26_val!=null?+st.totD.fytd26_val.toFixed(4):0, {bg:C.card,fg:C.teal,bold:true,align:'right',bord:true});
+    cell(ws,row,5+nM, dtot!=null?fmtPct(dtot,1):'—', {bg:C.card,fg:dtot!=null?(dtot>=0?C.green:C.red):C.gray,align:'center',bord:true});
+    cell(ws,row,6+nM,'',{bg:C.card,bord:true});
+    row++;
+  }
+  note(row,'  "—" = valor mensal do total de mercado não disponível por mês individual neste período (Jul–Dez). Disponível: Jan/Fev/Mar e FYTD total.');
+  row += 2;
+
+  /* ══════════════════════════════════════════════
+     SEÇÃO 2 — SHARE % MENSAL
+  ══════════════════════════════════════════════ */
+  secTitle(row, '② SHARE % MENSAL  —  Fórmula: ValorMarca ÷ TotalMercado × 100', C.green);
+  row++;
+  hdrRow(row, 'Marca', C.green, 'FYTD25 %', 'FYTD26 %', 'Δ pp');
+  row++;
+
+  st.brands.forEach(function(b){
+    var rd = st.msoD[b]; if(!rd) return;
+    var bc = BRAND_COL[b]||C.white;
+    var d = rd.delta||0; var dc = deltaColor(d);
+    var monthly = rd.monthly||[];
+    ws.getRow(row).height = 17;
+    cell(ws,row,1,'',{bord:true});
+    cell(ws,row,2,b,{fg:bc,bold:true,bord:true});
+    for(var i=0;i<nM;i++){
+      var v = monthly[i];
+      cell(ws,row,3+i, v!=null?+v.toFixed(2)+'%':'—', {align:'center',bord:true});
+    }
+    cell(ws,row,3+nM, (rd.fytd25||0).toFixed(2)+'%', {fg:C.gray,align:'center',bord:true});
+    cell(ws,row,4+nM, (rd.fytd26||0).toFixed(2)+'%', {fg:bc,bold:true,align:'center',bord:true});
+    cell(ws,row,5+nM, fmtPp(d), {fg:dc,bold:true,align:'center',bord:true});
+    cell(ws,row,6+nM,'',{bord:true});
+    row++;
+  });
+  note(row,'  Share% mensal = ValorMarca(mês) ÷ TotalMercado(mês) × 100  |  FYTD% = Σ ValorMarca(Jul–Mar) ÷ Σ TotalMercado(FYTD) × 100  |  Δpp = FYTD26% − FYTD25%');
+
+  /* verificação Jan/Fev/Mar onde temos totais mensais */
+  if(st.totD && st.totD.jan26_val){
+    row++;
+    ws.getRow(row).height = 13;
+    ws.mergeCells(row,2,row,lastC-1);
+    var vn = ws.getCell(row,2);
+    vn.value = '  Verificação Jan/26: OFF! '
+      + (st.valD&&st.valD['OFF!']?(st.valD['OFF!'].jan_val||0).toFixed(4):'—')
+      + ' ÷ ' + (st.totD.jan26_val||0).toFixed(4)
+      + ' × 100 = '
+      + (st.valD&&st.valD['OFF!']&&st.totD.jan26_val
+          ? ((st.valD['OFF!'].jan_val||0)/st.totD.jan26_val*100).toFixed(2)+'%'
+          : '—')
+      + '  |  Fev/26: OFF! '
+      + (st.valD&&st.valD['OFF!']?(st.valD['OFF!'].fev_val||0).toFixed(4):'—')
+      + ' ÷ ' + (st.totD.fev26_val||0).toFixed(4)
+      + ' × 100 = '
+      + (st.valD&&st.valD['OFF!']&&st.totD.fev26_val
+          ? ((st.valD['OFF!'].fev_val||0)/st.totD.fev26_val*100).toFixed(2)+'%'
+          : '—');
+    vn.fill = {type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+    vn.font = {name:'Calibri',size:8,italic:true,color:{argb:'FF94A3B8'}};
+    vn.alignment = {horizontal:'left'};
+  }
+  row += 2;
+
+  /* ══════════════════════════════════════════════
+     SEÇÃO 3 — SCJ COMBINED
+  ══════════════════════════════════════════════ */
+  secTitle(row, '③ SCJ COMBINED  —  OFF! + EXPOSIS  |  Share% e Valor R$M', C.blue);
+  row++;
+
+  var offD = st.msoD['OFF!']||{};
+  var expD = st.msoD['EXPOSIS']||{};
+  var offV = st.valD?(st.valD['OFF!']||{}):{};
+  var expV = st.valD?(st.valD['EXPOSIS']||{}):{};
+  var offM = offD.monthly||[]; var expM = expD.monthly||[];
+  var offV_m = offV.monthly_val||[]; var expV_m = expV.monthly_val||[];
+
+  /* Header share */
+  hdrRow(row, 'Componente (Share %)', C.blue, 'FYTD25 %', 'FYTD26 %', 'Δ pp');
+  row++;
+
+  var scjShare = [
+    {label:'OFF! Share %', monthly:offM, fy25:(offD.fytd25||0).toFixed(2)+'%', fy26:(offD.fytd26||0).toFixed(2)+'%', d:offD.delta||0, fg:BRAND_COL['OFF!']||C.white, bold:false},
+    {label:'EXPOSIS Share %', monthly:expM, fy25:(expD.fytd25||0).toFixed(2)+'%', fy26:(expD.fytd26||0).toFixed(2)+'%', d:expD.delta||0, fg:BRAND_COL['EXPOSIS']||C.white, bold:false},
+    {label:'= SCJ Combined Share %',
+      monthly: offM.map(function(v,i){ return (v!=null&&expM[i]!=null)?+(v+expM[i]).toFixed(2):null; }),
+      fy25: ((offD.fytd25||0)+(expD.fytd25||0)).toFixed(2)+'%',
+      fy26: ((offD.fytd26||0)+(expD.fytd26||0)).toFixed(2)+'%',
+      d: ((offD.fytd26||0)+(expD.fytd26||0))-((offD.fytd25||0)+(expD.fytd25||0)),
+      fg:C.teal, bold:true}
+  ];
+  scjShare.forEach(function(sr){
+    ws.getRow(row).height = 17;
+    var bg2 = sr.bold?C.card:C.dark;
+    cell(ws,row,1,'',{bg:bg2,bord:true});
+    cell(ws,row,2,sr.label,{bg:bg2,fg:sr.fg,bold:sr.bold,bord:true});
+    for(var i=0;i<nM;i++){
+      var v=sr.monthly[i];
+      cell(ws,row,3+i, v!=null?v.toFixed(2)+'%':'—', {bg:bg2,align:'center',bord:true,fg:sr.bold?sr.fg:C.white});
+    }
+    cell(ws,row,3+nM,sr.fy25,{bg:bg2,fg:C.gray,align:'center',bord:true});
+    cell(ws,row,4+nM,sr.fy26,{bg:bg2,fg:sr.fg,bold:sr.bold,align:'center',bord:true});
+    cell(ws,row,5+nM,fmtPp(sr.d),{bg:bg2,fg:deltaColor(sr.d),bold:sr.bold,align:'center',bord:true});
+    cell(ws,row,6+nM,'',{bg:bg2,bord:true});
+    row++;
+  });
+
+  row++;
+  /* Header valor */
+  hdrRow(row, 'Componente (Valor R$M)', C.blue, 'FYTD25 R$M', 'FYTD26 R$M', 'Δ Val%');
+  row++;
+
+  var scjVal = [
+    {label:'OFF! Valor R$M', monthly:offV_m, fy25:(offV.fytd25_val||0), fy26:(offV.fytd26_val||0), fg:BRAND_COL['OFF!']||C.white, bold:false},
+    {label:'EXPOSIS Valor R$M', monthly:expV_m, fy25:(expV.fytd25_val||0), fy26:(expV.fytd26_val||0), fg:BRAND_COL['EXPOSIS']||C.white, bold:false},
+    {label:'= Total SCJ Valor R$M',
+      monthly: offV_m.map(function(v,i){ return (v!=null&&expV_m[i]!=null)?+(v+expV_m[i]).toFixed(4):null; }),
+      fy25:(offV.fytd25_val||0)+(expV.fytd25_val||0),
+      fy26:(offV.fytd26_val||0)+(expV.fytd26_val||0),
+      fg:C.teal, bold:true}
+  ];
+  scjVal.forEach(function(sr){
+    ws.getRow(row).height = 17;
+    var bg2 = sr.bold?C.card:C.dark;
+    var dv = sr.fy25>0?(sr.fy26-sr.fy25)/sr.fy25*100:null;
+    cell(ws,row,1,'',{bg:bg2,bord:true});
+    cell(ws,row,2,sr.label,{bg:bg2,fg:sr.fg,bold:sr.bold,bord:true});
+    for(var i=0;i<nM;i++){
+      var v=sr.monthly[i];
+      cell(ws,row,3+i, v!=null?+v.toFixed(4):0, {bg:bg2,align:'right',bord:true,fg:sr.bold?sr.fg:C.white});
+    }
+    cell(ws,row,3+nM, +sr.fy25.toFixed(4), {bg:bg2,fg:C.gray,align:'right',bord:true});
+    cell(ws,row,4+nM, +sr.fy26.toFixed(4), {bg:bg2,fg:sr.fg,bold:sr.bold,align:'right',bord:true});
+    cell(ws,row,5+nM, dv!=null?fmtPct(dv,1):'—', {bg:bg2,fg:dv!=null?(dv>=0?C.green:C.red):C.gray,align:'center',bord:true});
+    cell(ws,row,6+nM,'',{bg:bg2,bord:true});
+    row++;
+  });
+  row += 2;
+
+  /* ══════════════════════════════════════════════
+     SEÇÃO 4 — VOLUME MENSAL
+  ══════════════════════════════════════════════ */
+  secTitle(row, '④ VOLUME MENSAL (Unidades)  —  base para cálculo de Δ% Volume', C.amber);
+  row++;
+  hdrRow(row, 'Marca', C.amber, 'FYTD25 Un', 'FYTD26 Un', 'Δ Vol%');
+  row++;
+
+  st.brands.forEach(function(b){
+    var vd = st.valD?st.valD[b]:null; if(!vd) return;
+    var bc = BRAND_COL[b]||C.white;
+    var mu = vd.monthly_un||[];
+    var du = vd.fytd25_un>0?(vd.fytd26_un-vd.fytd25_un)/vd.fytd25_un*100:null;
+    ws.getRow(row).height = 17;
+    cell(ws,row,1,'',{bord:true});
+    cell(ws,row,2,b,{fg:bc,bold:true,bord:true});
+    for(var i=0;i<nM;i++){
+      var v=mu[i];
+      cell(ws,row,3+i, v!=null?Math.round(v):0, {align:'right',bord:true});
+    }
+    cell(ws,row,3+nM, vd.fytd25_un!=null?Math.round(vd.fytd25_un):0, {fg:C.gray,align:'right',bord:true});
+    cell(ws,row,4+nM, vd.fytd26_un!=null?Math.round(vd.fytd26_un):0, {fg:bc,bold:true,align:'right',bord:true});
+    cell(ws,row,5+nM, du!=null?fmtPct(du,1):'—', {fg:du!=null?(du>=0?C.green:C.red):C.gray,align:'center',bord:true});
+    cell(ws,row,6+nM,'',{bord:true});
+    row++;
+  });
+  note(row,'  Δ% Volume = (FYTD26_Un − FYTD25_Un) ÷ FYTD25_Un × 100');
+  row += 2;
+
+  /* Nota de rodapé */
+  ws.mergeCells(row,2,row,lastC-1);
+  var fn = ws.getCell(row,2);
+  fn.value = 'Fonte: NielsenIQ Retail Measurement · PS · GBL · SC JOHNSON · BR · PEST CONTROL · Exportado: '+new Date().toLocaleString('pt-BR');
+  fn.fill = {type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  fn.font = {name:'Calibri',size:8,italic:true,color:{argb:'FF94A3B8'}};
+  fn.alignment = {horizontal:'center'};
+
+  fillBg(ws, row+3, lastC+1);
+}
+
+/* ── 11b. SHEET 6 — 1-TABELA-1 (Base Completa Nielsen) ── */
+function sheetTabela1(wb, st){
+  var ws = wb.addWorksheet('1-Tabela-1');
+
+  /* Meses → datas de medição Nielsen (mesmo formato do arquivo original) */
+  var MONTH_DATES = [
+    '2025-07-23','2025-08-23','2025-09-22','2025-10-23','2025-11-22','2025-12-23',
+    '2026-01-23','2026-02-20','2026-03-23'
+  ];
+  var CAT = 'PERSONAL REPELLENT';
+
+  /* Larguras de colunas */
+  var COL_W = [22,22,14,12,20,16,16,16,16,22,16,14];
+  COL_W.forEach(function(w,i){ ws.getColumn(i+1).width = w; });
+
+  /* ── Metadados do arquivo original (linhas 1-8) ── */
+  var META_FONT = {name:'Calibri',size:9,color:{argb:'FF666666'}};
+  var META_FILL = {type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  function metaCell(r,txt){
+    var c=ws.getCell(r,1); c.value=txt; c.font=META_FONT; c.fill=META_FILL;
+  }
+  metaCell(4,'Tabela-1');
+  metaCell(5,'Voltar ao relatório');
+  metaCell(6,'Dataset: NielsenIQ Retail Measurement | PS - GBL - SC JOHNSON - BR - PEST CONTROL  | PS - GBL - SC JOHNSON - BR - PEST CONTROL  | Currency: Brazilian real');
+  metaCell(7,'7 Facts de 30 Products em...');
+  metaCell(8,'Exportado via Dashboard Farma Sul · '+new Date().toLocaleDateString('pt-BR')+' · Mercado filtrado: '+st.market+' · Modo: '+(st.mode==='un'?'Unidades':'Valor R$M'));
+  for(var r2=1;r2<=8;r2++){
+    for(var c2=1;c2<=12;c2++){
+      var mc=ws.getCell(r2,c2);
+      if(!mc.fill||!mc.fill.fgColor) mc.fill=META_FILL;
+    }
+  }
+
+  /* ── Linha de header (linha 9 — igual ao arquivo original) ── */
+  var HDRS=['Markets','CATEGORY','BRAND','Products','Data','$',
+            'Wghtd Dist Reach','Avg (UNID) Price','$ Shr - Product',
+            'TDP Wghtd Dist Reach Shr ','(UNID)','ROS $ (C)'];
+  var HDR_FILL = {type:'pattern',pattern:'solid',fgColor:{argb:'FFD9E1F2'}};
+  var HDR_FONT = {name:'Calibri',size:10,bold:true,color:{argb:'FF1F3864'}};
+  HDRS.forEach(function(h2,i){
+    var hc=ws.getCell(9,i+1);
+    hc.value=h2; hc.font=HDR_FONT; hc.fill=HDR_FILL;
+    hc.alignment={horizontal:'center',vertical:'middle',wrapText:false};
+    hc.border={bottom:{style:'medium',color:{argb:'FF1F3864'}}};
+  });
+  ws.getRow(9).height=20;
+  ws.views=[{state:'frozen',xSplit:0,ySplit:9,showGridLines:true}];
+
+  /* ── Dados: todos os mercados × marcas × períodos ── */
+  var dataRow = 10;
+  var allNBV  = st.allNBV || {};
+  var allMSO  = st.allMSO || {};
+  var allBrands = st.allBrands || st.brands;
+
+  /* Ordenar mercados alfabeticamente */
+  var markets = Object.keys(allNBV).sort();
+
+  /* Estilos alternados por mercado */
+  var ROW_FILL_A = {type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  var ROW_FILL_B = {type:'pattern',pattern:'solid',fgColor:{argb:'FFF2F2F2'}};
+  var BASE_FONT  = {name:'Calibri',size:9,color:{argb:'FF000000'}};
+  var NUM_FONT   = {name:'Calibri',size:9,color:{argb:'FF1F3864'}};
+  var FYTD_FONT  = {name:'Calibri',size:9,bold:true,color:{argb:'FF1F3864'}};
+
+  markets.forEach(function(mkt, mktIdx){
+    var nbvMkt = allNBV[mkt]; if(!nbvMkt) return;
+    var msoMkt = allMSO[mkt] || {};
+    var rowFill = (mktIdx%2===0) ? ROW_FILL_A : ROW_FILL_B;
+
+    allBrands.forEach(function(brand){
+      var vd = nbvMkt[brand]; if(!vd) return;
+      var rd = msoMkt[brand] || {};
+      var monthly_val = vd.monthly_val || [];
+      var monthly_un  = vd.monthly_un  || [];
+      var monthly_shr = rd.monthly     || [];
+
+      /* Períodos: FYTD25, FYTD26, depois 9 meses */
+      var periods = [
+        {label:'FYTD25', val:(vd.fytd25_val||0)*1000000, un:(vd.fytd25_un||0)*1000, shr:(rd.fytd25||null), isFytd:true},
+        {label:'FYTD26', val:(vd.fytd26_val||0)*1000000, un:(vd.fytd26_un||0)*1000, shr:(rd.fytd26||null), isFytd:true}
+      ];
+      for(var mi=0;mi<9;mi++){
+        var mv = monthly_val[mi]; var mu = monthly_un[mi]; var ms = monthly_shr[mi];
+        periods.push({
+          label: MONTH_DATES[mi],
+          val:   mv!=null ? mv*1000000 : null,
+          un:    mu!=null ? mu*1000    : null,
+          shr:   ms!=null ? ms         : null,
+          isFytd:false
+        });
+      }
+
+      periods.forEach(function(p){
+        var avgPrice = (p.un && p.un>0 && p.val!=null) ? p.val/p.un : null;
+        var fnt = p.isFytd ? FYTD_FONT : BASE_FONT;
+        var row = ws.getRow(dataRow);
+        /* Setar valores diretamente (mais rápido que getCell por getCell) */
+        row.values = [
+          mkt,
+          CAT,
+          brand,
+          null,
+          p.label,
+          p.val    != null ? +p.val.toFixed(4)    : null,
+          null, /* Wghtd Dist Reach — não disponível */
+          avgPrice != null ? +avgPrice.toFixed(6)  : null,
+          p.shr    != null ? +p.shr.toFixed(4)     : null,
+          null, /* TDP — não disponível */
+          p.un     != null ? +p.un.toFixed(4)      : null,
+          null  /* ROS — não disponível */
+        ];
+        /* Aplicar formatação mínima nas colunas importantes */
+        row.getCell(1).font = fnt;
+        row.getCell(3).font = fnt;
+        row.getCell(5).font = BASE_FONT;
+        row.getCell(6).font = NUM_FONT;
+        row.getCell(9).font = NUM_FONT;
+        row.getCell(11).font = NUM_FONT;
+        row.eachCell(function(c3){ c3.fill = rowFill; });
+        dataRow++;
+      });
+    });
+  });
+
+  /* AutoFilter e nota de rodapé */
+  ws.autoFilter = {from:{row:9,column:1}, to:{row:dataRow-1,column:12}};
+  var footRow = dataRow+1;
+  var fc = ws.getCell(footRow,1);
+  fc.value = 'Fonte: NielsenIQ Retail Measurement · PS · GBL · SC JOHNSON · BR · PEST CONTROL'
+           + ' · Gerado via Dashboard Farma Sul · '+new Date().toLocaleString('pt-BR');
+  fc.font = {name:'Calibri',size:8,italic:true,color:{argb:'FF888888'}};
+}
+
+/* ── 12. Orquestrar a geração ── */
+function buildExcel(state, btn){
+  try{
+    var wb=new ExcelJS.Workbook();
+    wb.creator='Dashboard Farma Sul — Giovano Anjos';
+    wb.created=new Date(); wb.modified=new Date();
+
+    sheetCapa(wb,state);
+    sheetBase(wb,state);
+    sheetEvolucao(wb,state);
+    sheetFYTD(wb,state);
+    sheetMemCalculo(wb,state);
+    sheetTabela1(wb,state);
+
+    var modeSuffix = (state.mode==='un') ? '_Unidades' : '_Valor';
+    var mktSlug = state.market.replace(/[^a-zA-Z0-9]/g,'_').replace(/_+/g,'_');
+    var fname = 'Nielsen_FarmaSul_FY26_'+mktSlug+modeSuffix+'.xlsx';
+
+    wb.xlsx.writeBuffer().then(function(buf){
+      var blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download=fname;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast('✓ Exportação concluída com sucesso.', 'success');
+      if(btn){ btn.disabled=false; btn.innerHTML='&#128229; Exportar Nielsen Excel'; }
+    }).catch(function(e){
+      showToast('❌ Erro na geração do arquivo: '+e.message,'error');
+      if(btn){ btn.disabled=false; btn.innerHTML='&#128229; Exportar Nielsen Excel'; }
+    });
+  } catch(e){
+    showToast('❌ Erro: '+e.message,'error');
+    console.error('NielsenExport error:',e);
+    if(btn){ btn.disabled=false; btn.innerHTML='&#128229; Exportar Nielsen Excel'; }
+  }
+}
+
+/* ── 13. Init ── */
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', injectBtn);
+} else {
+  injectBtn();
+}
+
 })();
 </script>
 
