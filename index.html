@@ -2457,21 +2457,55 @@ function toggleCmp(pfx, btn) {
 
 <script>
 /* ── Controle de acesso ── */
-var _loginRole = null; /* 'full' | 'scj' */
+var _loginRole     = null; /* 'full' | 'scj' */
+var _loginAttempts = 0;
+var _loginBlocked  = false;
 var _loginUser  = null; /* nome do usuário logado */
 var _obDone     = false; /* OB init flag (main block) */
 var _obInit     = false; /* OB init lock (main block) */
 
 var _LOGIN_USERS = {
   'Giovano': { s1:'2025', s2:'2026', role:'full' },
-  'SCJ':     { s1:'123',  s2:'123',  role:'scj'  }
+  'SCJ':     { s1:'123', s2:'123', role:'scj' }
 };
 
 function loginClearError(){
   document.getElementById('login-error').style.display='none';
 }
 
+
+/* === SEGURANCA: verbas modal === */
+function openVerbasPwd(){
+  var m=document.getElementById('verbas-pwd-modal');
+  if(!m)return;
+  m.style.display='flex';
+  var i=document.getElementById('verbas-pwd-input');
+  if(i){i.value='';setTimeout(function(){i.focus();},100);}
+  var e=document.getElementById('verbas-pwd-error');
+  if(e)e.textContent='';
+}
+function checkVerbasPwd(){
+  var i=document.getElementById('verbas-pwd-input');
+  var e=document.getElementById('verbas-pwd-error');
+  if(!i)return;
+  var _vp=['S','C','J','2','0','2','6'].join('');
+  if(i.value===_vp){
+    document.getElementById('verbas-locked').style.display='none';
+    document.getElementById('sellin-verbas-wrap').style.display='grid';
+    var m=document.getElementById('verbas-pwd-modal');
+    if(m)m.style.display='none';
+    if(typeof renderSellinVerbas==='function')renderSellinVerbas();
+  } else {
+    if(e)e.textContent='Senha incorreta.';
+    i.value='';i.focus();
+  }
+}
 function doLogin(){
+  if(_loginBlocked){
+    var _be=document.getElementById('login-error');
+    if(_be){_be.style.display='block';_be.textContent='Muitas tentativas. Aguarde 30 segundos.';}
+    return;
+  }
   var u  = document.getElementById('login-user').value;
   var s1 = document.getElementById('login-s1').value;
   var s2 = document.getElementById('login-s2').value;
@@ -2479,6 +2513,11 @@ function doLogin(){
   if(!cfg || s1!==cfg.s1 || s2!==cfg.s2){
     var el = document.getElementById('login-error');
     el.style.display='block';
+    _loginAttempts++;
+    if(_loginAttempts>=5){
+      _loginBlocked=true;
+      setTimeout(function(){_loginBlocked=false;_loginAttempts=0;},30000);
+    }
     document.getElementById('login-s1').style.borderColor='rgba(239,68,68,0.6)';
     document.getElementById('login-s2').style.borderColor='rgba(239,68,68,0.6)';
     return;
@@ -2499,16 +2538,17 @@ function doLogin(){
     /* SCJ: ocultar barra de filtros (fica vazia e deixa área em branco) */
     var filtersBar = document.querySelector('.filters');
     if(filtersBar) filtersBar.style.display='none';
-    /* Ocultar botões de edição */
-    ['btn-update-data','btn-save-dashboard'].forEach(function(id){
-      var el=document.getElementById(id);
-      if(el) el.style.display='none';
-    });
+    /* Botões de atualizar/salvar: visíveis para SCJ */
     /* SCJ: título personalizado e badge oculto */
     var titleEl = document.getElementById('dash-main-title');
     if(titleEl) titleEl.textContent = 'Analise BR-Farma';
     var badgeEl = document.getElementById('dash-header-badge');
     if(badgeEl) badgeEl.style.display = 'none';
+    /* SCJ: ocultar KPIs de marca concorrente no topo do Nielsen */
+    ['mso-kpis','mso-headline'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el) el.style.display='none';
+    });
     /* SCJ: ocultar cards restritos na aba Cobertura */
     ['cob-card-top-cidades','cob-card-evol-mensal','cob-card-posit-comp',
      'cob-card-intocaveis','cob-card-white-space','cob-card-universe'].forEach(function(id){
@@ -2622,7 +2662,7 @@ function showAccessDenied(){
       <h1 id="dash-main-title">Dashboard Sell Out — Farma Sul</h1>
       <div class="header-sub">Repelentes &amp; Inseticidas · Unidades &amp; Receita · 2024–2026</div>
     </div>
-    <span id="dash-update-badge" style="font-size:10px;font-weight:600;color:#34d399;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:4px;padding:3px 8px;white-space:nowrap;align-self:flex-start;">✓ Atualizado 25/05/2026</span>
+    <span id="dash-update-badge" style="font-size:10px;font-weight:600;color:#34d399;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:4px;padding:3px 8px;white-space:nowrap;align-self:flex-start;">✓ Atualizado 02/06/2026</span>
   </div>
 
   <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
@@ -2677,7 +2717,7 @@ function showAccessDenied(){
   <!-- GRÁFICO GERAL -->
   <div class="card full" style="margin-bottom:14px;">
     <div class="card-header">
-      <div><div class="card-title">Meta BI × Real Acumulado — por Cliente</div><div class="card-sub">Caixas · FY26 acumulado Jul–Abr</div></div>
+      <div><div class="card-title">Meta BI × Real Acumulado — por Cliente</div><div class="card-sub">Caixas · FY26 acumulado Jul–Jun</div></div>
       <div class="toggle-group">
         <button class="tgl active blue" onclick="setSellinChartMode('abs',this)">Caixas</button>
         <button class="tgl" onclick="setSellinChartMode('pct',this)">% vs Meta</button>
@@ -14789,7 +14829,7 @@ const DN_INTOC_DIST = {
       <div style="font-size:48px;margin-bottom:16px;">🔒</div>
       <div style="font-size:16px;font-weight:700;color:#fbbf24;margin-bottom:8px;">Conteúdo Protegido</div>
       <div style="font-size:13px;color:#94A3B8;margin-bottom:24px;">Esta seção contém informações confidenciais sobre verbas e investimentos.</div>
-      <button onclick="alert('Botão clicado!'); var senha = prompt('Digite a senha:'); if(senha === 'SCJ2026'){ document.getElementById('verbas-locked').style.display='none'; document.getElementById('sellin-verbas-wrap').style.display='grid'; if(typeof renderSellinVerbas === 'function') renderSellinVerbas(); } else if(senha) { alert('Senha incorreta!'); }" style="padding:12px 32px;border-radius:8px;border:none;background:#fbbf24;color:#0a1218;cursor:pointer;font-weight:700;font-family:inherit;font-size:14px;">🔓 Desbloquear</button>
+      <button onclick="openVerbasPwd()" style="padding:12px 32px;border-radius:8px;border:none;background:#fbbf24;color:#0a1218;cursor:pointer;font-weight:700;font-family:inherit;font-size:14px;">🔓 Desbloquear</button>
     </div>
     <!-- Conteúdo real (oculto) -->
     <div id="sellin-verbas-wrap" style="display:none;grid-template-columns:1fr 1fr;gap:14px;"></div>
@@ -15980,7 +16020,7 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
     <div>
       <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;color:#2dd4bf;margin-bottom:4px;">EVOLUÇÃO MENSAL DE POSITIVAÇÃO</div>
       <div class="card-title">PDVs Ativos por Mês — GAM + Gaúcha</div>
-      <div class="card-sub">Comparativo 2024 × 2025 × 2026 · Jan–<strong style="color:#2dd4bf;">Abr/2026</strong> confirmado · Sazonalidade repelentes</div>
+      <div class="card-sub">Comparativo 2024 × 2025 × 2026 · Jan–<strong style="color:#2dd4bf;">Mai/2026</strong> confirmado · Sazonalidade repelentes</div>
     </div>
     <div class="toggle-group">
       <button class="tgl active blue" onclick="setMensalPosView('combinado',this)">Combinado</button>
@@ -16747,6 +16787,187 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("saojoao",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("saojoao",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
 
+<!-- ═══ CARD SELL OUT POR MARCA · SÃO JOÃO ═══ -->
+<div class="card full" id="card-sj-marca" style="margin-bottom:16px;">
+  <div class="card-header">
+    <div>
+      <div class="card-title">🏷️ SELL OUT POR MARCA — São João</div>
+      <div class="card-sub" id="sj-marca-sub">FY25 vs FY26 · Faturamento e Volume</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div class="toggle-group" id="sj-marca-filter">
+        <button class="tgl active blue" onclick="sjMarcaSet('total',this)">TOTAL</button>
+        <button class="tgl" onclick="sjMarcaSet('off',this)">OFF!</button>
+        <button class="tgl" onclick="sjMarcaSet('exposis',this)">EXPOSIS</button>
+        <button class="tgl" onclick="sjMarcaSet('raid',this)">RAID</button>
+      </div>
+      <div style="display:flex;gap:14px;align-items:center;">
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span>
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span>
+        <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span>
+      </div>
+    </div>
+  </div>
+  <div id="sj-marca-kpi" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">💰 Faturamento Mensal (R$)</div>
+      <div style="position:relative;height:240px;"><canvas id="sj-marca-r"></canvas></div>
+    </div>
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">📦 Unidades Mensais</div>
+      <div style="position:relative;height:240px;"><canvas id="sj-marca-v"></canvas></div>
+    </div>
+  </div>
+  <div id="sj-marca-diag" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+</div>
+<script>
+(function(){
+  var LBL=['Jul','Ago','Set','Out','Nov','Dez','Jan','Fev','Mar','Abr','Mai','Jun'];
+  /* Dados FY25 (Jul/24-Jun/25) e FY26 (Jul/25-Jun/26) por marca */
+  var _D={
+    off:{
+      r25:[47335,111340,257140,414402,645952,798688,902387,650019,429555,183544,70155,9414],
+      v25:[2027,4530,11073,18202,30093,34865,42460,31066,18445,7190,2332,312],
+      r26:[10310,15580,75964,340150,654599,857325,629184,460723,318911,184554,22898,null],
+      v26:[344,509,2754,12697,27844,30992,23197,18078,12657,6053,910,null]
+    },
+    exposis:{
+      r25:[29102,44767,106148,167906,206491,224614,217697,225091,207141,167519,92990,15328],
+      v25:[490,722,1753,2693,3083,3295,3173,3249,2995,2420,1329,214],
+      r26:[19754,36794,80335,145569,223278,354188,291029,236056,208994,164996,35890,null],
+      v26:[268,497,1122,2050,3062,5176,4224,3555,3086,2368,610,null]
+    },
+    raid:{
+      r25:[2457,2969,10071,45739,87316,108429,118403,87111,87935,61258,41747,6215],
+      v25:[135,168,535,2057,3800,4874,5240,3749,3722,2501,1639,243],
+      r26:[2962,4984,12445,43579,81762,158105,99478,49052,30063,19026,3696,null],
+      v26:[122,199,490,1753,3648,7063,4448,2173,1302,846,171,null]
+    }
+  };
+  /* Total = soma das 3 marcas */
+  function _sum(a,b,c){return a.map(function(v,i){var x=(v||0)+(b[i]||0)+(c[i]||0);return x===0?null:x;});}
+  _D.total={
+    r25:_sum(_D.off.r25,_D.exposis.r25,_D.raid.r25),
+    v25:_sum(_D.off.v25,_D.exposis.v25,_D.raid.v25),
+    r26:_D.off.r26.map(function(v,i){var s=(v||0)+(_D.exposis.r26[i]||0)+(_D.raid.r26[i]||0);return v===null&&_D.exposis.r26[i]===null&&_D.raid.r26[i]===null?null:s;}),
+    v26:_D.off.v26.map(function(v,i){var s=(v||0)+(_D.exposis.v26[i]||0)+(_D.raid.v26[i]||0);return v===null&&_D.exposis.v26[i]===null&&_D.raid.v26[i]===null?null:s;})
+  };
+
+  var _marca='total';
+  var _charts={};
+
+  function _fmtR(v){if(!v)return'R$ 0';if(v>=1e6)return'R$ '+(v/1e6).toFixed(1)+'M';if(v>=1e3)return'R$ '+(v/1e3).toFixed(0)+'K';return'R$ '+v.toFixed(0);}
+  function _fmtU(v){if(!v)return'0 un';if(v>=1e6)return(v/1e6).toFixed(1)+'M un';if(v>=1e3)return(v/1e3).toFixed(0)+'K un';return v.toFixed(0)+' un';}
+  function _fmtAx(v,isR){if(isR){if(v>=1e6)return'R$'+(v/1e6).toFixed(0)+'M';if(v>=1e3)return'R$'+(v/1e3).toFixed(0)+'K';return'R$'+v;}if(v>=1e6)return(v/1e6).toFixed(1)+'M un';if(v>=1e3)return(v/1e3).toFixed(0)+'K un';return v+' un';}
+  function _pct(a,b){return a>0?((b-a)/a*100).toFixed(1):'—';}
+  function _sum1(arr){return arr.reduce(function(s,v){return s+(v||0);},0);}
+
+  function _proj(fy26){
+    var last=-1;
+    fy26.forEach(function(v,i){if(v!==null)last=i;});
+    if(last<0||last>=11)return null;
+    var avg25=_D[_marca].r25.slice(0,last+1).reduce(function(s,v){return s+v;},0)/(last+1);
+    var avg26=fy26.slice(0,last+1).reduce(function(s,v){return s+(v||0);},0)/(last+1);
+    var ratio=avg25>0?avg26/avg25:1;
+    return fy26.map(function(v,i){return v!==null?v:Math.round(_D[_marca].r25[i]*ratio);});
+  }
+
+  function _mkChart(id,fy25,fy26,isR){
+    var ctx=document.getElementById(id);if(!ctx)return null;
+    if(_charts[id]){try{_charts[id].destroy();}catch(e){}}
+    var proj=_proj(fy26);
+    var last26=-1;fy26.forEach(function(v,i){if(v!==null)last26=i;});
+    var d26full=fy26.slice(0,last26+1);
+    var d26proj=proj?proj.map(function(v,i){return i>last26?v:null;}):null;
+    var cfg={type:'line',data:{labels:LBL,datasets:[
+      {label:'FY25',data:fy25,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.13)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#3b82f6',fill:true,tension:0.35},
+      {label:'FY26',data:d26full,borderColor:'#34d399',backgroundColor:'rgba(52,211,153,0.15)',borderWidth:2.5,pointRadius:4,pointBackgroundColor:'#34d399',fill:true,tension:0.35},
+      d26proj?{label:'Proj.',data:d26proj,borderColor:'#64748B',borderWidth:1.5,borderDash:[5,4],pointRadius:3,pointBackgroundColor:'#64748B',fill:false,tension:0.35}:null
+    ].filter(Boolean)},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(isR?_fmtR(c.parsed.y):_fmtU(c.parsed.y));}}}},scales:{x:{ticks:{color:'#475569',font:{size:10}},grid:{color:'rgba(148,163,184,0.1)'}},y:{ticks:{color:'#475569',font:{size:9},callback:function(v){return _fmtAx(v,isR);}},grid:{color:'rgba(148,163,184,0.12)'}}}}};
+    _charts[id]=new Chart(ctx,cfg);
+    return _charts[id];
+  }
+
+  function _kpi(lbl,v25,v26,isR){
+    var pct=parseFloat(_pct(v25,v26));
+    var ok=pct>=0;
+    var arrow=ok?'▲':'▼';
+    var col=ok?'#22c55e':'#ef4444';
+    return '<div class="kpi-cell" style="background:#E4EAF2;border-radius:10px;padding:12px 14px;border:1px solid rgba(94,153,208,0.35);box-shadow:0 1px 4px rgba(10,40,80,0.07);">'
+      +'<div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#64748B;margin-bottom:4px;">'+lbl+'</div>'
+      +'<div style="font-size:10px;color:#64748B;margin-bottom:2px;">FY25: '+(isR?_fmtR(v25):_fmtU(v25))+'</div>'
+      +'<div style="font-size:17px;font-weight:800;color:#1D6FA8;line-height:1.1;">'+(isR?_fmtR(v26):_fmtU(v26))
+      +(v25>0?' <span style="font-size:12px;color:'+col+';">'+arrow+' '+Math.abs(pct)+'%</span>':'')+'</div>'
+      +'</div>';
+  }
+
+  function _diag(d,marcaNm){
+    var totR25=_sum1(d.r25),totR26=_sum1(d.r26.filter(function(v){return v!==null;}));
+    var totV25=_sum1(d.v25),totV26=_sum1(d.v26.filter(function(v){return v!==null;}));
+    var mesCount=d.r26.filter(function(v){return v!==null;}).length;
+    var pr=parseFloat(_pct(totR25*mesCount/12,totR26));
+    var pv=parseFloat(_pct(totV25*mesCount/12,totV26));
+    var best=-1,bestV=0;d.r26.forEach(function(v,i){if(v&&v>bestV){bestV=v;best=i;}});
+    var cr=pr>=0?'#22c55e':'#ef4444',cv=pv>=0?'#22c55e':'#ef4444';
+    var ar=pr>=0?'▲':'▼',av=pv>=0?'▲':'▼';
+    var txt='<b>📊 DIAGNÓSTICO ACUMULADO FY25 vs FY26 — '+marcaNm.toUpperCase()+'</b><br>'
+      +'💰 Fat. FY26 YTD ('+mesCount+' meses): <b>'+_fmtR(totR26)+'</b> vs FY25 '+_fmtR(totR25*mesCount/12)
+      +' — <span style="color:'+cr+';">'+ar+' '+Math.abs(pr)+'%</span><br>'
+      +'📦 Un. FY26 YTD: <b>'+_fmtU(totV26)+'</b> vs FY25 '+_fmtU(totV25*mesCount/12)
+      +' — <span style="color:'+cv+';">'+av+' '+Math.abs(pv)+'%</span><br>'
+      +(best>=0?'📅 Melhor mês FY26: <b>'+LBL[best]+'</b> com <b>'+_fmtR(bestV)+'</b><br>':'')
+      +'<span style="color:#64748B;font-size:10px;">FY25: Jul/24–Jun/25 · FY26: Jul/25–Jun/26 ('+mesCount+' meses com dados)</span>';
+    return txt;
+  }
+
+  function _render(m, _retries){
+    /* Aguardar visibilidade antes de renderizar (Chart.js precisa de canvas visível) */
+    var card=document.getElementById('card-sj-marca');
+    if(!card||card.offsetParent===null||typeof Chart==='undefined'){
+      if((_retries||0)<40){setTimeout(function(){_render(m,(_retries||0)+1);},150);}
+      return;
+    }
+    _marca=m||_marca;
+    var d=_D[_marca];
+    var nms={total:'Total HB (OFF+EXPOSIS+RAID)',off:'OFF!',exposis:'EXPOSIS',raid:'RAID'};
+    var nm=nms[_marca];
+    document.getElementById('sj-marca-sub').textContent='FY25 vs FY26 · '+nm+' · São João';
+    /* KPIs */
+    var totR25=_sum1(d.r25),totV25=_sum1(d.v25);
+    var totR26=_sum1(d.r26.filter(function(v){return v!==null;}));
+    var totV26=_sum1(d.v26.filter(function(v){return v!==null;}));
+    var mesCount=d.r26.filter(function(v){return v!==null;}).length;
+    var kpi1='<div class="kpi-cell" style="background:#E4EAF2;border-radius:10px;padding:12px 14px;border:1px solid rgba(94,153,208,0.35);box-shadow:0 1px 4px rgba(10,40,80,0.07);">'
+      +'<div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#64748B;margin-bottom:4px;">FAT. FY25 (anual)</div>'
+      +'<div style="font-size:10px;color:#64748B;margin-bottom:2px;">Referência FY25</div>'
+      +'<div style="font-size:17px;font-weight:800;color:#1D6FA8;line-height:1.1;">'+_fmtR(totR25)+'</div>'
+      +'</div>';
+    document.getElementById('sj-marca-kpi').innerHTML=kpi1
+      +_kpi('FAT. FY26 YTD ('+mesCount+' meses)',totR25*mesCount/12,totR26,true)
+      +_kpi('UN. FY26 YTD',totV25*mesCount/12,totV26,false);
+    /* Gráficos */
+    _mkChart('sj-marca-r',d.r25,d.r26,true);
+    _mkChart('sj-marca-v',d.v25,d.v26,false);
+    /* Diagnóstico */
+    document.getElementById('sj-marca-diag').innerHTML=_diag(d,nm);
+  }
+
+  window.sjMarcaSet=function(m,btn){
+    _marca=m;
+    document.querySelectorAll('#sj-marca-filter .tgl').forEach(function(b){b.classList.remove('active','blue');});
+    if(btn){btn.classList.add('active','blue');}
+    _render(m);
+  };
+
+  /* Expor render — aguarda visibilidade automaticamente via retry em _render */
+  window.sjMarcaRender=function(){ _render(_marca,0); };
+
+  /* Render inicial: começa retrying após 400ms */
+  setTimeout(function(){_render('total',0);},400);
+})();
+</script>
+
   <div class="cards-row">
       <div class="card">
         <div class="card-header">
@@ -17005,6 +17226,32 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
   </div>
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("nissei",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("nissei",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
+<!-- CARD SO MARCA: nissei -->
+<div class="card full" id="card-so-marca-nissei" style="margin-bottom:16px;">
+  <div class="card-header">
+    <div>
+      <div class="card-title">&#127991; SELL OUT POR MARCA &mdash; Nissei</div>
+      <div class="card-sub" id="so-marca-sub-nissei">FY25 vs FY26 &middot; HB Total &middot; Nissei</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div class="toggle-group" id="so-marca-filter-nissei"><button class="tgl active blue" onclick="soMarcaSetMode('nissei','total',this)">Total</button><button class="tgl" onclick="soMarcaSetMode('nissei','andre',this)">Andre</button><button class="tgl" onclick="soMarcaSetMode('nissei','edmar',this)">Edmar</button></div>
+      <div style="display:flex;gap:14px;align-items:center;"><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span><span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span></div>
+    </div>
+  </div>
+  <div id="so-marca-kpi-nissei" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128176; Faturamento Mensal (R$)</div>
+      <div style="position:relative;height:240px;"><canvas id="so-mr-nissei"></canvas></div>
+    </div>
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128230; Unidades Mensais</div>
+      <div style="position:relative;height:240px;"><canvas id="so-mv-nissei"></canvas></div>
+    </div>
+  </div>
+  <div id="so-marca-diag-nissei" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+</div>
+
   <div class="cards-row">
     <div class="card">
       <div class="card-header">
@@ -17261,6 +17508,32 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
   </div>
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("clamed",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("clamed",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
+<!-- CARD SO MARCA: clamed -->
+<div class="card full" id="card-so-marca-clamed" style="margin-bottom:16px;">
+  <div class="card-header">
+    <div>
+      <div class="card-title">&#127991; SELL OUT POR MARCA &mdash; Clamed</div>
+      <div class="card-sub" id="so-marca-sub-clamed">FY25 vs FY26 &middot; HB Total &middot; Clamed</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      
+      <div style="display:flex;gap:14px;align-items:center;"><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span><span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span></div>
+    </div>
+  </div>
+  <div id="so-marca-kpi-clamed" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128176; Faturamento Mensal (R$)</div>
+      <div style="position:relative;height:240px;"><canvas id="so-mr-clamed"></canvas></div>
+    </div>
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128230; Unidades Mensais</div>
+      <div style="position:relative;height:240px;"><canvas id="so-mv-clamed"></canvas></div>
+    </div>
+  </div>
+  <div id="so-marca-diag-clamed" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+</div>
+
   <div class="cards-row">
     <div class="card">
       <div class="card-header">
@@ -17460,6 +17733,32 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
   </div>
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("panvel",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("panvel",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
+<!-- CARD SO MARCA: panvel -->
+<div class="card full" id="card-so-marca-panvel" style="margin-bottom:16px;">
+  <div class="card-header">
+    <div>
+      <div class="card-title">&#127991; SELL OUT POR MARCA &mdash; Panvel</div>
+      <div class="card-sub" id="so-marca-sub-panvel">FY25 vs FY26 &middot; HB Total &middot; Panvel</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      
+      <div style="display:flex;gap:14px;align-items:center;"><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span><span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span></div>
+    </div>
+  </div>
+  <div id="so-marca-kpi-panvel" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128176; Faturamento Mensal (R$)</div>
+      <div style="position:relative;height:240px;"><canvas id="so-mr-panvel"></canvas></div>
+    </div>
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128230; Unidades Mensais</div>
+      <div style="position:relative;height:240px;"><canvas id="so-mv-panvel"></canvas></div>
+    </div>
+  </div>
+  <div id="so-marca-diag-panvel" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+</div>
+
   <div class="cards-row">
     <div class="card">
       <div class="card-header">
@@ -17646,6 +17945,32 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
   </div>
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("ddgam",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("ddgam",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
+<!-- CARD SO MARCA: ddgam -->
+<div class="card full" id="card-so-marca-ddgam" style="margin-bottom:16px;">
+  <div class="card-header">
+    <div>
+      <div class="card-title">&#127991; SELL OUT POR MARCA &mdash; DD-GAM</div>
+      <div class="card-sub" id="so-marca-sub-ddgam">FY25 vs FY26 &middot; HB Total &middot; DD-GAM</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      
+      <div style="display:flex;gap:14px;align-items:center;"><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span><span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span></div>
+    </div>
+  </div>
+  <div id="so-marca-kpi-ddgam" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128176; Faturamento Mensal (R$)</div>
+      <div style="position:relative;height:240px;"><canvas id="so-mr-ddgam"></canvas></div>
+    </div>
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128230; Unidades Mensais</div>
+      <div style="position:relative;height:240px;"><canvas id="so-mv-ddgam"></canvas></div>
+    </div>
+  </div>
+  <div id="so-marca-diag-ddgam" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+</div>
+
   <div class="cards-row">
     <div class="card">
       <div class="card-header">
@@ -17839,6 +18164,32 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
   </div>
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("ddgaucha",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("ddgaucha",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
+<!-- CARD SO MARCA: ddgaucha -->
+<div class="card full" id="card-so-marca-ddgaucha" style="margin-bottom:16px;">
+  <div class="card-header">
+    <div>
+      <div class="card-title">&#127991; SELL OUT POR MARCA &mdash; DD-Gaúcha</div>
+      <div class="card-sub" id="so-marca-sub-ddgaucha">FY25 vs FY26 &middot; HB Total &middot; DD-Gaúcha</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      
+      <div style="display:flex;gap:14px;align-items:center;"><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span><span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span></div>
+    </div>
+  </div>
+  <div id="so-marca-kpi-ddgaucha" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128176; Faturamento Mensal (R$)</div>
+      <div style="position:relative;height:240px;"><canvas id="so-mr-ddgaucha"></canvas></div>
+    </div>
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128230; Unidades Mensais</div>
+      <div style="position:relative;height:240px;"><canvas id="so-mv-ddgaucha"></canvas></div>
+    </div>
+  </div>
+  <div id="so-marca-diag-ddgaucha" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+</div>
+
   <div class="cards-row">
     <div class="card">
       <div class="card-header">
@@ -18015,6 +18366,59 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
   </div>
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("ddriomed",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("ddriomed",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
+<!-- CARD SO MARCA: ddriomed -->
+<div class="card full" id="card-so-marca-ddriomed" style="margin-bottom:16px;">
+  <div class="card-header">
+    <div>
+      <div class="card-title">&#127991; SELL OUT POR MARCA &mdash; DD-Riomed</div>
+      <div class="card-sub" id="so-marca-sub-ddriomed">FY25 vs FY26 &middot; HB Total &middot; DD-Riomed</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      
+      <div style="display:flex;gap:14px;align-items:center;"><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span><span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span></div>
+    </div>
+  </div>
+  <div id="so-marca-kpi-ddriomed" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128176; Faturamento Mensal (R$)</div>
+      <div style="position:relative;height:240px;"><canvas id="so-mr-ddriomed"></canvas></div>
+    </div>
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128230; Unidades Mensais</div>
+      <div style="position:relative;height:240px;"><canvas id="so-mv-ddriomed"></canvas></div>
+    </div>
+  </div>
+  <div id="so-marca-diag-ddriomed" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+</div>
+<script>
+/* === SELL OUT POR MARCA — TODOS OS CLIENTES (exceto SJ) === */
+(function(){
+  var LBL=['Jul','Ago','Set','Out','Nov','Dez','Jan','Fev','Mar','Abr','Mai','Jun'];
+  var _charts={};
+  var _modes={nissei:'total',clamed:'total',panvel:'total',ddgam:'total',ddgaucha:'total',ddriomed:'total'};
+  function _fy(a24,a25,a26){var f25=[],f26=[];for(var i=6;i<12;i++)f25.push((a24&&a24[i]!=null)?+a24[i]:0);for(var i=0;i<6;i++)f25.push((a25&&a25[i]!=null)?+a25[i]:0);for(var i=6;i<12;i++)f26.push((a25&&a25[i]!=null)?+a25[i]:0);for(var i=0;i<6;i++)f26.push((a26&&a26[i]!=null)?+a26[i]:null);return{fy25:f25,fy26:f26};}
+  function _fmtR(v){if(!v)return'R$ 0';if(v>=1e6)return'R$ '+(v/1e6).toFixed(1)+'M';if(v>=1e3)return'R$ '+(v/1e3).toFixed(0)+'K';return'R$ '+v.toFixed(0);}
+  function _fmtU(v){if(!v)return'0 un';if(v>=1e6)return(v/1e6).toFixed(1)+'M un';if(v>=1e3)return(v/1e3).toFixed(0)+'K un';return v.toFixed(0)+' un';}
+  function _fmtAx(v,isR){if(isR){if(v>=1e6)return'R$'+(v/1e6).toFixed(0)+'M';if(v>=1e3)return'R$'+(v/1e3).toFixed(0)+'K';return'R$'+v;}if(v>=1e6)return(v/1e6).toFixed(1)+'M un';if(v>=1e3)return(v/1e3).toFixed(0)+'K un';return v+' un';}
+  function _pct(a,b){return a>0?((b-a)/a*100).toFixed(1):'--';}
+  function _sum1(arr){return arr.reduce(function(s,v){return s+(v||0);},0);}
+  function _getData(cid,mode){mode=mode||'total';try{
+    if(cid==='nissei'&&typeof NS!=='undefined'){var ns=NS[mode]||NS.total;return{r:_fy(ns.rec['2024'],ns.rec['2025'],ns.rec['2026']),v:_fy(ns.vol['2024'],ns.vol['2025'],ns.vol['2026'])};}
+    if(cid==='clamed'&&typeof CL_REC_2024!=='undefined')return{r:_fy(CL_REC_2024,CL_REC_2025,CL_REC_2026),v:_fy(CL_VOL_2024,CL_VOL_2025,CL_VOL_2026)};
+    if(cid==='panvel'&&typeof PV_REC!=='undefined')return{r:_fy(PV_REC['2024'],PV_REC['2025'],PV_REC['2026']),v:_fy(PV_VOL['2024'],PV_VOL['2025'],PV_VOL['2026'])};
+    if(cid==='ddgam'&&typeof GAM_REC!=='undefined')return{r:_fy(GAM_REC['2024'],GAM_REC['2025'],GAM_REC['2026']),v:_fy(GAM_VOL['2024'],GAM_VOL['2025'],GAM_VOL['2026'])};
+    if(cid==='ddgaucha'&&typeof GAUCHA_REC!=='undefined')return{r:_fy(GAUCHA_REC['2024'],GAUCHA_REC['2025'],GAUCHA_REC['2026']),v:_fy(GAUCHA_VOL['2024'],GAUCHA_VOL['2025'],GAUCHA_VOL['2026'])};
+    if(cid==='ddriomed'&&typeof RIOMED_REC_2024!=='undefined')return{r:_fy(RIOMED_REC_2024,RIOMED_REC_2025,RIOMED_REC_2026),v:_fy(RIOMED_VOL_2024,RIOMED_VOL_2025,RIOMED_VOL_2026)};
+  }catch(e){}return null;}
+  function _mkChart(id,fy25,fy26,isR){var ctx=document.getElementById(id);if(!ctx)return;if(_charts[id]){try{_charts[id].destroy();}catch(e){}}var last26=-1;fy26.forEach(function(v,i){if(v!==null)last26=i;});var d26=fy26.slice(0,last26+1);var proj=null;if(last26>=0&&last26<11){var avg25=fy25.slice(0,last26+1).reduce(function(s,v){return s+v;},0)/(last26+1);var avg26=d26.reduce(function(s,v){return s+(v||0);},0)/(last26+1);var ratio=avg25>0?avg26/avg25:1;proj=fy26.map(function(v,i){return v!==null?null:Math.round(fy25[i]*ratio);});}var ds=[{label:'FY25',data:fy25,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.13)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#3b82f6',fill:true,tension:0.35},{label:'FY26',data:d26,borderColor:'#34d399',backgroundColor:'rgba(52,211,153,0.15)',borderWidth:2.5,pointRadius:4,pointBackgroundColor:'#34d399',fill:true,tension:0.35}];if(proj)ds.push({label:'Proj.',data:proj,borderColor:'#64748B',borderWidth:1.5,borderDash:[5,4],pointRadius:3,pointBackgroundColor:'#64748B',fill:false,tension:0.35});var cfg={type:'line',data:{labels:LBL,datasets:ds},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(isR?_fmtR(c.parsed.y):_fmtU(c.parsed.y));}}}},scales:{x:{ticks:{color:'#475569',font:{size:10}},grid:{color:'rgba(148,163,184,0.1)'}},y:{ticks:{color:'#475569',font:{size:9},callback:function(v){return _fmtAx(v,isR);}},grid:{color:'rgba(148,163,184,0.12)'}}}}};_charts[id]=new Chart(ctx,cfg);}
+  function _kpiHtml(lbl,v25,v26,isR){var pct=parseFloat(_pct(v25,v26));var ok=pct>=0;var ar=ok?'▲':'▼';var col=ok?'#22c55e':'#ef4444';return'<div class="kpi-cell" style="background:#E4EAF2;border-radius:10px;padding:12px 14px;border:1px solid rgba(94,153,208,0.35);box-shadow:0 1px 4px rgba(10,40,80,0.07);"><div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#64748B;margin-bottom:4px;">'+lbl+'</div><div style="font-size:10px;color:#64748B;margin-bottom:2px;">FY25: '+(isR?_fmtR(v25):_fmtU(v25))+'</div><div style="font-size:17px;font-weight:800;color:#1D6FA8;line-height:1.1;">'+(isR?_fmtR(v26):_fmtU(v26))+(v25>0?' <span style="font-size:12px;color:'+col+';">'+ar+' '+Math.abs(pct)+'%</span>':'')+'</div></div>';}
+  function _renderClient(cid,_r){var card=document.getElementById('card-so-marca-'+cid);if(!card||card.offsetParent===null||typeof Chart==='undefined'){if((_r||0)<40){setTimeout(function(){_renderClient(cid,(_r||0)+1);},150);}return;}var mode=_modes[cid]||'total';var d=_getData(cid,mode);if(!d){setTimeout(function(){_renderClient(cid);},500);return;}var nmMap={nissei:'Nissei',clamed:'Clamed',panvel:'Panvel',ddgam:'DD-GAM',ddgaucha:'DD-Gaúcha',ddriomed:'DD-Riomed'};var modeNm={total:'Total HB',andre:'André (OFF+EXPOSIS)',edmar:'Edmar (RAID+Elét.)'};var nm=nmMap[cid]||cid;var sub=document.getElementById('so-marca-sub-'+cid);if(sub)sub.textContent='FY25 vs FY26 · '+(modeNm[mode]||'Total HB')+' · '+nm;var mesCount=d.r.fy26.filter(function(v){return v!==null;}).length;var totR25=_sum1(d.r.fy25),totR26=_sum1(d.r.fy26.filter(function(v){return v!==null;}));var totV25=_sum1(d.v.fy25),totV26=_sum1(d.v.fy26.filter(function(v){return v!==null;}));var kpiEl=document.getElementById('so-marca-kpi-'+cid);if(kpiEl)kpiEl.innerHTML='<div class="kpi-cell" style="background:#E4EAF2;border-radius:10px;padding:12px 14px;border:1px solid rgba(94,153,208,0.35);box-shadow:0 1px 4px rgba(10,40,80,0.07);"><div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#64748B;margin-bottom:4px;">FAT. FY25 (anual)</div><div style="font-size:17px;font-weight:800;color:#1D6FA8;line-height:1.1;">'+_fmtR(totR25)+'</div></div>'+_kpiHtml('FAT. FY26 YTD ('+mesCount+' meses)',totR25*mesCount/12,totR26,true)+_kpiHtml('UN. FY26 YTD',totV25*mesCount/12,totV26,false);_mkChart('so-mr-'+cid,d.r.fy25,d.r.fy26,true);_mkChart('so-mv-'+cid,d.v.fy25,d.v.fy26,false);var best=-1,bestV=0;d.r.fy26.forEach(function(v,i){if(v&&v>bestV){bestV=v;best=i;}});var pr=parseFloat(_pct(totR25*mesCount/12,totR26));var pv=parseFloat(_pct(totV25*mesCount/12,totV26));var cr=pr>=0?'#22c55e':'#ef4444',cv=pv>=0?'#22c55e':'#ef4444';var ar2=pr>=0?'▲':'▼',av2=pv>=0?'▲':'▼';var diagEl=document.getElementById('so-marca-diag-'+cid);if(diagEl)diagEl.innerHTML='<b>📊 DIAGNÓSTICO ACUMULADO FY25 vs FY26 — '+(modeNm[mode]||'TOTAL HB').toUpperCase()+' — '+nm.toUpperCase()+'</b><br>💰 Fat. FY26 YTD ('+mesCount+' meses): <b>'+_fmtR(totR26)+'</b> vs FY25 '+_fmtR(totR25*mesCount/12)+' — <span style="color:'+cr+';">'+ar2+' '+Math.abs(pr)+'%</span><br>📦 Un. FY26 YTD: <b>'+_fmtU(totV26)+'</b> vs FY25 '+_fmtU(totV25*mesCount/12)+' — <span style="color:'+cv+';">'+av2+' '+Math.abs(pv)+'%</span><br>'+(best>=0?'📅 Melhor mês FY26: <b>'+LBL[best]+'</b> com <b>'+_fmtR(bestV)+'</b><br>':'')+'<span style="color:#64748B;font-size:10px;">FY25: Jul/24–Jun/25 · FY26: Jul/25–Jun/26 ('+mesCount+' meses com dados)</span>';}
+  window._soMarcaRenderClient=function(cid){setTimeout(function(){_renderClient(cid,0);},400);};
+  window.soMarcaSetMode=function(cid,mode,btn){_modes[cid]=mode;document.querySelectorAll('#so-marca-filter-'+cid+' .tgl').forEach(function(b){b.classList.remove('active','blue');});if(btn)btn.classList.add('active','blue');_renderClient(cid);};
+})();
+</script>
+
   <div class="cards-row">
     <div class="card">
       <div class="card-header">
@@ -18988,13 +19392,13 @@ const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov'
 const SJ_UNID = {
   '2024':[43212,53066,36071,34050,19204,11512,8246,11511,19553,28812,43999,49468],
   '2025':[57194,43733,31660,16858,11050,5776,5923,5092,7137,21121,41181,47485],
-  '2026':[36766,33272,24361,18774,null,null,null,null,null,null,null,null],
+  '2026':[36766,33272,24361,18774,11816,null,null,null,null,null,null,null],
 };
 
 const SJ_REC = {
   '2024':[1121377,1593744,1015826,940450,517499,293263,206683,297604,509883,764421,1088977,1288007],
   '2025':[1385119,1090941,864511,534722,338386,145275,138670,147269,236894,628781,1079791,1450071],
-  '2026':[1119195,969122,731574,588859,null,null,null,null,null,null,null,null],
+  '2026':[1119195,969122,731574,588859,285013.83,null,null,null,null,null,null,null],
 };
 
 const SJ_RANK = {
@@ -19067,36 +19471,36 @@ const SJ_LOJAS_SKU = [
 /* ═════════════════════════════════════════════ */
 const NS = {
   total: {
-    vol:{ '2024':[15867,27073,6980,14640,25713,5961,3566,4704,8417,15813,16980,19481], '2025':[11822,13779,9647,6088,4308,2042,2947,3661,5992,8735,18223,26304], '2026':[13253,12543,14655,9724,null,null,null,null,null,null,null,null] },
-    rec:{ '2024':[387279,737438,194592,458282,881746,183813,105919,144058,236598,412613,453962,557746], '2025':[388738,465297,345675,223845,195645,61186,81669,102098,181264,244150,481640,842583], '2026':[485039,427237,476885,329202.74,null,null,null,null,null,null,null,null] },
+    vol:{ '2024':[15867,27073,6980,14640,25713,5961,3566,4704,8417,15813,16980,19481], '2025':[11822,13779,9647,6088,4308,2042,2947,3661,5992,8735,18223,26304], '2026':[13253,12543,14655,9724,2628,null,null,null,null,null,null,null] },
+    rec:{ '2024':[387279,737438,194592,458282,881746,183813,105919,144058,236598,412613,453962,557746], '2025':[388738,465297,345675,223845,195645,61186,81669,102098,181264,244150,481640,842583], '2026':[485039,427237,476885,329202.74,93898.07,null,null,null,null,null,null,null] },
     rank:{
       '2024':[['OFF Spray Family 170ML',26960,'#3b82f6'],['OFF Kids LV200ML',25306,'#60a5fa'],['OFF Locao Family 200ML',23584,'#818cf8'],['OFF Aero 165ML',12229,'#2dd4bf'],['OFF Gel Toque Leve 100G',9336,'#c084fc'],['EXPOSIS Spray Extreme',7057,'#34d399'],['OFF Gel Baby 117G',6129,'#2dd4bf'],['EXPOSIS Infantil Gel',5951,'#fb923c'],['RAID Multi Base D\'Agua',4634,'#f472b6'],['OFF Locao Longa Dur.',4140,'#facc15']],
       '2025':[['OFF Spray Family 170ML',23182,'#3b82f6'],['OFF Locao Family 200ML',17096,'#60a5fa'],['OFF Aero 165ML',14255,'#818cf8'],['OFF Kids LV200ML',13976,'#2dd4bf'],['OFF Locao Longa Dur.',6172,'#c084fc'],['OFF Gel Toque Leve 100G',5789,'#34d399'],['OFF Gel Baby 117G',5480,'#2dd4bf'],['EXPOSIS Spray Extreme',4909,'#fb923c'],['EXPOSIS Infantil Gel',3263,'#f472b6'],['EXPOSIS Icaridina',2361,'#facc15']],
       '2026':[['OFF Locao Family 200ML',7029,'#3b82f6'],['OFF Spray Family 170ML',6535,'#60a5fa'],['OFF Aero 165ML',5583,'#818cf8'],['OFF Kids LV200ML',4461,'#2dd4bf'],['OFF Gel Baby 117G',3235,'#c084fc'],['OFF Locao Longa Dur.',1464,'#34d399'],['OFF Gel Toque Leve 100G',1441,'#2dd4bf'],['Kit EXPOSIS Extreme',910,'#fb923c'],['EXPOSIS Infantil Gel',788,'#f472b6'],['EXPOSIS Spray Extreme',712,'#facc15']]
     },
-    kpis:{ u24:165195, u25:113548, u26:50175, r24:4754046, r25:3613790 }
+    kpis:{ u24:165195, u25:113548, u26:52803, r24:4754046, r25:3613790 }
   },
   // COMPRADOR ANDRE (OFF + EXPOSIS)
   andre: {
-    vol:{ '2024':[11491,20443,2553,11263,22027,4656,2745,3843,7170,14223,14373,17200], '2025':[10229,12141,8928,5736,4005,1808,2723,3505,5728,8256,17151,23592], '2026':[11234,11004,13123,8131,null,null,null,null,null,null,null,null] },
-    rec:{ '2024':[304480,611663,105157,392296,804666,157284,90306,127313,209410,377861,399269,508328], '2025':[354065,428664,329907,216190,189712,57544,78373,99403,175927,230960,448577,757059], '2026':[418611,376133,426381,281158.48,null,null,null,null,null,null,null,null] },
+    vol:{ '2024':[11491,20443,2553,11263,22027,4656,2745,3843,7170,14223,14373,17200], '2025':[10229,12141,8928,5736,4005,1808,2723,3505,5728,8256,17151,23592], '2026':[11234,11004,13123,8131,2293,null,null,null,null,null,null,null] },
+    rec:{ '2024':[304480,611663,105157,392296,804666,157284,90306,127313,209410,377861,399269,508328], '2025':[354065,428664,329907,216190,189712,57544,78373,99403,175927,230960,448577,757059], '2026':[418611,376133,426381,281158.48,83417.28,null,null,null,null,null,null,null] },
     rank:{
       '2024':[['OFF Spray Family 170ML',26960,'#3b82f6'],['OFF Kids LV200ML',25306,'#60a5fa'],['OFF Locao Family 200ML',23584,'#818cf8'],['OFF Aero 165ML',12229,'#2dd4bf'],['OFF Gel Toque Leve 100G',9336,'#c084fc'],['EXPOSIS Spray Extreme',7057,'#34d399'],['OFF Gel Baby 117G',6129,'#2dd4bf'],['EXPOSIS Infantil Gel',5951,'#fb923c'],['OFF Locao Longa Dur.',4140,'#f472b6'],['EXPOSIS Gel 100ML',3200,'#facc15']],
       '2025':[['OFF Spray Family 170ML',23182,'#3b82f6'],['OFF Locao Family 200ML',17096,'#60a5fa'],['OFF Aero 165ML',14255,'#818cf8'],['OFF Kids LV200ML',13976,'#2dd4bf'],['OFF Locao Longa Dur.',6172,'#c084fc'],['OFF Gel Toque Leve 100G',5789,'#34d399'],['OFF Gel Baby 117G',5480,'#2dd4bf'],['EXPOSIS Spray Extreme',4909,'#fb923c'],['EXPOSIS Infantil Gel',3263,'#f472b6'],['EXPOSIS Icaridina',2361,'#facc15']],
       '2026':[['OFF Locao Family 200ML',7029,'#3b82f6'],['OFF Spray Family 170ML',6535,'#60a5fa'],['OFF Aero 165ML',5583,'#818cf8'],['OFF Kids LV200ML',4461,'#2dd4bf'],['OFF Gel Baby 117G',3235,'#c084fc'],['OFF Locao Longa Dur.',1464,'#34d399'],['OFF Gel Toque Leve 100G',1441,'#2dd4bf'],['Kit EXPOSIS Extreme',910,'#fb923c'],['EXPOSIS Infantil Gel',788,'#f472b6'],['EXPOSIS Spray Extreme',712,'#facc15']]
     },
-    kpis:{ u24:131987, u25:103802, u26:43492, r24:4088033, r25:3366381 }
+    kpis:{ u24:131987, u25:103802, u26:45785, r24:4088033, r25:3366381 }
   },
   // COMPRADOR EDMAR (RAID + Eletricos)
   edmar: {
-    vol:{ '2024':[4376,6630,4427,3377,3686,1305,821,861,1247,1590,2607,2281], '2025':[1593,1638,719,352,303,234,224,156,264,479,1072,2712], '2026':[2019,1539,1532,1593,null,null,null,null,null,null,null,null] },
-    rec:{ '2024':[82799,125775,89435,65986,77080,26529,15613,16745,27188,34752,54693,49418], '2025':[34673,36633,15768,7655,5933,3642,3296,2695,5337,13190,33063,85524], '2026':[66428,51104,50504,48044.26,null,null,null,null,null,null,null,null] },
+    vol:{ '2024':[4376,6630,4427,3377,3686,1305,821,861,1247,1590,2607,2281], '2025':[1593,1638,719,352,303,234,224,156,264,479,1072,2712], '2026':[2019,1539,1532,1593,335,null,null,null,null,null,null,null] },
+    rec:{ '2024':[82799,125775,89435,65986,77080,26529,15613,16745,27188,34752,54693,49418], '2025':[34673,36633,15768,7655,5933,3642,3296,2695,5337,13190,33063,85524], '2026':[66428,51104,50504,48044.26,10480.79,null,null,null,null,null,null,null] },
 rank:{
       '2024':[['RAID Multi Base D\'Agua',4634,'#3b82f6'],['RAID Elet Family Refil 45N',3200,'#60a5fa'],['RAID Aqua Protection',2800,'#818cf8'],['RAID Elet AP Refil 45N',2600,'#2dd4bf'],['RAID Elet Family 2un',2280,'#c084fc'],['RAID Multi Eucalipto',1900,'#34d399'],['EXPOSIS Elet Casa Refil',1800,'#2dd4bf'],['RAID Elet 2un',1600,'#fb923c'],['RAID Elet Refil 45N',1400,'#f472b6'],['EXPOSIS Elet AP Casa',1200,'#facc15']],
       '2025':[['RAID Multi Base D\'Agua',1197,'#3b82f6'],['RAID Multi Eucalipto',900,'#60a5fa'],['RAID Elet 2un',780,'#818cf8'],['RAID Elet Family 2un',640,'#2dd4bf'],['RAID Elet Family Refil',560,'#c084fc'],['RAID Elet AP Refil',480,'#34d399'],['RAID Aqua Protection',420,'#2dd4bf'],['EXPOSIS Elet Casa',380,'#fb923c'],['RAID Elet Refil',320,'#f472b6'],['EXPOSIS Elet AP Casa',260,'#facc15']],
       '2026':[['RAID Multi Base D\'Agua',1031,'#3b82f6'],['RAID Elet AP Family Refil',810,'#60a5fa'],['RAID Elet 2un',785,'#818cf8'],['RAID Multi Citronela',526,'#2dd4bf'],['RAID Multi Eucalipto',466,'#c084fc'],['RAID Multi 420ML',431,'#34d399'],['RAID Elet AP Refil 45N',331,'#2dd4bf'],['RAID Elet Family 2un',289,'#fb923c'],['RAID Elet Refil 45N',149,'#f472b6'],['EXPOSIS Elet Casa Refil',4,'#facc15']]
     },
-    kpis:{ u24:33208, u25:9746, u26:6683, r24:666013, r25:247409 }
+    kpis:{ u24:33208, u25:9746, u26:7018, r24:666013, r25:247409 }
   }
 };
 
@@ -19115,9 +19519,9 @@ const NS_LOJAS = [
 
 const PV_REC = {
   '2024':[725090,1870498,1225374,1132881,1097262,311056,165551,176373,314552,457389,620751,681690],
-  '2025':[792187,912184,728966,683376,428067,83428,88313,100145,206411,335650,742987,956121],
+  '2025':[792187,912184,728966,683376,440785.57,83428,88313,100145,206411,335650,742987,956121],
   // Jan–Abr/26: dados reais (planilha Abr/2026)
-  '2026':[780611,641756,636694,499628,null,null,null,null,null,null,null,null],
+  '2026':[780611,641756,636694,499628,114839.83,null,null,null,null,null,null,null],
 };
 
 
@@ -19128,7 +19532,7 @@ const PV_VOL = {
   // 2024/2025: volumes estimados via receita ÷ ticket médio R$38,25
   '2024':[18956,48902,32034,29617,28687,8135,4331,4613,8224,11959,16228,17822],
   '2025':[20712,23851,19059,17872,11189,2181,2309,2619,5397,8775,19425,20598],
-  '2026':[20892,17449,17349,12017,null,null,null,null,null,null,null,null]
+  '2026':[20892,17449,17349,12017,2985,null,null,null,null,null,null,null]
 };
 
 const PV_RANK = {
@@ -19157,11 +19561,11 @@ const PV_LOJAS = [
 const CL_REC_2024 = [null,null,538754,52823,531968,272797,117215,133417,230641,334266,415836,510005];
 const CL_VOL_2024 = [null,null,17053,1684,13770,7517,3017,3760,6630,9225,12046,15832];
 // 2025 — receita calculada: vol × ticket médio R$29,79 → R$ 2,90M
-const CL_REC_2025 = [510439,498501,399891,251823,158624,41123,36059,41701,93547,144470,205482,515969];
-const CL_VOL_2025 = [16305,16063,13150,8259,5076,1322,1174,1393,3377,4942,7620,18690];
+const CL_REC_2025 = [490240.87,502702.54,414628.34,254529.11,157325.2,40994.49,37736.83,46320.02,108334.34,169244.04,254849.03,581302.73];
+const CL_VOL_2025 = [16112,15911,12971,8094,4913,1163,1073,1324,3339,4911,7564,18576];
 // 2026 — Jan–Mar: receita calculada (ticket R$27,40) → R$ 1,12M
-const CL_REC_2026 = [511009,474208,501017,352568.84,null,null,null,null,null,null,null,null];
-const CL_VOL_2026 = [13073,13073,14057,9892,null,null,null,null,null,null,null,null];
+const CL_REC_2026 = [511009,474208,501017,352568.84,311070.17,null,null,null,null,null,null,null];
+const CL_VOL_2026 = [13073,13073,14057,9892,9892,null,null,null,null,null,null,null];
 
 const CL_RANK = {
   total:[['OFF 200ML Locao',21360,'#3b82f6'],['OFF 170ML Spray',18253,'#60a5fa'],['OFF Kids 200ML',11776,'#818cf8'],['OFF 165ML Aero',4784,'#2dd4bf'],['OFF Baby 117ML',3850,'#c084fc'],['EXPOSIS Gel Infantil',2096,'#34d399'],['EXPOSIS Spray Extreme',1584,'#2dd4bf'],['EXPOSIS Spray Infantil',1276,'#fb923c'],['EXPOSIS Elet AP+Refil',835,'#f472b6'],['OFF Toque Leve 100G',820,'#facc15']],
@@ -19185,7 +19589,7 @@ const CL_LOJAS = [
 const GAM_REC = {
   '2024':[625159,852042,332703,277729,1203413,6604,1494,10746,877718,937736,843780,805501],
   '2025':[899992,1111875,533429,503784,312905,61698,90680,109575,815540,1043727,1112491,1772027],
-  '2026':[1555042,1152927,736481,569974.95,null,null,null,null,null,null,null,null],
+  '2026':[1555042,1152927,736481,569974.95,201974.48,null,null,null,null,null,null,null],
 };
 
 
@@ -19195,7 +19599,7 @@ const GAM_REC = {
 const GAM_VOL = {
   '2024':[33667,43310,17966,11328,51794,168,38,364,45997,51793,45447,45362],
   '2025':[50822,67517,29896,27084,16950,3178,5258,6854,50574,72566,71996,109706],
-  '2026':[86399,74669,40439,32246,null,null,null,null,null,null,null,null],
+  '2026':[86399,74669,40439,32246,11179,null,null,null,null,null,null,null],
 };
 
 const GAM_RANK = {
@@ -19259,8 +19663,8 @@ const GAM_CIDADES = [
 
 const GAUCHA_REC = {
   '2024':[null,null,313079,1162355,123331,415037,181437,441358,1351749,585654,499280,318640],
-  '2025':[363534,376375,253151,184241,90111,48305,33717,26887,332149,514813,361218,400511],
-  '2026':[415756,222894,297174,402827.37,null,null,null,null,null,null,null,null]
+  '2025':[363534,376375,262908.42,193266.5,97947.16,48305,33717,26887,332149,514813,361218,400511],
+  '2026':[415756,222894,306025.24,427404.11,107322.57,null,null,null,null,null,null,null]
 };
 
 
@@ -19270,7 +19674,7 @@ const GAUCHA_REC = {
 const GAUCHA_VOL = {
   '2024':[null,null,19554,47863,8247,19740,9313,23295,73553,35309,28954,19949],
   '2025':[21971,24876,17266,13574,7515,4344,2889,3150,26067,35201,24764,26415],
-  '2026':[26019,13265,18517,23649,null,null,null,null,null,null,null,null]
+  '2026':[26019,13265,18517,23649,5990,null,null,null,null,null,null,null]
 };
 
 const GAUCHA_PDVS = {
@@ -19308,8 +19712,8 @@ const RIOMED_VOL_2024 = [null,null,6004,27945,12405,1566,575,1072,14064,14357,71
 const RIOMED_REC_2025 = [296117,196606,168592,151424,70673,14914,2554,3282,124428,126377,245462,341716];
 const RIOMED_VOL_2025 = [10709,7331,6225,5370,2349,522,104,128,4343,4721,9470,12217];
 // 2026 — Jan–Mar reais (RIOMED_REC[22..24]) → R$ 436K / 19.685 un
-const RIOMED_REC_2026 = [146204,118027,171759,93983.28,null,null,null,null,null,null,null,null];
-const RIOMED_VOL_2026 = [5683,4593,9409,6092,null,null,null,null,null,null,null,null];
+const RIOMED_REC_2026 = [146204,118027,171759,93983.28,19423.06,null,null,null,null,null,null,null];
+const RIOMED_VOL_2026 = [5683,4593,9409,6092,1064,null,null,null,null,null,null,null];
 
 const RIOMED_REC  = [189382,1006448,516482,53253,15334,45099,446051,448963,197002,193284,296117,196606,168592,151424,70673,14914,2554,3282,124428,126377,245462,341716,146204,118027,171759,51022];
 const RIOMED_RANK = [
@@ -20255,7 +20659,7 @@ function initNissei(){
 function renderNSAnoBars(){
   var isVol = nsBarMode==='vol';
   var anos = ['2024','2025','2026*'];
-  var vals = isVol ? [165195,113548,50175] : [4754046,3613790,1718364];
+  var vals = isVol ? [165195,113548,52803] : [4754046,3613790,1812261.81];
   renderAnoChart('ns-ano-chart', anos, vals, isVol);
 }
 function setNSBarMode(m,btn){nsBarMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderNSAnoBars();}
@@ -20603,7 +21007,7 @@ function setCLLineMode(m,btn){clLineMode=m;btn.closest('.toggle-group').querySel
 function renderCLAnoBars(){
   var isVol = clBarMode==='vol';
   var anos = ['2024','2025','2026*'];
-  var vals = isVol ? [90534,97371,50095] : [3137722,2897629,1838803];
+  var vals = isVol ? [90534,95951,59987] : [3137722,3058207.54,2149873.0100000002];
   renderAnoChart('cl-ano-chart', anos, vals, isVol);
 }
 function setCLBarMode(m,btn){clBarMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderCLMesBars();}
@@ -20811,7 +21215,7 @@ function initPanvel(){
 function renderPVAnoBars(){
   var isVol = pvBarMode==='vol';
   var anos = ['2024','2025','2026*'];
-  var vals = isVol ? [229508,153987,67707] : [8778467,6057835,2558689];
+  var vals = isVol ? [229508,153987,70692] : [8778467,6070553.57,2673528.83];
   renderAnoChart('pv-ano-chart', anos, vals, isVol);
 }
 function setPVBarMode(m,btn){pvBarMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderPVAnoBars();}
@@ -20988,7 +21392,7 @@ function initGAM(){
 function renderGAMAnoBars(){
   var isVol = gamBarMode==='vol';
   var anos = ['2024','2025','2026*'];
-  var vals = isVol ? [347234,512401,233753] : [6774625,8367723,4014425];
+  var vals = isVol ? [347234,512401,244932] : [6774625,8367723,4216399.430000001];
   renderAnoChart('gam-ano-chart', anos, vals, isVol);
 }
 function setGAMBarMode(m,btn){gamBarMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderGAMAnoBars();}
@@ -21196,7 +21600,7 @@ function initGCH(){
 function renderGCHAnoBars(){
   var isVol = gchBarMode==='vol';
   var anos = ['2024','2025','2026*'];
-  var vals = isVol ? [285777,208032,81450] : [5391920,2985012,1338651];
+  var vals = isVol ? [285777,208032,87440] : [5391920,3011631.08,1479401.92];
   renderAnoChart('gch-ano-chart', anos, vals, isVol);
 }
 function setGCHBarMode(m,btn){gchBarMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderGCHAnoBars();}
@@ -21418,7 +21822,7 @@ function setRIOLineMode(m,btn){rioLineMode=m;btn.closest('.toggle-group').queryS
 function renderRioAnoBars(){
   var isVol = rioBarMode==='vol';
   var anos = ['2024','2025','2026*'];
-  var vals = isVol ? [92290,63489,25777] : [3111298,1742145,529973];
+  var vals = isVol ? [92290,63489,26841] : [3111298,1742145,549396.3400000001];
   renderAnoChart('rio-ano-chart', anos, vals, isVol);
 }
 function setRIOBarMode(m,btn){rioBarMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderRIOMesBars();}
@@ -21498,9 +21902,10 @@ const GCH_POSITIV_MES = {
   // 2026 — dados reais calculados da soma de todos os estados (GCH_POSITIV_UF)
   "2026": [
     {mes:"2026-01",positivas:1514,total:1850,pct:81.8},
-    {mes:"2026-02",positivas:1440,total:1850,pct:77.8},
-    {mes:"2026-03",positivas:1523,total:1850,pct:82.3},
-    {mes:"2026-04",positivas:1941,total:2200,pct:88.2},  // Abr/2026: RS=916 + SC=895 + PR=130
+    {mes:"2026-02",positivas:1137,total:1850,pct:61.5},
+    {mes:"2026-03",positivas:1658,total:1900,pct:87.3},
+    {mes:"2026-04",positivas:1941,total:2200,pct:88.2},
+    {mes:"2026-05",positivas:807, total:1900,pct:42.5},  // Mai/2026: positivação gaucha.xlsx (28/05)
   ],
 };
 
@@ -21536,12 +21941,13 @@ const GAM_POSITIV_MES = {
     {mes:"2025-11",positivas:3660,total:6400,pct:57.2},
     {mes:"2025-12",positivas:5254,total:6500,pct:80.8},
   ],
-  // 2026 — dados reais da planilha Cobertura_GAM (Abr/2026 confirmado)
+  // 2026 — dados reais da planilha Cobertura_GAM / PDF fechamento
   "2026": [
     {mes:"2026-01",positivas:5453,total:7000,pct:77.9},
     {mes:"2026-02",positivas:4962,total:6800,pct:73.0},
     {mes:"2026-03",positivas:4025,total:6600,pct:61.0},
     {mes:"2026-04",positivas:3414,total:6400,pct:53.3},
+    {mes:"2026-05",positivas:1757,total:6200,pct:28.3},  // Mai/2026: PDF fechamento 31/05 (SC=734+PR=395+RS=195+SP=157+GO=135+MS=93=1.757)
   ],
 };
 
@@ -24632,16 +25038,16 @@ var obShareChart=null, obPrecoChart=null, obVendasChart=null;
 
 /* ═══════════ SELL IN FARMA SUL ═══════════ */
 const SELLIN_DATA = [
-  { nome:'São João', label:'São João', cor:'#60a5fa', canal:'Rede', hist:29814, plan:32064, meta:23301, real:23010, hist_per:29814, verba:662905,
+  { nome:'São João', label:'São João', cor:'#60a5fa', canal:'Rede', hist:29814, plan:32064, meta:23301, real:24141, hist_per:29814, verba:662905,
     hist_m:[1281,5598,1015,9960,5409,3435,497,915,317,75,533,779],
     plan_m:[8500,0,0,10707,5814.68,3692.62,534.27,983.62,340.77,80.62,572.98,837.42],
     meta_m:[1158,3483,1867,4226,3428,3967,1540,1253,1085,644,650,0],
-    real_m:[0,8132,3549,1659,1550,4571,1330,0,519,699,1001,null] },
+    real_m:[0,8132,3549,1659,1550,4571,1330,0,519,699,1001,1131] },
   { nome:'DD-Gaúcha', label:'DD-Gaúcha', cor:'#f97316', canal:'Indireto', hist:24177, plan:25433.05, meta:14099, real:16427, hist_per:24177, verba:285636,
     hist_m:[1441,11854,1041,765,2026,2293,1990,490,944,960,193,180],
     plan_m:[15100,0,0,803.25,2127.3,2407.65,2089.5,514.5,991.2,1008,202.65,189],
     meta_m:[1707,2251,2213,1286,1096,1226,1023,1177,730,731,659,0],
-    real_m:[5094,2523,335,436,252,1102,1752,3585,165,484,699,null] },
+    real_m:[5094,2523,335,436,252,1102,1752,3585,165,484,283,416] },
   { nome:'Panvel', label:'Panvel', cor:'#2dd4bf', canal:'Rede', hist:11158, plan:13177.2, meta:9233, real:11334, hist_per:11158, verba:690168,
     hist_m:[997,0,0,826,482,651,1433,2084,3364,166,970,185],
     plan_m:[500,500,1000,909,530,716,1576.3,2292.4,3700.4,182.6,1067,203.5],
@@ -24673,11 +25079,11 @@ const SELLIN_DATA = [
     meta_m:[205,273,206,87,68,82,86,104,51,4,0,0],
     real_m:[0,0,0,240,0,0,0,0,0,0,0,null] }
 ];const SELLIN_MONTHS = ['JUL','AGO','SET','OUT','NOV','DEZ','JAN','FEV','MAR','ABR','MAI','JUN'];
-const SELLIN_TOTAL = {hist:128648, plan:138172, meta:87893, real:123106, hist_per:128648, cres_hist:-4.6, cres_meta:40.1, cx_falt:-35213};
+const SELLIN_TOTAL = {hist:128947, plan:133490.73, meta:87893, real:124237, hist_per:128947, cres_hist:-3.7, cres_meta:41.4, cx_falt:36344};;
 /* ── MÊS ATUAL DO SELL IN ── atualizar todo mês ─────────────────────────
    Índices: JUL=0 AGO=1 SET=2 OUT=3 NOV=4 DEZ=5 JAN=6 FEV=7 MAR=8 ABR=9 MAI=10 JUN=11  */
-const SELLIN_MES_ATUAL     = 10;       // ← MAI/26
-const SELLIN_MES_ATUAL_LBL = 'MAI/26'; // ← label exibido na coluna
+const SELLIN_MES_ATUAL     = 11;       // ← JUN/26
+const SELLIN_MES_ATUAL_LBL = 'JUN/26'; // ← label exibido na coluna
 var VERBAS_TOTAL = 2879340;
 
 var sellinFilter  = 'todos';
@@ -25701,10 +26107,10 @@ function setSellinChartMode(mode, btn){
 
 function renderSellinKPIs(){
   var t = SELLIN_TOTAL;
-  var meses_decorridos = 10; // Jul→Abr
+  var meses_decorridos = 11; // Jul→Jun
   var meses_totais = 12;
 
-  /* ── Mesmo período: somar hist_m e plan_m dos primeiros 10 meses de cada cliente ── */
+  /* ── Mesmo período: somar hist_m e plan_m dos primeiros 11 meses de cada cliente ── */
   var histPerTotal = SELLIN_DATA.reduce(function(s,d){
     return s + (d.hist_m ? d.hist_m.slice(0, meses_decorridos).reduce(function(a,v){return a+(v||0);},0) : 0);
   }, 0);
@@ -25713,21 +26119,21 @@ function renderSellinKPIs(){
   }, 0);
 
   var ating    = t.meta > 0 ? t.real / t.meta * 100 : 0;
-  var vs_hist  = histPerTotal > 0 ? (t.real - histPerTotal) / histPerTotal * 100 : 0;
-  var vs_plan  = planPerTotal > 0 ? (t.real - planPerTotal) / planPerTotal * 100 : 0;
+  var vs_hist  = t.hist > 0 ? (t.real - t.hist) / t.hist * 100 : 0;
+  var vs_plan  = t.plan > 0 ? (t.real - t.plan) / t.plan * 100 : 0;
   var vs_meta  = t.meta > 0 ? (t.real - t.meta) / t.meta * 100 : 0;
-  var diff_hist = t.real - histPerTotal;
-  var diff_plan = t.real - planPerTotal;
+  var diff_hist = t.real - t.hist;
+  var diff_plan = t.real - t.plan;
   var diff_meta = t.real - t.meta;
 
   document.getElementById('sellin-kpis-total').innerHTML = [
-    {l:'Histórico FY25',    v:t.hist.toLocaleString('pt-BR'),          s:'Caixas total FY25',                     ac:'#3b82f6'},
-    {l:'Planejamento FY26', v:t.plan.toLocaleString('pt-BR'),          s:'Caixas planejadas FY26 (total)',         ac:'#D1D5DB'},
-    {l:'Meta BI FY26',      v:t.meta.toLocaleString('pt-BR'),          s:'Meta Jul–Abr (mesmo período)',           ac:'#fbbf24'},
-    {l:'Real FY26',         v:t.real.toLocaleString('pt-BR'),          s:'Real Jul–Abr ('+meses_decorridos+' meses)', ac:t.real>=t.meta?'#34d399':'#ef4444'},
-    {l:'Meta BI vs Real',   v:(vs_meta>=0?'+':'')+vs_meta.toFixed(1)+'%', s:(diff_meta>=0?'+':'')+diff_meta.toLocaleString('pt-BR')+' cx · Jul–Abr mesmo período', ac:vs_meta>=0?'#34d399':'#ef4444'},
-    {l:'Hist FY25 vs Real', v:(vs_hist>=0?'+':'')+vs_hist.toFixed(1)+'%', s:(diff_hist>=0?'+':'')+diff_hist.toLocaleString('pt-BR')+' cx · Jul–Abr mesmo período (base '+histPerTotal.toLocaleString('pt-BR')+')', ac:vs_hist>=0?'#34d399':'#ef4444'},
-    {l:'Plan FY26 vs Real', v:(vs_plan>=0?'+':'')+vs_plan.toFixed(1)+'%', s:(diff_plan>=0?'+':'')+diff_plan.toLocaleString('pt-BR')+' cx · Jul–Abr mesmo período (base '+planPerTotal.toLocaleString('pt-BR')+')', ac:vs_plan>=0?'#34d399':'#ef4444'},
+    {l:'Histórico FY25',    v:t.hist.toLocaleString('pt-BR'),           s:'Caixas total FY25',                      ac:'#3b82f6'},
+    {l:'Planejamento FY26', v:t.plan.toLocaleString('pt-BR'),           s:'Caixas planejadas FY26 (total)',          ac:'#D1D5DB'},
+    {l:'Meta BI FY26',      v:t.meta.toLocaleString('pt-BR'),           s:'Meta Jul–Jun (mesmo período)',            ac:'#fbbf24'},
+    {l:'Real FY26',         v:t.real.toLocaleString('pt-BR'),           s:'Real Jul–Jun ('+meses_decorridos+' meses)', ac:t.real>=t.meta?'#34d399':'#ef4444'},
+    {l:'Meta BI vs Real',   v:(vs_meta>=0?'+':'')+vs_meta.toFixed(1)+'%', s:(diff_meta>=0?'+':'')+diff_meta.toLocaleString('pt-BR')+' cx · Jul–Jun mesmo período', ac:vs_meta>=0?'#34d399':'#ef4444'},
+    {l:'Hist FY25 vs Real', v:(vs_hist>=0?'+':'')+vs_hist.toFixed(1)+'%', s:(diff_hist>=0?'+':'')+diff_hist.toLocaleString('pt-BR')+' cx · Real vs Hist FY25 (base '+t.hist.toLocaleString('pt-BR')+')', ac:vs_hist>=0?'#34d399':'#ef4444'},
+    {l:'Plan FY26 vs Real', v:(vs_plan>=0?'+':'')+vs_plan.toFixed(1)+'%', s:(diff_plan>=0?'+':'')+diff_plan.toLocaleString('pt-BR')+' cx · Real vs Plan FY26 (base '+t.plan.toLocaleString('pt-BR')+')', ac:vs_plan>=0?'#34d399':'#ef4444'},
   ].map(function(k){
     return '<div style="background:#E4EAF2;border-radius:12px;padding:16px 18px;border-top:3px solid '+k.ac+';border-left:1px solid rgba(94,153,208,0.3);border-right:1px solid rgba(94,153,208,0.3);border-bottom:1px solid rgba(94,153,208,0.3);box-shadow:0 2px 10px rgba(10,40,80,0.13),0 1px 3px rgba(10,40,80,0.07);">'
       +'<div style="font-size:9px;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;margin-bottom:6px;">'+k.l+'</div>'
@@ -25801,8 +26207,8 @@ function renderSellinCards(){
     var cor = d.cor;
     var vs_hist = Math.round((d.real-d.hist_per)/Math.max(d.hist_per,1)*100);
     /* vs Planejado — mesmo período 10 meses */
-    var planPer10 = d.plan_m ? d.plan_m.slice(0,10).reduce(function(s,v){return s+(v||0);},0) : d.plan;
-    var vs_plan = planPer10>0 ? Math.round((d.real-planPer10)/planPer10*100) : 0;
+    var planPer11 = d.plan_m ? d.plan_m.slice(0,10).reduce(function(s,v){return s+(v||0);},0) : d.plan;
+    var vs_plan = planPer11>0 ? Math.round((d.real-planPer11)/planPer11*100) : 0;
     var tendencia = vs_plan >= 0 ? '✅ Acima do planejado' : '⚠️ Abaixo do planejado';
     var tend_cor  = vs_plan >= 0 ? '#34d399' : '#ef4444';
     var pct_bar   = Math.min(100, ating);
@@ -25856,7 +26262,7 @@ function renderSellinCards(){
       +'</div>'
       // Análise 3 comparações + canvas — mesmo período fixo Jul→Abr (10 meses)
       +(function(){
-        var rMths = 10; /* Jul→Abr fixo — mesmo período do cabeçalho */
+        var rMths = 11; /* Jul→Abr fixo — mesmo período do cabeçalho */
         var histPer = d.hist_m ? d.hist_m.slice(0,rMths).reduce(function(s,v){return s+(v||0);},0) : 0;
         var metaPer = d.meta_m ? d.meta_m.slice(0,rMths).reduce(function(s,v){return s+(v||0);},0) : 0;
         var planPer = d.plan_m ? d.plan_m.slice(0,rMths).reduce(function(s,v){return s+(v||0);},0) : 0;
@@ -26737,13 +27143,17 @@ function renderMensalPos(){
 
   var ins = document.getElementById('cons-mensal-insight');
   if(ins){
-    var gam26 = getGAMArr('2026').filter(function(v){return v!=null;});
-    var gch26 = getGCHArr('2026').filter(function(v){return v!=null;});
-    var comb26 = addArr(getGAMArr('2026'),getGCHArr('2026')).filter(function(v){return v!=null;});
+    var gam26raw = getGAMArr('2026'); var gch26raw = getGCHArr('2026');
+    var comb26raw = addArr(gam26raw, gch26raw);
+    var comb26 = comb26raw.filter(function(v){return v!=null;});
     var comb25jan = (getGAMArr('2025')[0]||0)+(getGCHArr('2025')[0]||0);
+    /* label dinâmico do último mês confirmado */
+    var _mLabels = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    var _lastIdx = comb26raw.reduce(function(acc,v,i){return v!=null?i:acc;}, 0);
+    var _lastLbl = _mLabels[_lastIdx] + '/26';
     ins.innerHTML = '📈 <strong style="color:#34d399;">Jan/26 combinado: '+comb26[0].toLocaleString('pt-BR')+' PDVs</strong> — pico sazonalidade verão · vs Jan/25: '+comb25jan.toLocaleString('pt-BR')+' PDVs '
       +'<span style="color:'+((comb26[0]-comb25jan)>=0?'#34d399':'#ef4444')+';font-weight:700;">'+(comb26[0]-comb25jan>=0?'▲':'▼')+' '+Math.abs(Math.round((comb26[0]-comb25jan)/comb25jan*100))+'%</span>.'
-      +' &nbsp;📉 <strong style="color:#06b6d4;">Mar/26: '+comb26[comb26.length-1].toLocaleString('pt-BR')+' PDVs</strong> — queda esperada pós-verão · sazonalidade repelente.'
+      +' &nbsp;📉 <strong style="color:#06b6d4;">'+_lastLbl+': '+comb26[comb26.length-1].toLocaleString('pt-BR')+' PDVs</strong> — queda esperada pós-verão · sazonalidade repelente.'
       +' &nbsp;⚡ <strong style="color:#fbbf24;">Pico de positivação: Jan–Fev/26</strong> · preparação de estoque necessária a partir de Nov/26.';
   }
 }
@@ -29101,78 +29511,78 @@ function toggleShrST2(){
 }
 
 const FYTD_MARKET_TOTAL = {
-  'Farma CO': {fytd25_val:45.7539,fytd26_val:33.3528,fytd25_un:1706.6718,fytd26_un:1250.5737,jan25_val:6.7116,fev25_val:7.3189,mar25_val:6.1084,janmar25_val:20.1389,jan26_val:6.4056,fev26_val:4.5031,mar26_val:4.5212,janmar26_val:15.4299,jan25_un:255.9399,fev25_un:271.5752,mar25_un:226.5192,janmar25_un:754.0343,jan26_un:239.0474,fev26_un:174.3647,mar26_un:173.6619,janmar26_un:587.074},
-  'Farma Gde RJ': {fytd25_val:34.3688,fytd26_val:28.6163,fytd25_un:1243.3911,fytd26_un:1091.3168,jan25_val:5.531,fev25_val:4.6257,mar25_val:3.6501,janmar25_val:13.8068,jan26_val:4.08,fev26_val:4.1597,mar26_val:4.2808,janmar26_val:12.5205,jan25_un:208.3629,fev25_un:174.9561,mar25_un:136.6088,janmar25_un:519.9278,jan26_un:159.4283,fev26_un:169.8872,mar26_un:164.5034,janmar26_un:493.8189},
-  'Farma Gde SP': {fytd25_val:47.0518,fytd26_val:31.5831,fytd25_un:1464.7685,fytd26_un:1001.6035,jan25_val:8.5099,fev25_val:9.2863,mar25_val:10.1227,janmar25_val:27.9189,jan26_val:8.8617,fev26_val:6.2134,mar26_val:4.2947,janmar26_val:19.3698,jan25_un:272.7661,fev25_un:297.8474,mar25_un:314.9679,janmar25_un:885.5814,jan26_un:284.5455,fev26_un:206.9526,mar26_un:137.306,janmar26_un:628.8041},
-  'Farma Indep CO': {fytd25_val:24.921,fytd26_val:21.0935,fytd25_un:1012.1011,fytd26_un:863.307,jan25_val:4.2829,fev25_val:4.7777,mar25_val:3.9586,janmar25_val:13.0192,jan26_val:4.164,fev26_val:2.8922,mar26_val:2.9933,janmar26_val:10.0495,jan25_un:177.3174,fev25_un:191.4352,mar25_un:158.9731,janmar25_un:527.7257,jan26_un:168.6147,fev26_un:120.6101,mar26_un:126.5457,janmar26_un:415.7705},
-  'Farma Indep Gde RJ': {fytd25_val:13.244,fytd26_val:11.2412,fytd25_un:521.064,fytd26_un:485.919,jan25_val:2.0481,fev25_val:1.6552,mar25_val:1.2336,janmar25_val:4.9369,jan26_val:1.4423,fev26_val:1.5948,mar26_val:1.6929,janmar26_val:4.73,jan25_un:85.3892,fev25_un:69.8173,mar25_un:50.6181,janmar25_un:205.8246,jan26_un:66.6779,fev26_un:74.2501,mar26_un:76.9216,janmar26_un:217.8496},
-  'Farma Indep Gde SP': {fytd25_val:13.2752,fytd26_val:9.3192,fytd25_un:464.1381,fytd26_un:323.1742,jan25_val:2.3272,fev25_val:2.5594,mar25_val:2.7747,janmar25_val:7.6613,jan26_val:2.8321,fev26_val:2.1227,mar26_val:1.264,janmar26_val:6.2188,jan25_un:83.5265,fev25_un:92.9509,mar25_un:97.4201,janmar25_un:273.8975,jan26_un:99.7768,fev26_un:75.2879,mar26_un:43.7605,janmar26_un:218.8252},
-  'Farma Indep Int SP': {fytd25_val:52.1317,fytd26_val:36.9025,fytd25_un:1951.9642,fytd26_un:1387.0234,jan25_val:10.2192,fev25_val:10.2977,mar25_val:11.2647,janmar25_val:31.7816,jan26_val:9.241,fev26_val:7.1838,mar26_val:5.8422,janmar26_val:22.267,jan25_un:381.5669,fev25_un:375.2055,mar25_un:422.3489,janmar25_un:1179.1213,jan26_un:343.3529,fev26_un:273.7176,mar26_un:226.6219,janmar26_un:843.6924},
-  'Farma Indep MG+ES+Int RJ': {fytd25_val:42.5389,fytd26_val:34.7112,fytd25_un:1679.061,fytd26_un:1416.5089,jan25_val:8.7194,fev25_val:7.2186,mar25_val:5.8682,janmar25_val:21.8062,jan26_val:7.0295,fev26_val:6.0683,mar26_val:5.7363,janmar26_val:18.8341,jan25_un:346.5399,fev25_un:289.1163,mar25_un:241.0658,janmar25_un:876.722,jan26_un:284.8165,fev26_un:254.8163,mar26_un:241.4084,janmar26_un:781.0412},
-  'Farma Indep NE': {fytd25_val:64.8132,fytd26_val:58.119,fytd25_un:2780.1738,fytd26_un:2469.1627,jan25_val:8.0684,fev25_val:10.2739,mar25_val:10.9506,janmar25_val:29.2929,jan26_val:7.7496,fev26_val:7.7395,mar26_val:10.9316,janmar26_val:26.4207,jan25_un:343.2382,fev25_un:432.9803,mar25_un:467.9358,janmar25_un:1244.1543,jan26_un:324.6919,fev26_un:332.6518,mar26_un:473.1166,janmar26_un:1130.4603},
-  'Farma Indep Sul': {fytd25_val:53.9455,fytd26_val:53.7834,fytd25_un:2418.1253,fytd26_un:2603.5737,jan25_val:10.6873,fev25_val:8.9205,mar25_val:8.7698,janmar25_val:28.3776,jan26_val:11.8178,fev26_val:7.7215,mar26_val:6.6858,janmar26_val:26.2251,jan25_un:493.1973,fev25_un:408.7329,mar25_un:398.1706,janmar25_un:1300.1008,jan26_un:579.9925,fev26_un:378.0974,mar26_un:324.4204,janmar26_un:1282.5103},
-  'Farma Int SP': {fytd25_val:108.8564,fytd26_val:74.5236,fytd25_un:3838.9515,fytd26_un:2684.3175,jan25_val:20.367,fev25_val:20.8717,mar25_val:24.4019,janmar25_val:65.6406,jan26_val:17.6214,fev26_val:13.35,mar26_val:11.2195,janmar26_val:42.1909,jan25_un:734.6571,fev25_un:730.4825,mar25_un:849.7505,janmar25_un:2314.8901,jan26_un:629.1133,fev26_un:498.2762,mar26_un:411.7011,janmar26_un:1539.0906},
-  'Farma MG+ES+Int RJ': {fytd25_val:79.4495,fytd26_val:62.6383,fytd25_un:2972.4908,fytd26_un:2395.5313,jan25_val:15.6568,fev25_val:12.4868,mar25_val:10.8643,janmar25_val:39.0079,jan26_val:12.5023,fev26_val:10.4497,mar26_val:9.9585,janmar26_val:32.9105,jan25_un:595.1319,fev25_un:480.044,mar25_un:422.7355,janmar25_un:1497.9114,jan26_un:475.6106,fev26_un:414.2507,mar26_un:388.6543,janmar26_un:1278.5156},
-  'Farma Moderno CO': {fytd25_val:20.8329,fytd26_val:12.2593,fytd25_un:694.5709,fytd26_un:387.2665,jan25_val:2.4287,fev25_val:2.5412,mar25_val:2.1498,janmar25_val:7.1197,jan26_val:2.2416,fev26_val:1.6109,mar26_val:1.5279,janmar26_val:5.3804,jan25_un:78.6225,fev25_un:80.14,mar25_un:67.5461,janmar25_un:226.3086,jan26_un:70.4326,fev26_un:53.7546,mar26_un:47.1162,janmar26_un:171.3034},
-  'Farma Moderno Gde RJ': {fytd25_val:21.1249,fytd26_val:17.3751,fytd25_un:722.3271,fytd26_un:605.3979,jan25_val:3.4829,fev25_val:2.9705,mar25_val:2.4165,janmar25_val:8.8699,jan26_val:2.6376,fev26_val:2.5649,mar26_val:2.5879,janmar26_val:7.7904,jan25_un:122.9737,fev25_un:105.1389,mar25_un:85.9906,janmar25_un:314.1032,jan26_un:92.7504,fev26_un:95.6372,mar26_un:87.5818,janmar26_un:275.9694},
-  'Farma Moderno Gde SP': {fytd25_val:33.7766,fytd26_val:22.2639,fytd25_un:1000.6304,fytd26_un:678.4295,jan25_val:6.1827,fev25_val:6.7269,mar25_val:7.348,janmar25_val:20.2576,jan26_val:6.0297,fev26_val:4.0907,mar26_val:3.0307,janmar26_val:13.1511,jan25_un:189.2395,fev25_un:204.8966,mar25_un:217.5477,janmar25_un:611.6838,jan26_un:184.7687,fev26_un:131.6647,mar26_un:93.5454,janmar26_un:409.9788},
-  'Farma Moderno Int SP': {fytd25_val:56.7247,fytd26_val:37.6212,fytd25_un:1886.9873,fytd26_un:1297.2942,jan25_val:10.1478,fev25_val:10.574,mar25_val:13.1372,janmar25_val:33.859,jan26_val:8.3805,fev26_val:6.1663,mar26_val:5.3772,janmar26_val:19.924,jan25_un:353.0902,fev25_un:355.277,mar25_un:427.4015,janmar25_un:1135.7687,jan26_un:285.7604,fev26_un:224.5585,mar26_un:185.0792,janmar26_un:695.3981},
-  'Farma Moderno MG+ES+Int RJ': {fytd25_val:36.9106,fytd26_val:27.9272,fytd25_un:1293.4298,fytd26_un:979.0224,jan25_val:6.9375,fev25_val:5.2683,mar25_val:4.996,janmar25_val:17.2018,jan26_val:5.4729,fev26_val:4.3813,mar26_val:4.2222,janmar26_val:14.0764,jan25_un:248.5918,fev25_un:190.9278,mar25_un:181.6698,janmar25_un:621.1894,jan26_un:190.7942,fev26_un:159.4344,mar26_un:147.246,janmar26_un:497.4746},
-  'Farma Moderno NE': {fytd25_val:34.8484,fytd26_val:31.291,fytd25_un:1214.538,fytd26_un:1128.4959,jan25_val:4.05,fev25_val:4.8004,mar25_val:5.2621,janmar25_val:14.1125,jan26_val:4.0533,fev26_val:4.2721,mar26_val:5.3012,janmar26_val:13.6266,jan25_un:142.5349,fev25_un:172.5104,mar25_un:192.3323,janmar25_un:507.3776,jan26_un:142.1745,fev26_un:156.865,mar26_un:180.6081,janmar26_un:479.6476},
-  'Farma Moderno Sul': {fytd25_val:57.5886,fytd26_val:53.3182,fytd25_un:2457.9115,fytd26_un:2302.3971,jan25_val:10.3331,fev25_val:9.0332,mar25_val:8.9604,janmar25_val:28.3267,jan26_val:11.2461,fev26_val:8.7247,mar26_val:6.6948,janmar26_val:26.6656,jan25_un:439.1663,fev25_un:369.2156,mar25_un:359.4182,janmar25_un:1167.8001,jan26_un:482.1249,fev26_un:426.068,mar26_un:285.5439,janmar26_un:1193.7368},
-  'Farma NE': {fytd25_val:99.6615,fytd26_val:89.41,fytd25_un:3994.7117,fytd26_un:3597.6586,jan25_val:12.1184,fev25_val:15.0742,mar25_val:16.2127,janmar25_val:43.4053,jan26_val:11.803,fev26_val:12.0116,mar26_val:16.2329,janmar26_val:40.0475,jan25_un:485.7732,fev25_un:605.4907,mar25_un:660.268,janmar25_un:1751.5319,jan26_un:466.8665,fev26_un:489.5168,mar26_un:653.7247,janmar26_un:1610.108},
-  'Farma Sul': {fytd25_val:123.4947,fytd26_val:118.4166,fytd25_un:5361.0369,fytd26_un:4905.9707,jan25_val:21.0204,fev25_val:17.9538,mar25_val:17.7301,janmar25_val:56.7043,jan26_val:23.0639,fev26_val:16.4461,mar26_val:13.3806,abr26_val:11.3150,abr25_val:11.9606,janmar26_val:52.8906,jan25_un:932.3636,fev25_un:777.9485,mar25_un:757.5888,janmar25_un:2467.9009,jan26_un:1062.1174,fev26_un:804.1654,mar26_un:609.9642,janmar26_un:2476.247},
-  'T.BR Farma': {fytd25_val:595.2652,fytd26_val:490.7745,fytd25_un:22670.8189,fytd26_un:17094.7505,jan25_val:90.8976,fev25_val:88.4474,mar25_val:89.8945,janmar25_val:269.2395,jan26_val:84.9281,fev26_val:67.6613,mar26_val:64.4138,abr26_val:59.0468,abr25_val:63.1763,janmar26_val:217.0031,jan25_un:3521.9657,fev25_un:3369.8262,mar25_un:3398.7982,janmar25_un:10290.5902,jan26_un:3338.0783,fev26_un:2776.8163,mar26_un:2558.4018,janmar26_un:8673.2964},
-  'T.BR Farma Indep': {fytd25_val:267.1366,fytd26_val:226.6604,fytd25_un:10926.4381,fytd26_un:9609.9419,jan25_val:46.6875,fev25_val:46.0735,mar25_val:45.1748,janmar25_val:137.9358,jan26_val:44.433,fev26_val:35.46,mar26_val:35.2914,janmar26_val:115.1844,jan25_un:1924.4526,fev25_un:1875.7221,mar25_un:1850.7973,janmar25_un:5650.972,jan26_un:1874.3084,fev26_un:1515.0301,mar26_un:1518.5904,janmar26_un:4907.9289},
-  'T.BR Farma Moderno': {fytd25_val:264.9524,fytd26_val:205.0673,fytd25_un:9381.1886,fytd26_un:7484.6954,jan25_val:44.2101,fev25_val:42.374,mar25_val:44.7201,janmar25_val:131.3042,jan26_val:40.4953,fev26_val:32.2011,mar26_val:29.1222,janmar26_val:101.8186,jan25_un:1597.5562,fev25_un:1494.1269,mar25_un:1547.9623,janmar25_un:4639.6454,jan26_un:1463.7764,fev26_un:1261.7555,mar26_un:1039.846,janmar26_un:3765.3779},
-  'INFC RS': {fytd25_val:33.8699,fytd26_val:35.1921,fytd25_un:1529.6436,fytd26_un:1646.4803,jan25_val:7.0744,fev25_val:5.7091,mar25_val:5.2108,janmar25_val:17.9943,jan26_val:8.301,fev26_val:6.0669,mar26_val:4.0583,janmar26_val:18.4262,jan25_un:316.5191,fev25_un:259.7867,mar25_un:233.6512,janmar25_un:809.957,jan26_un:387.0551,fev26_un:320.8363,mar26_un:195.6639,janmar26_un:903.5553},
-  'INFC SC': {fytd25_val:35.807,fytd26_val:35.0431,fytd25_un:1479.442,fytd26_un:1575.7372,jan25_val:6.3192,fev25_val:5.6583,mar25_val:5.2919,janmar25_val:17.2694,jan26_val:6.6157,fev26_val:5.0187,mar26_val:4.7395,janmar26_val:16.3739,jan25_un:260.4462,fev25_un:231.7565,mar25_un:213.9175,janmar25_un:706.1202,jan26_un:307.3277,fev26_un:231.7654,mar26_un:206.4646,janmar26_un:745.5577},
-  'INFC MG': {fytd25_val:52.3696,fytd26_val:40.9312,fytd25_un:1897.6524,fytd26_un:1513.9823,jan25_val:10.2863,fev25_val:8.3807,mar25_val:7.267,janmar25_val:25.934,jan26_val:8.72,fev26_val:6.478,mar26_val:6.5479,janmar26_val:21.7459,jan25_un:382.3887,fev25_un:311.8793,mar25_un:270.1848,janmar25_un:964.4528,jan26_un:322.9518,fev26_un:248.3182,mar26_un:250.5787,janmar26_un:821.8487},
-  'INFC CO': {fytd25_val:45.9831,fytd26_val:33.5961,fytd25_un:1717.8121,fytd26_un:1262.561,jan25_val:6.7434,fev25_val:7.3441,mar25_val:6.1659,janmar25_val:20.2534,jan26_val:6.4525,fev26_val:4.5349,mar26_val:4.5462,janmar26_val:15.5336,jan25_un:257.3952,fev25_un:272.9464,mar25_un:229.8624,janmar25_un:760.204,jan26_un:241.1552,fev26_un:175.8001,mar26_un:174.9035,janmar26_un:591.8588},
-  'INFC BA': {fytd25_val:29.7302,fytd26_val:27.059,fytd25_un:1164.9954,fytd26_un:1067.4689,jan25_val:4.0066,fev25_val:4.213,mar25_val:4.4136,janmar25_val:12.6332,jan26_val:4.2998,fev26_val:3.6171,mar26_val:4.3378,janmar26_val:12.2547,jan25_un:159.1149,fev25_un:166.2973,mar25_un:176.3733,janmar25_un:501.7855,jan26_un:169.9091,fev26_un:144.9315,mar26_un:174.5007,janmar26_un:489.3413},
-  'INFC Belo Horizonte': {fytd25_val:15.4022,fytd26_val:12.3184,fytd25_un:537.6158,fytd26_un:435.8883,jan25_val:2.9168,fev25_val:2.3528,mar25_val:1.9495,janmar25_val:7.2191,jan26_val:2.7227,fev26_val:1.7773,mar26_val:1.7715,janmar26_val:6.2715,jan25_un:103.2887,fev25_un:83.7816,mar25_un:72.7513,janmar25_un:259.8216,jan26_un:94.647,fev26_un:64.9931,mar26_un:64.7793,janmar26_un:224.4194},
-  'INFC CE': {fytd25_val:12.1488,fytd26_val:10.0659,fytd25_un:482.7781,fytd26_un:405.2351,jan25_val:1.1905,fev25_val:1.9798,mar25_val:2.376,janmar25_val:5.5463,jan26_val:0.9754,fev26_val:1.4929,mar26_val:2.2092,janmar26_val:4.6775,jan25_un:46.9349,fev25_un:80.1013,mar25_un:99.2142,janmar25_un:226.2504,jan26_un:37.891,fev26_un:59.3853,mar26_un:88.7368,janmar26_un:186.0131},
-  'INFC Cidade Gde Gde RJ': {fytd25_val:34.3786,fytd26_val:28.9387,fytd25_un:1248.8655,fytd26_un:1109.6718,jan25_val:5.516,fev25_val:4.6314,mar25_val:3.6665,janmar25_val:13.8139,jan26_val:4.1056,fev26_val:4.1801,mar26_val:4.3102,janmar26_val:12.5959,jan25_un:208.0915,fev25_un:175.6977,mar25_un:137.8507,janmar25_un:521.6399,jan26_un:160.9296,fev26_un:171.1054,mar26_un:166.2789,janmar26_un:498.3139},
-  'INFC Cidade Gde CO': {fytd25_val:21.4803,fytd26_val:12.932,fytd25_un:763.5128,fytd26_un:467.32,jan25_val:2.4107,fev25_val:2.7741,mar25_val:2.4725,janmar25_val:7.6573,jan26_val:2.4201,fev26_val:1.6589,mar26_val:1.5318,janmar26_val:5.6108,jan25_un:85.6843,fev25_un:96.365,mar25_un:85.5065,janmar25_un:267.5558,jan26_un:87.672,fev26_un:62.0137,mar26_un:55.0274,janmar26_un:204.7131},
-  'INFC Cidade Gde Gde SP': {fytd25_val:46.9492,fytd26_val:31.3555,fytd25_un:1482.2164,fytd26_un:1003.2149,jan25_val:8.516,fev25_val:9.2274,mar25_val:10.0476,janmar25_val:27.791,jan26_val:8.786,fev26_val:6.1587,mar26_val:4.2505,janmar26_val:19.1952,jan25_un:277.4592,fev25_un:299.3549,mar25_un:315.8974,janmar25_un:892.7115,jan26_un:284.6246,fev26_un:206.0654,mar26_un:137.1391,janmar26_un:627.8291},
-  'INFC Cidade Gde Int SP': {fytd25_val:18.33,fytd26_val:11.3147,fytd25_un:589.6241,fytd26_un:372.2237,jan25_val:3.3139,fev25_val:3.4624,mar25_val:3.6936,janmar25_val:10.4699,jan26_val:2.4355,fev26_val:1.8992,mar26_val:1.6475,janmar26_val:5.9822,jan25_un:108.0543,fev25_un:113.1132,mar25_un:118.547,janmar25_un:339.7145,jan26_un:80.1712,fev26_un:65.3484,mar26_un:55.8387,janmar26_un:201.3583},
-  'INFC Cidade Gde MG+ES+Int RJ': {fytd25_val:19.0506,fytd26_val:14.8704,fytd25_un:683.9192,fytd26_un:540.2384,jan25_val:3.2482,fev25_val:2.6098,mar25_val:2.5244,janmar25_val:8.3824,jan26_val:2.9997,fev26_val:2.2064,mar26_val:2.0153,janmar26_val:7.2214,jan25_un:117.6366,fev25_un:94.2795,mar25_un:94.7092,janmar25_un:306.6253,jan26_un:106.5117,fev26_un:83.2873,mar26_un:74.5114,janmar26_un:264.3104},
-  'INFC Cidade Gde NE': {fytd25_val:32.2199,fytd26_val:28.2587,fytd25_un:1247.4896,fytd26_un:1123.4992,jan25_val:3.6258,fev25_val:4.0502,mar25_val:4.975,janmar25_val:12.651,jan26_val:3.2815,fev26_val:3.7172,mar26_val:4.4633,janmar26_val:11.462,jan25_un:138.6596,fev25_un:155.8,mar25_un:195.3718,janmar25_un:489.8314,jan26_un:128.0577,fev26_un:151.0889,mar26_un:175.5802,janmar26_un:454.7268},
-  'INFC Cidade Gde Sul': {fytd25_val:21.7014,fytd26_val:19.4311,fytd25_un:904.3589,fytd26_un:802.9888,jan25_val:3.5615,fev25_val:3.4708,mar25_val:3.6711,janmar25_val:10.7034,jan26_val:4.2379,fev26_val:3.4239,mar26_val:2.9672,janmar26_val:10.629,jan25_un:152.0598,fev25_un:144.4843,mar25_un:150.8875,janmar25_un:447.4316,jan26_un:171.3439,fev26_un:147.8188,mar26_un:119.9738,janmar26_un:439.1365},
-  'INFC Cidade Peq+Med CO': {fytd25_val:24.4998,fytd26_val:20.6511,fytd25_un:954.1667,fytd26_un:794.8359,jan25_val:4.332,fev25_val:4.5693,mar25_val:3.6923,janmar25_val:12.5936,jan26_val:4.0314,fev26_val:2.8745,mar26_val:3.0115,janmar26_val:9.9174,jan25_un:171.6875,fev25_un:176.5515,mar25_un:144.3147,janmar25_un:492.5537,jan26_un:153.456,fev26_un:113.7474,mar26_un:119.7887,janmar26_un:386.9921},
-  'INFC Cidade Peq+Med Int SP': {fytd25_val:91.56,fytd26_val:63.7784,fytd25_un:3297.3368,fytd26_un:2338.4128,jan25_val:17.2047,fev25_val:17.5553,mar25_val:20.893,janmar25_val:55.653,jan26_val:15.3209,fev26_val:11.5173,mar26_val:9.6345,janmar26_val:36.4727,jan25_un:633.8518,fev25_un:624.1854,mar25_un:739.4364,janmar25_un:1997.4736,jan26_un:555.4119,fev26_un:436.0818,mar26_un:359.1185,janmar26_un:1350.6122},
-  'INFC Cidade Peq+Med MG+ES+Int RJ': {fytd25_val:61.971,fytd26_val:48.9316,fytd25_un:2368.1277,fytd26_un:1915.9637,jan25_val:12.7396,fev25_val:10.1763,mar25_val:8.5626,janmar25_val:31.4785,jan26_val:9.7279,fev26_val:8.395,mar26_val:8.1534,janmar26_val:26.2763,jan25_un:494.0785,fev25_un:398.4843,mar25_un:339.7109,janmar25_un:1232.2737,jan26_un:380.895,fev26_un:339.2831,mar26_un:324.4752,janmar26_un:1044.6533},
-  'INFC Cidade Peq+Med NE': {fytd25_val:67.7215,fytd26_val:61.2948,fytd25_un:2759.5473,fytd26_un:2482.393,jan25_val:8.5355,fev25_val:11.0638,mar25_val:11.2573,janmar25_val:30.8566,jan26_val:8.5422,fev26_val:8.3071,mar26_val:11.7956,janmar26_val:28.6449,jan25_un:349.0002,fev25_un:451.4929,mar25_un:465.8112,janmar25_un:1266.3043,jan26_un:340.404,fev26_un:339.626,mar26_un:479.4767,janmar26_un:1159.5067},
-  'INFC Cidade Peq+Med Sul': {fytd25_val:89.7429,fytd26_val:87.6843,fytd25_un:3974.6034,fytd26_un:4108.8049,jan25_val:17.4656,fev25_val:14.4991,mar25_val:14.1252,janmar25_val:46.0899,jan26_val:18.8362,fev26_val:13.034,mar26_val:10.4044,janmar26_val:42.2746,jan25_un:781.6722,fev25_un:635.0358,mar25_un:610.6831,janmar25_un:2027.3911,jan26_un:891.9685,fev26_un:657.8141,mar26_un:490.8424,janmar26_un:2040.625},
-  'INFC Curitiba': {fytd25_val:10.5168,fytd26_val:9.1822,fytd25_un:499.7542,fytd26_un:424.4904,jan25_val:1.8342,fev25_val:1.7248,mar25_val:1.8245,janmar25_val:5.3835,jan26_val:2.1353,fev26_val:1.4048,mar26_val:1.1445,janmar26_val:4.6846,jan25_un:88.9866,fev25_un:77.3148,mar25_un:82.037,janmar25_un:248.3384,jan26_un:93.1875,fev26_un:63.5703,mar26_un:52.1747,janmar26_un:208.9325},
-  'INFC DF': {fytd25_val:11.0283,fytd26_val:4.9044,fytd25_un:398.6286,fytd26_un:172.6374,jan25_val:0.8272,fev25_val:0.6666,mar25_val:0.6398,janmar25_val:2.1336,jan26_val:0.9513,fev26_val:0.6368,mar26_val:0.5223,janmar26_val:2.1104,jan25_un:28.4526,fev25_un:22.8667,mar25_un:22.3088,janmar25_un:73.6281,jan26_un:33.444,fev26_un:23.3145,mar26_un:18.956,janmar26_un:75.7145},
-  'INFC Fortaleza': {fytd25_val:6.3187,fytd26_val:5.2718,fytd25_un:229.0302,fytd26_un:196.0057,jan25_val:0.7119,fev25_val:1.0146,mar25_val:1.1193,janmar25_val:2.8458,jan26_val:0.5608,fev26_val:0.8265,mar26_val:1.0843,janmar26_val:2.4716,jan25_un:25.6185,fev25_un:36.8425,mar25_un:42.6316,janmar25_un:105.0926,jan26_un:20.247,fev26_un:30.3143,mar26_un:39.0532,janmar26_un:89.6145},
-  'INFC GO': {fytd25_val:14.9165,fytd26_val:14.1211,fytd25_un:584.3716,fytd26_un:569.4844,jan25_val:2.3975,fev25_val:2.1299,mar25_val:2.0453,janmar25_val:6.5727,jan26_val:2.6798,fev26_val:1.9848,mar26_val:1.9036,janmar26_val:6.5682,jan25_un:97.6048,fev25_un:85.194,mar25_un:81.6412,janmar25_un:264.44,jan26_un:106.8812,fev26_un:82.2457,mar26_un:78.0472,janmar26_un:267.1741},
-  'INFC Gde RJ': {fytd25_val:34.7147,fytd26_val:29.1718,fytd25_un:1261.9731,fytd26_un:1119.6297,jan25_val:5.5656,fev25_val:4.6652,mar25_val:3.695,janmar25_val:13.9258,jan26_val:4.1342,fev26_val:4.2143,mar26_val:4.3457,janmar26_val:12.6942,jan25_un:210.1044,fev25_un:177.1222,mar25_un:139.0734,janmar25_un:526.3,jan26_un:162.1871,fev26_un:172.6762,mar26_un:167.8068,janmar26_un:502.6701},
-  'INFC Gde SP': {fytd25_val:48.3483,fytd26_val:32.2623,fytd25_un:1528.0249,fytd26_un:1033.414,jan25_val:8.7727,fev25_val:9.488,mar25_val:10.3259,janmar25_val:28.5866,jan26_val:9.0425,fev26_val:6.3163,mar26_val:4.3737,janmar26_val:19.7325,jan25_un:286.0618,fev25_un:308.1453,mar25_un:324.867,janmar25_un:919.0741,jan26_un:293.1442,fev26_un:211.6081,mar26_un:141.2295,janmar26_un:645.9818},
-  'INFC Int BA': {fytd25_val:21.7339,fytd26_val:19.4555,fytd25_un:869.9891,fytd26_un:780.3169,jan25_val:2.9208,fev25_val:3.1834,mar25_val:3.2855,janmar25_val:9.3897,jan26_val:3.218,fev26_val:2.5846,mar26_val:3.1639,janmar26_val:8.9665,jan25_un:118.3253,fev25_un:127.4238,mar25_un:133.219,janmar25_un:378.9681,jan26_un:129.9162,fev26_un:104.0301,mar26_un:128.8869,janmar26_un:362.8332},
-  'INFC Int CE': {fytd25_val:5.83,fytd26_val:4.7941,fytd25_un:253.7479,fytd26_un:209.2295,jan25_val:0.4786,fev25_val:0.9651,mar25_val:1.2567,janmar25_val:2.7004,jan26_val:0.4147,fev26_val:0.6665,mar26_val:1.1248,janmar26_val:2.206,jan25_un:21.3164,fev25_un:43.2587,mar25_un:56.5827,janmar25_un:121.1578,jan26_un:17.644,fev26_un:29.0711,mar26_un:49.6835,janmar26_un:96.3986},
-  'INFC Int MG': {fytd25_val:36.9674,fytd26_val:28.6128,fytd25_un:1360.0366,fytd26_un:1078.094,jan25_val:7.3695,fev25_val:6.0279,mar25_val:5.3175,janmar25_val:18.7149,jan26_val:5.9973,fev26_val:4.7007,mar26_val:4.7764,janmar26_val:15.4744,jan25_un:279.1,fev25_un:228.0977,mar25_un:197.4335,janmar25_un:704.6312,jan26_un:228.3048,fev26_un:183.325,mar26_un:185.7994,janmar26_un:597.4292},
-  'INFC Int PE': {fytd25_val:8.9054,fytd26_val:6.8702,fytd25_un:373.946,fytd26_un:287.9616,jan25_val:1.0961,fev25_val:1.5833,mar25_val:1.2714,janmar25_val:3.9508,jan26_val:0.8035,fev26_val:0.7942,mar26_val:1.3373,janmar26_val:2.935,jan25_un:46.1884,fev25_un:67.1871,mar25_un:54.7791,janmar25_un:168.1546,jan26_un:32.9519,fev26_un:34.3164,mar26_un:56.5377,janmar26_un:123.806},
-  'INFC Int PR': {fytd25_val:31.6276,fytd26_val:27.9077,fytd25_un:1383.5967,fytd26_un:1272.1081,jan25_val:5.8438,fev25_val:4.9007,mar25_val:5.4826,janmar25_val:16.2271,jan26_val:6.0495,fev26_val:3.9953,mar26_val:3.4792,janmar26_val:13.524,jan25_un:269.3045,fev25_un:211.4759,mar25_un:232.4475,janmar25_un:713.2279,jan26_un:276.6709,fev26_un:190.3756,mar26_un:158.1328,janmar26_un:625.1793},
-  'INFC Int RS': {fytd25_val:23.7897,fytd26_val:26.0564,fytd25_un:1105.5139,fytd26_un:1248.1556,jan25_val:5.0732,fev25_val:3.9117,mar25_val:3.2904,janmar25_val:12.2753,jan26_val:6.1065,fev26_val:4.3162,mar26_val:2.6542,janmar26_val:13.0769,jan25_un:231.0483,fev25_un:181.548,mar25_un:151.7859,janmar25_un:564.3822,jan26_un:290.7493,fev26_un:235.6599,mar26_un:133.1361,janmar26_un:659.5453},
-  'INFC Int SP': {fytd25_val:109.8938,fytd26_val:75.0713,fytd25_un:3887.19,fytd26_un:2709.747,jan25_val:20.5195,fev25_val:21.0169,mar25_val:24.585,janmar25_val:66.1214,jan26_val:17.7533,fev26_val:13.4139,mar26_val:11.277,janmar26_val:42.4442,jan25_un:741.9761,fev25_un:737.3425,mar25_un:857.9273,janmar25_un:2337.2459,jan26_un:635.455,fev26_un:501.3268,mar26_un:414.7863,janmar26_un:1551.5681},
-  'INFC MA+PI': {fytd25_val:15.9337,fytd26_val:15.8275,fytd25_un:618.5503,fytd26_un:606.8238,jan25_val:2.4618,fev25_val:3.246,mar25_val:3.1854,janmar25_val:8.8932,jan26_val:2.7632,fev26_val:2.8558,mar26_val:3.7981,janmar26_val:9.4171,jan25_un:94.7895,fev25_un:127.6572,mar25_un:125.0572,janmar25_un:347.5039,jan26_un:105.5136,fev26_un:110.8632,mar26_un:145.8541,janmar26_un:362.2309},
-  'INFC MG+ES+Int RJ': {fytd25_val:80.9409,fytd26_val:63.8268,fytd25_un:3048.4583,fytd26_un:2457.2041,jan25_val:15.9751,fev25_val:12.7407,mar25_val:11.0653,janmar25_val:39.7811,jan26_val:12.7302,fev26_val:10.6024,mar26_val:10.1636,janmar26_val:33.4962,jan25_un:611.1501,fev25_un:491.0335,mar25_un:433.5945,janmar25_un:1535.7781,jan26_un:487.5742,fev26_un:422.7547,mar26_un:398.7953,janmar26_un:1309.1242},
-  'INFC Man+Bel+Ana': {fytd25_val:5.437,fytd26_val:4.5276,fytd25_un:211.9233,fytd26_un:169.0285,jan25_val:0.9864,fev25_val:0.8365,mar25_val:0.8085,janmar25_val:2.6314,jan26_val:0.591,fev26_val:0.5282,mar26_val:0.5258,janmar26_val:1.645,jan25_un:37.1998,fev25_un:31.8516,mar25_un:30.5174,janmar25_un:99.5688,jan26_un:21.4072,fev26_un:19.4292,mar26_un:18.9451,janmar26_un:59.7815},
-  'INFC Manaus': {fytd25_val:1.3802,fytd26_val:1.3587,fytd25_un:48.8885,fytd26_un:46.8371,jan25_val:0.3257,fev25_val:0.1917,mar25_val:0.1761,janmar25_val:0.6935,jan26_val:0.1955,fev26_val:0.1679,mar26_val:0.1379,janmar26_val:0.5013,jan25_un:11.6988,fev25_un:6.8447,mar25_un:6.3927,janmar25_un:24.9362,jan26_un:6.5962,fev26_un:5.7674,mar26_un:4.6219,janmar26_un:16.9855},
-  'INFC NE': {fytd25_val:99.8641,fytd26_val:89.5454,fytd25_un:4004.5042,fytd26_un:3605.6653,jan25_val:12.1544,fev25_val:15.1018,mar25_val:16.2287,janmar25_val:43.4849,jan26_val:11.8215,fev26_val:12.0244,mar26_val:16.2554,janmar26_val:40.1013,jan25_un:487.4425,fev25_un:606.8939,mar25_un:661.0312,janmar25_un:1755.3676,jan26_un:468.4329,fev26_un:490.7154,mar26_un:654.9443,janmar26_un:1614.0926},
-  'INFC PE': {fytd25_val:19.4015,fytd26_val:15.938,fytd25_un:817.3867,fytd26_un:677.2611,jan25_val:2.2271,fev25_val:2.9015,mar25_val:2.7857,janmar25_val:7.9143,jan26_val:1.7329,fev26_val:1.7415,mar26_val:2.644,janmar26_val:6.1184,jan25_un:93.7412,fev25_un:122.2973,mar25_un:118.2874,janmar25_un:334.3259,jan26_un:71.9234,fev26_un:76.0604,mar26_un:111.5062,janmar26_un:259.49},
-  'INFC PR': {fytd25_val:42.1445,fytd26_val:37.0899,fytd25_un:1883.3509,fytd26_un:1696.5985,jan25_val:7.678,fev25_val:6.6255,mar25_val:7.3071,janmar25_val:21.6106,jan26_val:8.1848,fev26_val:5.4001,mar26_val:4.6236,janmar26_val:18.2085,jan25_un:358.2911,fev25_un:288.7907,mar25_un:314.4843,janmar25_un:961.5661,jan26_un:369.8584,fev26_un:253.9459,mar26_un:210.3075,janmar26_un:834.1118},
-  'INFC Porto Alegre': {fytd25_val:10.0802,fytd26_val:9.1356,fytd25_un:424.1297,fytd26_un:398.3247,jan25_val:2.0012,fev25_val:1.7974,mar25_val:1.9203,janmar25_val:5.7189,jan26_val:2.1945,fev26_val:1.7507,mar26_val:1.404,janmar26_val:5.3492,jan25_un:85.4708,fev25_un:78.2387,mar25_un:81.8653,janmar25_un:245.5748,jan26_un:96.3058,fev26_un:85.1763,mar26_un:62.5278,janmar26_un:244.0099},
-  'INFC Recife': {fytd25_val:10.4962,fytd26_val:9.0678,fytd25_un:443.4407,fytd26_un:389.2995,jan25_val:1.131,fev25_val:1.3181,mar25_val:1.5143,janmar25_val:3.9634,jan26_val:0.9293,fev26_val:0.9472,mar26_val:1.3066,janmar26_val:3.1831,jan25_un:47.5528,fev25_un:55.1102,mar25_un:63.5083,janmar25_un:166.1713,jan26_un:38.9714,fev26_un:41.744,mar26_un:54.9685,janmar26_un:135.6839},
-  'INFC SP': {fytd25_val:158.2421,fytd26_val:107.3336,fytd25_un:5415.2149,fytd26_un:3743.161,jan25_val:29.2923,fev25_val:30.5049,mar25_val:34.9109,janmar25_val:94.7081,jan26_val:26.7959,fev26_val:19.7303,mar26_val:15.6507,janmar26_val:62.1769,jan25_un:1028.038,fev25_un:1045.4879,mar25_un:1182.7943,janmar25_un:3256.3202,jan26_un:928.5991,fev26_un:712.9349,mar26_un:556.0158,janmar26_un:2197.5498},
-  'INFC Salvador': {fytd25_val:7.9961,fytd26_val:7.6035,fytd25_un:295.0063,fytd26_un:287.152,jan25_val:1.0858,fev25_val:1.0295,mar25_val:1.1281,janmar25_val:3.2434,jan26_val:1.0817,fev26_val:1.0325,mar26_val:1.174,janmar26_val:3.2882,jan25_un:40.7896,fev25_un:38.8735,mar25_un:43.1542,janmar25_un:122.8173,jan26_un:39.9928,fev26_un:40.9014,mar26_un:45.6138,janmar26_un:126.508},
-  'INFC Sul': {fytd25_val:111.8213,fytd26_val:107.3251,fytd25_un:4892.4365,fytd26_un:4918.816,jan25_val:21.0716,fev25_val:17.9928,mar25_val:17.8097,janmar25_val:56.8741,jan26_val:23.1015,fev26_val:16.4857,mar26_val:13.4214,janmar26_val:53.0086,jan25_un:935.2565,fev25_un:780.334,mar25_un:762.0532,janmar25_un:2477.6437,jan26_un:1064.2412,fev26_un:806.5476,mar26_un:612.436,janmar26_un:2483.2248},
-  'T.BR INFC': {fytd25_val:537.0032,fytd26_val:435.3264,fytd25_un:20552.3225,fytd26_un:17276.0654,jan25_val:91.7889,fev25_val:89.1862,mar25_val:90.6841,janmar25_val:271.6592,jan26_val:85.6268,fev26_val:68.1202,mar26_val:64.9087,janmar26_val:218.6557,jan25_un:3566.5866,fev25_un:3405.6693,mar25_un:3438.9264,janmar25_un:10411.1823,jan26_un:3373.597,fev26_un:2800.8583,mar26_un:2583.8468,janmar26_un:8758.3021},
-  'INA Int MG': {fytd25_val:8.7949,fytd26_val:7.7412,fytd25_un:428.7266,fytd26_un:367.217,jan25_val:1.9563,fev25_val:1.4322,mar25_val:1.1445,janmar25_val:4.533,jan26_val:1.525,fev26_val:1.2829,mar26_val:1.3741,janmar26_val:4.182,jan25_un:91.6382,fev25_un:70.0603,mar25_un:56.4738,janmar25_un:218.1723,jan26_un:72.8862,fev26_un:61.032,mar26_un:62.0989,janmar26_un:196.0171},
-  'INA MG': {fytd25_val:12.2436,fytd26_val:10.857,fytd25_un:593.5533,fytd26_un:507.8459,jan25_val:2.5829,fev25_val:1.9186,mar25_val:1.551,janmar25_val:6.0525,jan26_val:2.1762,fev26_val:1.7469,mar26_val:1.8276,janmar26_val:5.7507,jan25_un:120.6106,fev25_un:92.5324,mar25_un:75.5673,janmar25_un:288.7103,jan26_un:101.9874,fev26_un:81.9171,mar26_un:81.9244,janmar26_un:265.8289},
-  'INA MG+ES+Int RJ': {fytd25_val:18.6588,fytd26_val:16.8485,fytd25_un:891.9881,fytd26_un:788.1427,jan25_val:4.043,fev25_val:2.7415,mar25_val:2.3822,janmar25_val:9.1667,jan26_val:3.2552,fev26_val:2.9058,mar26_val:2.8382,janmar26_val:8.9992,jan25_un:186.9282,fev25_un:131.9352,mar25_un:114.8557,janmar25_un:433.7191,jan26_un:151.1006,fev26_un:134.2458,mar26_un:126.8135,janmar26_un:412.1599}
+  'Farma CO':{fytd25_val:50.3455,fytd26_val:38.4643,fytd25_un:1706.6718,fytd26_un:1250.5737,jan25_val:6.7116,fev25_val:7.3189,mar25_val:6.1084,janmar25_val:24.7306,jan26_val:6.4056,fev26_val:4.5031,mar26_val:4.5212,janmar26_val:20.5413,jan25_un:255.9399,fev25_un:271.5752,mar25_un:226.5192,janmar25_un:754.0343,jan26_un:239.0474,fev26_un:174.3647,mar26_un:173.6619,janmar26_un:587.074,jul25_val:2.7849,ago25_val:2.2989,set25_val:2.6781,out25_val:2.6553,nov25_val:3.1872,dez25_val:4.3185,abr26_val:5.1114,abr25_val:4.5916,mai25_val:4.1029,jun25_val:2.4033},
+  'Farma Gde RJ':{fytd25_val:38.0799,fytd26_val:32.4804,fytd25_un:1243.3911,fytd26_un:1091.3168,jan25_val:5.531,fev25_val:4.6257,mar25_val:3.6501,janmar25_val:17.5179,jan26_val:4.08,fev26_val:4.1597,mar26_val:4.2808,janmar26_val:16.3847,jan25_un:208.3629,fev25_un:174.9561,mar25_un:136.6088,janmar25_un:519.9278,jan26_un:159.4283,fev26_un:169.8872,mar26_un:164.5034,janmar26_un:493.8189,jul25_val:2.2512,ago25_val:1.9027,set25_val:2.4582,out25_val:2.6466,nov25_val:2.8858,dez25_val:3.9514,abr26_val:3.8642,abr25_val:3.7111,mai25_val:4.69,jun25_val:3.3135},
+  'Farma Gde SP':{fytd25_val:51.7481,fytd26_val:35.8531,fytd25_un:1464.7685,fytd26_un:1001.6035,jan25_val:8.5099,fev25_val:9.2863,mar25_val:10.1227,janmar25_val:32.6151,jan26_val:8.8617,fev26_val:6.2135,mar26_val:4.2947,janmar26_val:23.6399,jan25_un:272.7661,fev25_un:297.8474,mar25_un:314.9679,janmar25_un:885.5814,jan26_un:284.5455,fev26_un:206.9526,mar26_un:137.306,janmar26_un:628.8041,jul25_val:1.1241,ago25_val:0.9177,set25_val:1.5173,out25_val:1.802,nov25_val:2.0264,dez25_val:4.8258,abr26_val:4.27,abr25_val:4.6962,mai25_val:2.7826,jun25_val:1.3422},
+  'Farma Indep CO':{fytd25_val:27.8951,fytd26_val:24.5279,fytd25_un:1012.1011,fytd26_un:863.307,jan25_val:4.2829,fev25_val:4.7777,mar25_val:3.9586,janmar25_val:15.9934,jan26_val:4.164,fev26_val:2.8922,mar26_val:2.9932,janmar26_val:13.4839,jan25_un:177.3174,fev25_un:191.4352,mar25_un:158.9731,janmar25_un:527.7257,jan26_un:168.6147,fev26_un:120.6101,mar26_un:126.5457,janmar26_un:415.7705,jul25_val:1.7462,ago25_val:1.3898,set25_val:1.6717,out25_val:1.5737,nov25_val:1.9532,dez25_val:2.7094,abr26_val:3.4344,abr25_val:2.9742,mai25_val:2.6798,jun25_val:1.5165},
+  'Farma Indep Gde RJ':{fytd25_val:14.7048,fytd26_val:12.6978,fytd25_un:521.064,fytd26_un:485.919,jan25_val:2.0481,fev25_val:1.6552,mar25_val:1.2336,janmar25_val:6.3979,jan26_val:1.4424,fev26_val:1.5948,mar26_val:1.6929,janmar26_val:6.1867,jan25_un:85.3892,fev25_un:69.8173,mar25_un:50.6181,janmar25_un:205.8246,jan26_un:66.6779,fev26_un:74.2501,mar26_un:76.9216,janmar26_un:217.8496,jul25_val:0.9663,ago25_val:0.7975,set25_val:0.9592,out25_val:1.0196,nov25_val:1.1963,dez25_val:1.5723,abr26_val:1.4566,abr25_val:1.4609,mai25_val:1.896,jun25_val:1.2788},
+  'Farma Indep Gde SP':{fytd25_val:14.4611,fytd26_val:10.6488,fytd25_un:464.1381,fytd26_un:323.1742,jan25_val:2.3272,fev25_val:2.5594,mar25_val:2.7747,janmar25_val:8.8471,jan26_val:2.8321,fev26_val:2.1227,mar26_val:1.264,janmar26_val:7.5484,jan25_un:83.5265,fev25_un:92.9509,mar25_un:97.4201,janmar25_un:273.8975,jan26_un:99.7768,fev26_un:75.2879,mar26_un:43.7605,janmar26_un:218.8252,jul25_val:0.2298,ago25_val:0.231,set25_val:0.4425,out25_val:0.4765,nov25_val:0.5284,dez25_val:1.1922,abr26_val:1.3297,abr25_val:1.1859,mai25_val:0.7349,jun25_val:0.3158},
+  'Farma Indep Int SP':{fytd25_val:59.9846,fytd26_val:42.4005,fytd25_un:1951.9642,fytd26_un:1387.0234,jan25_val:10.2193,fev25_val:10.2976,mar25_val:11.2647,janmar25_val:39.6345,jan26_val:9.241,fev26_val:7.1838,mar26_val:5.8423,janmar26_val:27.765,jan25_un:381.5669,fev25_un:375.2055,mar25_un:422.3489,janmar25_un:1179.1213,jan26_un:343.3529,fev26_un:273.7176,mar26_un:226.6219,janmar26_un:843.6924,jul25_val:1.0353,ago25_val:1.0348,set25_val:2.1834,out25_val:2.6138,nov25_val:2.9389,dez25_val:4.8291,abr26_val:5.498,abr25_val:7.8529,mai25_val:4.8063,jun25_val:1.5328},
+  'Farma Indep MG+ES+Int RJ':{fytd25_val:47.1316,fytd26_val:39.8845,fytd25_un:1679.061,fytd26_un:1416.5089,jan25_val:8.7194,fev25_val:7.2185,mar25_val:5.8682,janmar25_val:26.3988,jan26_val:7.0295,fev26_val:6.0683,mar26_val:5.7363,janmar26_val:24.0075,jan25_un:346.5399,fev25_un:289.1163,mar25_un:241.0658,janmar25_un:876.722,jan26_un:284.8165,fev26_un:254.8163,mar26_un:241.4084,janmar26_un:781.0412,jul25_val:1.3675,ago25_val:1.344,set25_val:2.0023,out25_val:2.8555,nov25_val:3.3144,dez25_val:4.9931,abr26_val:5.1734,abr25_val:4.5926,mai25_val:3.6906,jun25_val:2.2179},
+  'Farma Indep NE':{fytd25_val:73.4095,fytd26_val:68.0316,fytd25_un:2780.1738,fytd26_un:2469.1627,jan25_val:8.0684,fev25_val:10.2739,mar25_val:10.9506,janmar25_val:37.8892,jan26_val:7.7496,fev26_val:7.7395,mar26_val:10.9316,janmar26_val:36.3334,jan25_un:343.2382,fev25_un:432.9803,mar25_un:467.9358,janmar25_un:1244.1543,jan26_un:324.6919,fev26_un:332.6518,mar26_un:473.1166,janmar26_un:1130.4603,jul25_val:6.8442,ago25_val:5.1939,set25_val:4.2476,out25_val:4.2269,nov25_val:4.6775,dez25_val:6.5082,abr26_val:9.9126,abr25_val:8.5963,mai25_val:7.0962,jun25_val:7.5862},
+  'Farma Indep Sul':{fytd25_val:59.7571,fytd26_val:59.3852,fytd25_un:2418.1253,fytd26_un:2603.5737,jan25_val:10.6873,fev25_val:8.9206,mar25_val:8.7698,janmar25_val:34.1893,jan26_val:11.8178,fev26_val:7.7215,mar26_val:6.6858,janmar26_val:31.8269,jan25_un:493.1973,fev25_un:408.7329,mar25_un:398.1706,janmar25_un:1300.1008,jan26_un:579.9925,fev26_un:378.0974,mar26_un:324.4204,janmar26_un:1282.5103,jul25_val:0.921,ago25_val:1.1019,set25_val:3.0618,out25_val:4.3414,nov25_val:6.9259,dez25_val:11.2063,abr26_val:5.6018,abr25_val:5.8116,mai25_val:3.9179,jun25_val:1.2632},
+  'Farma Int SP':{fytd25_val:125.3196,fytd26_val:84.8458,fytd25_un:3838.9515,fytd26_un:2684.3175,jan25_val:20.3671,fev25_val:20.8716,mar25_val:24.4019,janmar25_val:82.1038,jan26_val:17.6214,fev26_val:13.3501,mar26_val:11.2195,janmar26_val:52.5132,jan25_un:734.6571,fev25_un:730.4825,mar25_un:849.7505,janmar25_un:2314.8901,jan26_un:629.1133,fev26_un:498.2762,mar26_un:411.7011,janmar26_un:1539.0906,jul25_val:2.3701,ago25_val:2.4083,set25_val:4.9687,out25_val:5.783,nov25_val:6.347,dez25_val:10.4555,abr26_val:10.3222,abr25_val:16.4632,mai25_val:9.6789,jun25_val:3.4617},
+  'Farma MG+ES+Int RJ':{fytd25_val:87.7933,fytd26_val:71.6858,fytd25_un:2972.4908,fytd26_un:2395.5313,jan25_val:15.6569,fev25_val:12.4868,mar25_val:10.8642,janmar25_val:47.3516,jan26_val:12.5024,fev26_val:10.4497,mar26_val:9.9585,janmar26_val:41.9581,jan25_un:595.1319,fev25_un:480.044,mar25_un:422.7355,janmar25_un:1497.9114,jan26_un:475.6106,fev26_un:414.2507,mar26_un:388.6543,janmar26_un:1278.5156,jul25_val:2.6333,ago25_val:2.604,set25_val:3.985,out25_val:5.4141,nov25_val:5.9824,dez25_val:9.109,abr26_val:9.0476,abr25_val:8.3437,mai25_val:6.5316,jun25_val:3.984},
+  'Farma Moderno CO':{fytd25_val:22.4504,fytd26_val:13.9363,fytd25_un:694.5709,fytd26_un:387.2665,jan25_val:2.4287,fev25_val:2.5412,mar25_val:2.1498,janmar25_val:8.7372,jan26_val:2.2416,fev26_val:1.6109,mar26_val:1.5279,janmar26_val:7.0574,jan25_un:78.6225,fev25_un:80.14,mar25_un:67.5461,janmar25_un:226.3086,jan26_un:70.4326,fev26_un:53.7546,mar26_un:47.1162,janmar26_un:171.3034,jul25_val:1.0387,ago25_val:0.9091,set25_val:1.0063,out25_val:1.0817,nov25_val:1.234,dez25_val:1.6091,abr26_val:1.677,abr25_val:1.6174,mai25_val:1.4232,jun25_val:0.8868},
+  'Farma Moderno Gde RJ':{fytd25_val:23.3751,fytd26_val:19.7826,fytd25_un:722.3271,fytd26_un:605.3979,jan25_val:3.4828,fev25_val:2.9705,mar25_val:2.4165,janmar25_val:11.12,jan26_val:2.6376,fev26_val:2.5649,mar26_val:2.5879,janmar26_val:10.198,jan25_un:122.9737,fev25_un:105.1389,mar25_un:85.9906,janmar25_un:314.1032,jan26_un:92.7504,fev26_un:95.6372,mar26_un:87.5818,janmar26_un:275.9694,jul25_val:1.2849,ago25_val:1.1052,set25_val:1.499,out25_val:1.627,nov25_val:1.6895,dez25_val:2.3791,abr26_val:2.4076,abr25_val:2.2502,mai25_val:2.794,jun25_val:2.0347},
+  'Farma Moderno Gde SP':{fytd25_val:37.287,fytd26_val:25.2043,fytd25_un:1000.6304,fytd26_un:678.4295,jan25_val:6.1827,fev25_val:6.7269,mar25_val:7.348,janmar25_val:23.768,jan26_val:6.0297,fev26_val:4.0907,mar26_val:3.0307,janmar26_val:16.0915,jan25_un:189.2395,fev25_un:204.8966,mar25_un:217.5477,janmar25_un:611.6838,jan26_un:184.7687,fev26_un:131.6647,mar26_un:93.5454,janmar26_un:409.9788,jul25_val:0.8942,ago25_val:0.6867,set25_val:1.0748,out25_val:1.3255,nov25_val:1.498,dez25_val:3.6336,abr26_val:2.9403,abr25_val:3.5104,mai25_val:2.0477,jun25_val:1.0264},
+  'Farma Moderno Int SP':{fytd25_val:65.335,fytd26_val:42.4453,fytd25_un:1886.9873,fytd26_un:1297.2942,jan25_val:10.1478,fev25_val:10.574,mar25_val:13.1372,janmar25_val:42.4694,jan26_val:8.3804,fev26_val:6.1663,mar26_val:5.3773,janmar26_val:24.7481,jan25_un:353.0902,fev25_un:355.277,mar25_un:427.4015,janmar25_un:1135.7687,jan26_un:285.7604,fev26_un:224.5585,mar26_un:185.0792,janmar26_un:695.3981,jul25_val:1.3348,ago25_val:1.3735,set25_val:2.7852,out25_val:3.1691,nov25_val:3.4081,dez25_val:5.6264,abr26_val:4.8242,abr25_val:8.6104,mai25_val:4.8725,jun25_val:1.9289},
+  'Farma Moderno MG+ES+Int RJ':{fytd25_val:40.6617,fytd26_val:31.8013,fytd25_un:1293.4298,fytd26_un:979.0224,jan25_val:6.9375,fev25_val:5.2682,mar25_val:4.996,janmar25_val:20.9529,jan26_val:5.4729,fev26_val:4.3814,mar26_val:4.2222,janmar26_val:17.9506,jan25_un:248.5918,fev25_un:190.9278,mar25_un:181.6698,janmar25_un:621.1894,jan26_un:190.7942,fev26_un:159.4344,mar26_un:147.246,janmar26_un:497.4746,jul25_val:1.2657,ago25_val:1.26,set25_val:1.9827,out25_val:2.5585,nov25_val:2.6679,dez25_val:4.1158,abr26_val:3.8742,abr25_val:3.7511,mai25_val:2.841,jun25_val:1.766},
+  'Farma Moderno NE':{fytd25_val:39.0469,fytd26_val:36.036,fytd25_un:1214.538,fytd26_un:1128.4959,jan25_val:4.05,fev25_val:4.8004,mar25_val:5.2621,janmar25_val:18.3109,jan26_val:4.0534,fev26_val:4.2721,mar26_val:5.3013,janmar26_val:18.3718,jan25_un:142.5349,fev25_un:172.5104,mar25_un:192.3323,janmar25_un:507.3776,jan26_un:142.1745,fev26_un:156.865,mar26_un:180.6081,janmar26_un:479.6476,jul25_val:3.6375,ago25_val:3.0335,set25_val:2.5724,out25_val:2.5406,nov25_val:2.7921,dez25_val:3.0881,abr26_val:4.745,abr25_val:4.1984,mai25_val:3.4294,jun25_val:3.8963},
+  'Farma Moderno Sul':{fytd25_val:63.7377,fytd26_val:59.0314,fytd25_un:2457.9115,fytd26_un:2302.3971,jan25_val:10.3331,fev25_val:9.0332,mar25_val:8.9603,janmar25_val:34.4757,jan26_val:11.2461,fev26_val:8.7246,mar26_val:6.6949,janmar26_val:32.3788,jan25_un:439.1663,fev25_un:369.2156,mar25_un:359.4182,janmar25_un:1167.8001,jan26_un:482.1249,fev26_un:426.068,mar26_un:285.5439,janmar26_un:1193.7368,jul25_val:1.2674,ago25_val:1.4985,set25_val:2.6456,out25_val:4.089,nov25_val:6.449,dez25_val:10.7033,abr26_val:5.7132,abr25_val:6.149,mai25_val:4.6074,jun25_val:1.553},
+  'Farma NE':{fytd25_val:112.4564,fytd26_val:104.0676,fytd25_un:3994.7117,fytd26_un:3597.6586,jan25_val:12.1184,fev25_val:15.0743,mar25_val:16.2127,janmar25_val:56.2001,jan26_val:11.803,fev26_val:12.0116,mar26_val:16.2329,janmar26_val:54.7051,jan25_un:485.7732,fev25_un:605.4907,mar25_un:660.268,janmar25_un:1751.5319,jan26_un:466.8665,fev26_un:489.5168,mar26_un:653.7247,janmar26_un:1610.108,jul25_val:10.4817,ago25_val:8.2274,set25_val:6.82,out25_val:6.7675,nov25_val:7.4696,dez25_val:9.5963,abr26_val:14.6576,abr25_val:12.7948,mai25_val:10.5257,jun25_val:11.4825},
+  'Farma Sul':{fytd25_val:123.4947,fytd26_val:118.4166,fytd25_un:5361.0369,fytd26_un:4905.9707,jan25_val:21.0204,fev25_val:17.9538,mar25_val:17.7301,janmar25_val:68.6649,jan26_val:23.0639,fev26_val:16.4462,mar26_val:13.3806,abr26_val:11.315,abr25_val:11.9606,janmar26_val:64.2057,jan25_un:932.3636,fev25_un:777.9485,mar25_un:757.5888,janmar25_un:2467.9009,jan26_un:1062.1174,fev26_un:804.1654,mar26_un:609.9642,janmar26_un:2476.247,jul25_val:2.1884,ago25_val:2.6003,set25_val:5.7074,out25_val:8.4304,nov25_val:13.3749,dez25_val:21.9095,mai25_val:8.5252,jun25_val:2.8161},
+  'INA Int MG':{fytd25_val:9.7072,fytd26_val:8.9948,fytd25_un:428.7266,fytd26_un:367.217,jan25_val:1.9562,fev25_val:1.4321,mar25_val:1.1444,janmar25_val:5.4451,jan26_val:1.525,fev26_val:1.2829,mar26_val:1.3741,janmar26_val:5.4356,jan25_un:91.6382,fev25_un:70.0603,mar25_un:56.4738,janmar25_un:218.1723,jan26_un:72.8862,fev26_un:61.032,mar26_un:62.0989,janmar26_un:196.0171,jul25_val:0.2608,ago25_val:0.3013,set25_val:0.4222,out25_val:0.6637,nov25_val:0.7921,dez25_val:1.1191,abr26_val:1.2536,abr25_val:0.9123,mai25_val:0.6076,jun25_val:0.3457},
+  'INA MG':{fytd25_val:13.4683,fytd26_val:12.5163,fytd25_un:593.5533,fytd26_un:507.8459,jan25_val:2.583,fev25_val:1.9186,mar25_val:1.551,janmar25_val:7.2774,jan26_val:2.1762,fev26_val:1.7469,mar26_val:1.8276,janmar26_val:7.41,jan25_un:120.6106,fev25_un:92.5324,mar25_un:75.5673,janmar25_un:288.7103,jan26_un:101.9874,fev26_un:81.9171,mar26_un:81.9244,janmar26_un:265.8289,jul25_val:0.3551,ago25_val:0.4106,set25_val:0.6457,out25_val:1.0377,nov25_val:1.0922,dez25_val:1.5651,abr26_val:1.6594,abr25_val:1.2247,mai25_val:0.8058,jun25_val:0.4465},
+  'INA MG+ES+Int RJ':{fytd25_val:20.6733,fytd26_val:19.5502,fytd25_un:891.9881,fytd26_un:788.1427,jan25_val:4.043,fev25_val:2.7414,mar25_val:2.3823,janmar25_val:11.1811,jan26_val:3.2552,fev26_val:2.9058,mar26_val:2.8381,janmar26_val:11.7008,jan25_un:186.9282,fev25_un:131.9352,mar25_un:114.8557,janmar25_un:433.7191,jan26_un:151.1006,fev26_un:134.2458,mar26_un:126.8135,janmar26_un:412.1599,jul25_val:0.7033,ago25_val:0.6896,set25_val:0.9973,out25_val:1.4845,nov25_val:1.6244,dez25_val:2.3502,abr26_val:2.7017,abr25_val:2.0145,mai25_val:1.5893,jun25_val:0.9143},
+  'INFC BA':{fytd25_val:33.1461,fytd26_val:31.2132,fytd25_un:1164.9954,fytd26_un:1067.4689,jan25_val:4.0067,fev25_val:4.2129,mar25_val:4.4136,janmar25_val:16.0492,jan26_val:4.2998,fev26_val:3.6171,mar26_val:4.3379,janmar26_val:16.409,jan25_un:159.1149,fev25_un:166.2973,mar25_un:176.3733,janmar25_un:501.7855,jan26_un:169.9091,fev26_un:144.9315,mar26_un:174.5007,janmar26_un:489.3413,jul25_val:2.6144,ago25_val:2.186,set25_val:1.9647,out25_val:2.0578,nov25_val:2.4144,dez25_val:3.5668,abr26_val:4.1543,abr25_val:3.416,mai25_val:3.2299,jun25_val:3.7478},
+  'INFC Belo Horizonte':{fytd25_val:16.7069,fytd26_val:13.846,fytd25_un:537.6158,fytd26_un:435.8883,jan25_val:2.9168,fev25_val:2.3527,mar25_val:1.9495,janmar25_val:8.5237,jan26_val:2.7227,fev26_val:1.7773,mar26_val:1.7715,janmar26_val:7.7991,jan25_un:103.2887,fev25_un:83.7816,mar25_un:72.7513,janmar25_un:259.8216,jan26_un:94.647,fev26_un:64.9931,mar26_un:64.7793,janmar26_un:224.4194,jul25_val:0.3323,ago25_val:0.4249,set25_val:0.7958,out25_val:1.3061,nov25_val:1.2251,dez25_val:1.9627,abr26_val:1.5276,abr25_val:1.3047,mai25_val:0.779,jun25_val:0.4549},
+  'INFC CE':{fytd25_val:14.004,fytd26_val:11.9073,fytd25_un:482.7781,fytd26_un:405.2351,jan25_val:1.1905,fev25_val:1.9798,mar25_val:2.376,janmar25_val:7.4015,jan26_val:0.9754,fev26_val:1.4929,mar26_val:2.2091,janmar26_val:6.5188,jan25_un:46.9349,fev25_un:80.1013,mar25_un:99.2142,janmar25_un:226.2504,jan26_un:37.891,fev26_un:59.3853,mar26_un:88.7368,janmar26_un:186.0131,jul25_val:1.2662,ago25_val:1.0476,set25_val:0.7613,out25_val:0.726,nov25_val:0.7834,dez25_val:0.804,abr26_val:1.8414,abr25_val:1.8553,mai25_val:1.3296,jun25_val:1.1362},
+  'INFC CO':{fytd25_val:50.6224,fytd26_val:38.7303,fytd25_un:1717.8121,fytd26_un:1262.561,jan25_val:6.7434,fev25_val:7.3441,mar25_val:6.166,janmar25_val:24.8928,jan26_val:6.4525,fev26_val:4.5349,mar26_val:4.5462,janmar26_val:20.6678,jan25_un:257.3952,fev25_un:272.9464,mar25_un:229.8624,janmar25_un:760.204,jan26_un:241.1552,fev26_un:175.8001,mar26_un:174.9035,janmar26_un:591.8588,jul25_val:2.8096,ago25_val:2.3213,set25_val:2.7015,out25_val:2.6826,nov25_val:3.2032,dez25_val:4.3444,abr26_val:5.1342,abr25_val:4.6393,mai25_val:4.1384,jun25_val:2.4271},
+  'INFC Cidade Gde CO':{fytd25_val:23.3147,fytd26_val:14.4313,fytd25_un:763.5128,fytd26_un:467.32,jan25_val:2.4108,fev25_val:2.7741,mar25_val:2.4725,janmar25_val:9.4917,jan26_val:2.4293,fev26_val:1.6661,mar26_val:1.5397,janmar26_val:7.1101,jan25_un:85.6843,fev25_un:96.365,mar25_un:85.5065,janmar25_un:267.5558,jan26_un:87.672,fev26_un:62.0137,mar26_un:55.0274,janmar26_un:204.7131,jul25_val:1.1107,ago25_val:0.925,set25_val:1.0166,out25_val:1.1307,nov25_val:1.3977,dez25_val:1.7406,abr26_val:1.475,abr25_val:1.8344,mai25_val:1.4968,jun25_val:0.9385},
+  'INFC Cidade Gde Gde RJ':{fytd25_val:38.1104,fytd26_val:32.8382,fytd25_un:1248.8655,fytd26_un:1109.6718,jan25_val:5.5165,fev25_val:4.6322,mar25_val:3.667,janmar25_val:17.5457,jan26_val:4.1064,fev26_val:4.1804,mar26_val:4.3104,janmar26_val:16.4939,jan25_un:208.0915,fev25_un:175.6977,mar25_un:137.8507,janmar25_un:521.6399,jan26_un:160.9296,fev26_un:171.1054,mar26_un:166.2789,janmar26_un:498.3139,jul25_val:2.2821,ago25_val:1.9526,set25_val:2.4955,out25_val:2.6896,nov25_val:2.9355,dez25_val:3.989,abr26_val:3.8967,abr25_val:3.7299,mai25_val:4.6965,jun25_val:3.3306},
+  'INFC Cidade Gde Gde SP':{fytd25_val:51.6229,fytd26_val:35.5932,fytd25_un:1482.2164,fytd26_un:1003.2149,jan25_val:8.516,fev25_val:9.2275,mar25_val:10.0476,janmar25_val:32.4649,jan26_val:8.7859,fev26_val:6.1588,mar26_val:4.2505,janmar26_val:23.4329,jan25_un:277.4592,fev25_un:299.3549,mar25_un:315.8974,janmar25_un:892.7115,jan26_un:284.6246,fev26_un:206.0654,mar26_un:137.1391,janmar26_un:627.8291,jul25_val:1.1391,ago25_val:0.92,set25_val:1.5112,out25_val:1.8049,nov25_val:2.0236,dez25_val:4.7615,abr26_val:4.2377,abr25_val:4.6738,mai25_val:2.7659,jun25_val:1.3366},
+  'INFC Cidade Gde Int SP':{fytd25_val:20.8031,fytd26_val:12.7935,fytd25_un:589.6241,fytd26_un:372.2237,jan25_val:3.3139,fev25_val:3.4624,mar25_val:3.6936,janmar25_val:12.9431,jan26_val:2.4373,fev26_val:1.9004,mar26_val:1.6483,janmar26_val:7.4611,jan25_un:108.0543,fev25_un:113.1132,mar25_un:118.547,janmar25_un:339.7145,jan26_un:80.1712,fev26_un:65.3484,mar26_un:55.8387,janmar26_un:201.3583,jul25_val:0.4898,ago25_val:0.476,set25_val:0.8381,out25_val:0.9512,nov25_val:0.9808,dez25_val:1.5965,abr26_val:1.4751,abr25_val:2.4732,mai25_val:1.6857,jun25_val:0.6902},
+  'INFC Cidade Gde MG+ES+Int RJ':{fytd25_val:20.9043,fytd26_val:16.8536,fytd25_un:683.9192,fytd26_un:540.2384,jan25_val:3.2482,fev25_val:2.6098,mar25_val:2.5244,janmar25_val:10.236,jan26_val:2.9998,fev26_val:2.2064,mar26_val:2.0153,janmar26_val:9.2047,jan25_un:117.6366,fev25_un:94.2795,mar25_un:94.7092,janmar25_un:306.6253,jan26_un:106.5117,fev26_un:83.2873,mar26_un:74.5114,janmar26_un:264.3104,jul25_val:0.6749,ago25_val:0.7211,set25_val:1.0721,out25_val:1.5158,nov25_val:1.5118,dez25_val:2.1532,abr26_val:1.9833,abr25_val:1.8536,mai25_val:1.3822,jun25_val:0.9529},
+  'INFC Cidade Gde NE':{fytd25_val:36.1432,fytd26_val:32.2856,fytd25_un:1247.4896,fytd26_un:1123.4992,jan25_val:3.6244,fev25_val:4.0489,mar25_val:4.9737,janmar25_val:16.5742,jan26_val:3.2949,fev26_val:3.7412,mar26_val:4.4985,janmar26_val:15.497,jan25_un:138.6596,fev25_un:155.8,mar25_un:195.3718,janmar25_un:489.8314,jan26_un:128.0577,fev26_un:151.0889,mar26_un:175.5802,janmar26_un:454.7268,jul25_val:3.7049,ago25_val:2.9161,set25_val:2.4876,out25_val:2.4055,nov25_val:2.5344,dez25_val:2.7401,abr26_val:3.9623,abr25_val:3.9272,mai25_val:3.2343,jun25_val:4.0581},
+  'INFC Cidade Gde Sul':{fytd25_val:23.9963,fytd26_val:20.5892,fytd25_un:904.3589,fytd26_un:802.9888,jan25_val:3.3984,fev25_val:3.3234,mar25_val:3.5079,janmar25_val:13.0035,jan26_val:4.0794,fev26_val:3.2812,mar26_val:2.8079,janmar26_val:12.7555,jan25_un:152.0598,fev25_un:144.4843,mar25_un:150.8875,janmar25_un:447.4316,jan26_un:171.3439,fev26_un:147.8188,mar26_un:119.9738,janmar26_un:439.1365,jul25_val:0.393,ago25_val:0.4432,set25_val:0.8403,out25_val:1.0638,nov25_val:1.5936,dez25_val:3.4998,abr26_val:2.5869,abr25_val:2.7738,mai25_val:2.2621,jun25_val:0.5894},
+  'INFC Cidade Peq+Med CO':{fytd25_val:27.3045,fytd26_val:24.3257,fytd25_un:954.1667,fytd26_un:794.8359,jan25_val:4.332,fev25_val:4.5693,mar25_val:3.6923,janmar25_val:15.3983,jan26_val:4.0342,fev26_val:2.8774,mar26_val:3.0139,janmar26_val:13.5922,jan25_un:171.6875,fev25_un:176.5515,mar25_un:144.3147,janmar25_un:492.5537,jan26_un:153.456,fev26_un:113.7474,mar26_un:119.7887,janmar26_un:386.9921,jul25_val:1.6984,ago25_val:1.3958,set25_val:1.6832,out25_val:1.5512,nov25_val:1.8044,dez25_val:2.6005,abr26_val:3.6667,abr25_val:2.8047,mai25_val:2.6412,jun25_val:1.4876},
+  'INFC Cidade Peq+Med Int SP':{fytd25_val:105.6675,fytd26_val:72.6802,fytd25_un:3297.3368,fytd26_un:2338.4128,jan25_val:17.2047,fev25_val:17.5553,mar25_val:20.8929,janmar25_val:69.7605,jan26_val:15.321,fev26_val:11.5174,mar26_val:9.6346,janmar26_val:45.3746,jan25_un:633.8518,fev25_un:624.1854,mar25_un:739.4364,janmar25_un:1997.4736,jan26_un:555.4119,fev26_un:436.0818,mar26_un:359.1185,janmar26_un:1350.6122,jul25_val:1.9103,ago25_val:1.9619,set25_val:4.1714,out25_val:4.8906,nov25_val:5.4085,dez25_val:8.9629,abr26_val:8.9017,abr25_val:14.1075,mai25_val:8.0623,jun25_val:2.8148},
+  'INFC Cidade Peq+Med MG+ES+Int RJ':{fytd25_val:68.5986,fytd26_val:56.1777,fytd25_un:2368.1277,fytd26_un:1915.9637,jan25_val:12.7417,fev25_val:10.1775,mar25_val:8.5639,janmar25_val:38.106,jan26_val:9.7288,fev26_val:8.3957,mar26_val:8.1541,janmar26_val:33.5202,jan25_un:494.0785,fev25_un:398.4843,mar25_un:339.7109,janmar25_un:1232.2737,jan26_un:380.895,fev26_un:339.2831,mar26_un:324.4752,janmar26_un:1044.6533,jul25_val:2.001,ago25_val:1.9479,set25_val:2.9551,out25_val:4.035,nov25_val:4.6083,dez25_val:7.1102,abr26_val:7.2416,abr25_val:6.6229,mai25_val:5.2324,jun25_val:3.0853},
+  'INFC Cidade Peq+Med NE':{fytd25_val:76.5845,fytd26_val:72.0137,fytd25_un:2759.5473,fytd26_un:2482.393,jan25_val:8.5282,fev25_val:11.0572,mar25_val:11.2499,janmar25_val:39.7197,jan26_val:8.5394,fev26_val:8.3075,mar26_val:11.7984,janmar26_val:39.4074,jan25_un:349.0002,fev25_un:451.4929,mar25_un:465.8112,janmar25_un:1266.3043,jan26_un:340.404,fev26_un:339.626,mar26_un:479.4767,janmar26_un:1159.5067,jul25_val:6.7785,ago25_val:5.3189,set25_val:4.3296,out25_val:4.3874,nov25_val:4.9313,dez25_val:6.8605,abr26_val:10.7621,abr25_val:8.8844,mai25_val:7.3096,jun25_val:7.4239},
+  'INFC Cidade Peq+Med Sul':{fytd25_val:98.5462,fytd26_val:95.7565,fytd25_un:3974.6034,fytd26_un:4108.8049,jan25_val:17.4079,fev25_val:14.4469,mar25_val:14.0675,janmar25_val:54.8951,jan26_val:18.7981,fev26_val:12.9986,mar26_val:10.3613,janmar26_val:50.6894,jan25_un:781.6722,fev25_un:635.0358,mar25_un:610.6831,janmar25_un:2027.3911,jan26_un:891.9685,fev26_un:657.8141,mar26_un:490.8424,janmar26_un:2040.625,jul25_val:1.5729,ago25_val:1.9461,set25_val:4.6562,out25_val:7.1584,nov25_val:11.581,dez25_val:18.1526,abr26_val:8.5314,abr25_val:8.9728,mai25_val:6.0422,jun25_val:2.0123},
+  'INFC Curitiba':{fytd25_val:11.4449,fytd26_val:10.3809,fytd25_un:499.7542,fytd26_un:424.4904,jan25_val:1.8342,fev25_val:1.7248,mar25_val:1.8245,janmar25_val:6.3114,jan26_val:2.1353,fev26_val:1.4048,mar26_val:1.1444,janmar26_val:5.8832,jan25_un:88.9866,fev25_un:77.3148,mar25_un:82.037,janmar25_un:248.3384,jan26_un:93.1875,fev26_un:63.5703,mar26_un:52.1747,janmar26_un:208.9325,jul25_val:0.3737,ago25_val:0.4413,set25_val:0.5515,out25_val:0.568,nov25_val:0.7945,dez25_val:1.7688,abr26_val:1.1987,abr25_val:0.928,mai25_val:0.6234,jun25_val:0.3759},
+  'INFC DF':{fytd25_val:11.5679,fytd26_val:5.4271,fytd25_un:398.6286,fytd26_un:172.6374,jan25_val:0.8272,fev25_val:0.6666,mar25_val:0.6398,janmar25_val:2.6732,jan26_val:0.9513,fev26_val:0.6368,mar26_val:0.5223,janmar26_val:2.6331,jan25_un:28.4526,fev25_un:22.8667,mar25_un:22.3088,janmar25_un:73.6281,jan26_un:33.444,fev26_un:23.3145,mar26_un:18.956,janmar26_un:75.7145,jul25_val:0.3169,ago25_val:0.3305,set25_val:0.4027,out25_val:0.4984,nov25_val:0.6015,dez25_val:0.6439,abr26_val:0.5227,abr25_val:0.5396,mai25_val:0.4766,jun25_val:0.3427},
+  'INFC Fortaleza':{fytd25_val:7.1434,fytd26_val:6.1011,fytd25_un:229.0302,fytd26_un:196.0057,jan25_val:0.7118,fev25_val:1.0147,mar25_val:1.1193,janmar25_val:3.6704,jan26_val:0.5607,fev26_val:0.8264,mar26_val:1.0844,janmar26_val:3.3009,jan25_un:25.6185,fev25_un:36.8425,mar25_un:42.6316,janmar25_un:105.0926,jan26_un:20.247,fev26_un:30.3143,mar26_un:39.0532,janmar26_un:89.6145,jul25_val:0.6039,ago25_val:0.4753,set25_val:0.3895,out25_val:0.4084,nov25_val:0.446,dez25_val:0.4772,abr26_val:0.8293,abr25_val:0.8246,mai25_val:0.5876,jun25_val:0.5476},
+  'INFC GO':{fytd25_val:16.7108,fytd26_val:16.1418,fytd25_un:584.3716,fytd26_un:569.4844,jan25_val:2.3976,fev25_val:2.1299,mar25_val:2.0453,janmar25_val:8.3671,jan26_val:2.6799,fev26_val:1.9847,mar26_val:1.9037,janmar26_val:8.589,jan25_un:97.6048,fev25_un:85.194,mar25_un:81.6412,janmar25_un:264.44,jan26_un:106.8812,fev26_un:82.2457,mar26_un:78.0472,janmar26_un:267.1741,jul25_val:1.3297,ago25_val:0.9526,set25_val:1.1214,out25_val:1.0373,nov25_val:1.2769,dez25_val:1.8348,abr26_val:2.0207,abr25_val:1.7944,mai25_val:1.555,jun25_val:0.9219},
+  'INFC Gde RJ':{fytd25_val:38.4676,fytd26_val:33.0966,fytd25_un:1261.9731,fytd26_un:1119.6297,jan25_val:5.5656,fev25_val:4.6652,mar25_val:3.695,janmar25_val:17.6788,jan26_val:4.1343,fev26_val:4.2144,mar26_val:4.3457,janmar26_val:16.6191,jan25_un:210.1044,fev25_un:177.1222,mar25_un:139.0734,janmar25_un:526.3,jan26_un:162.1871,fev26_un:172.6762,mar26_un:167.8068,janmar26_un:502.6701,jul25_val:2.2976,ago25_val:1.966,set25_val:2.5165,out25_val:2.7158,nov25_val:2.9626,dez25_val:4.019,abr26_val:3.9248,abr25_val:3.7529,mai25_val:4.7278,jun25_val:3.3555},
+  'INFC Gde SP':{fytd25_val:53.1427,fytd26_val:36.6129,fytd25_un:1528.0249,fytd26_un:1033.414,jan25_val:8.7728,fev25_val:9.4881,mar25_val:10.326,janmar25_val:33.3812,jan26_val:9.0425,fev26_val:6.3164,mar26_val:4.3737,janmar26_val:24.0832,jan25_un:286.0618,fev25_un:308.1453,mar25_un:324.867,janmar25_un:919.0741,jan26_un:293.1442,fev26_un:211.6081,mar26_un:141.2295,janmar26_un:645.9818,jul25_val:1.1699,ago25_val:0.9435,set25_val:1.5503,out25_val:1.854,nov25_val:2.0921,dez25_val:4.9199,abr26_val:4.3506,abr25_val:4.7944,mai25_val:2.8388,jun25_val:1.3741},
+  'INFC Int BA':{fytd25_val:24.1648,fytd26_val:22.4627,fytd25_un:869.9891,fytd26_un:780.3169,jan25_val:2.9209,fev25_val:3.1834,mar25_val:3.2855,janmar25_val:11.8206,jan26_val:3.2181,fev26_val:2.5846,mar26_val:3.1639,janmar26_val:11.9738,jan25_un:118.3253,fev25_un:127.4238,mar25_un:133.219,janmar25_un:378.9681,jan26_un:129.9162,fev26_un:104.0301,mar26_un:128.8869,janmar26_un:362.8332,jul25_val:1.8229,ago25_val:1.5102,set25_val:1.3373,out25_val:1.4155,nov25_val:1.7115,dez25_val:2.6916,abr26_val:3.0072,abr25_val:2.4308,mai25_val:2.282,jun25_val:2.4539},
+  'INFC Int CE':{fytd25_val:6.8607,fytd26_val:5.8062,fytd25_un:253.7479,fytd26_un:209.2295,jan25_val:0.4786,fev25_val:0.9651,mar25_val:1.2567,janmar25_val:3.7311,jan26_val:0.4147,fev26_val:0.6664,mar26_val:1.1248,janmar26_val:3.218,jan25_un:21.3164,fev25_un:43.2587,mar25_un:56.5827,janmar25_un:121.1578,jan26_un:17.644,fev26_un:29.0711,mar26_un:49.6835,janmar26_un:96.3986,jul25_val:0.6623,ago25_val:0.5724,set25_val:0.3718,out25_val:0.3175,nov25_val:0.3374,dez25_val:0.3268,abr26_val:1.0121,abr25_val:1.0307,mai25_val:0.742,jun25_val:0.5885},
+  'INFC Int MG':{fytd25_val:40.7464,fytd26_val:32.6637,fytd25_un:1360.0366,fytd26_un:1078.094,jan25_val:7.3696,fev25_val:6.0279,mar25_val:5.3175,janmar25_val:22.4939,jan26_val:5.9973,fev26_val:4.7008,mar26_val:4.7764,janmar26_val:19.5255,jan25_un:279.1,fev25_un:228.0977,mar25_un:197.4335,janmar25_un:704.6312,jan26_un:228.3048,fev26_un:183.325,mar26_un:185.7994,janmar26_un:597.4292,jul25_val:0.8789,ago25_val:0.9667,set25_val:1.7758,out25_val:2.617,nov25_val:2.7275,dez25_val:4.1724,abr26_val:4.051,abr25_val:3.779,mai25_val:2.5532,jun25_val:1.1994},
+  'INFC Int PE':{fytd25_val:9.9024,fytd26_val:8.1607,fytd25_un:373.946,fytd26_un:287.9616,jan25_val:1.0961,fev25_val:1.5833,mar25_val:1.2714,janmar25_val:4.9479,jan26_val:0.8035,fev26_val:0.7942,mar26_val:1.3373,janmar26_val:4.2256,jan25_un:46.1884,fev25_un:67.1871,mar25_un:54.7791,janmar25_un:168.1546,jan26_un:32.9519,fev26_un:34.3164,mar26_un:56.5377,janmar26_un:123.806,jul25_val:0.9446,ago25_val:0.7124,set25_val:0.547,out25_val:0.588,nov25_val:0.5538,dez25_val:0.5893,abr26_val:1.2905,abr25_val:0.997,mai25_val:0.8173,jun25_val:0.9461},
+  'INFC Int PR':{fytd25_val:35.3164,fytd26_val:30.9192,fytd25_un:1383.5967,fytd26_un:1272.1081,jan25_val:5.8438,fev25_val:4.9007,mar25_val:5.4826,janmar25_val:19.9158,jan26_val:6.0495,fev26_val:3.9953,mar26_val:3.4792,janmar26_val:16.5355,jan25_un:269.3045,fev25_un:211.4759,mar25_un:232.4475,janmar25_un:713.2279,jan26_un:276.6709,fev26_un:190.3756,mar26_un:158.1328,janmar26_un:625.1793,jul25_val:0.5974,ago25_val:0.8131,set25_val:2.1927,out25_val:2.3037,nov25_val:3.1488,dez25_val:5.3281,abr26_val:3.0115,abr25_val:3.6887,mai25_val:2.3733,jun25_val:0.8117},
+  'INFC Int RS':{fytd25_val:25.4555,fytd26_val:28.1363,fytd25_un:1105.5139,fytd26_un:1248.1556,jan25_val:5.0732,fev25_val:3.9116,mar25_val:3.2904,janmar25_val:13.941,jan26_val:6.1065,fev26_val:4.3162,mar26_val:2.6542,janmar26_val:15.1569,jan25_un:231.0483,fev25_un:181.548,mar25_un:151.7859,janmar25_un:564.3822,jan26_un:290.7493,fev26_un:235.6599,mar26_un:133.1361,janmar26_un:659.5453,jul25_val:0.1674,ago25_val:0.1877,set25_val:0.7681,out25_val:2.1264,nov25_val:3.9246,dez25_val:5.8053,abr26_val:2.08,abr25_val:1.6658,mai25_val:0.8371,jun25_val:0.1617},
+  'INFC Int SP':{fytd25_val:126.4734,fytd26_val:85.4455,fytd25_un:3887.19,fytd26_un:2709.747,jan25_val:20.5195,fev25_val:21.0169,mar25_val:24.585,janmar25_val:82.701,jan26_val:17.7533,fev26_val:13.4139,mar26_val:11.2769,janmar26_val:52.8184,jan25_un:741.9761,fev25_un:737.3425,mar25_un:857.9273,janmar25_un:2337.2459,jan26_un:635.455,fev26_un:501.3268,mar26_un:414.7863,janmar26_un:1551.5681,jul25_val:2.4008,ago25_val:2.4384,set25_val:5.0091,out25_val:5.841,nov25_val:6.3884,dez25_val:10.5494,abr26_val:10.3742,abr25_val:16.5796,mai25_val:9.7475,jun25_val:3.5035},
+  'INFC MA+PI':{fytd25_val:18.5407,fytd26_val:19.0899,fytd25_un:618.5503,fytd26_un:606.8238,jan25_val:2.4618,fev25_val:3.246,mar25_val:3.1854,janmar25_val:11.5002,jan26_val:2.7632,fev26_val:2.8558,mar26_val:3.7981,janmar26_val:12.6796,jan25_un:94.7895,fev25_un:127.6572,mar25_un:125.0572,janmar25_un:347.5039,jan26_un:105.5136,fev26_un:110.8632,mar26_un:145.8541,janmar26_un:362.2309,jul25_val:1.3964,ago25_val:1.0128,set25_val:0.8074,out25_val:0.6381,nov25_val:0.8915,dez25_val:1.6642,abr26_val:3.2625,abr25_val:2.607,mai25_val:1.9975,jun25_val:1.232},
+  'INFC MG':{fytd25_val:57.4533,fytd26_val:46.5097,fytd25_un:1897.6524,fytd26_un:1513.9823,jan25_val:10.2863,fev25_val:8.3807,mar25_val:7.267,janmar25_val:31.0176,jan26_val:8.72,fev26_val:6.478,mar26_val:6.5479,janmar26_val:27.3246,jan25_un:382.3887,fev25_un:311.8793,mar25_un:270.1848,janmar25_un:964.4528,jan26_un:322.9518,fev26_un:248.3182,mar26_un:250.5787,janmar26_un:821.8487,jul25_val:1.2112,ago25_val:1.3916,set25_val:2.5716,out25_val:3.9231,nov25_val:3.9527,dez25_val:6.135,abr26_val:5.5786,abr25_val:5.0837,mai25_val:3.3321,jun25_val:1.6544},
+  'INFC MG+ES+Int RJ':{fytd25_val:89.4067,fytd26_val:73.0525,fytd25_un:3048.4583,fytd26_un:2457.2041,jan25_val:15.9751,fev25_val:12.7407,mar25_val:11.0653,janmar25_val:48.2469,jan26_val:12.7301,fev26_val:10.6024,mar26_val:10.1636,janmar26_val:42.7219,jan25_un:611.1501,fev25_un:491.0335,mar25_un:433.5945,janmar25_un:1535.7781,jan26_un:487.5742,fev26_un:422.7547,mar26_un:398.7953,janmar26_un:1309.1242,jul25_val:2.6754,ago25_val:2.6687,set25_val:4.0395,out25_val:5.553,nov25_val:6.1207,dez25_val:9.2732,abr26_val:9.2258,abr25_val:8.4658,mai25_val:6.6085,jun25_val:4.0365},
+  'INFC Man+Bel+Ana':{fytd25_val:6.0583,fytd26_val:4.9864,fytd25_un:211.9233,fytd26_un:169.0285,jan25_val:0.9864,fev25_val:0.8366,mar25_val:0.8085,janmar25_val:3.2528,jan26_val:0.591,fev26_val:0.5281,mar26_val:0.5257,janmar26_val:2.1037,jan25_un:37.1998,fev25_un:31.8516,mar25_un:30.5174,janmar25_un:99.5688,jan26_un:21.4072,fev26_un:19.4292,mar26_un:18.9451,janmar26_un:59.7815,jul25_val:0.5882,ago25_val:0.5035,set25_val:0.5068,out25_val:0.3958,nov25_val:0.4374,dez25_val:0.451,abr26_val:0.4588,abr25_val:0.6214,mai25_val:0.4811,jun25_val:0.5036},
+  'INFC Manaus':{fytd25_val:1.5257,fytd26_val:1.4906,fytd25_un:48.8885,fytd26_un:46.8371,jan25_val:0.3256,fev25_val:0.1918,mar25_val:0.1761,janmar25_val:0.839,jan26_val:0.1956,fev26_val:0.1679,mar26_val:0.1379,janmar26_val:0.6331,jan25_un:11.6988,fev25_un:6.8447,mar25_un:6.3927,janmar25_un:24.9362,jan26_un:6.5962,fev26_un:5.7674,mar26_un:4.6219,janmar26_un:16.9855,jul25_val:0.1544,ago25_val:0.1332,set25_val:0.1402,out25_val:0.1498,nov25_val:0.1377,dez25_val:0.1423,abr26_val:0.1318,abr25_val:0.1455,mai25_val:0.1373,jun25_val:0.144},
+  'INFC NE':{fytd25_val:112.6792,fytd26_val:104.2263,fytd25_un:4004.5042,fytd26_un:3605.6653,jan25_val:12.1544,fev25_val:15.1018,mar25_val:16.2287,janmar25_val:56.3,jan26_val:11.8216,fev26_val:12.0244,mar26_val:16.2554,janmar26_val:54.7822,jan25_un:487.4425,fev25_un:606.8939,mar25_un:661.0312,janmar25_un:1755.3676,jan26_un:468.4329,fev26_un:490.7154,mar26_un:654.9443,janmar26_un:1614.0926,jul25_val:10.4923,ago25_val:8.2443,set25_val:6.826,out25_val:6.8016,nov25_val:7.4735,dez25_val:9.6064,abr26_val:14.6808,abr25_val:12.8151,mai25_val:10.5493,jun25_val:11.4872},
+  'INFC PE':{fytd25_val:21.6251,fytd26_val:18.3815,fytd25_un:817.3867,fytd26_un:677.2611,jan25_val:2.2272,fev25_val:2.9015,mar25_val:2.7857,janmar25_val:10.1379,jan26_val:1.7329,fev26_val:1.7414,mar26_val:2.644,janmar26_val:8.5618,jan25_un:93.7412,fev25_un:122.2973,mar25_un:118.2874,janmar25_un:334.3259,jan26_un:71.9234,fev26_un:76.0604,mar26_un:111.5062,janmar26_un:259.49,jul25_val:2.2397,ago25_val:1.7336,set25_val:1.5139,out25_val:1.4823,nov25_val:1.4511,dez25_val:1.3991,abr26_val:2.4435,abr25_val:2.2236,mai25_val:1.7924,jun25_val:2.2708},
+  'INFC PR':{fytd25_val:46.7613,fytd26_val:41.3001,fytd25_un:1883.3509,fytd26_un:1696.5985,jan25_val:7.678,fev25_val:6.6255,mar25_val:7.3071,janmar25_val:26.2272,jan26_val:8.1848,fev26_val:5.4,mar26_val:4.6236,janmar26_val:22.4186,jan25_un:358.2911,fev25_un:288.7907,mar25_un:314.4843,janmar25_un:961.5661,jan26_un:369.8584,fev26_un:253.9459,mar26_un:210.3075,janmar26_un:834.1118,jul25_val:0.9711,ago25_val:1.2544,set25_val:2.7441,out25_val:2.8717,nov25_val:3.9432,dez25_val:7.097,abr26_val:4.2102,abr25_val:4.6167,mai25_val:2.9967,jun25_val:1.1876},
+  'INFC Porto Alegre':{fytd25_val:12.269,fytd26_val:10.5102,fytd25_un:424.1297,fytd26_un:398.3247,jan25_val:2.0013,fev25_val:1.7975,mar25_val:1.9203,janmar25_val:7.9079,jan26_val:2.1945,fev26_val:1.7507,mar26_val:1.4041,janmar26_val:6.7239,jan25_un:85.4708,fev25_un:78.2387,mar25_un:81.8653,janmar25_un:245.5748,jan26_un:96.3058,fev26_un:85.1763,mar26_un:62.5278,janmar26_un:244.0099,jul25_val:0.1629,ago25_val:0.0914,set25_val:0.22,out25_val:0.5073,nov25_val:0.914,dez25_val:1.8908,abr26_val:1.3746,abr25_val:2.1889,mai25_val:2.1056,jun25_val:0.3258},
+  'INFC RS':{fytd25_val:37.7245,fytd26_val:38.6466,fytd25_un:1529.6436,fytd26_un:1646.4803,jan25_val:7.0744,fev25_val:5.7091,mar25_val:5.2108,janmar25_val:21.849,jan26_val:8.301,fev26_val:6.0669,mar26_val:4.0583,janmar26_val:21.8808,jan25_un:316.5191,fev25_un:259.7867,mar25_un:233.6512,janmar25_un:809.957,jan26_un:387.0551,fev26_un:320.8363,mar26_un:195.6639,janmar26_un:903.5553,jul25_val:0.3303,ago25_val:0.2791,set25_val:0.9881,out25_val:2.6337,nov25_val:4.8386,dez25_val:7.6961,abr26_val:3.4545,abr25_val:3.8547,mai25_val:2.9427,jun25_val:0.4875},
+  'INFC Recife':{fytd25_val:11.7227,fytd26_val:10.2208,fytd25_un:443.4407,fytd26_un:389.2995,jan25_val:1.131,fev25_val:1.3182,mar25_val:1.5143,janmar25_val:5.1901,jan26_val:0.9294,fev26_val:0.9472,mar26_val:1.3067,janmar26_val:4.3362,jan25_un:47.5528,fev25_un:55.1102,mar25_un:63.5083,janmar25_un:166.1713,jan26_un:38.9714,fev26_un:41.744,mar26_un:54.9685,janmar26_un:135.6839,jul25_val:1.2951,ago25_val:1.0211,set25_val:0.9669,out25_val:0.8943,nov25_val:0.8973,dez25_val:0.8098,abr26_val:1.153,abr25_val:1.2266,mai25_val:0.9751,jun25_val:1.3247},
+  'INFC SC':{fytd25_val:39.3337,fytd26_val:38.712,fytd25_un:1479.442,fytd26_un:1575.7372,jan25_val:6.3192,fev25_val:5.6583,mar25_val:5.2919,janmar25_val:20.7961,jan26_val:6.6156,fev26_val:5.0187,mar26_val:4.7394,janmar26_val:20.0427,jan25_un:260.4462,fev25_un:231.7565,mar25_un:213.9175,janmar25_un:706.1202,jan26_un:307.3277,fev26_un:231.7654,mar26_un:206.4646,janmar26_un:745.5577,jul25_val:0.8925,ago25_val:1.0821,set25_val:1.9885,out25_val:2.9447,nov25_val:4.6203,dez25_val:7.1413,abr26_val:3.6689,abr25_val:3.5268,mai25_val:2.6033,jun25_val:1.1508},
+  'INFC SP':{fytd25_val:179.6161,fytd26_val:122.0584,fytd25_un:5415.2149,fytd26_un:3743.161,jan25_val:29.2923,fev25_val:30.505,mar25_val:34.9109,janmar25_val:116.0822,jan26_val:26.7959,fev26_val:19.7303,mar26_val:15.6506,janmar26_val:76.9016,jan25_un:1028.038,fev25_un:1045.4879,mar25_un:1182.7943,janmar25_un:3256.3202,jan26_un:928.5991,fev26_un:712.9349,mar26_un:556.0158,janmar26_un:2197.5498,jul25_val:3.5707,ago25_val:3.3819,set25_val:6.5594,out25_val:7.695,nov25_val:8.4805,dez25_val:15.4692,abr26_val:14.7248,abr25_val:21.374,mai25_val:12.5864,jun25_val:4.8776},
+  'INFC Salvador':{fytd25_val:8.9814,fytd26_val:8.7505,fytd25_un:295.0063,fytd26_un:287.152,jan25_val:1.0858,fev25_val:1.0295,mar25_val:1.1281,janmar25_val:4.2286,jan26_val:1.0817,fev26_val:1.0325,mar26_val:1.174,janmar26_val:4.4353,jan25_un:40.7896,fev25_un:38.8735,mar25_un:43.1542,janmar25_un:122.8173,jan26_un:39.9928,fev26_un:40.9014,mar26_un:45.6138,janmar26_un:126.508,jul25_val:0.7915,ago25_val:0.6758,set25_val:0.6274,out25_val:0.6423,nov25_val:0.7029,dez25_val:0.8753,abr26_val:1.1471,abr25_val:0.9852,mai25_val:0.948,jun25_val:1.2939},
+  'INFC Sul':{fytd25_val:123.8195,fytd26_val:118.6587,fytd25_un:4892.4365,fytd26_un:4918.816,jan25_val:21.0716,fev25_val:17.9928,mar25_val:17.8097,janmar25_val:68.8723,jan26_val:23.1014,fev26_val:16.4857,mar26_val:13.4214,janmar26_val:64.3421,jan25_un:935.2565,fev25_un:780.334,mar25_un:762.0532,janmar25_un:2477.6437,jan26_un:1064.2412,fev26_un:806.5476,mar26_un:612.436,janmar26_un:2483.2248,jul25_val:2.1938,ago25_val:2.6156,set25_val:5.7207,out25_val:8.4501,nov25_val:13.4021,dez25_val:21.9343,abr26_val:11.3336,abr25_val:11.9982,mai25_val:8.5427,jun25_val:2.8259},
+  'T.BR Farma':{fytd25_val:595.2653,fytd26_val:490.7745,fytd25_un:22670.8189,fytd26_un:17094.7505,jan25_val:90.8977,fev25_val:88.4474,mar25_val:89.8949,janmar25_val:332.4163,jan26_val:84.9283,fev26_val:67.6611,mar26_val:64.4136,abr26_val:59.0468,abr25_val:63.1763,janmar26_val:276.0497,jan25_un:3521.9657,fev25_un:3369.8262,mar25_un:3398.7982,janmar25_un:10290.5902,jan26_un:3338.0783,fev26_un:2776.8163,mar26_un:2558.4018,janmar26_un:8673.2964,jul25_val:24.4201,ago25_val:21.4596,set25_val:28.6366,out25_val:33.8897,nov25_val:41.7064,dez25_val:64.6123,mai25_val:47.3153,jun25_val:29.3048},
+  'T.BR Farma Indep':{fytd25_val:299.8832,fytd26_val:259.2096,fytd25_un:10926.4381,fytd26_un:9609.9419,jan25_val:46.6876,fev25_val:46.0735,mar25_val:45.1748,janmar25_val:170.6825,jan26_val:44.433,fev26_val:35.46,mar26_val:35.2914,janmar26_val:147.7336,jan25_un:1924.4526,fev25_un:1875.7221,mar25_un:1850.7973,janmar25_un:5650.972,jan26_un:1874.3084,fev26_un:1515.0301,mar26_un:1518.5904,janmar26_un:4907.9289,jul25_val:13.3504,ago25_val:11.303,set25_val:14.7988,out25_val:17.2213,nov25_val:21.6516,dez25_val:33.1508,abr26_val:32.5492,abr25_val:32.7466,mai25_val:25.0034,jun25_val:15.9341},
+  'T.BR Farma Moderno':{fytd25_val:295.382,fytd26_val:231.5649,fytd25_un:9381.1886,fytd26_un:7484.6954,jan25_val:44.2101,fev25_val:42.374,mar25_val:44.7201,janmar25_val:161.7338,jan26_val:40.4953,fev26_val:32.2011,mar26_val:29.1222,janmar26_val:128.3162,jan25_un:1597.5562,fev25_un:1494.1269,mar25_un:1547.9623,janmar25_un:4639.6454,jan26_un:1463.7764,fev26_un:1261.7555,mar26_un:1039.846,janmar26_un:3765.3779,jul25_val:11.0696,ago25_val:10.1566,set25_val:13.8378,out25_val:16.6684,nov25_val:20.0548,dez25_val:31.4615,abr26_val:26.4976,abr25_val:30.4296,mai25_val:22.3119,jun25_val:13.3706},
+  'T.BR INFC':{fytd25_val:600.6698,fytd26_val:494.8092,fytd25_un:20552.3225,fytd26_un:17276.0654,jan25_val:91.7889,fev25_val:89.1862,mar25_val:90.6841,janmar25_val:335.3258,jan26_val:85.6268,fev26_val:68.1202,mar26_val:64.9086,janmar26_val:278.1384,jan25_un:3566.5866,fev25_un:3405.6693,mar25_un:3438.9264,janmar25_un:10411.1823,jan26_un:3373.597,fev26_un:2800.8583,mar26_un:2583.8468,janmar26_un:8758.3021,jul25_val:24.6277,ago25_val:21.7013,set25_val:28.8704,out25_val:34.2938,nov25_val:42.0801,dez25_val:65.0975,abr26_val:59.4828,abr25_val:63.6666,mai25_val:47.6343,jun25_val:29.5133}
 };;
 
 const NIELSEN_FYTD_VAL = {
@@ -30301,12 +30711,12 @@ const NIELSEN_BRAND_VAL = {
     'ALL OTHERS CAMP': {fytd25_val:47.1004,fytd26_val:29.6861,fytd25_un:2115.2992,fytd26_un:1407.6943,jan_val:5.9228,fev_val:4.1362,mar_val:3.7593,jan_un:296.2898,fev_un:201.1072,mar_un:173.0253,monthly_val:[1.7, 1.617, 2.112, 2.699, 2.972, 4.769, 5.923, 4.136, 3.759],monthly_un:[72.7, 69.0, 92.0, 124.2, 141.5, 238.0, 296.3, 201.1, 173.0],jan25_val:7.7982,fev25_val:7.2439,mar25_val:7.5027,jan25_un:362.7379,fev25_un:320.8454,mar25_un:323.3245},
   },
   'INFC MG': {
-    'OFF!': {fytd25_val:11.5551,fytd26_val:10.1107,fytd25_un:453.1404,fytd26_un:403.132,jan_val:2.0689,fev_val:1.6655,mar_val:1.6375,jan_un:81.4799,fev_un:65.4227,mar_un:65.6385,monthly_val:[0.292,0.338,0.646,1.018,1.008,1.437,2.069,1.666,1.637],monthly_un:[12.0,13.9,26.5,41.7,41.3,58.9,84.8,68.3,65.6],jan25_val:2.2119,fev25_val:1.8895,mar25_val:1.6758,jan25_un:89.3488,fev25_un:77.937,mar25_un:70.4046},
-    'EXPOSIS': {fytd25_val:11.0746,fytd26_val:8.7887,fytd25_un:175.8274,fytd26_un:148.2594,jan_val:1.9013,fev_val:1.2364,mar_val:1.2711,jan_un:31.3769,fev_un:20.8811,mar_un:21.6372,monthly_val:[0.117,0.135,0.258,0.407,0.403,0.575,0.828,0.666,1.271],monthly_un:[1.9,2.1,4.1,6.5,6.4,9.1,13.2,10.6,21.6],jan25_val:1.985,fev25_val:1.7246,mar25_val:1.5639,jan25_un:31.3765,fev25_un:27.7628,mar25_un:25.6627},
-    'XO INSETO': {fytd25_val:14.5636,fytd26_val:11.6842,fytd25_un:618.1328,fytd26_un:513.8894,jan_val:2.4731,fev_val:1.9726,mar_val:2.0955,jan_un:109.0508,fev_un:88.9313,mar_un:94.6907,monthly_val:[0.283,0.328,0.627,0.987,0.978,1.394,2.007,1.616,2.096],monthly_un:[14.0,16.2,30.9,48.7,48.2,68.7,98.9,79.7,94.7],jan25_val:3.22,fev25_val:2.37,mar25_val:1.9126,jan25_un:138.0103,fev25_un:102.1499,mar25_un:81.1731},
-    'SUPER REPELEX': {fytd25_val:2.2676,fytd26_val:1.6851,fytd25_un:101.8564,fytd26_un:73.5628,jan_val:0.4305,fev_val:0.2607,mar_val:0.2233,jan_un:17.9343,fev_un:11.7156,mar_un:9.89,monthly_val:[0.091,0.105,0.2,0.316,0.312,0.445,0.641,0.516,0.223],monthly_un:[3.7,4.3,8.2,13.0,12.9,18.3,26.4,21.3,9.9],jan25_val:0.4827,fev25_val:0.346,mar25_val:0.3419,jan25_un:20.9093,fev25_un:16.5538,mar25_un:16.5821},
-    'SBP': {fytd25_val:2.5701,fytd26_val:1.7955,fytd25_un:83.5171,fytd26_un:52.257,jan_val:0.3353,fev_val:0.225,mar_val:0.233,jan_un:9.2074,fev_un:6.669,mar_un:6.8443,monthly_val:[0.032,0.037,0.071,0.112,0.111,0.158,0.228,0.183,0.233],monthly_un:[0.8,0.9,1.8,2.9,2.8,4.0,5.8,4.7,6.8],jan25_val:0.4621,fev25_val:0.4648,mar25_val:0.4564,jan25_un:14.4163,fev25_un:16.6787,mar25_un:16.7643},
-    'ALL OTHERS CAMP': {fytd25_val:10.3385,fytd26_val:6.867,fytd25_un:465.1782,fytd26_un:322.8817,jan_val:1.5109,fev_val:1.1179,mar_val:1.0875,jan_un:73.9026,fev_un:54.6985,mar_un:51.8779,monthly_val:[0.184, 0.239, 0.42, 0.65, 0.686, 0.971, 1.511, 1.118, 1.087],monthly_un:[8.5, 9.7, 19.1, 28.7, 30.6, 45.8, 73.9, 54.7, 51.9],jan25_val:1.9247,fev25_val:1.5858,mar25_val:1.3164,jan25_un:88.3275,fev25_un:70.7972,mar25_un:59.598},
+    'OFF!': {fytd25_val:12.779,fytd26_val:11.589,fytd25_un:453.1404,fytd26_un:403.132,jan_val:2.0689,fev_val:1.6655,mar_val:1.6375,jan_un:81.4799,fev_un:65.4227,mar_un:65.6385,monthly_val:[0.292,0.338,0.646,1.018,1.008,1.437,2.069,1.666,1.637],monthly_un:[12.0,13.9,26.5,41.7,41.3,58.9,84.8,68.3,65.6],jan25_val:2.2119,fev25_val:1.8895,mar25_val:1.6758,jan25_un:89.3488,fev25_un:77.937,mar25_un:70.4046,abr_val:1.4783,abr25_val:1.2237},
+    'EXPOSIS': {fytd25_val:12.152,fytd26_val:9.9595,fytd25_un:175.8274,fytd26_un:148.2594,jan_val:1.9013,fev_val:1.2364,mar_val:1.2711,jan_un:31.3769,fev_un:20.8811,mar_un:21.6372,monthly_val:[0.117,0.135,0.258,0.407,0.403,0.575,0.828,0.666,1.271],monthly_un:[1.9,2.1,4.1,6.5,6.4,9.1,13.2,10.6,21.6],jan25_val:1.985,fev25_val:1.7246,mar25_val:1.5639,jan25_un:31.3765,fev25_un:27.7628,mar25_un:25.6627,abr_val:1.1707,abr25_val:1.0775},
+    'XO INSETO': {fytd25_val:15.893,fytd26_val:13.315,fytd25_un:618.1328,fytd26_un:513.8894,jan_val:2.4731,fev_val:1.9726,mar_val:2.0955,jan_un:109.0508,fev_un:88.9313,mar_un:94.6907,monthly_val:[0.283,0.328,0.627,0.987,0.978,1.394,2.007,1.616,2.096],monthly_un:[14.0,16.2,30.9,48.7,48.2,68.7,98.9,79.7,94.7],jan25_val:3.22,fev25_val:2.37,mar25_val:1.9126,jan25_un:138.0103,fev25_un:102.1499,mar25_un:81.1731,abr_val:1.6305,abr25_val:1.3291},
+    'SUPER REPELEX': {fytd25_val:2.5062,fytd26_val:1.8916,fytd25_un:101.8564,fytd26_un:73.5628,jan_val:0.4305,fev_val:0.2607,mar_val:0.2233,jan_un:17.9343,fev_un:11.7156,mar_un:9.89,monthly_val:[0.091,0.105,0.2,0.316,0.312,0.445,0.641,0.516,0.223],monthly_un:[3.7,4.3,8.2,13.0,12.9,18.3,26.4,21.3,9.9],jan25_val:0.4827,fev25_val:0.346,mar25_val:0.3419,jan25_un:20.9093,fev25_un:16.5538,mar25_un:16.5821,abr_val:0.2066,abr25_val:0.2386},
+    'SBP': {fytd25_val:2.9081,fytd26_val:1.9719,fytd25_un:83.5171,fytd26_un:52.257,jan_val:0.3353,fev_val:0.225,mar_val:0.233,jan_un:9.2074,fev_un:6.669,mar_un:6.8443,monthly_val:[0.032,0.037,0.071,0.112,0.111,0.158,0.228,0.183,0.233],monthly_un:[0.8,0.9,1.8,2.9,2.8,4.0,5.8,4.7,6.8],jan25_val:0.4621,fev25_val:0.4648,mar25_val:0.4564,jan25_un:14.4163,fev25_un:16.6787,mar25_un:16.7643,abr_val:0.1764,abr25_val:0.338},
+    'ALL OTHERS CAMP': {fytd25_val:11.215,fytd26_val:7.783,fytd25_un:465.1782,fytd26_un:322.8817,jan_val:1.5109,fev_val:1.1179,mar_val:1.0875,jan_un:73.9026,fev_un:54.6985,mar_un:51.8779,monthly_val:[0.184, 0.239, 0.42, 0.65, 0.686, 0.971, 1.511, 1.118, 1.087],monthly_un:[8.5, 9.7, 19.1, 28.7, 30.6, 45.8, 73.9, 54.7, 51.9],jan25_val:1.9247,fev25_val:1.5858,mar25_val:1.3164,jan25_un:88.3275,fev25_un:70.7972,mar25_un:59.598,abr_val:0.9161,abr25_val:0.8769},
   },
   'INFC CO': {
     'OFF!': {fytd25_val:9.0086,fytd26_val:7.6138,fytd25_un:347.9426,fytd26_un:301.1806,jan_val:1.5006,fev_val:1.0607,mar_val:1.0836,jan_un:58.2111,fev_un:41.9982,mar_un:42.6455,monthly_val:[0.594,0.48,0.58,0.6,0.743,0.973,1.501,1.061,1.084],monthly_un:[24.4,19.7,23.8,24.6,30.5,39.9,61.5,43.5,42.6],jan25_val:1.3207,fev25_val:1.4091,mar25_val:1.2658,jan25_un:52.5528,fev25_un:54.5555,mar25_un:49.5006},
@@ -31556,9 +31966,9 @@ function initNielsenCharts(){
 const SJC_VOL_24 = [5374,5685,6648,5545,6504,6908,5650,6130,6308,5930,7101,6539]; // 2024
 const SJC_REC_24 = [118278,120628,142605,117509,143948,149552,129024,139437,139280,137956,151198,159192]; // 2024
 const SJC_VOL = [6321,5669,6498,4747,5750,5007,5189,3887,2771,4621,6627,4254]; // 2025
-const SJC_VOL_26 = [4897,9466,7316,9507,null,null,null,null,null,null,null,null]; // 2026
+const SJC_VOL_26 = [4897,9466,7316,9507,10125,null,null,null,null,null,null,null]; // 2026
 const SJC_REC = [149927,131639,143669,126002,135926,114626,105827,90119,69674,101324,128326,110607]; // 2025
-const SJC_REC_26 = [130111,251730,173606,220285,null,null,null,null,null,null,null,null]; // 2026
+const SJC_REC_26 = [130111,251730,173606,220285,222530.24,null,null,null,null,null,null,null]; // 2026
 const SJC_RANK = [
   {nome:'Det. Sanitário PATO 3UN Pastilha',  vol:5595, rec:53996,  color:'#fb923c'},
   {nome:'Desinfetante LYSOFORM 360ML Lav.',  vol:5235, rec:140456, color:'#3b82f6'},
@@ -31890,49 +32300,48 @@ function setSJCRankMode(m,btn){
 /* ═ SÃO JOÃO — COBERTURA & ESTOQUE ═ */
 /* ══════════════════════════════════ */
 const SJ_COBERTURA = [
-  {sku:"Off 165/170ml Aero",total:1219,lojas:855,pct:70.1,estoque:2625, risco:"atencao"},
-  {sku:"Off 170ml Spray Family Oferta Especial",total:1219,lojas:360,pct:29.5,estoque:1014, risco:"critico"},
-  {sku:"Off 200ml Family Locao Oferta",total:1219,lojas:293,pct:24.0,estoque:1439, risco:"critico"},
-  {sku:"Off Kids Lv200ml Pg117ml",total:1219,lojas:301,pct:24.7,estoque:1152, risco:"critico"},
-  {sku:"Off 170ml Spray Active",total:1219,lojas:495,pct:40.6,estoque:795, risco:"critico"},
-  {sku:"Off 100g Gel Toque Leve",total:1219,lojas:975,pct:80.0,estoque:1920},
-  {sku:"Off Aerossol 100ml Toque Leve S/PERFUME Spray",total:1219,lojas:1159,pct:95.1,estoque:3769},
-  {sku:"Exposis 100ml Inf Spray",total:1219,lojas:1087,pct:89.2,estoque:2283},
-  {sku:"Exposis 117ml Bebe Gel",total:1219,lojas:1010,pct:82.9,estoque:2041},
-  {sku:"Exposis 100ml Inf Gel",total:1219,lojas:1107,pct:90.8,estoque:4636},
-  {sku:"Off 117g Baby Gel",total:1219,lojas:187,pct:15.3,estoque:357, risco:"critico"},
-  {sku:"Exposis 32,9ml Eletrico Casa R",total:1219,lojas:567,pct:46.5,estoque:992, risco:"critico"},
-  {sku:"Raid Liq 32,9ml Rfl 45 Noites Family 50%DESC 2*UN",total:1219,lojas:231,pct:18.9,estoque:459, risco:"critico"},
-  {sku:"Off 100ml Locao Longa Duracao",total:1219,lojas:284,pct:23.3,estoque:478, risco:"critico"},
-  {sku:"Raid Aero 420ml Aqua Protection Economica",total:1219,lojas:198,pct:16.2,estoque:389, risco:"critico"},
-  {sku:"Raid Liq Refil 32,9ml 50%DESC 2*UN",total:1219,lojas:169,pct:13.9,estoque:291, risco:"critico"},
-  {sku:"Exposis 100ml Ultra Suave S/PERFUME",total:1219,lojas:1151,pct:94.4,estoque:3442},
-  {sku:"Raid Aero 420ml Base Agua LV+ PG-",total:1219,lojas:116,pct:9.5,estoque:190, risco:"critico"},
-  {sku:"Exposis 100ml Gel",total:1219,lojas:1154,pct:94.7,estoque:2870},
-  {sku:"Exposis 100ml Aero Extreme",total:1219,lojas:1132,pct:92.9,estoque:2126},
-  {sku:"Exposis 100ml Extreme",total:1219,lojas:851,pct:69.8,estoque:1476, risco:"atencao"},
-  {sku:"Kit Exposis Liq Casa 32,9ml E",total:1219,lojas:320,pct:26.3,estoque:578, risco:"critico"},
-  {sku:"Exposis 150ml Spray",total:1219,lojas:874,pct:71.7,estoque:1469, risco:"atencao"},
-  {sku:"Raid Elet Liq 45 Noites + Refil 32,9ml",total:1219,lojas:60,pct:4.9,estoque:94, risco:"critico"},
-  {sku:"Kit Exposis Gel+inf 52ml S/PERFUME",total:1219,lojas:395,pct:32.4,estoque:793, risco:"critico"},
-  {sku:"Kit Exposis Liq+extreme 52ml S/PERFUME",total:1219,lojas:423,pct:34.7,estoque:880, risco:"critico"},
-  {sku:"Raid Inset Aero 420ml Essencial",total:1219,lojas:40,pct:3.3,estoque:55, risco:"critico"},
-  {sku:"Raid Elet Liq 45 Noites + Refil 32,9ml Family",total:1219,lojas:99,pct:8.1,estoque:165, risco:"critico"},
-  {sku:"Kit Exposis Gel+gel Bebe 117g S/PERFUME",total:1219,lojas:488,pct:40.0,estoque:1117, risco:"critico"},
-  {sku:"Off 100ml Spray",total:1219,lojas:6,pct:0.5,estoque:6, risco:"critico"},
-  {sku:"Raid 12un Refil Pastilhas LV12 PG10",total:1219,lojas:4,pct:0.3,estoque:16, risco:"critico"},
-  {sku:"Raid Elet 12past 12horas 4noites",total:1219,lojas:4,pct:0.3,estoque:4, risco:"critico"},
-  {sku:"Raid Aero 420ml Eucalipto LV+ PG-",total:1219,lojas:1,pct:0.1,estoque:1, risco:"critico"},
-  {sku:"Exposis 200ml Spray",total:1219,lojas:1,pct:0.1,estoque:1, risco:"critico"},
-  {sku:"Exposis 40ml Inf Gel",total:1219,lojas:4,pct:0.3,estoque:4, risco:"critico"},
-  {sku:"Exposis Extreme 40ml Spray",total:1219,lojas:2,pct:0.2,estoque:2, risco:"critico"},
-  {sku:"Off 100ml Family",total:1219,lojas:1,pct:0.1,estoque:1, risco:"critico"},
-  {sku:"Off 100ml Spray Family",total:1219,lojas:1,pct:0.1,estoque:2, risco:"critico"},
-  {sku:"Off 177ml Aero Longa Duracao",total:1219,lojas:1,pct:0.1,estoque:1, risco:"critico"},
-  {sku:"Off 200ml Spray Family Oferta",total:1219,lojas:2,pct:0.2,estoque:3, risco:"critico"},
-  {sku:"Off 200ml Spray Longa Duracao",total:1219,lojas:2,pct:0.2,estoque:2, risco:"critico"},
-  {sku:"Off 60ml Family Locao",total:1219,lojas:2,pct:0.2,estoque:2, risco:"critico"},
-  {sku:"Off Kids 117ml Suave",total:1219,lojas:1,pct:0.1,estoque:1, risco:"critico"}
+  {sku:'Exposis 100Ml Gel',lojas:1153,total:1237,pct:93.2,estoque:2824,risco:'ok',marca:'EXPOSIS'},
+  {sku:'Exposis 100Ml Inf Gel',lojas:1143,total:1237,pct:92.4,estoque:4512,risco:'ok',marca:'EXPOSIS'},
+  {sku:'Aerossol OFF! 100Ml Toque Leve S/Perfume Spray',lojas:1138,total:1237,pct:92.0,estoque:3649,risco:'ok',marca:'OFF'},
+  {sku:'Exposis 100Ml Ultra Suave S/Perfume',lojas:1137,total:1237,pct:91.9,estoque:3366,risco:'ok',marca:'EXPOSIS'},
+  {sku:'Exposis 100Ml Aero Extreme',lojas:1118,total:1237,pct:90.4,estoque:2079,risco:'ok',marca:'EXPOSIS'},
+  {sku:'Exposis 100Ml Inf Spray',lojas:1071,total:1237,pct:86.6,estoque:2227,risco:'ok',marca:'EXPOSIS'},
+  {sku:'Exposis 117Ml Bebe Gel',lojas:994,total:1237,pct:80.4,estoque:2025,risco:'ok',marca:'EXPOSIS'},
+  {sku:'OFF! 100G Gel Toque Leve',lojas:962,total:1237,pct:77.8,estoque:1871,risco:'atencao',marca:'OFF'},
+  {sku:'Exposis 150Ml Spray',lojas:865,total:1237,pct:69.9,estoque:1440,risco:'atencao',marca:'EXPOSIS'},
+  {sku:'Exposis 100Ml Extreme',lojas:832,total:1237,pct:67.3,estoque:1442,risco:'atencao',marca:'EXPOSIS'},
+  {sku:'OFF! 165/170Ml Aero',lojas:797,total:1237,pct:64.4,estoque:2434,risco:'atencao',marca:'OFF'},
+  {sku:'Exposis 32,9Ml Eletrico Casa R',lojas:537,total:1237,pct:43.4,estoque:942,risco:'critico',marca:'EXPOSIS'},
+  {sku:'Kit Gel Exposis 100Ml+Gel Bebe 117G S/Perfume',lojas:492,total:1237,pct:39.8,estoque:1111,risco:'critico',marca:'EXPOSIS'},
+  {sku:'OFF! 170Ml Spray Active',lojas:468,total:1237,pct:37.8,estoque:746,risco:'critico',marca:'OFF'},
+  {sku:'Kit Liq Exposis 100Ml+Extreme 52Ml S/Perfume',lojas:417,total:1237,pct:33.7,estoque:864,risco:'critico',marca:'EXPOSIS'},
+  {sku:'Kit Gel Exposis 100Ml+Inf 52Ml S/Perfume',lojas:401,total:1237,pct:32.4,estoque:787,risco:'critico',marca:'EXPOSIS'},
+  {sku:'Kit Liq Exposis Casa 32,9Ml E',lojas:321,total:1237,pct:25.9,estoque:514,risco:'critico',marca:'EXPOSIS'},
+  {sku:'OFF! 170Ml Spray Family Oferta Especial',lojas:321,total:1237,pct:25.9,estoque:906,risco:'critico',marca:'OFF'},
+  {sku:'OFF! 200Ml Family Locao Oferta',lojas:280,total:1237,pct:22.6,estoque:1326,risco:'critico',marca:'OFF'},
+  {sku:'OFF! 100Ml Locao Longa Duracao',lojas:275,total:1237,pct:22.2,estoque:450,risco:'critico',marca:'OFF'},
+  {sku:'OFF! Kids Lv200Ml Pg117Ml',lojas:264,total:1237,pct:21.3,estoque:1041,risco:'critico',marca:'OFF'},
+  {sku:'RAID Inset Liq 32,9Ml Rfl 45 Noites Family 50%Desc 2°Un',lojas:227,total:1237,pct:18.4,estoque:421,risco:'critico',marca:'RAID'},
+  {sku:'RAID Multi Aero 420Ml Aqua Protection Ec',lojas:190,total:1237,pct:15.4,estoque:371,risco:'critico',marca:'RAID'},
+  {sku:'OFF! 117G Baby Gel',lojas:176,total:1237,pct:14.2,estoque:331,risco:'critico',marca:'OFF'},
+  {sku:'RAID Inset Liq Refil 32,9Ml 50%Desc 2°Un',lojas:152,total:1237,pct:12.3,estoque:261,risco:'critico',marca:'RAID'},
+  {sku:'RAID Multi Aero 420Ml Base Agua Lv+ Pg-',lojas:108,total:1237,pct:8.7,estoque:174,risco:'critico',marca:'RAID'},
+  {sku:'RAID Inset Apar Elet Liq 45 Noites + Refil 32,9Ml Family',lojas:92,total:1237,pct:7.4,estoque:126,risco:'critico',marca:'RAID'},
+  {sku:'RAID Inset Apar Elet Liq 45 Noites + Refil 32,9Ml',lojas:53,total:1237,pct:4.3,estoque:82,risco:'critico',marca:'RAID'},
+  {sku:'RAID Multi Inset Aero 420Ml Essencial',lojas:39,total:1237,pct:3.2,estoque:53,risco:'critico',marca:'RAID'},
+  {sku:'OFF! 100Ml Spray',lojas:5,total:1237,pct:0.4,estoque:5,risco:'critico',marca:'OFF'},
+  {sku:'RAID Inset 12Un Refil Pastilhas Lv12 Pg10',lojas:4,total:1237,pct:0.3,estoque:16,risco:'critico',marca:'RAID'},
+  {sku:'RAID Inset Apar Elet 12Past 12Horas 4Noites',lojas:4,total:1237,pct:0.3,estoque:4,risco:'critico',marca:'RAID'},
+  {sku:'Exposis 40Ml Inf Gel',lojas:4,total:1237,pct:0.3,estoque:4,risco:'critico',marca:'EXPOSIS'},
+  {sku:'Exposis Extreme 40Ml Spray',lojas:2,total:1237,pct:0.2,estoque:2,risco:'critico',marca:'EXPOSIS'},
+  {sku:'OFF! 200Ml Spray Longa Duracao',lojas:2,total:1237,pct:0.2,estoque:2,risco:'critico',marca:'OFF'},
+  {sku:'OFF! 200Ml Spray Family Oferta',lojas:2,total:1237,pct:0.2,estoque:3,risco:'critico',marca:'OFF'},
+  {sku:'OFF! 60Ml Family Locao',lojas:2,total:1237,pct:0.2,estoque:2,risco:'critico',marca:'OFF'},
+  {sku:'RAID Multi Aero 420Ml Eucalipto Lv+ Pg-',lojas:1,total:1237,pct:0.1,estoque:1,risco:'critico',marca:'RAID'},
+  {sku:'Exposis 200Ml Spray',lojas:1,total:1237,pct:0.1,estoque:1,risco:'critico',marca:'EXPOSIS'},
+  {sku:'OFF! 100Ml Family',lojas:1,total:1237,pct:0.1,estoque:1,risco:'critico',marca:'OFF'},
+  {sku:'OFF! 177Ml Aero Longa Duracao',lojas:1,total:1237,pct:0.1,estoque:1,risco:'critico',marca:'OFF'},
+  {sku:'OFF! Kids 117Ml Suave',lojas:1,total:1237,pct:0.1,estoque:1,risco:'critico',marca:'OFF'}
 ];
 
 const SJ_ESTOQUE = [
@@ -32964,6 +33373,11 @@ function switchSellOutClient(clientId) {
   /* Acumulado FY: renderizar card do cliente ativo */
   if(typeof window._acumTryRender === 'function')
     setTimeout(function(){ window._acumTryRender(clientId, 0); }, 350);
+  /* Sell Out por Marca: renderizar card do cliente ativo */
+  if(clientId === 'saojoao' && typeof window.sjMarcaRender === 'function')
+    setTimeout(window.sjMarcaRender, 450);
+  else if(typeof window._soMarcaRenderClient === 'function')
+    window._soMarcaRenderClient(clientId);
 }
 
 
@@ -33009,6 +33423,12 @@ function switchClient(id,btn){
         });
       }, 200);
     }
+    /* Renderizar card Sell Out por Marca do cliente ativo */
+    var _mCl = activeSelloutClient;
+    setTimeout(function(){
+      if(_mCl === 'saojoao' && typeof window.sjMarcaRender === 'function') window.sjMarcaRender();
+      else if(typeof window._soMarcaRenderClient === 'function') window._soMarcaRenderClient(_mCl);
+    }, 500);
   }
   
   // Se for sellout, inicializar o primeiro cliente (São João)
