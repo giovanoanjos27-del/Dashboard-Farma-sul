@@ -16782,191 +16782,10 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div style="position:relative;height:240px;"><canvas id="acum-v-saojoao"></canvas></div>
       </div>
     </div>
-    <div id="acum-diag-saojoao" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+    <div id="acum-diag-saojoao" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);"></div>
   </div>
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("saojoao",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("saojoao",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
-
-<!-- ═══ CARD SELL OUT POR MARCA · SÃO JOÃO ═══ -->
-<div class="card full" id="card-sj-marca" style="margin-bottom:16px;">
-  <div class="card-header">
-    <div>
-      <div class="card-title">🏷️ SELL OUT POR MARCA — São João</div>
-      <div class="card-sub" id="sj-marca-sub">FY25 vs FY26 · Faturamento e Volume</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:14px;">
-      <div class="toggle-group" id="sj-marca-filter">
-        <button class="tgl active blue" onclick="sjMarcaSet('total',this)">TOTAL</button>
-        <button class="tgl" onclick="sjMarcaSet('off',this)">OFF!</button>
-        <button class="tgl" onclick="sjMarcaSet('exposis',this)">EXPOSIS</button>
-        <button class="tgl" onclick="sjMarcaSet('raid',this)">RAID</button>
-      </div>
-      <div style="display:flex;gap:14px;align-items:center;">
-        <span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span>
-        <span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span>
-        <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span>
-      </div>
-    </div>
-  </div>
-  <div id="sj-marca-kpi" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">💰 Faturamento Mensal (R$)</div>
-      <div style="position:relative;height:240px;"><canvas id="sj-marca-r"></canvas></div>
-    </div>
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">📦 Unidades Mensais</div>
-      <div style="position:relative;height:240px;"><canvas id="sj-marca-v"></canvas></div>
-    </div>
-  </div>
-  <div id="sj-marca-diag" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
-</div>
-<script>
-(function(){
-  var LBL=['Jul','Ago','Set','Out','Nov','Dez','Jan','Fev','Mar','Abr','Mai','Jun'];
-  /* Dados FY25 (Jul/24-Jun/25) e FY26 (Jul/25-Jun/26) por marca */
-  var _D={
-    off:{
-      r25:[47335,111340,257140,414402,645952,798688,902387,650019,429555,183544,70155,9414],
-      v25:[2027,4530,11073,18202,30093,34865,42460,31066,18445,7190,2332,312],
-      r26:[10310,15580,75964,340150,654599,857325,629184,460723,318911,184554,22898,null],
-      v26:[344,509,2754,12697,27844,30992,23197,18078,12657,6053,910,null]
-    },
-    exposis:{
-      r25:[29102,44767,106148,167906,206491,224614,217697,225091,207141,167519,92990,15328],
-      v25:[490,722,1753,2693,3083,3295,3173,3249,2995,2420,1329,214],
-      r26:[19754,36794,80335,145569,223278,354188,291029,236056,208994,164996,35890,null],
-      v26:[268,497,1122,2050,3062,5176,4224,3555,3086,2368,610,null]
-    },
-    raid:{
-      r25:[2457,2969,10071,45739,87316,108429,118403,87111,87935,61258,41747,6215],
-      v25:[135,168,535,2057,3800,4874,5240,3749,3722,2501,1639,243],
-      r26:[2962,4984,12445,43579,81762,158105,99478,49052,30063,19026,3696,null],
-      v26:[122,199,490,1753,3648,7063,4448,2173,1302,846,171,null]
-    }
-  };
-  /* Total = soma das 3 marcas */
-  function _sum(a,b,c){return a.map(function(v,i){var x=(v||0)+(b[i]||0)+(c[i]||0);return x===0?null:x;});}
-  _D.total={
-    r25:_sum(_D.off.r25,_D.exposis.r25,_D.raid.r25),
-    v25:_sum(_D.off.v25,_D.exposis.v25,_D.raid.v25),
-    r26:_D.off.r26.map(function(v,i){var s=(v||0)+(_D.exposis.r26[i]||0)+(_D.raid.r26[i]||0);return v===null&&_D.exposis.r26[i]===null&&_D.raid.r26[i]===null?null:s;}),
-    v26:_D.off.v26.map(function(v,i){var s=(v||0)+(_D.exposis.v26[i]||0)+(_D.raid.v26[i]||0);return v===null&&_D.exposis.v26[i]===null&&_D.raid.v26[i]===null?null:s;})
-  };
-
-  var _marca='total';
-  var _charts={};
-
-  function _fmtR(v){if(!v)return'R$ 0';if(v>=1e6)return'R$ '+(v/1e6).toFixed(1)+'M';if(v>=1e3)return'R$ '+(v/1e3).toFixed(0)+'K';return'R$ '+v.toFixed(0);}
-  function _fmtU(v){if(!v)return'0 un';if(v>=1e6)return(v/1e6).toFixed(1)+'M un';if(v>=1e3)return(v/1e3).toFixed(0)+'K un';return v.toFixed(0)+' un';}
-  function _fmtAx(v,isR){if(isR){if(v>=1e6)return'R$'+(v/1e6).toFixed(0)+'M';if(v>=1e3)return'R$'+(v/1e3).toFixed(0)+'K';return'R$'+v;}if(v>=1e6)return(v/1e6).toFixed(1)+'M un';if(v>=1e3)return(v/1e3).toFixed(0)+'K un';return v+' un';}
-  function _pct(a,b){return a>0?((b-a)/a*100).toFixed(1):'—';}
-  function _sum1(arr){return arr.reduce(function(s,v){return s+(v||0);},0);}
-
-  function _proj(fy26){
-    var last=-1;
-    fy26.forEach(function(v,i){if(v!==null)last=i;});
-    if(last<0||last>=11)return null;
-    var avg25=_D[_marca].r25.slice(0,last+1).reduce(function(s,v){return s+v;},0)/(last+1);
-    var avg26=fy26.slice(0,last+1).reduce(function(s,v){return s+(v||0);},0)/(last+1);
-    var ratio=avg25>0?avg26/avg25:1;
-    return fy26.map(function(v,i){return v!==null?v:Math.round(_D[_marca].r25[i]*ratio);});
-  }
-
-  function _mkChart(id,fy25,fy26,isR){
-    var ctx=document.getElementById(id);if(!ctx)return null;
-    if(_charts[id]){try{_charts[id].destroy();}catch(e){}}
-    var proj=_proj(fy26);
-    var last26=-1;fy26.forEach(function(v,i){if(v!==null)last26=i;});
-    var d26full=fy26.slice(0,last26+1);
-    var d26proj=proj?proj.map(function(v,i){return i>last26?v:null;}):null;
-    var cfg={type:'line',data:{labels:LBL,datasets:[
-      {label:'FY25',data:fy25,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.13)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#3b82f6',fill:true,tension:0.35},
-      {label:'FY26',data:d26full,borderColor:'#34d399',backgroundColor:'rgba(52,211,153,0.15)',borderWidth:2.5,pointRadius:4,pointBackgroundColor:'#34d399',fill:true,tension:0.35},
-      d26proj?{label:'Proj.',data:d26proj,borderColor:'#64748B',borderWidth:1.5,borderDash:[5,4],pointRadius:3,pointBackgroundColor:'#64748B',fill:false,tension:0.35}:null
-    ].filter(Boolean)},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(isR?_fmtR(c.parsed.y):_fmtU(c.parsed.y));}}}},scales:{x:{ticks:{color:'#475569',font:{size:10}},grid:{color:'rgba(148,163,184,0.1)'}},y:{ticks:{color:'#475569',font:{size:9},callback:function(v){return _fmtAx(v,isR);}},grid:{color:'rgba(148,163,184,0.12)'}}}}};
-    _charts[id]=new Chart(ctx,cfg);
-    return _charts[id];
-  }
-
-  function _kpi(lbl,v25,v26,isR){
-    var pct=parseFloat(_pct(v25,v26));
-    var ok=pct>=0;
-    var arrow=ok?'▲':'▼';
-    var col=ok?'#22c55e':'#ef4444';
-    return '<div class="kpi-cell" style="background:#E4EAF2;border-radius:10px;padding:12px 14px;border:1px solid rgba(94,153,208,0.35);box-shadow:0 1px 4px rgba(10,40,80,0.07);">'
-      +'<div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#64748B;margin-bottom:4px;">'+lbl+'</div>'
-      +'<div style="font-size:10px;color:#64748B;margin-bottom:2px;">FY25: '+(isR?_fmtR(v25):_fmtU(v25))+'</div>'
-      +'<div style="font-size:17px;font-weight:800;color:#1D6FA8;line-height:1.1;">'+(isR?_fmtR(v26):_fmtU(v26))
-      +(v25>0?' <span style="font-size:12px;color:'+col+';">'+arrow+' '+Math.abs(pct)+'%</span>':'')+'</div>'
-      +'</div>';
-  }
-
-  function _diag(d,marcaNm){
-    var totR25=_sum1(d.r25),totR26=_sum1(d.r26.filter(function(v){return v!==null;}));
-    var totV25=_sum1(d.v25),totV26=_sum1(d.v26.filter(function(v){return v!==null;}));
-    var mesCount=d.r26.filter(function(v){return v!==null;}).length;
-    var pr=parseFloat(_pct(totR25*mesCount/12,totR26));
-    var pv=parseFloat(_pct(totV25*mesCount/12,totV26));
-    var best=-1,bestV=0;d.r26.forEach(function(v,i){if(v&&v>bestV){bestV=v;best=i;}});
-    var cr=pr>=0?'#22c55e':'#ef4444',cv=pv>=0?'#22c55e':'#ef4444';
-    var ar=pr>=0?'▲':'▼',av=pv>=0?'▲':'▼';
-    var txt='<b>📊 DIAGNÓSTICO ACUMULADO FY25 vs FY26 — '+marcaNm.toUpperCase()+'</b><br>'
-      +'💰 Fat. FY26 YTD ('+mesCount+' meses): <b>'+_fmtR(totR26)+'</b> vs FY25 '+_fmtR(totR25*mesCount/12)
-      +' — <span style="color:'+cr+';">'+ar+' '+Math.abs(pr)+'%</span><br>'
-      +'📦 Un. FY26 YTD: <b>'+_fmtU(totV26)+'</b> vs FY25 '+_fmtU(totV25*mesCount/12)
-      +' — <span style="color:'+cv+';">'+av+' '+Math.abs(pv)+'%</span><br>'
-      +(best>=0?'📅 Melhor mês FY26: <b>'+LBL[best]+'</b> com <b>'+_fmtR(bestV)+'</b><br>':'')
-      +'<span style="color:#64748B;font-size:10px;">FY25: Jul/24–Jun/25 · FY26: Jul/25–Jun/26 ('+mesCount+' meses com dados)</span>';
-    return txt;
-  }
-
-  function _render(m, _retries){
-    /* Aguardar visibilidade antes de renderizar (Chart.js precisa de canvas visível) */
-    var card=document.getElementById('card-sj-marca');
-    if(!card||card.offsetParent===null||typeof Chart==='undefined'){
-      if((_retries||0)<40){setTimeout(function(){_render(m,(_retries||0)+1);},150);}
-      return;
-    }
-    _marca=m||_marca;
-    var d=_D[_marca];
-    var nms={total:'Total HB (OFF+EXPOSIS+RAID)',off:'OFF!',exposis:'EXPOSIS',raid:'RAID'};
-    var nm=nms[_marca];
-    document.getElementById('sj-marca-sub').textContent='FY25 vs FY26 · '+nm+' · São João';
-    /* KPIs */
-    var totR25=_sum1(d.r25),totV25=_sum1(d.v25);
-    var totR26=_sum1(d.r26.filter(function(v){return v!==null;}));
-    var totV26=_sum1(d.v26.filter(function(v){return v!==null;}));
-    var mesCount=d.r26.filter(function(v){return v!==null;}).length;
-    var kpi1='<div class="kpi-cell" style="background:#E4EAF2;border-radius:10px;padding:12px 14px;border:1px solid rgba(94,153,208,0.35);box-shadow:0 1px 4px rgba(10,40,80,0.07);">'
-      +'<div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#64748B;margin-bottom:4px;">FAT. FY25 (anual)</div>'
-      +'<div style="font-size:10px;color:#64748B;margin-bottom:2px;">Referência FY25</div>'
-      +'<div style="font-size:17px;font-weight:800;color:#1D6FA8;line-height:1.1;">'+_fmtR(totR25)+'</div>'
-      +'</div>';
-    document.getElementById('sj-marca-kpi').innerHTML=kpi1
-      +_kpi('FAT. FY26 YTD ('+mesCount+' meses)',totR25*mesCount/12,totR26,true)
-      +_kpi('UN. FY26 YTD',totV25*mesCount/12,totV26,false);
-    /* Gráficos */
-    _mkChart('sj-marca-r',d.r25,d.r26,true);
-    _mkChart('sj-marca-v',d.v25,d.v26,false);
-    /* Diagnóstico */
-    document.getElementById('sj-marca-diag').innerHTML=_diag(d,nm);
-  }
-
-  window.sjMarcaSet=function(m,btn){
-    _marca=m;
-    document.querySelectorAll('#sj-marca-filter .tgl').forEach(function(b){b.classList.remove('active','blue');});
-    if(btn){btn.classList.add('active','blue');}
-    _render(m);
-  };
-
-  /* Expor render — aguarda visibilidade automaticamente via retry em _render */
-  window.sjMarcaRender=function(){ _render(_marca,0); };
-
-  /* Render inicial: começa retrying após 400ms */
-  setTimeout(function(){_render('total',0);},400);
-})();
-</script>
 
   <div class="cards-row">
       <div class="card">
@@ -17222,36 +17041,10 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div style="position:relative;height:240px;"><canvas id="acum-v-nissei"></canvas></div>
       </div>
     </div>
-    <div id="acum-diag-nissei" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+    <div id="acum-diag-nissei" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);"></div>
   </div>
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("nissei",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("nissei",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
-<!-- CARD SO MARCA: nissei -->
-<div class="card full" id="card-so-marca-nissei" style="margin-bottom:16px;">
-  <div class="card-header">
-    <div>
-      <div class="card-title">&#127991; SELL OUT POR MARCA &mdash; Nissei</div>
-      <div class="card-sub" id="so-marca-sub-nissei">FY25 vs FY26 &middot; HB Total &middot; Nissei</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:14px;">
-      <div class="toggle-group" id="so-marca-filter-nissei"><button class="tgl active blue" onclick="soMarcaSetMode('nissei','total',this)">Total</button><button class="tgl" onclick="soMarcaSetMode('nissei','andre',this)">Andre</button><button class="tgl" onclick="soMarcaSetMode('nissei','edmar',this)">Edmar</button></div>
-      <div style="display:flex;gap:14px;align-items:center;"><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span><span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span></div>
-    </div>
-  </div>
-  <div id="so-marca-kpi-nissei" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128176; Faturamento Mensal (R$)</div>
-      <div style="position:relative;height:240px;"><canvas id="so-mr-nissei"></canvas></div>
-    </div>
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128230; Unidades Mensais</div>
-      <div style="position:relative;height:240px;"><canvas id="so-mv-nissei"></canvas></div>
-    </div>
-  </div>
-  <div id="so-marca-diag-nissei" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
-</div>
-
   <div class="cards-row">
     <div class="card">
       <div class="card-header">
@@ -17432,7 +17225,7 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
 <!-- Conteúdo Clamed -->
 <div id="sellout-content-clamed" class="sellout-client-content" style="display:none;">
 <div id="panel-clamed-inner">
-  <div class="kpi-grid" id="cl-kpis"><div class="kpi-cell" style="--accent:#3b82f6;position:relative;"><div style="position:absolute;bottom:8px;right:10px;opacity:0.6;pointer-events:none;"><svg width="76" height="30" viewBox="0 0 76 30" style="overflow:visible;" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg59130246_5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"></stop><stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0"></stop></linearGradient></defs><polygon points="0,30 0.0,2.0 8.4,28.0 16.9,7.6 25.3,18.1 33.8,25.7 42.2,24.5 50.7,19.6 59.1,15.2 67.6,10.5 76.0,4.1 76,30" fill="url(#sg59130246_5)" opacity="0.7"></polygon><polyline points="0.0,2.0 8.4,28.0 16.9,7.6 25.3,18.1 33.8,25.7 42.2,24.5 50.7,19.6 59.1,15.2 67.6,10.5 76.0,4.1" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"></polyline><circle cx="76" cy="4.1" r="2.5" fill="#3b82f6" opacity="1"></circle></svg></div><div class="kpi-tag">Volume 2024</div><div class="kpi-val animating" data-val="88.571" data-prefix="" data-suffix="">79.238</div><div class="kpi-sub">Mar–Dez (parcial)</div></div><div class="kpi-cell" style="--accent:#2dd4bf;position:relative;"><div style="position:absolute;bottom:8px;right:10px;opacity:0.6;pointer-events:none;"><svg width="76" height="30" viewBox="0 0 76 30" style="overflow:visible;" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg45212191_5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.35"></stop><stop offset="100%" stop-color="#2dd4bf" stop-opacity="0.0"></stop></linearGradient></defs><polygon points="0,30 0.0,5.5 6.9,5.9 13.8,10.2 20.7,17.5 27.6,22.2 34.5,27.8 41.5,28.0 48.4,27.7 55.3,24.7 62.2,22.4 69.1,18.4 76.0,2.0 76,30" fill="url(#sg45212191_5)" opacity="0.7"></polygon><polyline points="0.0,5.5 6.9,5.9 13.8,10.2 20.7,17.5 27.6,22.2 34.5,27.8 41.5,28.0 48.4,27.7 55.3,24.7 62.2,22.4 69.1,18.4 76.0,2.0" fill="none" stroke="#2dd4bf" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"></polyline><circle cx="76" cy="2.0" r="2.5" fill="#2dd4bf" opacity="1"></circle></svg></div><div class="kpi-tag">Volume 2025</div><div class="kpi-val animating" data-val="100.876" data-prefix="" data-suffix="">90.246</div><div class="kpi-sub">Total anual</div><div class="kpi-delta delta-up">▲ 13,9% vs 2024</div></div><div class="kpi-cell" style="--accent:#34d399;position:relative;"><div style="position:absolute;bottom:8px;right:10px;opacity:0.6;pointer-events:none;"><svg width="76" height="30" viewBox="0 0 76 30" style="overflow:visible;" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg52211153_5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#34d399" stop-opacity="0.35"></stop><stop offset="100%" stop-color="#34d399" stop-opacity="0.0"></stop></linearGradient></defs><polygon points="0,30 0.0,2.6 25.3,4.9 50.7,2.0 76.0,28.0 76,30" fill="url(#sg52211153_5)" opacity="0.7"></polygon><polyline points="0.0,2.6 25.3,4.9 50.7,2.0 76.0,28.0" fill="none" stroke="#34d399" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"></polyline><circle cx="76" cy="28.0" r="2.5" fill="#34d399" opacity="1"></circle></svg></div><div class="kpi-tag">Volume 2026</div><div class="kpi-val animating" data-val="46.071" data-prefix="" data-suffix="">41.216</div><div class="kpi-sub">Jan–Abr parcial</div></div><div class="kpi-cell" style="--accent:#3b82f6;position:relative;"><div style="position:absolute;bottom:8px;right:10px;opacity:0.6;pointer-events:none;"><svg width="76" height="30" viewBox="0 0 76 30" style="overflow:visible;" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg59130246_6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"></stop><stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0"></stop></linearGradient></defs><polygon points="0,30 0.0,2.0 8.4,28.0 16.9,2.4 25.3,16.2 33.8,24.6 42.2,23.7 50.7,18.5 59.1,12.9 67.6,8.6 76.0,3.5 76,30" fill="url(#sg59130246_6)" opacity="0.7"></polygon><polyline points="0.0,2.0 8.4,28.0 16.9,2.4 25.3,16.2 33.8,24.6 42.2,23.7 50.7,18.5 59.1,12.9 67.6,8.6 76.0,3.5" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"></polyline><circle cx="76" cy="3.5" r="2.5" fill="#3b82f6" opacity="1"></circle></svg></div><div class="kpi-tag">Receita 2024</div><div class="kpi-val animating" data-val="R$ 3,14M" data-prefix="" data-suffix="">R$ 2,81M</div><div class="kpi-sub">Mar–Dez (parcial)</div></div><div class="kpi-cell" style="--accent:#2dd4bf;position:relative;"><div style="position:absolute;bottom:8px;right:10px;opacity:0.6;pointer-events:none;"><svg width="76" height="30" viewBox="0 0 76 30" style="overflow:visible;" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg45212191_6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.35"></stop><stop offset="100%" stop-color="#2dd4bf" stop-opacity="0.0"></stop></linearGradient></defs><polygon points="0,30 0.0,2.3 6.9,2.9 13.8,8.3 20.7,16.3 27.6,21.4 34.5,27.7 41.5,28.0 48.4,27.7 55.3,24.9 62.2,22.1 69.1,18.8 76.0,2.0 76,30" fill="url(#sg45212191_6)" opacity="0.7"></polygon><polyline points="0.0,2.3 6.9,2.9 13.8,8.3 20.7,16.3 27.6,21.4 34.5,27.7 41.5,28.0 48.4,27.7 55.3,24.9 62.2,22.1 69.1,18.8 76.0,2.0" fill="none" stroke="#2dd4bf" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"></polyline><circle cx="76" cy="2.0" r="2.5" fill="#2dd4bf" opacity="1"></circle></svg></div><div class="kpi-tag">Receita 2025</div><div class="kpi-val animating" data-val="R$ 3,55M" data-prefix="" data-suffix="">R$ 3,18M</div><div class="kpi-sub">Total anual</div><div class="kpi-delta delta-up">▲ 13,2% vs 2024</div></div><div class="kpi-cell" style="--accent:#34d399;position:relative;"><div style="position:absolute;bottom:8px;right:10px;opacity:0.6;pointer-events:none;"><svg width="76" height="30" viewBox="0 0 76 30" style="overflow:visible;" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg52211153_6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#34d399" stop-opacity="0.35"></stop><stop offset="100%" stop-color="#34d399" stop-opacity="0.0"></stop></linearGradient></defs><polygon points="0,30 0.0,2.0 25.3,4.9 50.7,2.8 76.0,28.0 76,30" fill="url(#sg52211153_6)" opacity="0.7"></polygon><polyline points="0.0,2.0 25.3,4.9 50.7,2.8 76.0,28.0" fill="none" stroke="#34d399" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"></polyline><circle cx="76" cy="28.0" r="2.5" fill="#34d399" opacity="1"></circle></svg></div><div class="kpi-tag">Receita 2026</div><div class="kpi-val animating" data-val="R$ 1,67M" data-prefix="" data-suffix="">R$ 1,49M</div><div class="kpi-sub">Jan–Abr parcial</div></div></div>
+  <div class="kpi-grid" id="cl-kpis"><div class="kpi-cell" style="--accent:#3b82f6;position:relative;"><div style="position:absolute;bottom:8px;right:10px;opacity:0.6;pointer-events:none;"><svg width="76" height="30" viewBox="0 0 76 30" style="overflow:visible;" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg59130246_5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"></stop><stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0"></stop></linearGradient></defs><polygon points="0,30 0.0,2.0 8.4,28.0 16.9,7.6 25.3,18.1 33.8,25.7 42.2,24.5 50.7,19.6 59.1,15.2 67.6,10.5 76.0,4.1 76,30" fill="url(#sg59130246_5)" opacity="0.7"></polygon><polyline points="0.0,2.0 8.4,28.0 16.9,7.6 25.3,18.1 33.8,25.7 42.2,24.5 50.7,19.6 59.1,15.2 67.6,10.5 76.0,4.1" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"></polyline><circle cx="76" cy="4.1" r="2.5" fill="#3b82f6" opacity="1"></circle></svg></div><div class="kpi-tag">Volume 2024</div><div class="kpi-val animating" data-val="88.571" data-prefix="" data-suffix="">79.238</div><div class="kpi-sub">Mar–Dez (parcial)</div></div><div class="kpi-cell" style="--accent:#2dd4bf;position:relative;"><div style="position:absolute;bottom:8px;right:10px;opacity:0.6;pointer-events:none;"><svg width="76" height="30" viewBox="0 0 76 30" style="overflow:visible;" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg45212191_5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.35"></stop><stop offset="100%" stop-color="#2dd4bf" stop-opacity="0.0"></stop></linearGradient></defs><polygon points="0,30 0.0,5.5 6.9,5.9 13.8,10.2 20.7,17.5 27.6,22.2 34.5,27.8 41.5,28.0 48.4,27.7 55.3,24.7 62.2,22.4 69.1,18.4 76.0,2.0 76,30" fill="url(#sg45212191_5)" opacity="0.7"></polygon><polyline points="0.0,5.5 6.9,5.9 13.8,10.2 20.7,17.5 27.6,22.2 34.5,27.8 41.5,28.0 48.4,27.7 55.3,24.7 62.2,22.4 69.1,18.4 76.0,2.0" fill="none" stroke="#2dd4bf" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"></polyline><circle cx="76" cy="2.0" r="2.5" fill="#2dd4bf" opacity="1"></circle></svg></div><div class="kpi-tag">Volume 2025</div><div class="kpi-val animating" data-val="95.951" data-prefix="" data-suffix="">90.246</div><div class="kpi-sub">Total anual</div><div class="kpi-delta delta-up">▲ 6,0% vs 2024</div></div><div class="kpi-cell" style="--accent:#34d399;position:relative;"><div style="position:absolute;bottom:8px;right:10px;opacity:0.6;pointer-events:none;"><svg width="76" height="30" viewBox="0 0 76 30" style="overflow:visible;" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg52211153_5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#34d399" stop-opacity="0.35"></stop><stop offset="100%" stop-color="#34d399" stop-opacity="0.0"></stop></linearGradient></defs><polygon points="0,30 0.0,2.6 25.3,4.9 50.7,2.0 76.0,28.0 76,30" fill="url(#sg52211153_5)" opacity="0.7"></polygon><polyline points="0.0,2.6 25.3,4.9 50.7,2.0 76.0,28.0" fill="none" stroke="#34d399" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"></polyline><circle cx="76" cy="28.0" r="2.5" fill="#34d399" opacity="1"></circle></svg></div><div class="kpi-tag">Volume 2026</div><div class="kpi-val animating" data-val="53.526" data-prefix="" data-suffix="">41.216</div><div class="kpi-sub">Jan–Mai parcial</div></div><div class="kpi-cell" style="--accent:#3b82f6;position:relative;"><div style="position:absolute;bottom:8px;right:10px;opacity:0.6;pointer-events:none;"><svg width="76" height="30" viewBox="0 0 76 30" style="overflow:visible;" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg59130246_6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"></stop><stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0"></stop></linearGradient></defs><polygon points="0,30 0.0,2.0 8.4,28.0 16.9,2.4 25.3,16.2 33.8,24.6 42.2,23.7 50.7,18.5 59.1,12.9 67.6,8.6 76.0,3.5 76,30" fill="url(#sg59130246_6)" opacity="0.7"></polygon><polyline points="0.0,2.0 8.4,28.0 16.9,2.4 25.3,16.2 33.8,24.6 42.2,23.7 50.7,18.5 59.1,12.9 67.6,8.6 76.0,3.5" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"></polyline><circle cx="76" cy="3.5" r="2.5" fill="#3b82f6" opacity="1"></circle></svg></div><div class="kpi-tag">Receita 2024</div><div class="kpi-val animating" data-val="R$ 3,14M" data-prefix="" data-suffix="">R$ 2,81M</div><div class="kpi-sub">Mar–Dez (parcial)</div></div><div class="kpi-cell" style="--accent:#2dd4bf;position:relative;"><div style="position:absolute;bottom:8px;right:10px;opacity:0.6;pointer-events:none;"><svg width="76" height="30" viewBox="0 0 76 30" style="overflow:visible;" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg45212191_6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.35"></stop><stop offset="100%" stop-color="#2dd4bf" stop-opacity="0.0"></stop></linearGradient></defs><polygon points="0,30 0.0,2.3 6.9,2.9 13.8,8.3 20.7,16.3 27.6,21.4 34.5,27.7 41.5,28.0 48.4,27.7 55.3,24.9 62.2,22.1 69.1,18.8 76.0,2.0 76,30" fill="url(#sg45212191_6)" opacity="0.7"></polygon><polyline points="0.0,2.3 6.9,2.9 13.8,8.3 20.7,16.3 27.6,21.4 34.5,27.7 41.5,28.0 48.4,27.7 55.3,24.9 62.2,22.1 69.1,18.8 76.0,2.0" fill="none" stroke="#2dd4bf" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"></polyline><circle cx="76" cy="2.0" r="2.5" fill="#2dd4bf" opacity="1"></circle></svg></div><div class="kpi-tag">Receita 2025</div><div class="kpi-val animating" data-val="R$ 3,06M" data-prefix="" data-suffix="">R$ 3,18M</div><div class="kpi-sub">Total anual</div><div class="kpi-delta delta-down">▼ 2,5% vs 2024</div></div><div class="kpi-cell" style="--accent:#34d399;position:relative;"><div style="position:absolute;bottom:8px;right:10px;opacity:0.6;pointer-events:none;"><svg width="76" height="30" viewBox="0 0 76 30" style="overflow:visible;" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg52211153_6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#34d399" stop-opacity="0.35"></stop><stop offset="100%" stop-color="#34d399" stop-opacity="0.0"></stop></linearGradient></defs><polygon points="0,30 0.0,2.0 25.3,4.9 50.7,2.8 76.0,28.0 76,30" fill="url(#sg52211153_6)" opacity="0.7"></polygon><polyline points="0.0,2.0 25.3,4.9 50.7,2.8 76.0,28.0" fill="none" stroke="#34d399" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"></polyline><circle cx="76" cy="28.0" r="2.5" fill="#34d399" opacity="1"></circle></svg></div><div class="kpi-tag">Receita 2026</div><div class="kpi-val animating" data-val="R$ 1,91M" data-prefix="" data-suffix="">R$ 1,49M</div><div class="kpi-sub">Jan–Mai parcial</div></div></div>
 
   
 <!-- CARD ESTUDO ED SHARE -->
@@ -17504,36 +17297,10 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div style="position:relative;height:240px;"><canvas id="acum-v-clamed"></canvas></div>
       </div>
     </div>
-    <div id="acum-diag-clamed" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+    <div id="acum-diag-clamed" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);"></div>
   </div>
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("clamed",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("clamed",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
-<!-- CARD SO MARCA: clamed -->
-<div class="card full" id="card-so-marca-clamed" style="margin-bottom:16px;">
-  <div class="card-header">
-    <div>
-      <div class="card-title">&#127991; SELL OUT POR MARCA &mdash; Clamed</div>
-      <div class="card-sub" id="so-marca-sub-clamed">FY25 vs FY26 &middot; HB Total &middot; Clamed</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:14px;">
-      
-      <div style="display:flex;gap:14px;align-items:center;"><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span><span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span></div>
-    </div>
-  </div>
-  <div id="so-marca-kpi-clamed" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128176; Faturamento Mensal (R$)</div>
-      <div style="position:relative;height:240px;"><canvas id="so-mr-clamed"></canvas></div>
-    </div>
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128230; Unidades Mensais</div>
-      <div style="position:relative;height:240px;"><canvas id="so-mv-clamed"></canvas></div>
-    </div>
-  </div>
-  <div id="so-marca-diag-clamed" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
-</div>
-
   <div class="cards-row">
     <div class="card">
       <div class="card-header">
@@ -17729,36 +17496,10 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div style="position:relative;height:240px;"><canvas id="acum-v-panvel"></canvas></div>
       </div>
     </div>
-    <div id="acum-diag-panvel" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+    <div id="acum-diag-panvel" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);"></div>
   </div>
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("panvel",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("panvel",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
-<!-- CARD SO MARCA: panvel -->
-<div class="card full" id="card-so-marca-panvel" style="margin-bottom:16px;">
-  <div class="card-header">
-    <div>
-      <div class="card-title">&#127991; SELL OUT POR MARCA &mdash; Panvel</div>
-      <div class="card-sub" id="so-marca-sub-panvel">FY25 vs FY26 &middot; HB Total &middot; Panvel</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:14px;">
-      
-      <div style="display:flex;gap:14px;align-items:center;"><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span><span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span></div>
-    </div>
-  </div>
-  <div id="so-marca-kpi-panvel" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128176; Faturamento Mensal (R$)</div>
-      <div style="position:relative;height:240px;"><canvas id="so-mr-panvel"></canvas></div>
-    </div>
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128230; Unidades Mensais</div>
-      <div style="position:relative;height:240px;"><canvas id="so-mv-panvel"></canvas></div>
-    </div>
-  </div>
-  <div id="so-marca-diag-panvel" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
-</div>
-
   <div class="cards-row">
     <div class="card">
       <div class="card-header">
@@ -17941,36 +17682,10 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div style="position:relative;height:240px;"><canvas id="acum-v-ddgam"></canvas></div>
       </div>
     </div>
-    <div id="acum-diag-ddgam" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+    <div id="acum-diag-ddgam" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);"></div>
   </div>
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("ddgam",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("ddgam",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
-<!-- CARD SO MARCA: ddgam -->
-<div class="card full" id="card-so-marca-ddgam" style="margin-bottom:16px;">
-  <div class="card-header">
-    <div>
-      <div class="card-title">&#127991; SELL OUT POR MARCA &mdash; DD-GAM</div>
-      <div class="card-sub" id="so-marca-sub-ddgam">FY25 vs FY26 &middot; HB Total &middot; DD-GAM</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:14px;">
-      
-      <div style="display:flex;gap:14px;align-items:center;"><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span><span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span></div>
-    </div>
-  </div>
-  <div id="so-marca-kpi-ddgam" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128176; Faturamento Mensal (R$)</div>
-      <div style="position:relative;height:240px;"><canvas id="so-mr-ddgam"></canvas></div>
-    </div>
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128230; Unidades Mensais</div>
-      <div style="position:relative;height:240px;"><canvas id="so-mv-ddgam"></canvas></div>
-    </div>
-  </div>
-  <div id="so-marca-diag-ddgam" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
-</div>
-
   <div class="cards-row">
     <div class="card">
       <div class="card-header">
@@ -18160,36 +17875,10 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div style="position:relative;height:240px;"><canvas id="acum-v-ddgaucha"></canvas></div>
       </div>
     </div>
-    <div id="acum-diag-ddgaucha" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+    <div id="acum-diag-ddgaucha" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);"></div>
   </div>
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("ddgaucha",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("ddgaucha",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
-<!-- CARD SO MARCA: ddgaucha -->
-<div class="card full" id="card-so-marca-ddgaucha" style="margin-bottom:16px;">
-  <div class="card-header">
-    <div>
-      <div class="card-title">&#127991; SELL OUT POR MARCA &mdash; DD-Gaúcha</div>
-      <div class="card-sub" id="so-marca-sub-ddgaucha">FY25 vs FY26 &middot; HB Total &middot; DD-Gaúcha</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:14px;">
-      
-      <div style="display:flex;gap:14px;align-items:center;"><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span><span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span></div>
-    </div>
-  </div>
-  <div id="so-marca-kpi-ddgaucha" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128176; Faturamento Mensal (R$)</div>
-      <div style="position:relative;height:240px;"><canvas id="so-mr-ddgaucha"></canvas></div>
-    </div>
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128230; Unidades Mensais</div>
-      <div style="position:relative;height:240px;"><canvas id="so-mv-ddgaucha"></canvas></div>
-    </div>
-  </div>
-  <div id="so-marca-diag-ddgaucha" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
-</div>
-
   <div class="cards-row">
     <div class="card">
       <div class="card-header">
@@ -18362,63 +18051,10 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div style="position:relative;height:240px;"><canvas id="acum-v-ddriomed"></canvas></div>
       </div>
     </div>
-    <div id="acum-diag-ddriomed" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
+    <div id="acum-diag-ddriomed" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);"></div>
   </div>
   <script>setTimeout(function(){if(typeof window._acumTryRender==="function") window._acumTryRender("ddriomed",0);else{ var _t=0,_iv=setInterval(function(){if(typeof window._acumTryRender==="function"){clearInterval(_iv);window._acumTryRender("ddriomed",0);}else if(++_t>40)clearInterval(_iv);},100); }},600);</script>
 </div>
-<!-- CARD SO MARCA: ddriomed -->
-<div class="card full" id="card-so-marca-ddriomed" style="margin-bottom:16px;">
-  <div class="card-header">
-    <div>
-      <div class="card-title">&#127991; SELL OUT POR MARCA &mdash; DD-Riomed</div>
-      <div class="card-sub" id="so-marca-sub-ddriomed">FY25 vs FY26 &middot; HB Total &middot; DD-Riomed</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:14px;">
-      
-      <div style="display:flex;gap:14px;align-items:center;"><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;"><span style="width:18px;height:2.5px;background:#3b82f6;display:inline-block;border-radius:2px;"></span>FY25</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#34d399;"><span style="width:18px;height:2.5px;background:#34d399;display:inline-block;border-radius:2px;"></span>FY26</span><span style="display:flex;align-items:center;gap:5px;font-size:10px;color:#64748B;"><span style="width:20px;height:2.5px;display:inline-block;border-radius:2px;background:repeating-linear-gradient(90deg,#64748B 0,#64748B 4px,transparent 4px,transparent 8px);"></span>Projetado</span></div>
-    </div>
-  </div>
-  <div id="so-marca-kpi-ddriomed" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 16px;"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128176; Faturamento Mensal (R$)</div>
-      <div style="position:relative;height:240px;"><canvas id="so-mr-ddriomed"></canvas></div>
-    </div>
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#3d6b63;text-transform:uppercase;margin-bottom:8px;">&#128230; Unidades Mensais</div>
-      <div style="position:relative;height:240px;"><canvas id="so-mv-ddriomed"></canvas></div>
-    </div>
-  </div>
-  <div id="so-marca-diag-ddriomed" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(59,130,246,0.4);font-size:11px;color:#D1D5DB;line-height:1.7;"></div>
-</div>
-<script>
-/* === SELL OUT POR MARCA — TODOS OS CLIENTES (exceto SJ) === */
-(function(){
-  var LBL=['Jul','Ago','Set','Out','Nov','Dez','Jan','Fev','Mar','Abr','Mai','Jun'];
-  var _charts={};
-  var _modes={nissei:'total',clamed:'total',panvel:'total',ddgam:'total',ddgaucha:'total',ddriomed:'total'};
-  function _fy(a24,a25,a26){var f25=[],f26=[];for(var i=6;i<12;i++)f25.push((a24&&a24[i]!=null)?+a24[i]:0);for(var i=0;i<6;i++)f25.push((a25&&a25[i]!=null)?+a25[i]:0);for(var i=6;i<12;i++)f26.push((a25&&a25[i]!=null)?+a25[i]:0);for(var i=0;i<6;i++)f26.push((a26&&a26[i]!=null)?+a26[i]:null);return{fy25:f25,fy26:f26};}
-  function _fmtR(v){if(!v)return'R$ 0';if(v>=1e6)return'R$ '+(v/1e6).toFixed(1)+'M';if(v>=1e3)return'R$ '+(v/1e3).toFixed(0)+'K';return'R$ '+v.toFixed(0);}
-  function _fmtU(v){if(!v)return'0 un';if(v>=1e6)return(v/1e6).toFixed(1)+'M un';if(v>=1e3)return(v/1e3).toFixed(0)+'K un';return v.toFixed(0)+' un';}
-  function _fmtAx(v,isR){if(isR){if(v>=1e6)return'R$'+(v/1e6).toFixed(0)+'M';if(v>=1e3)return'R$'+(v/1e3).toFixed(0)+'K';return'R$'+v;}if(v>=1e6)return(v/1e6).toFixed(1)+'M un';if(v>=1e3)return(v/1e3).toFixed(0)+'K un';return v+' un';}
-  function _pct(a,b){return a>0?((b-a)/a*100).toFixed(1):'--';}
-  function _sum1(arr){return arr.reduce(function(s,v){return s+(v||0);},0);}
-  function _getData(cid,mode){mode=mode||'total';try{
-    if(cid==='nissei'&&typeof NS!=='undefined'){var ns=NS[mode]||NS.total;return{r:_fy(ns.rec['2024'],ns.rec['2025'],ns.rec['2026']),v:_fy(ns.vol['2024'],ns.vol['2025'],ns.vol['2026'])};}
-    if(cid==='clamed'&&typeof CL_REC_2024!=='undefined')return{r:_fy(CL_REC_2024,CL_REC_2025,CL_REC_2026),v:_fy(CL_VOL_2024,CL_VOL_2025,CL_VOL_2026)};
-    if(cid==='panvel'&&typeof PV_REC!=='undefined')return{r:_fy(PV_REC['2024'],PV_REC['2025'],PV_REC['2026']),v:_fy(PV_VOL['2024'],PV_VOL['2025'],PV_VOL['2026'])};
-    if(cid==='ddgam'&&typeof GAM_REC!=='undefined')return{r:_fy(GAM_REC['2024'],GAM_REC['2025'],GAM_REC['2026']),v:_fy(GAM_VOL['2024'],GAM_VOL['2025'],GAM_VOL['2026'])};
-    if(cid==='ddgaucha'&&typeof GAUCHA_REC!=='undefined')return{r:_fy(GAUCHA_REC['2024'],GAUCHA_REC['2025'],GAUCHA_REC['2026']),v:_fy(GAUCHA_VOL['2024'],GAUCHA_VOL['2025'],GAUCHA_VOL['2026'])};
-    if(cid==='ddriomed'&&typeof RIOMED_REC_2024!=='undefined')return{r:_fy(RIOMED_REC_2024,RIOMED_REC_2025,RIOMED_REC_2026),v:_fy(RIOMED_VOL_2024,RIOMED_VOL_2025,RIOMED_VOL_2026)};
-  }catch(e){}return null;}
-  function _mkChart(id,fy25,fy26,isR){var ctx=document.getElementById(id);if(!ctx)return;if(_charts[id]){try{_charts[id].destroy();}catch(e){}}var last26=-1;fy26.forEach(function(v,i){if(v!==null)last26=i;});var d26=fy26.slice(0,last26+1);var proj=null;if(last26>=0&&last26<11){var avg25=fy25.slice(0,last26+1).reduce(function(s,v){return s+v;},0)/(last26+1);var avg26=d26.reduce(function(s,v){return s+(v||0);},0)/(last26+1);var ratio=avg25>0?avg26/avg25:1;proj=fy26.map(function(v,i){return v!==null?null:Math.round(fy25[i]*ratio);});}var ds=[{label:'FY25',data:fy25,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.13)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#3b82f6',fill:true,tension:0.35},{label:'FY26',data:d26,borderColor:'#34d399',backgroundColor:'rgba(52,211,153,0.15)',borderWidth:2.5,pointRadius:4,pointBackgroundColor:'#34d399',fill:true,tension:0.35}];if(proj)ds.push({label:'Proj.',data:proj,borderColor:'#64748B',borderWidth:1.5,borderDash:[5,4],pointRadius:3,pointBackgroundColor:'#64748B',fill:false,tension:0.35});var cfg={type:'line',data:{labels:LBL,datasets:ds},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(isR?_fmtR(c.parsed.y):_fmtU(c.parsed.y));}}}},scales:{x:{ticks:{color:'#475569',font:{size:10}},grid:{color:'rgba(148,163,184,0.1)'}},y:{ticks:{color:'#475569',font:{size:9},callback:function(v){return _fmtAx(v,isR);}},grid:{color:'rgba(148,163,184,0.12)'}}}}};_charts[id]=new Chart(ctx,cfg);}
-  function _kpiHtml(lbl,v25,v26,isR){var pct=parseFloat(_pct(v25,v26));var ok=pct>=0;var ar=ok?'▲':'▼';var col=ok?'#22c55e':'#ef4444';return'<div class="kpi-cell" style="background:#E4EAF2;border-radius:10px;padding:12px 14px;border:1px solid rgba(94,153,208,0.35);box-shadow:0 1px 4px rgba(10,40,80,0.07);"><div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#64748B;margin-bottom:4px;">'+lbl+'</div><div style="font-size:10px;color:#64748B;margin-bottom:2px;">FY25: '+(isR?_fmtR(v25):_fmtU(v25))+'</div><div style="font-size:17px;font-weight:800;color:#1D6FA8;line-height:1.1;">'+(isR?_fmtR(v26):_fmtU(v26))+(v25>0?' <span style="font-size:12px;color:'+col+';">'+ar+' '+Math.abs(pct)+'%</span>':'')+'</div></div>';}
-  function _renderClient(cid,_r){var card=document.getElementById('card-so-marca-'+cid);if(!card||card.offsetParent===null||typeof Chart==='undefined'){if((_r||0)<40){setTimeout(function(){_renderClient(cid,(_r||0)+1);},150);}return;}var mode=_modes[cid]||'total';var d=_getData(cid,mode);if(!d){setTimeout(function(){_renderClient(cid);},500);return;}var nmMap={nissei:'Nissei',clamed:'Clamed',panvel:'Panvel',ddgam:'DD-GAM',ddgaucha:'DD-Gaúcha',ddriomed:'DD-Riomed'};var modeNm={total:'Total HB',andre:'André (OFF+EXPOSIS)',edmar:'Edmar (RAID+Elét.)'};var nm=nmMap[cid]||cid;var sub=document.getElementById('so-marca-sub-'+cid);if(sub)sub.textContent='FY25 vs FY26 · '+(modeNm[mode]||'Total HB')+' · '+nm;var mesCount=d.r.fy26.filter(function(v){return v!==null;}).length;var totR25=_sum1(d.r.fy25),totR26=_sum1(d.r.fy26.filter(function(v){return v!==null;}));var totV25=_sum1(d.v.fy25),totV26=_sum1(d.v.fy26.filter(function(v){return v!==null;}));var kpiEl=document.getElementById('so-marca-kpi-'+cid);if(kpiEl)kpiEl.innerHTML='<div class="kpi-cell" style="background:#E4EAF2;border-radius:10px;padding:12px 14px;border:1px solid rgba(94,153,208,0.35);box-shadow:0 1px 4px rgba(10,40,80,0.07);"><div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#64748B;margin-bottom:4px;">FAT. FY25 (anual)</div><div style="font-size:17px;font-weight:800;color:#1D6FA8;line-height:1.1;">'+_fmtR(totR25)+'</div></div>'+_kpiHtml('FAT. FY26 YTD ('+mesCount+' meses)',totR25*mesCount/12,totR26,true)+_kpiHtml('UN. FY26 YTD',totV25*mesCount/12,totV26,false);_mkChart('so-mr-'+cid,d.r.fy25,d.r.fy26,true);_mkChart('so-mv-'+cid,d.v.fy25,d.v.fy26,false);var best=-1,bestV=0;d.r.fy26.forEach(function(v,i){if(v&&v>bestV){bestV=v;best=i;}});var pr=parseFloat(_pct(totR25*mesCount/12,totR26));var pv=parseFloat(_pct(totV25*mesCount/12,totV26));var cr=pr>=0?'#22c55e':'#ef4444',cv=pv>=0?'#22c55e':'#ef4444';var ar2=pr>=0?'▲':'▼',av2=pv>=0?'▲':'▼';var diagEl=document.getElementById('so-marca-diag-'+cid);if(diagEl)diagEl.innerHTML='<b>📊 DIAGNÓSTICO ACUMULADO FY25 vs FY26 — '+(modeNm[mode]||'TOTAL HB').toUpperCase()+' — '+nm.toUpperCase()+'</b><br>💰 Fat. FY26 YTD ('+mesCount+' meses): <b>'+_fmtR(totR26)+'</b> vs FY25 '+_fmtR(totR25*mesCount/12)+' — <span style="color:'+cr+';">'+ar2+' '+Math.abs(pr)+'%</span><br>📦 Un. FY26 YTD: <b>'+_fmtU(totV26)+'</b> vs FY25 '+_fmtU(totV25*mesCount/12)+' — <span style="color:'+cv+';">'+av2+' '+Math.abs(pv)+'%</span><br>'+(best>=0?'📅 Melhor mês FY26: <b>'+LBL[best]+'</b> com <b>'+_fmtR(bestV)+'</b><br>':'')+'<span style="color:#64748B;font-size:10px;">FY25: Jul/24–Jun/25 · FY26: Jul/25–Jun/26 ('+mesCount+' meses com dados)</span>';}
-  window._soMarcaRenderClient=function(cid){setTimeout(function(){_renderClient(cid,0);},400);};
-  window.soMarcaSetMode=function(cid,mode,btn){_modes[cid]=mode;document.querySelectorAll('#so-marca-filter-'+cid+' .tgl').forEach(function(b){b.classList.remove('active','blue');});if(btn)btn.classList.add('active','blue');_renderClient(cid);};
-})();
-</script>
-
   <div class="cards-row">
     <div class="card">
       <div class="card-header">
@@ -19564,8 +19200,8 @@ const CL_VOL_2024 = [null,null,17053,1684,13770,7517,3017,3760,6630,9225,12046,1
 const CL_REC_2025 = [490240.87,502702.54,414628.34,254529.11,157325.2,40994.49,37736.83,46320.02,108334.34,169244.04,254849.03,581302.73];
 const CL_VOL_2025 = [16112,15911,12971,8094,4913,1163,1073,1324,3339,4911,7564,18576];
 // 2026 — Jan–Mar: receita calculada (ticket R$27,40) → R$ 1,12M
-const CL_REC_2026 = [511009,474208,501017,352568.84,311070.17,null,null,null,null,null,null,null];
-const CL_VOL_2026 = [13073,13073,14057,9892,9892,null,null,null,null,null,null,null];
+const CL_REC_2026 = [511009,474208,501017,352568.84,74402.75,null,null,null,null,null,null,null];
+const CL_VOL_2026 = [13965,16070,11233,9892,2366,null,null,null,null,null,null,null];
 
 const CL_RANK = {
   total:[['OFF 200ML Locao',21360,'#3b82f6'],['OFF 170ML Spray',18253,'#60a5fa'],['OFF Kids 200ML',11776,'#818cf8'],['OFF 165ML Aero',4784,'#2dd4bf'],['OFF Baby 117ML',3850,'#c084fc'],['EXPOSIS Gel Infantil',2096,'#34d399'],['EXPOSIS Spray Extreme',1584,'#2dd4bf'],['EXPOSIS Spray Infantil',1276,'#fb923c'],['EXPOSIS Elet AP+Refil',835,'#f472b6'],['OFF Toque Leve 100G',820,'#facc15']],
@@ -21036,11 +20672,11 @@ function initClamed(){
   setTimeout(renderCLAnoBars, 100);
   renderKPIs('cl-kpis',[
     {label:'Volume 2024',val:'88.571',sub:'Mar–Dez (parcial)',color:'#3b82f6',spark:CL_VOL_2024},
-    {label:'Volume 2025',val:'100.876',sub:'Total anual',color:'#2dd4bf',delta:'▲ 13,9% vs 2024',deltaUp:true,spark:CL_VOL_2025},
-    {label:'Volume 2026',val:'46.071',sub:'Jan–Abr parcial',color:'#34d399',spark:CL_VOL_2026},
+    {label:'Volume 2025',val:'95.951',sub:'Total anual',color:'#2dd4bf',delta:'▲ 6,0% vs 2024',deltaUp:true,spark:CL_VOL_2025},
+    {label:'Volume 2026',val:'53.526',sub:'Jan–Mai parcial',color:'#34d399',spark:CL_VOL_2026},
     {label:'Receita 2024',val:'R$ 3,14M',sub:'Mar–Dez (parcial)',color:'#3b82f6',spark:CL_REC_2024},
-    {label:'Receita 2025',val:'R$ 3,55M',sub:'Total anual',color:'#2dd4bf',delta:'▲ 13,2% vs 2024',deltaUp:true,spark:CL_REC_2025},
-    {label:'Receita 2026',val:'R$ 1,67M',sub:'Jan–Abr parcial',color:'#34d399',spark:CL_REC_2026},
+    {label:'Receita 2025',val:'R$ 3,06M',sub:'Total anual',color:'#2dd4bf',delta:'▼ 2,5% vs 2024',deltaUp:false,spark:CL_REC_2025},
+    {label:'Receita 2026',val:'R$ 1,91M',sub:'Jan–Mai parcial',color:'#34d399',spark:CL_REC_2026},
   ]);
   renderCLLine(); renderCLMesBars(); renderCLDonut(); renderCLLojas(); renderCLRank();
   renderClEstoqueBarras();
@@ -33373,11 +33009,6 @@ function switchSellOutClient(clientId) {
   /* Acumulado FY: renderizar card do cliente ativo */
   if(typeof window._acumTryRender === 'function')
     setTimeout(function(){ window._acumTryRender(clientId, 0); }, 350);
-  /* Sell Out por Marca: renderizar card do cliente ativo */
-  if(clientId === 'saojoao' && typeof window.sjMarcaRender === 'function')
-    setTimeout(window.sjMarcaRender, 450);
-  else if(typeof window._soMarcaRenderClient === 'function')
-    window._soMarcaRenderClient(clientId);
 }
 
 
@@ -33423,12 +33054,6 @@ function switchClient(id,btn){
         });
       }, 200);
     }
-    /* Renderizar card Sell Out por Marca do cliente ativo */
-    var _mCl = activeSelloutClient;
-    setTimeout(function(){
-      if(_mCl === 'saojoao' && typeof window.sjMarcaRender === 'function') window.sjMarcaRender();
-      else if(typeof window._soMarcaRenderClient === 'function') window._soMarcaRenderClient(_mCl);
-    }, 500);
   }
   
   // Se for sellout, inicializar o primeiro cliente (São João)
