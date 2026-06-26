@@ -2544,11 +2544,6 @@ function doLogin(){
     if(titleEl) titleEl.textContent = 'Analise BR-Farma';
     var badgeEl = document.getElementById('dash-header-badge');
     if(badgeEl) badgeEl.style.display = 'none';
-    /* SCJ: ocultar KPIs de marca concorrente no topo do Nielsen */
-    ['mso-kpis','mso-headline'].forEach(function(id){
-      var el=document.getElementById(id);
-      if(el) el.style.display='none';
-    });
     /* SCJ: ocultar cards restritos na aba Cobertura */
     ['cob-card-top-cidades','cob-card-evol-mensal','cob-card-posit-comp',
      'cob-card-intocaveis','cob-card-white-space','cob-card-universe'].forEach(function(id){
