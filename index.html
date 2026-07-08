@@ -15204,6 +15204,221 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
     </div>
   </div>
 
+  <!-- CARD REPELENTES ELÉTRICOS FY25 vs FY26 -->
+  <div id="elet-card" class="card full" style="margin-bottom:14px;">
+    <div class="card-header" style="align-items:flex-start;">
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;color:#fbbf24;margin-bottom:4px;" id="elet-mkt-label">⚡ REPELENTES ELÉTRICOS — T.BR FARMA</div>
+        <div class="card-title">$ Share por Fabricante — FY25 vs FY26</div>
+        <div class="card-sub" id="elet-mkt-sub">FY25 = Jul/24–Jun/25 · FY26 = Jul/25–Mai/26 (11 meses) · Electric Liquid · NielsenIQ · T.BR Farma</div>
+      </div>
+      <!-- Market filter dropdown -->
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <select id="eletMarketSel" onchange="eletSetMarket()" style="font-size:11px;padding:6px 28px 6px 10px;border-radius:7px;border:0.5px solid rgba(251,191,36,0.3);background:#161B22;color:#e2e8f0;cursor:pointer;font-family:inherit;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23fbbf24'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 10px center;">
+          <optgroup label="── Farma ──">
+            <option value="Farma CO">Farma CO</option>
+            <option value="Farma Gde RJ">Farma Gde RJ</option>
+            <option value="Farma Gde SP">Farma Gde SP</option>
+            <option value="Farma Indep CO">Farma Indep CO</option>
+            <option value="Farma Indep Gde RJ">Farma Indep Gde RJ</option>
+            <option value="Farma Indep Gde SP">Farma Indep Gde SP</option>
+            <option value="Farma Indep Int SP">Farma Indep Int SP</option>
+            <option value="Farma Indep MG+ES+Int RJ">Farma Indep MG+ES+Int RJ</option>
+            <option value="Farma Indep NE">Farma Indep NE</option>
+            <option value="Farma Indep Sul">Farma Indep Sul</option>
+            <option value="Farma Int SP">Farma Int SP</option>
+            <option value="Farma MG+ES+Int RJ">Farma MG+ES+Int RJ</option>
+            <option value="Farma Moderno CO">Farma Moderno CO</option>
+            <option value="Farma Moderno Gde RJ">Farma Moderno Gde RJ</option>
+            <option value="Farma Moderno Gde SP">Farma Moderno Gde SP</option>
+            <option value="Farma Moderno Int SP">Farma Moderno Int SP</option>
+            <option value="Farma Moderno MG+ES+Int RJ">Farma Moderno MG+ES+Int RJ</option>
+            <option value="Farma Moderno NE">Farma Moderno NE</option>
+            <option value="Farma Moderno Sul">Farma Moderno Sul</option>
+            <option value="Farma NE">Farma NE</option>
+            <option value="Farma Sul">Farma Sul</option>
+            <option value="T.BR Farma" selected>T.BR Farma</option>
+            <option value="T.BR Farma Indep">T.BR Farma Indep</option>
+            <option value="T.BR Farma Moderno">T.BR Farma Moderno</option>
+          </optgroup>
+          <optgroup label="── INFC ──">
+            <option value="INFC RS">INFC RS</option>
+            <option value="INFC SC">INFC SC</option>
+            <option value="INFC MG">INFC MG</option>
+            <option value="INFC CO">INFC CO</option>
+            <option value="INFC BA">INFC BA</option>
+            <option value="INFC Belo Horizonte">INFC Belo Horizonte</option>
+            <option value="INFC CE">INFC CE</option>
+            <option value="INFC Cidade Gde Gde RJ">INFC Cidade Gde Gde RJ</option>
+            <option value="INFC Cidade Gde CO">INFC Cidade Gde CO</option>
+            <option value="INFC Cidade Gde Gde SP">INFC Cidade Gde Gde SP</option>
+            <option value="INFC Cidade Gde Int SP">INFC Cidade Gde Int SP</option>
+            <option value="INFC Cidade Gde MG+ES+Int RJ">INFC Cidade Gde MG+ES+Int RJ</option>
+            <option value="INFC Cidade Gde NE">INFC Cidade Gde NE</option>
+            <option value="INFC Cidade Gde Sul">INFC Cidade Gde Sul</option>
+            <option value="INFC Cidade Peq+Med CO">INFC Cidade Peq+Med CO</option>
+            <option value="INFC Cidade Peq+Med Int SP">INFC Cidade Peq+Med Int SP</option>
+            <option value="INFC Cidade Peq+Med MG+ES+Int RJ">INFC Cidade Peq+Med MG+ES+Int RJ</option>
+            <option value="INFC Cidade Peq+Med NE">INFC Cidade Peq+Med NE</option>
+            <option value="INFC Cidade Peq+Med Sul">INFC Cidade Peq+Med Sul</option>
+            <option value="INFC Curitiba">INFC Curitiba</option>
+            <option value="INFC DF">INFC DF</option>
+            <option value="INFC Fortaleza">INFC Fortaleza</option>
+            <option value="INFC GO">INFC GO</option>
+            <option value="INFC Gde RJ">INFC Gde RJ</option>
+            <option value="INFC Gde SP">INFC Gde SP</option>
+            <option value="INFC Int BA">INFC Int BA</option>
+            <option value="INFC Int CE">INFC Int CE</option>
+            <option value="INFC Int MG">INFC Int MG</option>
+            <option value="INFC Int PE">INFC Int PE</option>
+            <option value="INFC Int PR">INFC Int PR</option>
+            <option value="INFC Int RS">INFC Int RS</option>
+            <option value="INFC Int SP">INFC Int SP</option>
+            <option value="INFC MA+PI">INFC MA+PI</option>
+            <option value="INFC MG+ES+Int RJ">INFC MG+ES+Int RJ</option>
+            <option value="INFC Man+Bel+Ana">INFC Man+Bel+Ana</option>
+            <option value="INFC Manaus">INFC Manaus</option>
+            <option value="INFC NE">INFC NE</option>
+            <option value="INFC PE">INFC PE</option>
+            <option value="INFC PR">INFC PR</option>
+            <option value="INFC Porto Alegre">INFC Porto Alegre</option>
+            <option value="INFC Recife">INFC Recife</option>
+            <option value="INFC SP">INFC SP</option>
+            <option value="INFC Salvador">INFC Salvador</option>
+            <option value="INFC Sul">INFC Sul</option>
+            <option value="T.BR INFC">T.BR INFC</option>
+          </optgroup>
+          <optgroup label="── INA ──">
+            <option value="INA Int MG">INA Int MG</option>
+            <option value="INA MG">INA MG</option>
+            <option value="INA MG+ES+Int RJ">INA MG+ES+Int RJ</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+    <!-- Headline dinâmico -->
+    <div id="elet-headline" style="font-size:13px;color:#334155;margin-bottom:18px;line-height:1.6;padding:12px 16px;background:rgba(45,90,142,0.06);border-radius:8px;border-left:3px solid rgba(45,90,142,0.40);"></div>
+    <!-- KPI chips dinâmicos -->
+    <div id="elet-kpis" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px;"></div>
+    <!-- Mercado Elétrico FYTD -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;padding:14px 16px;background:rgba(251,191,36,0.03);border-radius:10px;border:0.5px solid rgba(251,191,36,0.12);">
+      <!-- Barra comparativa -->
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;color:#94A3B8;margin-bottom:10px;">MERCADO ELÉTRICO LÍQUIDO — FYTD Jul–Mai · R$MM</div>
+        <div style="display:flex;gap:16px;align-items:flex-end;margin-bottom:8px;">
+          <div>
+            <div id="elet-mkt-val25" style="font-size:24px;font-weight:800;color:#6B7280;line-height:1;">—</div>
+            <div style="font-size:9px;color:#6B7280;margin-top:2px;">FY25</div>
+          </div>
+          <div id="elet-mkt-arrow" style="font-size:20px;padding-bottom:16px;">→</div>
+          <div>
+            <div id="elet-mkt-val26" style="font-size:28px;font-weight:800;color:#fbbf24;line-height:1;">—</div>
+            <div style="font-size:9px;color:#94A3B8;margin-top:2px;">FY26</div>
+          </div>
+          <div id="elet-mkt-delta" style="font-size:13px;font-weight:700;padding-bottom:18px;"></div>
+        </div>
+        <div style="position:relative;height:60px;"><canvas id="elet-mkt-bar"></canvas></div>
+      </div>
+      <!-- Linha mensal mercado -->
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;color:#94A3B8;margin-bottom:10px;">EVOLUÇÃO MENSAL MERCADO — R$MM · FY26</div>
+        <div style="position:relative;height:88px;"><canvas id="elet-mkt-line"></canvas></div>
+      </div>
+    </div>
+    <!-- Gráficos: barra FYTD (esq) + linha mensal (dir) — idêntico ao MSO -->
+    <div style="display:grid;grid-template-columns:240px 1fr;gap:20px;align-items:start;">
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;color:#94A3B8;margin-bottom:10px;">FYTD25 vs FYTD26</div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="elet-bar-chart"></canvas></div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;color:#94A3B8;">EVOLUÇÃO MENSAL — Jul/25 a Mai/26</div>
+          <div id="elet-legend" style="display:flex;gap:12px;flex-wrap:wrap;"></div>
+        </div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="elet-line-chart"></canvas></div>
+      </div>
+    </div>
+    <!-- Seção: Tamanhos de Embalagem -->
+    <div style="margin-top:18px;padding-top:14px;border-top:0.5px solid rgba(255,255,255,0.06);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;color:#94A3B8;">TAMANHOS DE EMBALAGEM — % dentro do Mercado Elétrico (R$ · T.BR Farma)</div>
+        <select id="eletEmbSel" onchange="eletSetEmb()" style="font-size:11px;padding:4px 24px 4px 8px;border-radius:7px;border:0.5px solid rgba(251,191,36,0.3);background:#161B22;color:#e2e8f0;cursor:pointer;font-family:inherit;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23fbbf24'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 8px center;">
+          <option value="todos">Todos</option>
+          <option value="scj">SC JOHNSON</option>
+          <option value="reckitt">RECKITT</option>
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <!-- SCJ -->
+        <div id="elet-emb-scj">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;color:#fbbf24;margin-bottom:10px;">SC JOHNSON</div>
+          <div style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <span style="font-size:11px;color:#34d399;font-weight:600;">EXPOSIS &nbsp;<span style="font-size:9px;background:rgba(52,211,153,0.12);border:0.5px solid rgba(52,211,153,0.3);padding:1px 5px;border-radius:3px;">32.9 ML</span></span>
+              <span style="font-size:10px;color:#94A3B8;">FY25 <b style="color:#6b7280;">9.8%</b> → FY26 <b style="color:#34d399;">11.5%</b> <span style="color:#34d399;font-size:9px;">▲1.7pp</span></span>
+            </div>
+            <div style="display:flex;gap:3px;">
+              <div style="flex:1;background:#161B22;border-radius:3px;height:6px;overflow:hidden;"><div style="height:100%;background:rgba(52,211,153,0.35);width:9.8%;border-radius:3px;"></div></div>
+              <div style="flex:1;background:#161B22;border-radius:3px;height:6px;overflow:hidden;"><div style="height:100%;background:#34d399;width:11.5%;border-radius:3px;"></div></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <span style="font-size:11px;color:#60a5fa;font-weight:600;">RAID &nbsp;<span style="font-size:9px;background:rgba(96,165,250,0.12);border:0.5px solid rgba(96,165,250,0.3);padding:1px 5px;border-radius:3px;">32.9 ML</span></span>
+              <span style="font-size:10px;color:#94A3B8;">FY25 <b style="color:#6b7280;">38.2%</b> → FY26 <b style="color:#60a5fa;">39.8%</b> <span style="color:#34d399;font-size:9px;">▲1.6pp</span></span>
+            </div>
+            <div style="display:flex;gap:3px;">
+              <div style="flex:1;background:#161B22;border-radius:3px;height:6px;overflow:hidden;"><div style="height:100%;background:rgba(96,165,250,0.35);width:38.2%;border-radius:3px;"></div></div>
+              <div style="flex:1;background:#161B22;border-radius:3px;height:6px;overflow:hidden;"><div style="height:100%;background:#60a5fa;width:39.8%;border-radius:3px;"></div></div>
+            </div>
+          </div>
+        </div>
+        <!-- RECKITT -->
+        <div id="elet-emb-reckitt">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;color:#f87171;margin-bottom:10px;">RECKITT</div>
+          <div style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <span style="font-size:11px;color:#fca5a5;font-weight:600;">SBP &nbsp;<span style="font-size:9px;background:rgba(252,165,165,0.12);border:0.5px solid rgba(252,165,165,0.3);padding:1px 5px;border-radius:3px;">32.9 ML</span></span>
+              <span style="font-size:10px;color:#94A3B8;">FY25 <b style="color:#6b7280;">17.9%</b> → FY26 <b style="color:#fca5a5;">41.7%</b> <span style="color:#34d399;font-size:9px;">▲23.8pp</span></span>
+            </div>
+            <div style="display:flex;gap:3px;">
+              <div style="flex:1;background:#161B22;border-radius:3px;height:6px;overflow:hidden;"><div style="height:100%;background:rgba(252,165,165,0.3);width:17.9%;border-radius:3px;"></div></div>
+              <div style="flex:1;background:#161B22;border-radius:3px;height:6px;overflow:hidden;"><div style="height:100%;background:#fca5a5;width:41.7%;border-radius:3px;"></div></div>
+            </div>
+            <div style="font-size:9px;color:#fbbf24;margin-top:3px;">⚡ Migração de embalagem: 35ML → 32.9ML</div>
+          </div>
+          <div style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <span style="font-size:11px;color:#6b7280;font-weight:600;">SBP &nbsp;<span style="font-size:9px;background:rgba(107,114,128,0.12);border:0.5px solid rgba(107,114,128,0.3);padding:1px 5px;border-radius:3px;">35 ML</span></span>
+              <span style="font-size:10px;color:#94A3B8;">FY25 <b style="color:#6b7280;">28.9%</b> → FY26 <b style="color:#ef4444;">1.8%</b> <span style="color:#ef4444;font-size:9px;">▼27.1pp</span></span>
+            </div>
+            <div style="display:flex;gap:3px;">
+              <div style="flex:1;background:#161B22;border-radius:3px;height:6px;overflow:hidden;"><div style="height:100%;background:rgba(107,114,128,0.5);width:28.9%;border-radius:3px;"></div></div>
+              <div style="flex:1;background:#161B22;border-radius:3px;height:6px;overflow:hidden;"><div style="height:100%;background:#ef4444;width:1.8%;border-radius:3px;"></div></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <span style="font-size:11px;color:#fde68a;font-weight:600;">SUPER REPELEX &nbsp;<span style="font-size:9px;background:rgba(253,230,138,0.12);border:0.5px solid rgba(253,230,138,0.3);padding:1px 5px;border-radius:3px;">40 ML</span></span>
+              <span style="font-size:10px;color:#94A3B8;">FY25 <b style="color:#6b7280;">3.4%</b> → FY26 <b style="color:#fde68a;">4.3%</b> <span style="color:#34d399;font-size:9px;">▲0.9pp</span></span>
+            </div>
+            <div style="display:flex;gap:3px;">
+              <div style="flex:1;background:#161B22;border-radius:3px;height:6px;overflow:hidden;"><div style="height:100%;background:rgba(253,230,138,0.3);width:3.4%;border-radius:3px;"></div></div>
+              <div style="flex:1;background:#161B22;border-radius:3px;height:6px;overflow:hidden;"><div style="height:100%;background:#fde68a;width:4.3%;border-radius:3px;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:9px;color:#3d4451;">Barra esquerda = FY25 &nbsp;|&nbsp; Barra direita = FY26 &nbsp;|&nbsp; Escala: % dentro do mercado Elétrico Líquido (R$) · T.BR Farma</div>
+    </div>
+    <!-- Diagnóstico -->
+    <div id="elet-diag" style="margin-top:16px;padding:14px 16px;background:rgba(251,191,36,0.04);border-radius:10px;border-left:3px solid rgba(251,191,36,0.5);font-size:11px;color:#D1D5DB;line-height:1.9;display:none;"></div>
+    <div style="font-size:9px;color:#3d4451;margin-top:12px;padding-top:8px;border-top:0.5px solid rgba(255,255,255,0.04);">
+      Fonte: NielsenIQ Retail Measurement · PS - GBL - SC JOHNSON - BR - PEST CONTROL · <em>Base Giovano (26-06 elettricos).xlsx</em> · Exportado: 26 jun 2026
+    </div>
+  </div>
+
   <!-- CARD MARKET SHARE POR SKU — JAN-ABR -->
   <div id="mso-sku-jm-card" class="card full" style="margin-bottom:18px;">
     <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
@@ -31329,10 +31544,1123 @@ function initNielsenCharts(){
       setTimeout(function(){
         if(_mySeq !== _nielsenInitSeq) return;
         renderAvgInsight();
+        renderEletricosCard();
         console.log('[Nielsen] renderização completa seq=' + _mySeq);
       }, 200);
     }, 300);
   }, 150);
+}
+
+/* ─── DADOS ELÉTRICOS POR MERCADO (% share dentro do mercado Elétrico) ─── */
+var ELET_MKT_DATA = {
+  "Farma CO":{
+    label:"FARMA CO",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma CO",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[42.28, 5.33, 28.49, 41.06, 29.62],
+    fytd26:[40.27, 7.88, 24.33, 42.9, 29.5],
+    monthly:[[37.26, 34.27, 34.48, 35.3, 39.02, 39.26, 44.32, 47.75, 40.92, 43.34, 40.83], [7.2, 8.83, 5.28, 7.4, 6.66, 7.04, 7.42, 9.11, 10.84, 10.04, 7.76], [22.61, 18.58, 22.3, 20.83, 24.55, 24.37, 28.03, 29.09, 21.89, 24.63, 24.9], [46.07, 49.06, 48.85, 48.04, 44.32, 44.07, 39.02, 35.19, 41.59, 39.28, 42.51], [32.7, 35.02, 34.22, 34.05, 30.99, 30.3, 25.67, 22.5, 29.16, 26.32, 29.65]],
+    mkt_fy25:12.999,
+    mkt_fy26:8.98,
+    mkt_monthly:[0.459, 0.57, 0.693, 0.716, 0.974, 1.244, 1.378, 0.808, 0.737, 0.785, 0.617]
+  },
+  "Farma Gde RJ":{
+    label:"FARMA GDE RJ",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Gde RJ",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[30.89, 8.15, 16.57, 52.44, 40.09],
+    fytd26:[39.03, 11.22, 20.01, 44.3, 32.22],
+    monthly:[[32.33, 31.46, 34.78, 39.02, 31.8, 35.35, 46.11, 48.4, 46.56, 45.34, 47.12], [8.41, 10.0, 9.91, 11.98, 11.2, 9.18, 13.18, 12.45, 10.54, 12.81, 15.68], [17.46, 15.17, 17.92, 19.24, 14.24, 19.09, 23.72, 26.26, 26.71, 23.46, 22.02], [51.0, 51.88, 48.55, 44.31, 51.53, 47.99, 37.22, 34.93, 36.77, 37.99, 36.22], [37.96, 38.81, 35.82, 32.55, 38.45, 35.35, 25.09, 24.87, 25.78, 26.83, 24.91]],
+    mkt_fy25:11.867,
+    mkt_fy26:10.0,
+    mkt_monthly:[0.804, 0.862, 1.044, 1.193, 1.208, 1.105, 0.732, 0.817, 0.832, 0.735, 0.669]
+  },
+  "Farma Gde SP":{
+    label:"FARMA GDE SP",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Gde SP",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[30.24, 8.0, 16.18, 52.97, 39.02],
+    fytd26:[33.38, 9.62, 17.08, 49.96, 36.22],
+    monthly:[[32.97, 37.82, 27.21, 35.32, 31.52, 27.28, 26.83, 35.08, 38.07, 44.43, 40.59], [9.73, 12.29, 7.85, 6.67, 9.43, 7.49, 7.99, 10.2, 12.37, 11.86, 13.38], [16.65, 17.96, 13.91, 21.59, 15.78, 14.34, 13.48, 17.86, 18.09, 23.69, 19.09], [50.36, 45.52, 56.13, 48.01, 51.81, 56.05, 56.5, 48.25, 45.26, 38.9, 42.75], [36.4, 33.16, 41.13, 35.5, 37.41, 40.79, 41.0, 33.96, 33.42, 28.38, 31.18]],
+    mkt_fy25:22.301,
+    mkt_fy26:16.677,
+    mkt_monthly:[0.292, 0.37, 0.688, 1.176, 0.892, 2.232, 3.493, 3.028, 2.067, 1.576, 0.863]
+  },
+  "Farma Indep CO":{
+    label:"FARMA INDEP CO",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Indep CO",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[53.33, 2.28, 40.38, 30.0, 24.0],
+    fytd26:[46.64, 3.68, 33.63, 36.34, 29.07],
+    monthly:[[45.5, 37.24, 42.02, 40.35, 51.15, 51.2, 51.95, 51.54, 42.9, 45.76, 39.18], [1.97, 7.03, 0.0, 2.46, 2.49, 3.73, 2.6, 4.48, 7.48, 5.98, 2.18], [34.43, 22.76, 33.62, 29.82, 38.43, 37.23, 38.96, 36.75, 26.84, 30.63, 29.16], [37.83, 46.09, 41.31, 42.98, 32.19, 32.13, 31.39, 31.05, 38.66, 36.0, 44.15], [30.27, 36.87, 33.05, 34.38, 25.75, 25.71, 25.11, 24.84, 30.92, 28.8, 35.32]],
+    mkt_fy25:4.926,
+    mkt_fy26:4.134,
+    mkt_monthly:[0.205, 0.275, 0.269, 0.309, 0.432, 0.539, 0.659, 0.425, 0.341, 0.358, 0.321]
+  },
+  "Farma Indep Gde RJ":{
+    label:"FARMA INDEP GDE RJ",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Indep Gde RJ",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[35.67, 6.93, 21.6, 47.66, 38.13],
+    fytd26:[37.41, 9.57, 20.36, 45.92, 36.43],
+    monthly:[[38.56, 35.93, 34.85, 43.9, 29.52, 29.38, 41.3, 46.19, 41.8, 38.96, 32.61], [8.8, 11.16, 11.01, 12.58, 12.05, 0.0, 6.26, 9.68, 6.82, 11.87, 13.6], [22.05, 17.59, 16.87, 22.54, 11.56, 23.5, 26.78, 27.27, 26.62, 19.29, 12.49], [44.77, 47.4, 48.48, 39.43, 53.82, 53.95, 42.03, 37.14, 41.53, 44.37, 50.72], [35.82, 37.92, 38.78, 31.55, 43.05, 43.16, 33.63, 29.71, 33.23, 35.5, 36.32]],
+    mkt_fy25:4.519,
+    mkt_fy26:3.422,
+    mkt_monthly:[0.306, 0.318, 0.312, 0.343, 0.43, 0.316, 0.208, 0.377, 0.285, 0.282, 0.245]
+  },
+  "Farma Indep Gde SP":{
+    label:"FARMA INDEP GDE SP",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Indep Gde SP",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[37.81, 1.32, 28.94, 45.04, 36.03],
+    fytd26:[29.85, 2.88, 20.99, 53.49, 42.79],
+    monthly:[[51.11, 55.92, 18.44, 42.08, 33.94, 19.08, 19.22, 33.65, 33.8, 34.71, 22.21], [0.0, 19.28, 0.0, 2.27, 0.0, 1.1, 2.08, 2.82, 5.19, 2.74, 2.45], [40.89, 25.45, 14.75, 31.4, 27.15, 14.16, 13.29, 24.1, 21.85, 25.02, 15.32], [32.23, 27.42, 64.89, 41.25, 49.4, 64.26, 64.12, 49.68, 49.54, 48.63, 61.13], [25.78, 21.93, 51.91, 33.0, 39.52, 51.41, 51.29, 39.75, 39.63, 38.9, 48.9]],
+    mkt_fy25:6.117,
+    mkt_fy26:5.094,
+    mkt_monthly:[0.046, 0.11, 0.137, 0.496, 0.187, 0.492, 0.97, 1.004, 0.667, 0.605, 0.38]
+  },
+  "Farma Indep Int SP":{
+    label:"FARMA INDEP INT SP",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Indep Int SP",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[23.86, 2.29, 16.8, 59.47, 46.86],
+    fytd26:[28.36, 2.67, 20.02, 54.77, 43.3],
+    monthly:[[28.32, 21.11, 25.32, 28.56, 25.05, 30.08, 31.69, 26.65, 31.02, 27.28, 28.35], [0.0, 0.61, 3.67, 3.65, 1.98, 0.92, 1.28, 2.98, 6.74, 0.0, 6.29], [22.66, 16.28, 16.58, 19.2, 18.06, 23.14, 24.07, 18.33, 18.08, 21.83, 16.39], [55.01, 62.22, 57.11, 53.61, 58.28, 53.26, 51.64, 56.69, 52.08, 56.05, 54.98], [44.01, 49.78, 45.69, 42.88, 45.91, 41.55, 40.0, 44.5, 41.67, 44.84, 43.98]],
+    mkt_fy25:10.373,
+    mkt_fy26:7.788,
+    mkt_monthly:[0.25, 0.269, 0.712, 0.627, 0.555, 0.769, 1.482, 1.037, 0.812, 0.726, 0.548]
+  },
+  "Farma Indep MG+ES+Int RJ":{
+    label:"FARMA INDEP MG+ES+INT RJ",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Indep MG+ES+Int RJ",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[57.66, 1.12, 45.0, 25.3, 20.24],
+    fytd26:[59.45, 1.28, 46.28, 23.78, 18.74],
+    monthly:[[52.64, 50.15, 59.48, 60.54, 62.9, 61.17, 57.91, 63.05, 59.05, 56.78, 60.57], [0.0, 1.37, 1.22, 1.31, 0.5, 2.36, 1.53, 1.08, 1.02, 1.97, 0.52], [42.11, 38.75, 46.37, 47.11, 49.82, 46.58, 44.8, 49.36, 46.21, 43.46, 47.93], [30.69, 33.18, 23.6, 22.76, 20.33, 22.16, 25.28, 20.29, 24.18, 26.39, 22.28], [24.55, 26.15, 17.68, 17.14, 16.26, 17.73, 20.22, 16.23, 19.34, 20.76, 17.47]],
+    mkt_fy25:21.45,
+    mkt_fy26:18.101,
+    mkt_monthly:[0.698, 0.94, 1.386, 2.162, 1.855, 2.291, 2.255, 2.038, 2.021, 1.355, 1.099]
+  },
+  "Farma Indep NE":{
+    label:"FARMA INDEP NE",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Indep NE",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[25.95, 2.03, 18.73, 53.28, 42.51],
+    fytd26:[29.79, 3.15, 20.69, 51.15, 40.34],
+    monthly:[[22.73, 25.35, 29.69, 24.14, 22.01, 27.28, 26.87, 28.96, 35.87, 40.75, 29.93], [5.06, 3.26, 4.68, 5.36, 0.0, 0.77, 3.3, 1.0, 3.63, 3.58, 2.7], [13.13, 17.02, 19.07, 13.95, 17.61, 21.06, 18.19, 22.17, 25.07, 29.02, 21.25], [55.17, 57.99, 51.58, 55.98, 55.82, 53.8, 53.57, 52.99, 46.35, 41.5, 50.24], [44.13, 46.39, 41.26, 43.69, 44.65, 41.44, 42.48, 41.66, 35.46, 32.86, 39.87]],
+    mkt_fy25:4.971,
+    mkt_fy26:4.092,
+    mkt_monthly:[0.425, 0.305, 0.291, 0.251, 0.218, 0.275, 0.342, 0.404, 0.558, 0.554, 0.47]
+  },
+  "Farma Indep Sul":{
+    label:"FARMA INDEP SUL",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Indep Sul",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[57.57, 7.6, 38.46, 25.43, 20.25],
+    fytd26:[49.68, 9.79, 29.95, 31.91, 25.33],
+    monthly:[[43.81, 42.84, 37.74, 60.99, 58.94, 48.94, 46.48, 43.5, 52.34, 54.62, 41.38], [9.3, 0.0, 9.46, 6.22, 3.4, 6.41, 7.23, 5.31, 14.08, 20.31, 14.35], [25.75, 34.27, 20.73, 42.58, 43.75, 32.74, 29.95, 29.49, 27.79, 23.39, 18.75], [39.53, 40.5, 45.59, 21.92, 24.13, 33.45, 34.29, 38.44, 27.36, 26.32, 41.42], [31.62, 32.4, 36.48, 16.92, 19.31, 25.97, 27.43, 30.38, 21.89, 21.06, 33.13]],
+    mkt_fy25:7.951,
+    mkt_fy26:7.046,
+    mkt_monthly:[0.052, 0.044, 0.188, 0.435, 0.581, 1.009, 1.401, 0.847, 1.04, 0.924, 0.524]
+  },
+  "Farma Int SP":{
+    label:"FARMA INT SP",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Int SP",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[32.67, 7.41, 18.73, 50.65, 37.61],
+    fytd26:[35.72, 8.32, 20.26, 47.52, 34.65],
+    monthly:[[33.79, 31.0, 31.26, 35.69, 34.81, 36.19, 34.97, 35.48, 38.8, 38.59, 40.31], [5.61, 6.24, 6.26, 7.64, 8.36, 9.17, 7.29, 9.5, 10.36, 7.51, 11.21], [21.43, 18.56, 18.74, 20.91, 19.49, 19.78, 20.69, 18.89, 20.68, 23.36, 21.04], [49.48, 52.19, 51.65, 47.23, 48.52, 47.14, 48.35, 47.85, 44.46, 44.74, 43.02], [37.52, 39.57, 38.48, 34.58, 35.18, 33.99, 34.67, 34.37, 32.59, 33.03, 31.67]],
+    mkt_fy25:28.843,
+    mkt_fy26:22.85,
+    mkt_monthly:[0.626, 0.746, 1.972, 2.149, 2.041, 2.865, 4.075, 3.038, 2.322, 1.801, 1.214]
+  },
+  "Farma MG+ES+Int RJ":{
+    label:"FARMA MG+ES+INT RJ",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma MG+ES+Int RJ",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[50.85, 3.25, 37.43, 32.33, 25.07],
+    fytd26:[51.63, 3.58, 37.73, 31.66, 23.95],
+    monthly:[[46.5, 47.71, 50.03, 50.82, 52.24, 52.5, 51.5, 53.6, 53.47, 51.41, 52.73], [2.39, 3.21, 3.39, 3.43, 3.18, 3.92, 3.9, 3.27, 3.81, 4.28, 3.68], [34.8, 34.96, 36.64, 37.22, 38.62, 38.08, 37.3, 39.61, 38.96, 36.84, 38.5], [36.84, 35.62, 33.21, 32.5, 31.05, 30.83, 31.77, 29.73, 29.82, 31.86, 30.41], [28.31, 27.25, 24.59, 24.47, 23.53, 23.52, 23.7, 22.36, 22.82, 24.35, 23.13]],
+    mkt_fy25:52.495,
+    mkt_fy26:44.601,
+    mkt_monthly:[1.651, 2.047, 3.782, 5.517, 4.633, 5.778, 5.558, 4.618, 4.727, 3.499, 2.792]
+  },
+  "Farma Moderno CO":{
+    label:"FARMA MODERNO CO",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Moderno CO",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[35.53, 7.2, 21.23, 47.8, 33.05],
+    fytd26:[34.84, 11.47, 16.4, 48.5, 29.87],
+    monthly:[[30.6, 31.5, 29.71, 31.47, 29.35, 30.12, 37.32, 43.54, 39.22, 41.3, 42.62], [11.44, 10.52, 8.63, 11.15, 9.98, 9.57, 11.84, 14.24, 13.75, 13.46, 13.84], [13.04, 14.68, 15.14, 14.02, 13.5, 14.53, 18.02, 20.59, 17.63, 19.58, 20.26], [52.74, 51.83, 53.63, 51.87, 53.98, 53.21, 46.01, 39.79, 44.12, 42.03, 40.72], [34.66, 33.3, 34.97, 33.8, 35.17, 33.81, 26.19, 19.9, 27.64, 24.23, 23.47]],
+    mkt_fy25:8.073,
+    mkt_fy26:4.846,
+    mkt_monthly:[0.254, 0.295, 0.424, 0.407, 0.542, 0.704, 0.719, 0.383, 0.396, 0.427, 0.295]
+  },
+  "Farma Moderno Gde RJ":{
+    label:"FARMA MODERNO GDE RJ",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Moderno Gde RJ",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[27.96, 8.9, 13.47, 55.38, 41.3],
+    fytd26:[39.87, 12.07, 19.82, 43.46, 30.03],
+    monthly:[[28.5, 28.85, 34.76, 37.05, 33.06, 37.74, 48.03, 50.29, 49.04, 49.32, 55.47], [8.17, 9.32, 9.44, 11.73, 10.73, 12.86, 15.92, 14.83, 12.48, 13.4, 16.88], [14.63, 13.76, 18.36, 17.91, 15.72, 17.33, 22.5, 25.41, 26.76, 26.06, 27.5], [54.83, 54.49, 48.58, 46.29, 50.27, 45.6, 35.31, 33.04, 34.29, 34.01, 27.86], [39.28, 39.33, 34.55, 32.95, 35.91, 32.22, 21.69, 20.73, 21.91, 21.42, 18.34]],
+    mkt_fy25:7.348,
+    mkt_fy26:6.579,
+    mkt_monthly:[0.497, 0.544, 0.732, 0.849, 0.778, 0.789, 0.524, 0.44, 0.547, 0.453, 0.425]
+  },
+  "Farma Moderno Gde SP":{
+    label:"FARMA MODERNO GDE SP",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Moderno Gde SP",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[27.37, 10.53, 11.36, 55.96, 40.15],
+    fytd26:[34.93, 12.58, 15.37, 48.41, 33.34],
+    monthly:[[29.61, 30.14, 29.38, 30.39, 30.88, 29.61, 29.76, 35.79, 40.11, 50.49, 55.05], [11.53, 9.33, 9.8, 9.88, 11.93, 9.3, 10.26, 13.86, 15.79, 17.54, 21.97], [12.16, 14.79, 13.7, 14.43, 12.77, 14.39, 13.55, 14.77, 16.3, 22.86, 22.06], [53.72, 53.19, 53.95, 52.95, 52.45, 53.73, 53.57, 47.54, 43.22, 32.84, 28.29], [38.37, 37.91, 38.46, 37.33, 36.85, 37.79, 37.05, 31.08, 30.46, 21.82, 17.24]],
+    mkt_fy25:16.185,
+    mkt_fy26:11.583,
+    mkt_monthly:[0.246, 0.26, 0.551, 0.68, 0.705, 1.74, 2.522, 2.024, 1.4, 0.971, 0.483]
+  },
+  "Farma Moderno Int SP":{
+    label:"FARMA MODERNO INT SP",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Moderno Int SP",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[37.61, 10.28, 19.81, 45.7, 32.41],
+    fytd26:[39.52, 11.24, 20.38, 43.77, 30.18],
+    monthly:[[37.43, 36.59, 34.62, 38.62, 38.46, 38.43, 36.84, 40.07, 42.98, 46.22, 50.15], [9.34, 9.42, 7.73, 9.28, 10.75, 12.2, 10.72, 12.88, 12.31, 12.58, 15.25], [20.61, 19.85, 19.97, 21.61, 20.02, 18.54, 18.75, 19.18, 22.07, 24.39, 24.87], [45.79, 46.52, 48.56, 44.6, 44.86, 44.89, 46.48, 43.26, 40.35, 37.1, 33.19], [33.2, 33.8, 34.41, 31.16, 31.16, 31.21, 31.62, 29.12, 27.71, 25.06, 21.54]],
+    mkt_fy25:18.47,
+    mkt_fy26:15.062,
+    mkt_monthly:[0.376, 0.476, 1.26, 1.522, 1.486, 2.097, 2.594, 2.001, 1.51, 1.075, 0.666]
+  },
+  "Farma Moderno MG+ES+Int RJ":{
+    label:"FARMA MODERNO MG+ES+INT RJ",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Moderno MG+ES+Int RJ",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[46.15, 4.72, 32.19, 37.19, 28.42],
+    fytd26:[46.3, 5.15, 31.89, 37.03, 27.51],
+    monthly:[[42.0, 45.64, 44.57, 44.55, 45.13, 46.8, 47.12, 46.14, 49.3, 48.01, 47.65], [4.15, 4.77, 4.64, 4.8, 4.97, 4.94, 5.52, 5.0, 5.89, 5.75, 5.73], [29.45, 31.74, 31.01, 30.85, 31.13, 32.49, 32.18, 31.91, 33.55, 32.66, 32.39], [41.33, 37.69, 38.76, 38.78, 38.21, 36.54, 36.21, 37.2, 34.04, 35.32, 35.68], [31.05, 28.19, 28.59, 29.2, 28.38, 27.33, 26.07, 27.21, 25.42, 26.62, 26.8]],
+    mkt_fy25:31.045,
+    mkt_fy26:26.5,
+    mkt_monthly:[0.953, 1.107, 2.396, 3.355, 2.778, 3.486, 3.303, 2.579, 2.706, 2.143, 1.694]
+  },
+  "Farma Moderno NE":{
+    label:"FARMA MODERNO NE",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Moderno NE",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[35.46, 11.27, 17.1, 47.87, 34.26],
+    fytd26:[38.96, 11.15, 20.02, 44.37, 29.88],
+    monthly:[[36.45, 34.96, 38.53, 38.76, 41.17, 41.19, 37.17, 38.66, 37.18, 40.67, 43.74], [10.59, 10.07, 10.9, 12.24, 12.09, 10.15, 11.98, 10.45, 11.94, 10.27, 11.82], [18.57, 17.9, 19.92, 18.77, 20.85, 22.8, 17.75, 20.48, 17.81, 22.26, 23.17], [46.88, 48.38, 44.8, 44.57, 42.17, 42.15, 46.16, 44.67, 46.15, 42.67, 39.6], [31.55, 34.06, 30.67, 30.18, 29.43, 28.5, 31.8, 30.74, 31.61, 27.13, 24.04]],
+    mkt_fy25:10.671,
+    mkt_fy26:11.371,
+    mkt_monthly:[1.048, 0.901, 0.713, 0.736, 0.786, 0.954, 1.173, 1.181, 1.469, 1.177, 1.232]
+  },
+  "Farma Moderno Sul":{
+    label:"FARMA MODERNO SUL",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Moderno Sul",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[45.72, 11.15, 25.43, 37.51, 25.34],
+    fytd26:[47.39, 11.6, 26.32, 33.95, 23.07],
+    monthly:[[36.64, 45.25, 46.67, 43.84, 42.77, 44.11, 48.07, 52.08, 50.35, 50.32, 51.49], [11.37, 15.42, 14.19, 8.87, 9.52, 9.6, 10.95, 13.55, 14.01, 13.21, 15.62], [17.94, 20.78, 23.15, 26.19, 24.7, 25.69, 27.51, 28.11, 26.27, 27.05, 25.57], [46.43, 37.93, 36.42, 38.91, 38.85, 36.75, 32.54, 28.94, 30.85, 31.88, 30.97], [33.98, 28.29, 25.61, 28.7, 28.26, 25.73, 21.99, 18.0, 18.52, 20.97, 21.45]],
+    mkt_fy25:15.428,
+    mkt_fy26:13.835,
+    mkt_monthly:[0.135, 0.171, 0.332, 0.82, 1.335, 2.908, 2.996, 1.703, 1.494, 1.428, 0.513]
+  },
+  "Farma NE":{
+    label:"FARMA NE",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma NE",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[32.44, 8.34, 17.62, 49.59, 36.88],
+    fytd26:[36.53, 9.03, 20.2, 46.17, 32.65],
+    monthly:[[32.49, 32.53, 35.97, 35.04, 37.01, 38.08, 34.84, 36.19, 36.82, 40.69, 39.93], [9.0, 8.35, 9.1, 10.49, 9.47, 8.05, 10.02, 8.04, 9.65, 8.13, 9.3], [17.0, 17.68, 19.68, 17.54, 20.14, 22.41, 17.85, 20.91, 19.81, 24.43, 22.64], [49.27, 50.8, 46.76, 47.48, 45.12, 44.75, 47.83, 46.79, 46.2, 42.29, 42.53], [35.18, 37.17, 33.74, 33.62, 32.73, 31.4, 34.21, 33.52, 32.67, 28.97, 28.41]],
+    mkt_fy25:15.642,
+    mkt_fy26:15.463,
+    mkt_monthly:[1.473, 1.206, 1.004, 0.987, 1.004, 1.229, 1.515, 1.585, 2.027, 1.731, 1.702]
+  },
+  "Farma Sul":{
+    label:"FARMA SUL",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · Farma Sul",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[49.75, 9.94, 29.86, 33.4, 23.61],
+    fytd26:[48.16, 10.99, 27.54, 33.26, 23.83],
+    monthly:[[38.65, 44.75, 43.44, 49.78, 47.67, 45.36, 47.57, 49.23, 51.17, 52.01, 46.38], [10.79, 12.26, 12.48, 7.95, 7.66, 8.78, 9.76, 10.82, 14.04, 16.0, 14.98], [20.13, 23.54, 22.27, 31.87, 30.48, 27.51, 28.29, 28.57, 26.89, 25.61, 22.13], [44.5, 38.46, 39.74, 33.02, 34.38, 35.9, 33.1, 32.1, 29.42, 29.7, 36.25], [33.32, 29.13, 29.54, 24.61, 25.54, 25.79, 23.72, 22.11, 19.9, 21.0, 27.35]],
+    mkt_fy25:23.379,
+    mkt_fy26:20.881,
+    mkt_monthly:[0.187, 0.215, 0.52, 1.255, 1.917, 3.918, 4.397, 2.55, 2.534, 2.352, 1.037]
+  },
+  "INA Int MG":{
+    label:"INA INT MG",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INA Int MG",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[49.22, 0.0, 39.37, 33.57, 26.22],
+    fytd26:[50.22, 0.0, 40.17, 31.84, 24.6],
+    monthly:[[44.92, 47.69, 48.53, 52.06, 48.37, 49.86, 51.43, 51.28, 49.7, 52.13, 51.49], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [35.93, 38.15, 38.82, 41.65, 38.7, 39.89, 41.14, 41.02, 39.76, 41.7, 41.19], [38.08, 35.12, 33.91, 30.17, 33.97, 32.23, 30.62, 30.77, 31.5, 29.41, 30.4], [29.73, 27.34, 26.02, 22.84, 26.19, 24.86, 23.63, 23.96, 24.56, 23.03, 23.49]],
+    mkt_fy25:171.804,
+    mkt_fy26:154.272,
+    mkt_monthly:[5.432, 6.002, 11.861, 19.531, 18.707, 17.716, 17.273, 15.836, 17.392, 13.665, 10.856]
+  },
+  "INA MG":{
+    label:"INA MG",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INA MG",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[50.44, 0.0, 40.35, 32.14, 24.92],
+    fytd26:[52.24, 0.0, 41.8, 29.68, 22.76],
+    monthly:[[48.74, 50.85, 49.55, 52.58, 50.54, 52.63, 53.01, 53.01, 52.47, 54.69, 53.88], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [38.99, 40.68, 39.64, 42.06, 40.43, 42.1, 42.4, 42.41, 41.98, 43.75, 43.1], [34.1, 31.59, 32.61, 29.51, 31.54, 29.28, 28.87, 28.96, 28.78, 26.91, 27.89], [26.28, 24.27, 24.38, 22.19, 24.13, 22.45, 22.17, 22.46, 22.38, 21.05, 21.66]],
+    mkt_fy25:282.993,
+    mkt_fy26:247.704,
+    mkt_monthly:[8.867, 10.156, 19.865, 34.603, 28.842, 28.442, 27.526, 24.597, 26.642, 21.185, 16.978]
+  },
+  "INA MG+ES+Int RJ":{
+    label:"INA MG+ES+INT RJ",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INA MG+ES+Int RJ",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[46.99, 0.0, 37.6, 35.7, 27.77],
+    fytd26:[49.75, 0.0, 39.8, 32.48, 24.87],
+    monthly:[[46.28, 47.43, 47.44, 50.38, 48.6, 50.81, 51.01, 50.67, 49.73, 50.79, 50.29], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [37.02, 37.94, 37.95, 40.31, 38.88, 40.64, 40.81, 40.54, 39.78, 40.63, 40.23], [36.7, 35.27, 34.98, 31.88, 33.72, 31.33, 31.18, 31.63, 32.02, 31.24, 31.87], [28.26, 27.14, 26.34, 24.08, 25.8, 23.91, 23.93, 24.4, 24.83, 24.01, 24.55]],
+    mkt_fy25:362.805,
+    mkt_fy26:326.436,
+    mkt_monthly:[13.564, 15.1, 26.143, 41.153, 36.058, 37.037, 36.039, 33.61, 35.499, 28.741, 23.493]
+  },
+  "INFC BA":{
+    label:"INFC BA",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC BA",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[39.5, 6.14, 25.46, 43.84, 33.31],
+    fytd26:[44.05, 6.61, 28.63, 39.29, 28.41],
+    monthly:[[42.0, 39.38, 39.46, 43.03, 48.38, 47.13, 42.21, 42.14, 39.71, 51.45, 47.77], [5.58, 5.04, 4.57, 7.1, 7.75, 6.94, 9.0, 6.7, 6.54, 5.47, 7.12], [28.03, 26.46, 27.0, 27.32, 30.96, 30.77, 24.76, 27.01, 25.23, 35.69, 31.1], [41.33, 43.95, 43.88, 40.31, 34.95, 36.2, 41.12, 41.19, 43.63, 31.89, 35.56], [30.33, 33.2, 32.31, 28.67, 25.51, 25.28, 29.89, 29.88, 31.08, 22.56, 25.99]],
+    mkt_fy25:5.67,
+    mkt_fy26:5.767,
+    mkt_monthly:[0.436, 0.39, 0.404, 0.392, 0.408, 0.568, 0.623, 0.605, 0.73, 0.65, 0.562]
+  },
+  "INFC Belo Horizonte":{
+    label:"INFC BELO HORIZONTE",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Belo Horizonte",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[57.08, 2.56, 43.1, 26.23, 20.69],
+    fytd26:[55.76, 2.61, 42.0, 27.54, 21.43],
+    monthly:[[56.91, 56.55, 56.17, 56.01, 57.85, 54.95, 55.66, 57.06, 56.2, 51.93, 54.26], [2.04, 2.49, 1.8, 2.07, 2.56, 2.96, 3.02, 2.63, 2.53, 2.91, 3.37], [43.48, 42.75, 43.14, 42.74, 43.72, 41.0, 41.5, 43.01, 42.43, 38.63, 40.04], [26.43, 26.78, 27.16, 27.3, 25.49, 28.38, 27.55, 26.28, 27.03, 31.41, 29.07], [20.6, 20.55, 20.99, 21.14, 19.8, 22.12, 21.31, 20.5, 21.22, 24.61, 22.83]],
+    mkt_fy25:22.776,
+    mkt_fy26:19.378,
+    mkt_monthly:[0.518, 0.681, 1.595, 2.761, 2.045, 2.683, 2.582, 1.893, 1.958, 1.565, 1.097]
+  },
+  "INFC CE":{
+    label:"INFC CE",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC CE",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[35.12, 15.22, 12.88, 48.21, 34.37],
+    fytd26:[36.23, 14.08, 14.91, 47.1, 31.09],
+    monthly:[[32.18, 40.78, 44.59, 38.54, 39.24, 38.44, 37.14, 36.2, 34.75, 31.68, 32.89], [12.72, 18.51, 15.47, 18.72, 16.06, 11.77, 12.61, 14.11, 13.0, 12.23, 13.61], [13.03, 14.11, 20.2, 12.11, 15.34, 18.99, 17.1, 14.85, 14.8, 13.11, 12.71], [51.15, 42.55, 38.74, 44.79, 44.09, 44.89, 46.2, 47.13, 48.59, 51.65, 50.44], [36.39, 28.55, 27.49, 30.24, 31.1, 29.32, 27.0, 33.05, 34.36, 34.08, 25.35]],
+    mkt_fy25:2.004,
+    mkt_fy26:2.031,
+    mkt_monthly:[0.167, 0.184, 0.124, 0.094, 0.121, 0.135, 0.17, 0.245, 0.363, 0.21, 0.218]
+  },
+  "INFC CO":{
+    label:"INFC CO",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC CO",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[42.28, 5.34, 28.49, 41.06, 29.62],
+    fytd26:[40.27, 7.88, 24.33, 42.9, 29.5],
+    monthly:[[37.26, 34.27, 34.47, 35.3, 39.02, 39.26, 44.32, 47.75, 40.92, 43.34, 40.83], [7.2, 8.83, 5.28, 7.4, 6.66, 7.04, 7.42, 9.11, 10.84, 10.04, 7.76], [22.61, 18.58, 22.3, 20.83, 24.55, 24.37, 28.03, 29.09, 21.89, 24.63, 24.9], [46.07, 49.06, 48.86, 48.04, 44.32, 44.07, 39.02, 35.19, 41.59, 39.28, 42.51], [32.7, 35.02, 34.23, 34.05, 30.99, 30.3, 25.67, 22.5, 29.16, 26.32, 29.65]],
+    mkt_fy25:12.999,
+    mkt_fy26:8.981,
+    mkt_monthly:[0.459, 0.57, 0.693, 0.716, 0.974, 1.244, 1.378, 0.808, 0.737, 0.785, 0.617]
+  },
+  "INFC Cidade Gde CO":{
+    label:"INFC CIDADE GDE CO",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Cidade Gde CO",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[43.39, 4.7, 30.01, 39.94, 28.89],
+    fytd26:[39.01, 7.19, 24.01, 44.32, 29.92],
+    monthly:[[37.87, 35.66, 36.7, 40.28, 41.36, 37.27, 40.05, 45.64, 37.47, 39.91, 33.02], [5.98, 6.74, 5.26, 7.84, 6.08, 6.69, 7.49, 9.44, 8.87, 7.46, 8.04], [24.31, 21.79, 24.1, 24.39, 27.01, 23.12, 24.55, 27.08, 21.11, 24.47, 18.38], [45.47, 47.68, 46.64, 43.05, 41.98, 46.06, 43.29, 37.69, 45.86, 43.42, 50.32], [31.47, 32.84, 32.63, 29.9, 28.4, 31.04, 28.13, 23.64, 32.34, 28.93, 33.75]],
+    mkt_fy25:8.751,
+    mkt_fy26:5.013,
+    mkt_monthly:[0.27, 0.305, 0.479, 0.431, 0.608, 0.72, 0.766, 0.435, 0.362, 0.349, 0.288]
+  },
+  "INFC Cidade Gde Gde RJ":{
+    label:"INFC CIDADE GDE GDE RJ",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Cidade Gde Gde RJ",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[30.98, 8.2, 16.59, 52.36, 40.02],
+    fytd26:[39.17, 11.31, 20.03, 44.16, 32.1],
+    monthly:[[32.51, 31.57, 34.87, 39.23, 31.82, 35.54, 45.98, 49.1, 46.72, 45.44, 47.09], [8.43, 10.04, 10.01, 12.09, 11.3, 9.27, 13.18, 12.69, 10.65, 12.9, 15.77], [17.57, 15.22, 17.88, 19.29, 14.16, 19.17, 23.6, 26.6, 26.72, 23.45, 21.9], [50.82, 51.76, 48.47, 44.11, 51.51, 47.79, 37.36, 34.23, 36.62, 37.89, 36.24], [37.82, 38.72, 35.75, 32.4, 38.44, 35.17, 25.2, 24.28, 25.68, 26.74, 24.92]],
+    mkt_fy25:11.774,
+    mkt_fy26:9.911,
+    mkt_monthly:[0.797, 0.856, 1.033, 1.181, 1.198, 1.093, 0.73, 0.802, 0.824, 0.731, 0.666]
+  },
+  "INFC Cidade Gde Gde SP":{
+    label:"INFC CIDADE GDE GDE SP",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Cidade Gde Gde SP",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[30.23, 7.77, 16.41, 52.97, 39.04],
+    fytd26:[33.33, 9.41, 17.25, 50.0, 36.27],
+    monthly:[[34.1, 38.35, 27.39, 35.27, 31.28, 27.38, 26.71, 35.12, 37.85, 44.25, 40.05], [9.39, 12.39, 7.87, 6.5, 9.02, 7.43, 7.83, 9.99, 12.05, 11.6, 12.91], [17.89, 18.29, 14.04, 21.71, 16.0, 14.48, 13.54, 18.1, 18.22, 23.8, 19.14], [49.23, 44.98, 55.95, 48.06, 52.06, 55.95, 56.63, 48.22, 45.49, 39.08, 43.28], [35.58, 32.79, 40.99, 35.53, 37.59, 40.81, 41.18, 33.96, 33.54, 28.43, 31.46]],
+    mkt_fy25:21.652,
+    mkt_fy26:16.28,
+    mkt_monthly:[0.291, 0.364, 0.671, 1.154, 0.869, 2.176, 3.393, 2.953, 2.017, 1.542, 0.849]
+  },
+  "INFC Cidade Gde Int SP":{
+    label:"INFC CIDADE GDE INT SP",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Cidade Gde Int SP",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[38.95, 10.41, 20.75, 44.38, 31.62],
+    fytd26:[37.05, 11.19, 18.45, 46.28, 32.36],
+    monthly:[[36.81, 37.44, 35.65, 36.93, 34.87, 32.92, 30.96, 38.56, 41.28, 45.71, 52.09], [9.11, 10.01, 9.75, 9.39, 11.17, 10.55, 9.47, 12.02, 13.15, 14.31, 17.19], [20.35, 19.94, 18.78, 20.15, 16.73, 15.79, 15.3, 18.83, 19.88, 22.25, 24.48], [46.52, 45.89, 47.68, 46.4, 48.46, 50.41, 52.37, 44.77, 42.05, 37.62, 31.24], [34.07, 33.95, 33.17, 32.35, 33.85, 35.66, 37.59, 30.6, 28.85, 25.09, 20.2]],
+    mkt_fy25:4.744,
+    mkt_fy26:3.695,
+    mkt_monthly:[0.113, 0.132, 0.309, 0.384, 0.334, 0.475, 0.652, 0.502, 0.371, 0.247, 0.176]
+  },
+  "INFC Cidade Gde MG+ES+Int RJ":{
+    label:"INFC CIDADE GDE MG+ES+INT RJ",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Cidade Gde MG+ES+Int RJ",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[53.15, 3.14, 39.38, 30.16, 23.37],
+    fytd26:[51.35, 3.46, 37.62, 31.95, 24.12],
+    monthly:[[51.32, 50.69, 51.95, 52.12, 52.05, 50.78, 51.3, 53.54, 52.36, 47.68, 49.4], [2.55, 2.88, 3.2, 2.77, 3.76, 3.78, 3.3, 3.38, 4.04, 3.72, 4.16], [38.5, 37.66, 38.36, 38.93, 37.88, 36.85, 37.74, 39.45, 37.85, 34.42, 35.36], [32.01, 32.65, 31.39, 31.18, 31.28, 32.55, 31.9, 29.79, 30.86, 35.65, 33.94], [24.5, 24.78, 23.61, 23.65, 23.45, 24.92, 23.62, 22.38, 23.21, 27.34, 25.47]],
+    mkt_fy25:21.464,
+    mkt_fy26:18.239,
+    mkt_monthly:[0.583, 0.758, 1.569, 2.499, 1.769, 2.386, 2.415, 1.743, 1.841, 1.539, 1.138]
+  },
+  "INFC Cidade Gde NE":{
+    label:"INFC CIDADE GDE NE",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Cidade Gde NE",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[31.71, 10.74, 14.63, 51.62, 37.04],
+    fytd26:[34.27, 12.36, 15.05, 49.07, 33.19],
+    monthly:[[28.91, 29.51, 24.6, 32.31, 32.45, 32.63, 32.1, 32.88, 38.11, 40.91, 41.68], [10.26, 9.53, 10.8, 12.58, 12.76, 12.53, 12.44, 12.17, 15.23, 11.69, 13.78], [12.87, 14.08, 8.88, 13.27, 13.2, 13.58, 13.24, 14.13, 15.26, 21.04, 19.56], [54.42, 53.82, 58.73, 51.03, 50.88, 50.7, 51.23, 50.46, 45.23, 42.42, 41.66], [38.09, 39.14, 41.14, 35.17, 35.37, 34.21, 35.15, 34.55, 30.52, 27.49, 24.22]],
+    mkt_fy25:6.226,
+    mkt_fy26:6.093,
+    mkt_monthly:[0.568, 0.476, 0.368, 0.395, 0.397, 0.436, 0.59, 0.612, 0.825, 0.725, 0.702]
+  },
+  "INFC Cidade Gde Sul":{
+    label:"INFC CIDADE GDE SUL",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Cidade Gde Sul",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[46.72, 11.82, 25.56, 36.46, 25.05],
+    fytd26:[49.95, 13.35, 26.6, 32.9, 22.16],
+    monthly:[[53.27, 59.06, 42.84, 48.43, 44.27, 44.37, 48.71, 53.96, 55.74, 53.26, 50.29], [15.6, 24.01, 10.93, 8.16, 14.5, 11.2, 12.1, 13.8, 15.39, 15.21, 17.28], [27.02, 23.24, 23.35, 30.58, 20.91, 24.3, 26.86, 29.37, 29.2, 27.4, 22.95], [30.06, 24.27, 40.49, 34.79, 38.2, 38.37, 33.96, 28.89, 27.19, 29.7, 32.79], [20.61, 17.84, 29.22, 25.34, 27.59, 26.57, 22.69, 18.02, 16.97, 19.8, 22.41]],
+    mkt_fy25:6.152,
+    mkt_fy26:5.216,
+    mkt_monthly:[0.051, 0.072, 0.125, 0.268, 0.359, 0.931, 1.146, 0.672, 0.717, 0.658, 0.219]
+  },
+  "INFC Cidade Peq+Med CO":{
+    label:"INFC CIDADE PEQ+MED CO",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Cidade Peq+Med CO",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[40.04, 6.65, 25.38, 43.29, 31.08],
+    fytd26:[41.87, 8.75, 24.75, 41.09, 28.96],
+    monthly:[[36.4, 32.69, 29.56, 27.76, 35.14, 42.0, 49.66, 50.19, 44.21, 46.1, 47.71], [8.93, 11.24, 5.37, 6.75, 7.61, 7.48, 7.34, 8.71, 12.72, 12.12, 7.52], [20.18, 14.91, 18.28, 15.46, 20.5, 26.12, 32.39, 31.44, 22.65, 24.76, 30.64], [46.94, 50.64, 53.77, 55.57, 48.2, 41.34, 33.67, 32.3, 37.5, 35.94, 35.62], [34.44, 37.53, 37.78, 40.32, 35.28, 29.27, 22.59, 21.17, 26.11, 24.21, 26.05]],
+    mkt_fy25:4.244,
+    mkt_fy26:3.966,
+    mkt_monthly:[0.189, 0.265, 0.213, 0.285, 0.365, 0.524, 0.613, 0.373, 0.375, 0.435, 0.328]
+  },
+  "INFC Cidade Peq+Med Int SP":{
+    label:"INFC CIDADE PEQ+MED INT SP",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Cidade Peq+Med Int SP",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[31.43, 6.82, 18.32, 51.9, 38.79],
+    fytd26:[35.46, 7.75, 20.61, 47.76, 35.07],
+    monthly:[[33.21, 29.63, 30.43, 35.42, 34.81, 36.85, 35.75, 34.86, 38.32, 37.41, 38.17], [4.84, 5.41, 5.62, 7.26, 7.8, 8.87, 6.87, 8.99, 9.82, 6.41, 10.16], [21.72, 18.29, 18.72, 21.08, 20.04, 20.61, 21.73, 18.9, 20.84, 23.51, 20.38], [50.05, 53.53, 52.4, 47.4, 48.52, 46.47, 47.58, 48.47, 44.91, 45.92, 45.16], [38.22, 40.77, 39.49, 35.07, 35.43, 33.64, 34.1, 35.08, 33.25, 34.27, 33.49]],
+    mkt_fy25:24.117,
+    mkt_fy26:19.177,
+    mkt_monthly:[0.514, 0.614, 1.664, 1.766, 1.708, 2.394, 3.426, 2.54, 1.954, 1.556, 1.042]
+  },
+  "INFC Cidade Peq+Med MG+ES+Int RJ":{
+    label:"INFC CIDADE PEQ+MED MG+ES+INT RJ",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Cidade Peq+Med MG+ES+Int RJ",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[49.44, 3.33, 36.22, 33.65, 26.12],
+    fytd26:[51.88, 3.68, 37.83, 31.4, 23.79],
+    monthly:[[44.0, 46.01, 48.66, 49.78, 52.4, 53.82, 51.69, 53.69, 54.25, 54.22, 55.09], [2.31, 3.39, 3.46, 3.96, 2.86, 4.09, 4.37, 3.21, 3.72, 4.71, 3.35], [32.88, 33.42, 35.47, 35.86, 39.06, 38.96, 36.97, 39.75, 39.68, 38.67, 40.72], [39.34, 37.32, 34.52, 33.55, 30.87, 29.51, 31.65, 29.64, 29.08, 29.0, 27.93], [30.28, 28.67, 25.31, 25.1, 23.55, 22.44, 23.72, 22.33, 22.5, 22.18, 21.48]],
+    mkt_fy25:31.262,
+    mkt_fy26:26.415,
+    mkt_monthly:[1.066, 1.289, 2.223, 3.023, 2.87, 3.409, 3.145, 2.873, 2.885, 1.966, 1.665]
+  },
+  "INFC Cidade Peq+Med NE":{
+    label:"INFC CIDADE PEQ+MED NE",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Cidade Peq+Med NE",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[32.9, 6.75, 19.57, 48.26, 36.79],
+    fytd26:[37.86, 6.8, 23.48, 44.44, 32.34],
+    monthly:[[34.67, 34.47, 42.51, 36.72, 39.97, 41.11, 36.49, 38.06, 35.38, 40.24, 38.72], [8.23, 7.6, 8.12, 9.06, 7.31, 5.57, 8.39, 5.36, 5.64, 5.56, 6.07], [19.51, 19.98, 25.89, 20.32, 24.66, 27.32, 20.8, 25.08, 22.66, 26.64, 24.9], [46.11, 48.87, 39.89, 45.25, 41.39, 41.44, 45.78, 44.71, 47.45, 42.5, 43.16], [33.4, 35.93, 29.51, 32.61, 31.02, 29.79, 33.55, 32.8, 34.36, 30.19, 31.4]],
+    mkt_fy25:9.432,
+    mkt_fy26:9.462,
+    mkt_monthly:[0.904, 0.729, 0.641, 0.592, 0.608, 0.797, 0.935, 0.987, 1.233, 1.018, 1.018]
+  },
+  "INFC Cidade Peq+Med Sul":{
+    label:"INFC CIDADE PEQ+MED SUL",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Cidade Peq+Med Sul",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[51.45, 9.34, 31.82, 31.69, 22.58],
+    fytd26:[48.64, 10.37, 28.54, 32.26, 23.43],
+    monthly:[[42.87, 48.35, 46.96, 51.83, 49.45, 46.19, 47.61, 48.31, 50.24, 52.44, 47.19], [11.36, 8.14, 13.82, 8.16, 6.22, 8.08, 8.94, 9.86, 13.69, 16.48, 14.85], [22.93, 30.54, 23.74, 33.3, 33.35, 28.87, 29.15, 28.79, 26.5, 25.47, 22.89], [40.12, 34.74, 36.15, 30.85, 32.48, 34.56, 32.29, 32.42, 29.33, 28.74, 35.28], [29.66, 25.67, 26.77, 23.0, 24.22, 25.07, 23.65, 22.88, 20.22, 20.65, 27.12]],
+    mkt_fy25:16.954,
+    mkt_fy26:15.259,
+    mkt_monthly:[0.104, 0.111, 0.361, 0.955, 1.527, 2.938, 3.206, 1.844, 1.776, 1.656, 0.782]
+  },
+  "INFC Curitiba":{
+    label:"INFC CURITIBA",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Curitiba",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[39.18, 8.35, 22.99, 43.93, 32.24],
+    fytd26:[43.72, 8.4, 26.58, 39.55, 28.61],
+    monthly:[[18.86, 17.56, 18.22, 29.92, 32.99, 47.25, 44.49, 47.99, 45.37, 48.66, 43.37], [5.56, 10.72, 4.41, 8.15, 6.53, 9.12, 7.18, 9.37, 7.77, 9.26, 12.19], [9.53, 3.33, 10.17, 15.78, 19.86, 28.68, 28.41, 29.02, 28.53, 29.66, 22.5], [64.47, 65.77, 65.12, 53.41, 49.23, 36.06, 38.84, 35.32, 37.95, 34.67, 39.96], [50.01, 51.8, 50.41, 40.69, 37.42, 25.03, 27.33, 25.09, 27.11, 25.3, 30.43]],
+    mkt_fy25:2.945,
+    mkt_fy26:2.971,
+    mkt_monthly:[0.046, 0.046, 0.075, 0.073, 0.139, 0.445, 0.76, 0.401, 0.345, 0.482, 0.16]
+  },
+  "INFC DF":{
+    label:"INFC DF",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC DF",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[50.61, 3.24, 37.24, 32.73, 24.23],
+    fytd26:[45.19, 6.25, 29.9, 38.15, 25.86],
+    monthly:[[44.8, 42.83, 37.99, 44.49, 46.78, 47.52, 47.16, 48.09, 41.86, 50.78, 39.02], [4.3, 5.67, 4.03, 7.07, 5.48, 6.04, 6.38, 8.16, 7.52, 6.38, 8.57], [31.54, 28.6, 26.36, 28.53, 31.94, 31.97, 31.35, 30.31, 25.97, 34.24, 22.65], [38.54, 40.5, 45.34, 38.84, 36.55, 35.82, 36.17, 35.25, 41.48, 32.55, 44.31], [27.68, 28.28, 33.87, 26.61, 24.3, 23.78, 23.45, 21.83, 29.79, 21.48, 29.22]],
+    mkt_fy25:5.572,
+    mkt_fy26:2.443,
+    mkt_monthly:[0.121, 0.129, 0.233, 0.218, 0.325, 0.377, 0.38, 0.196, 0.17, 0.156, 0.136]
+  },
+  "INFC Fortaleza":{
+    label:"INFC FORTALEZA",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Fortaleza",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[32.06, 14.88, 10.77, 51.27, 36.26],
+    fytd26:[35.02, 15.27, 12.74, 48.31, 31.42],
+    monthly:[[38.1, 35.3, 36.88, 36.94, 36.48, 32.18, 32.15, 37.43, 33.72, 33.61, 34.64], [16.0, 13.97, 16.61, 17.14, 16.94, 13.43, 13.48, 15.55, 16.66, 14.27, 14.15], [14.48, 14.27, 12.89, 12.41, 12.24, 12.31, 12.23, 14.39, 10.31, 12.62, 13.56], [45.23, 48.03, 46.46, 46.39, 46.86, 51.16, 51.19, 45.9, 49.62, 49.72, 48.69], [32.02, 32.85, 33.18, 30.83, 32.88, 33.24, 30.11, 31.66, 34.74, 31.15, 23.77]],
+    mkt_fy25:1.327,
+    mkt_fy26:1.307,
+    mkt_monthly:[0.093, 0.089, 0.071, 0.068, 0.093, 0.095, 0.112, 0.174, 0.222, 0.137, 0.152]
+  },
+  "INFC GO":{
+    label:"INFC GO",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC GO",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[38.52, 4.98, 25.83, 44.82, 33.0],
+    fytd26:[40.36, 7.36, 24.93, 42.67, 30.19],
+    monthly:[[35.89, 36.21, 35.7, 33.1, 36.75, 36.69, 45.72, 48.74, 41.93, 42.85, 42.28], [6.16, 10.51, 5.29, 6.24, 5.63, 6.81, 6.68, 9.13, 9.03, 9.91, 5.96], [22.55, 18.46, 23.27, 20.24, 23.77, 22.54, 29.89, 29.87, 24.51, 24.38, 27.87], [47.45, 47.12, 47.63, 50.23, 46.58, 46.64, 37.62, 33.94, 39.92, 39.25, 41.05], [33.8, 34.66, 32.72, 36.73, 33.25, 32.92, 25.35, 22.68, 28.68, 28.32, 30.55]],
+    mkt_fy25:5.382,
+    mkt_fy26:4.963,
+    mkt_monthly:[0.216, 0.315, 0.339, 0.372, 0.5, 0.69, 0.813, 0.483, 0.411, 0.455, 0.37]
+  },
+  "INFC Gde RJ":{
+    label:"INFC GDE RJ",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Gde RJ",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[30.89, 8.15, 16.57, 52.44, 40.09],
+    fytd26:[39.03, 11.22, 20.01, 44.3, 32.22],
+    monthly:[[32.33, 31.46, 34.78, 39.02, 31.8, 35.35, 46.11, 48.4, 46.56, 45.34, 47.12], [8.41, 10.0, 9.91, 11.98, 11.2, 9.18, 13.18, 12.45, 10.54, 12.81, 15.68], [17.46, 15.17, 17.92, 19.24, 14.24, 19.09, 23.72, 26.26, 26.71, 23.46, 22.02], [51.0, 51.88, 48.55, 44.31, 51.53, 47.99, 37.22, 34.93, 36.77, 37.99, 36.22], [37.96, 38.81, 35.82, 32.55, 38.45, 35.35, 25.09, 24.87, 25.78, 26.83, 24.91]],
+    mkt_fy25:11.867,
+    mkt_fy26:10.0,
+    mkt_monthly:[0.804, 0.862, 1.044, 1.193, 1.208, 1.105, 0.732, 0.817, 0.832, 0.735, 0.669]
+  },
+  "INFC Gde SP":{
+    label:"INFC GDE SP",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Gde SP",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[30.27, 8.0, 16.22, 52.93, 38.99],
+    fytd26:[33.41, 9.61, 17.11, 49.92, 36.16],
+    monthly:[[34.02, 38.1, 27.25, 35.34, 31.54, 27.32, 26.87, 35.09, 38.05, 44.35, 40.56], [9.53, 12.26, 7.85, 6.67, 9.43, 7.49, 7.98, 10.2, 12.37, 11.85, 13.45], [17.69, 18.22, 13.96, 21.6, 15.8, 14.36, 13.51, 17.88, 18.07, 23.63, 19.0], [49.32, 45.23, 56.08, 48.0, 51.8, 56.01, 56.46, 48.24, 45.28, 38.98, 42.78], [35.64, 32.95, 41.1, 35.49, 37.39, 40.76, 40.98, 33.93, 33.36, 28.3, 31.03]],
+    mkt_fy25:22.317,
+    mkt_fy26:16.705,
+    mkt_monthly:[0.298, 0.373, 0.688, 1.176, 0.892, 2.233, 3.495, 3.03, 2.071, 1.58, 0.868]
+  },
+  "INFC Int BA":{
+    label:"INFC INT BA",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Int BA",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[41.72, 4.6, 28.78, 41.62, 32.21],
+    fytd26:[46.61, 5.14, 32.15, 36.72, 27.13],
+    monthly:[[45.06, 41.0, 43.87, 43.49, 51.84, 50.34, 43.41, 45.25, 40.65, 55.15, 50.28], [3.97, 3.84, 3.46, 5.78, 7.52, 5.92, 8.11, 4.35, 3.7, 4.17, 5.71], [32.08, 28.96, 31.64, 29.01, 33.95, 34.35, 26.61, 31.85, 28.83, 39.95, 34.51], [38.28, 42.33, 39.46, 39.85, 31.5, 32.99, 39.92, 38.08, 42.68, 28.19, 33.05], [28.64, 32.36, 29.12, 29.66, 23.71, 23.26, 29.83, 28.12, 30.8, 20.61, 24.84]],
+    mkt_fy25:4.451,
+    mkt_fy26:4.457,
+    mkt_monthly:[0.348, 0.312, 0.328, 0.298, 0.322, 0.459, 0.467, 0.447, 0.522, 0.502, 0.453]
+  },
+  "INFC Int CE":{
+    label:"INFC INT CE",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Int CE",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[41.12, 15.88, 17.02, 42.21, 30.67],
+    fytd26:[38.42, 11.92, 18.82, 44.91, 30.49],
+    monthly:[[24.68, 45.95, 55.0, 42.79, 48.57, 53.06, 46.9, 33.22, 36.36, 28.07, 28.87], [8.56, 22.8, 13.92, 22.92, 13.09, 7.89, 10.89, 10.61, 7.26, 8.41, 12.35], [11.19, 13.96, 30.08, 11.32, 25.77, 34.56, 26.63, 15.97, 21.82, 14.04, 10.74], [58.65, 37.39, 28.34, 40.54, 34.77, 30.27, 36.43, 50.11, 46.97, 55.27, 54.47], [41.93, 24.49, 19.81, 28.69, 25.13, 20.17, 20.92, 36.43, 33.77, 39.59, 28.98]],
+    mkt_fy25:0.677,
+    mkt_fy26:0.725,
+    mkt_monthly:[0.074, 0.095, 0.053, 0.026, 0.028, 0.041, 0.057, 0.071, 0.142, 0.073, 0.066]
+  },
+  "INFC Int MG":{
+    label:"INFC INT MG",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Int MG",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[55.15, 3.57, 40.54, 27.78, 21.35],
+    fytd26:[56.38, 4.37, 40.73, 26.87, 20.05],
+    monthly:[[57.91, 54.32, 54.78, 50.93, 56.58, 58.31, 54.27, 59.54, 59.5, 56.65, 58.26], [2.9, 4.46, 5.08, 4.91, 3.57, 4.69, 4.31, 4.02, 4.18, 5.66, 3.43], [43.43, 39.0, 38.75, 35.84, 41.69, 41.96, 39.11, 43.61, 43.42, 39.66, 43.18], [25.42, 29.01, 28.28, 32.4, 26.63, 25.02, 29.07, 23.8, 23.83, 26.49, 24.5], [19.56, 22.22, 21.24, 24.62, 19.99, 18.83, 21.19, 17.58, 17.51, 19.73, 17.85]],
+    mkt_fy25:18.508,
+    mkt_fy26:15.075,
+    mkt_monthly:[0.533, 0.7, 1.23, 1.793, 1.649, 1.917, 1.926, 1.597, 1.681, 1.11, 0.941]
+  },
+  "INFC Int PE":{
+    label:"INFC INT PE",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Int PE",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[17.37, 7.82, 6.07, 65.96, 50.09],
+    fytd26:[32.17, 7.76, 17.98, 51.16, 37.05],
+    monthly:[[33.7, 22.35, 28.85, 16.71, 27.96, 34.61, 31.54, 29.6, 40.46, 31.82, 41.05], [9.93, 7.85, 6.51, 5.28, 7.11, 7.47, 6.52, 4.61, 7.43, 8.86, 11.6], [17.03, 10.04, 16.56, 8.08, 15.26, 20.22, 18.71, 19.07, 24.94, 16.6, 21.25], [49.63, 60.98, 54.49, 66.62, 55.37, 48.72, 51.8, 53.74, 42.87, 51.51, 42.28], [35.8, 45.74, 40.24, 49.6, 40.11, 35.96, 38.76, 37.87, 30.86, 35.03, 29.61]],
+    mkt_fy25:0.872,
+    mkt_fy26:0.993,
+    mkt_monthly:[0.11, 0.074, 0.055, 0.069, 0.062, 0.071, 0.122, 0.077, 0.155, 0.096, 0.102]
+  },
+  "INFC Int PR":{
+    label:"INFC INT PR",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Int PR",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[42.62, 13.4, 20.69, 40.62, 30.24],
+    fytd26:[36.15, 8.66, 20.26, 46.96, 35.44],
+    monthly:[[39.9, 37.82, 33.61, 42.08, 44.27, 34.21, 34.09, 34.94, 34.89, 37.04, 34.32], [5.87, 8.37, 11.04, 11.45, 7.36, 6.68, 7.08, 8.62, 11.65, 9.67, 10.14], [26.05, 21.89, 15.84, 22.22, 28.06, 20.69, 20.2, 19.33, 16.26, 19.96, 17.31], [43.44, 45.51, 49.73, 41.19, 38.77, 48.94, 48.96, 48.24, 48.2, 45.78, 48.84], [32.04, 34.39, 37.61, 30.53, 28.87, 37.01, 37.27, 36.65, 35.89, 34.49, 37.4]],
+    mkt_fy25:4.181,
+    mkt_fy26:3.525,
+    mkt_monthly:[0.044, 0.04, 0.166, 0.226, 0.32, 0.6, 0.721, 0.48, 0.425, 0.337, 0.165]
+  },
+  "INFC Int RS":{
+    label:"INFC INT RS",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Int RS",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[53.82, 8.17, 34.89, 29.13, 19.09],
+    fytd26:[54.03, 11.3, 31.92, 24.68, 16.82],
+    monthly:[[54.46, 71.92, 72.67, 55.49, 55.41, 49.3, 51.38, 52.95, 57.85, 58.63, 69.01], [13.29, 29.22, 20.42, 7.76, 6.87, 9.75, 9.63, 11.54, 14.46, 17.82, 18.9], [30.28, 28.31, 37.72, 36.63, 37.46, 29.69, 31.48, 30.82, 31.82, 29.08, 36.31], [28.44, 11.42, 10.11, 26.47, 25.75, 29.94, 26.04, 25.99, 17.64, 19.69, 11.01], [20.26, 5.04, 5.78, 19.45, 19.16, 20.98, 18.58, 16.94, 9.3, 12.3, 6.52]],
+    mkt_fy25:7.003,
+    mkt_fy26:6.616,
+    mkt_monthly:[0.021, 0.027, 0.098, 0.388, 0.674, 1.438, 1.556, 0.884, 0.766, 0.612, 0.152]
+  },
+  "INFC Int SP":{
+    label:"INFC INT SP",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Int SP",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[32.67, 7.4, 18.74, 50.65, 37.6],
+    fytd26:[35.71, 8.31, 20.26, 47.53, 34.63],
+    monthly:[[33.85, 31.02, 31.26, 35.69, 34.82, 36.2, 34.98, 35.47, 38.77, 38.55, 40.18], [5.6, 6.24, 6.26, 7.64, 8.36, 9.17, 7.29, 9.49, 10.35, 7.5, 11.17], [21.48, 18.58, 18.74, 20.91, 19.49, 19.79, 20.7, 18.88, 20.67, 23.34, 20.97], [49.42, 52.17, 51.65, 47.22, 48.51, 47.12, 48.34, 47.86, 44.48, 44.78, 43.15], [37.48, 39.55, 38.48, 34.58, 35.17, 33.98, 34.66, 34.34, 32.56, 33.0, 31.57]],
+    mkt_fy25:28.852,
+    mkt_fy26:22.862,
+    mkt_monthly:[0.627, 0.746, 1.972, 2.149, 2.041, 2.866, 4.076, 3.041, 2.324, 1.803, 1.217]
+  },
+  "INFC MA+PI":{
+    label:"INFC MA+PI",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC MA+PI",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[25.4, 8.6, 11.73, 57.93, 41.77],
+    fytd26:[33.94, 8.72, 18.43, 49.4, 33.87],
+    monthly:[[26.92, 29.81, 37.29, 30.74, 31.28, 27.4, 28.09, 40.53, 31.29, 40.32, 37.35], [8.66, 8.38, 13.86, 12.98, 12.33, 7.25, 9.54, 8.71, 9.93, 6.19, 6.63], [12.87, 15.46, 15.97, 11.61, 12.69, 14.67, 12.94, 23.71, 15.1, 26.06, 23.25], [56.42, 53.52, 46.05, 52.6, 52.05, 55.93, 55.24, 42.81, 52.05, 43.01, 45.98], [37.91, 36.99, 31.84, 34.37, 35.46, 39.7, 38.45, 27.98, 35.62, 29.6, 32.64]],
+    mkt_fy25:1.515,
+    mkt_fy26:1.547,
+    mkt_monthly:[0.102, 0.09, 0.057, 0.058, 0.05, 0.116, 0.17, 0.234, 0.254, 0.23, 0.184]
+  },
+  "INFC MG":{
+    label:"INFC MG",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC MG",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[56.21, 3.02, 41.95, 26.93, 20.99],
+    fytd26:[56.03, 3.38, 41.45, 27.25, 20.83],
+    monthly:[[57.42, 55.42, 55.57, 54.01, 57.28, 56.35, 55.06, 58.19, 57.72, 53.89, 56.11], [2.48, 3.49, 3.22, 3.19, 3.01, 3.68, 3.57, 3.27, 3.29, 4.05, 3.39], [43.46, 40.85, 41.23, 40.02, 42.81, 41.4, 40.48, 43.29, 42.89, 39.06, 41.49], [25.92, 27.91, 27.65, 29.31, 26.0, 26.98, 28.2, 25.14, 25.55, 29.37, 26.96], [20.07, 21.4, 21.1, 22.51, 19.88, 20.75, 21.26, 19.16, 19.51, 22.59, 20.53]],
+    mkt_fy25:41.284,
+    mkt_fy26:34.453,
+    mkt_monthly:[1.05, 1.381, 2.825, 4.554, 3.694, 4.599, 4.508, 3.49, 3.639, 2.675, 2.038]
+  },
+  "INFC MG+ES+Int RJ":{
+    label:"INFC MG+ES+INT RJ",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC MG+ES+Int RJ",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[50.97, 3.24, 37.53, 32.21, 24.98],
+    fytd26:[51.64, 3.58, 37.74, 31.65, 23.94],
+    monthly:[[46.51, 47.72, 50.04, 50.83, 52.25, 52.5, 51.5, 53.6, 53.47, 51.41, 52.81], [2.39, 3.21, 3.39, 3.43, 3.18, 3.92, 3.9, 3.27, 3.81, 4.28, 3.67], [34.81, 34.97, 36.65, 37.23, 38.62, 38.08, 37.3, 39.61, 38.96, 36.84, 38.58], [36.82, 35.61, 33.2, 32.49, 31.04, 30.83, 31.77, 29.73, 29.82, 31.86, 30.33], [28.3, 27.25, 24.59, 24.46, 23.52, 23.52, 23.7, 22.36, 22.82, 24.35, 23.07]],
+    mkt_fy25:52.688,
+    mkt_fy26:44.613,
+    mkt_monthly:[1.652, 2.047, 3.783, 5.519, 4.634, 5.778, 5.558, 4.618, 4.727, 3.499, 2.8]
+  },
+  "INFC Man+Bel+Ana":{
+    label:"INFC MAN+BEL+ANA",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Man+Bel+Ana",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[36.71, 12.53, 16.84, 46.62, 31.97],
+    fytd26:[40.68, 11.48, 21.07, 42.65, 28.4],
+    monthly:[[39.07, 38.09, 37.58, 41.62, 33.67, 41.15, 47.28, 42.31, 40.15, 36.53, 42.61], [12.15, 9.81, 11.02, 10.6, 11.82, 9.83, 14.8, 12.38, 11.15, 10.87, 9.11], [19.11, 20.66, 19.04, 22.7, 15.12, 23.09, 23.03, 21.47, 20.97, 18.35, 24.98], [44.26, 45.25, 45.76, 41.71, 49.67, 42.18, 36.05, 41.02, 43.18, 46.81, 40.72], [28.09, 30.45, 30.2, 28.07, 33.08, 28.98, 23.96, 27.39, 31.36, 32.51, 22.22]],
+    mkt_fy25:0.716,
+    mkt_fy26:0.77,
+    mkt_monthly:[0.053, 0.044, 0.054, 0.058, 0.062, 0.081, 0.107, 0.102, 0.084, 0.059, 0.066]
+  },
+  "INFC Manaus":{
+    label:"INFC MANAUS",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Manaus",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[45.03, 14.83, 21.2, 38.3, 26.96],
+    fytd26:[47.12, 13.2, 24.5, 36.21, 23.67],
+    monthly:[[54.07, 41.44, 47.63, 46.4, 39.03, 48.53, 52.02, 41.64, 53.59, 41.59, 52.24], [20.94, 10.85, 13.54, 12.35, 12.09, 12.51, 16.06, 12.12, 12.52, 12.86, 10.68], [22.32, 22.3, 24.56, 24.77, 19.13, 26.31, 25.56, 21.2, 30.35, 20.41, 31.12], [29.26, 41.89, 35.71, 36.93, 44.3, 34.81, 31.31, 41.69, 29.75, 41.74, 31.09], [15.39, 23.54, 18.27, 24.76, 30.62, 22.98, 21.37, 28.99, 21.31, 29.3, 17.46]],
+    mkt_fy25:0.291,
+    mkt_fy26:0.336,
+    mkt_monthly:[0.018, 0.016, 0.019, 0.027, 0.029, 0.036, 0.049, 0.05, 0.03, 0.03, 0.033]
+  },
+  "INFC NE":{
+    label:"INFC NE",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC NE",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[32.44, 8.33, 17.61, 49.58, 36.88],
+    fytd26:[36.53, 9.03, 20.2, 46.17, 32.65],
+    monthly:[[32.49, 32.53, 35.97, 35.04, 37.01, 38.08, 34.84, 36.19, 36.82, 40.69, 39.93], [9.0, 8.35, 9.1, 10.49, 9.47, 8.05, 10.02, 8.04, 9.65, 8.13, 9.3], [17.0, 17.68, 19.68, 17.54, 20.14, 22.41, 17.85, 20.91, 19.81, 24.43, 22.64], [49.27, 50.8, 46.76, 47.48, 45.12, 44.75, 47.83, 46.79, 46.2, 42.29, 42.53], [35.18, 37.17, 33.74, 33.62, 32.73, 31.4, 34.21, 33.52, 32.67, 28.97, 28.41]],
+    mkt_fy25:15.644,
+    mkt_fy26:15.463,
+    mkt_monthly:[1.473, 1.206, 1.004, 0.987, 1.004, 1.229, 1.515, 1.585, 2.027, 1.731, 1.702]
+  },
+  "INFC PE":{
+    label:"INFC PE",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC PE",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[23.12, 8.18, 10.32, 60.21, 44.93],
+    fytd26:[29.39, 7.75, 15.77, 53.94, 37.95],
+    monthly:[[27.3, 22.58, 23.96, 19.96, 26.12, 32.04, 26.39, 29.95, 38.14, 34.89, 35.07], [8.14, 8.04, 7.15, 6.52, 6.51, 7.45, 6.68, 6.25, 8.98, 8.57, 9.18], [13.7, 10.02, 12.02, 9.44, 14.38, 18.18, 14.43, 17.72, 21.53, 19.34, 18.88], [56.03, 60.75, 59.37, 63.38, 57.21, 51.3, 56.94, 53.38, 45.19, 48.44, 48.26], [39.09, 44.31, 42.75, 45.66, 41.63, 35.85, 42.65, 38.23, 31.45, 31.25, 31.0]],
+    mkt_fy25:2.295,
+    mkt_fy26:2.41,
+    mkt_monthly:[0.285, 0.211, 0.168, 0.185, 0.179, 0.174, 0.232, 0.18, 0.304, 0.235, 0.258]
+  },
+  "INFC PR":{
+    label:"INFC PR",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC PR",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[41.2, 11.31, 21.64, 41.99, 31.06],
+    fytd26:[39.61, 8.54, 23.15, 43.57, 32.31],
+    monthly:[[29.17, 27.04, 28.84, 39.11, 40.85, 39.77, 39.43, 40.88, 39.59, 43.88, 38.77], [5.71, 9.62, 8.99, 10.64, 7.11, 7.72, 7.13, 8.96, 9.92, 9.43, 11.15], [17.62, 12.02, 14.09, 20.65, 25.57, 24.09, 24.41, 23.74, 21.75, 25.67, 19.87], [54.17, 56.29, 54.49, 44.18, 41.94, 43.45, 43.77, 42.36, 43.61, 39.25, 44.47], [41.21, 43.65, 41.57, 33.01, 31.46, 31.91, 32.17, 31.39, 31.96, 29.08, 33.97]],
+    mkt_fy25:7.126,
+    mkt_fy26:6.495,
+    mkt_monthly:[0.091, 0.086, 0.241, 0.299, 0.459, 1.045, 1.481, 0.881, 0.77, 0.819, 0.325]
+  },
+  "INFC Porto Alegre":{
+    label:"INFC PORTO ALEGRE",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Porto Alegre",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[50.77, 10.06, 30.56, 32.48, 20.98],
+    fytd26:[51.69, 10.35, 31.01, 29.4, 18.8],
+    monthly:[[56.8, 63.41, 58.21, 52.51, 46.03, 47.02, 50.56, 58.82, 56.75, 51.31, 53.91], [9.22, 14.52, 13.52, 5.71, 10.2, 9.86, 9.91, 11.72, 10.19, 11.56, 18.44], [36.21, 36.2, 33.05, 36.3, 26.62, 27.76, 30.53, 35.33, 35.21, 29.49, 24.69], [25.24, 19.12, 24.74, 30.45, 35.65, 33.68, 29.27, 21.93, 24.21, 30.17, 27.96], [18.17, 13.34, 16.83, 22.49, 25.97, 22.98, 18.45, 10.47, 12.67, 17.06, 16.67]],
+    mkt_fy25:3.413,
+    mkt_fy26:2.524,
+    mkt_monthly:[0.021, 0.033, 0.071, 0.234, 0.275, 0.55, 0.476, 0.3, 0.258, 0.232, 0.075]
+  },
+  "INFC RS":{
+    label:"INFC RS",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC RS",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[52.82, 8.79, 33.47, 30.23, 19.71],
+    fytd26:[53.38, 11.04, 31.67, 25.98, 17.36],
+    monthly:[[55.63, 67.23, 66.6, 54.37, 52.69, 48.67, 51.19, 54.44, 57.58, 56.62, 64.02], [11.27, 21.13, 17.52, 6.99, 7.84, 9.78, 9.7, 11.59, 13.38, 16.1, 18.75], [33.24, 32.65, 35.76, 36.51, 34.32, 29.15, 31.26, 31.96, 32.68, 29.19, 32.46], [26.85, 15.65, 16.25, 27.96, 28.62, 30.98, 26.8, 24.96, 19.29, 22.57, 16.62], [19.22, 9.61, 10.42, 20.6, 21.13, 21.53, 18.55, 15.3, 10.15, 13.61, 9.88]],
+    mkt_fy25:10.416,
+    mkt_fy26:9.141,
+    mkt_monthly:[0.042, 0.061, 0.17, 0.621, 0.949, 1.988, 2.032, 1.184, 1.024, 0.844, 0.227]
+  },
+  "INFC Recife":{
+    label:"INFC RECIFE",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Recife",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[26.65, 8.4, 12.92, 56.68, 41.77],
+    fytd26:[27.44, 7.74, 14.22, 55.89, 38.57],
+    monthly:[[23.29, 22.71, 21.6, 21.86, 25.15, 30.25, 20.64, 30.22, 35.71, 37.02, 31.12], [7.03, 8.15, 7.45, 7.25, 6.2, 7.43, 6.86, 7.48, 10.6, 8.38, 7.59], [11.6, 10.02, 9.83, 10.24, 13.92, 16.77, 9.65, 16.7, 17.97, 21.24, 17.31], [60.05, 60.63, 61.73, 61.47, 58.18, 53.08, 62.69, 53.11, 47.62, 46.31, 52.21], [41.15, 43.54, 43.95, 43.34, 42.44, 35.77, 46.99, 38.5, 32.06, 28.63, 31.91]],
+    mkt_fy25:1.422,
+    mkt_fy26:1.417,
+    mkt_monthly:[0.175, 0.137, 0.113, 0.117, 0.117, 0.103, 0.109, 0.103, 0.149, 0.139, 0.155]
+  },
+  "INFC SC":{
+    label:"INFC SC",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC SC",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[54.72, 10.32, 33.46, 28.58, 21.46],
+    fytd26:[49.66, 13.93, 25.8, 33.19, 24.6],
+    monthly:[[41.36, 47.1, 39.72, 50.8, 44.46, 44.51, 52.87, 51.68, 54.34, 56.03, 43.21], [18.83, 7.71, 12.35, 7.34, 7.83, 7.76, 14.33, 12.3, 19.23, 23.66, 15.78], [14.25, 29.96, 19.43, 33.31, 27.74, 27.85, 27.96, 29.05, 24.24, 21.16, 18.78], [41.98, 36.24, 43.61, 32.44, 38.31, 38.05, 29.7, 30.86, 28.66, 27.09, 39.94], [31.03, 28.18, 32.64, 24.57, 28.43, 28.15, 21.45, 21.89, 20.86, 20.46, 31.12]],
+    mkt_fy25:5.837,
+    mkt_fy26:5.245,
+    mkt_monthly:[0.055, 0.068, 0.109, 0.334, 0.508, 0.885, 0.884, 0.485, 0.741, 0.69, 0.484]
+  },
+  "INFC SP":{
+    label:"INFC SP",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC SP",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[31.63, 7.66, 17.64, 51.65, 38.21],
+    fytd26:[34.74, 8.86, 18.93, 48.54, 35.28],
+    monthly:[[33.9, 33.38, 30.22, 35.57, 33.82, 32.31, 31.24, 35.28, 38.43, 41.26, 40.34], [6.87, 8.24, 6.67, 7.29, 8.69, 8.43, 7.61, 9.84, 11.3, 9.53, 12.12], [20.25, 18.46, 17.51, 21.16, 18.37, 17.41, 17.38, 18.38, 19.44, 23.47, 20.15], [49.39, 49.86, 52.8, 47.5, 49.51, 51.02, 52.09, 48.05, 44.86, 42.07, 43.0], [36.89, 37.35, 39.16, 34.9, 35.85, 36.95, 37.58, 34.14, 32.94, 30.81, 31.35]],
+    mkt_fy25:51.169,
+    mkt_fy26:39.567,
+    mkt_monthly:[0.925, 1.119, 2.66, 3.325, 2.934, 5.1, 7.572, 6.071, 4.395, 3.383, 2.085]
+  },
+  "INFC Salvador":{
+    label:"INFC SALVADOR",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Salvador",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[31.38, 11.75, 13.35, 51.95, 37.33],
+    fytd26:[35.31, 11.61, 16.64, 48.03, 32.79],
+    monthly:[[29.86, 32.92, 20.37, 41.57, 35.44, 33.59, 38.63, 33.39, 37.32, 38.9, 37.31], [11.97, 9.82, 9.39, 11.31, 8.6, 11.22, 11.65, 13.32, 13.67, 9.88, 13.01], [11.91, 16.52, 6.91, 21.95, 19.75, 15.65, 19.26, 13.39, 16.19, 21.23, 16.84], [53.48, 50.42, 62.96, 41.76, 47.89, 49.75, 44.7, 49.94, 46.01, 44.44, 46.02], [37.05, 36.58, 46.08, 25.53, 32.28, 33.81, 30.06, 34.83, 31.79, 29.2, 30.79]],
+    mkt_fy25:1.218,
+    mkt_fy26:1.31,
+    mkt_monthly:[0.088, 0.078, 0.076, 0.094, 0.086, 0.109, 0.157, 0.159, 0.208, 0.148, 0.108]
+  },
+  "INFC Sul":{
+    label:"INFC SUL",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · INFC Sul",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[49.75, 9.94, 29.86, 33.4, 23.61],
+    fytd26:[48.16, 10.99, 27.54, 33.26, 23.83],
+    monthly:[[38.65, 44.75, 43.44, 49.78, 47.67, 45.36, 47.57, 49.23, 51.17, 52.01, 46.38], [10.79, 12.26, 12.48, 7.95, 7.66, 8.78, 9.76, 10.82, 14.04, 16.0, 14.98], [20.13, 23.54, 22.27, 31.87, 30.48, 27.51, 28.29, 28.57, 26.89, 25.61, 22.13], [44.5, 38.46, 39.74, 33.02, 34.38, 35.9, 33.1, 32.1, 29.42, 29.7, 36.25], [33.32, 29.13, 29.54, 24.61, 25.54, 25.79, 23.72, 22.11, 19.9, 21.0, 27.35]],
+    mkt_fy25:23.379,
+    mkt_fy26:20.881,
+    mkt_monthly:[0.187, 0.215, 0.52, 1.255, 1.917, 3.918, 4.397, 2.55, 2.534, 2.352, 1.037]
+  },
+  "T.BR Farma":{
+    label:"T.BR FARMA",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · T.BR Farma",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[41.01, 6.54, 26.26, 42.11, 31.41],
+    fytd26:[43.0, 7.64, 26.76, 39.94, 29.06],
+    monthly:[[37.48, 38.28, 40.03, 43.67, 43.06, 42.47, 41.6, 43.93, 45.54, 46.39, 45.4], [6.54, 7.02, 6.23, 6.42, 6.69, 7.02, 7.47, 8.1, 9.16, 9.32, 9.23], [23.44, 23.6, 25.79, 28.52, 27.76, 26.95, 25.81, 27.05, 27.27, 27.79, 27.09], [45.43, 45.03, 43.12, 39.48, 39.97, 40.39, 41.11, 39.04, 37.24, 36.53, 37.63], [33.53, 33.57, 31.69, 29.12, 29.43, 29.43, 29.58, 27.88, 27.06, 26.42, 27.13]],
+    mkt_fy25:168.242,
+    mkt_fy26:140.222,
+    mkt_monthly:[5.545, 6.06, 9.757, 13.051, 12.731, 18.451, 21.255, 16.545, 15.331, 12.538, 8.959]
+  },
+  "T.BR Farma Indep":{
+    label:"T.BR FARMA INDEP",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · T.BR Farma Indep",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[45.2, 2.8, 33.36, 37.57, 29.91],
+    fytd26:[45.12, 3.79, 32.3, 37.67, 29.85],
+    monthly:[[39.98, 39.92, 42.77, 49.7, 49.5, 46.82, 42.82, 45.26, 46.83, 45.39, 40.94], [2.89, 4.44, 3.3, 3.33, 2.41, 2.7, 2.96, 3.03, 5.62, 6.36, 4.95], [29.09, 27.49, 30.91, 36.44, 37.19, 34.76, 31.3, 33.18, 31.84, 29.95, 27.8], [42.19, 43.41, 40.09, 33.24, 33.47, 36.24, 39.84, 37.73, 35.56, 37.2, 41.75], [33.75, 34.57, 31.56, 25.98, 26.68, 28.63, 31.59, 29.94, 28.29, 29.62, 32.96]],
+    mkt_fy25:60.313,
+    mkt_fy26:49.684,
+    mkt_monthly:[1.983, 2.261, 3.294, 4.623, 4.258, 5.692, 7.317, 6.136, 5.725, 4.808, 3.586]
+  },
+  "T.BR Farma Moderno":{
+    label:"T.BR FARMA MODERNO",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · T.BR Farma Moderno",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[38.66, 8.63, 22.3, 44.65, 32.24],
+    fytd26:[41.84, 9.75, 23.72, 41.18, 28.63],
+    monthly:[[36.09, 37.3, 38.63, 40.35, 39.83, 40.53, 40.96, 43.15, 44.77, 47.02, 48.38], [8.57, 8.56, 7.72, 8.11, 8.84, 8.95, 9.84, 11.09, 11.28, 11.16, 12.08], [20.29, 21.28, 23.18, 24.17, 23.03, 23.47, 22.93, 23.43, 24.54, 26.45, 26.62], [47.23, 46.0, 44.66, 42.9, 43.23, 42.24, 41.78, 39.81, 38.23, 36.11, 34.87], [33.41, 32.97, 31.75, 30.84, 30.81, 29.79, 28.52, 26.66, 26.33, 24.43, 23.24]],
+    mkt_fy25:107.929,
+    mkt_fy26:90.538,
+    mkt_monthly:[3.562, 3.799, 6.462, 8.427, 8.472, 12.76, 13.938, 10.408, 9.606, 7.73, 5.373]
+  },
+  "T.BR INFC":{
+    label:"T.BR INFC",
+    sub:"% share dentro do mercado Elétrico · FY26 = Jul/25–Mai/26 (11 meses) · NielsenIQ · T.BR INFC",
+    brands:["SCJ", "EXPOSIS", "RAID", "RECKITT", "SBP"],
+    colors:["#fbbf24", "#34d399", "#60a5fa", "#f87171", "#fca5a5"],
+    fytd25:[41.06, 6.53, 26.31, 42.06, 31.37],
+    fytd26:[43.01, 7.64, 26.77, 39.94, 29.05],
+    monthly:[[37.54, 38.3, 40.03, 43.68, 43.07, 42.47, 41.61, 43.93, 45.53, 46.38, 45.41], [6.53, 7.02, 6.23, 6.41, 6.69, 7.02, 7.47, 8.1, 9.16, 9.32, 9.22], [23.5, 23.62, 25.8, 28.53, 27.77, 26.95, 25.82, 27.05, 27.26, 27.78, 27.1], [45.37, 45.01, 43.11, 39.47, 39.96, 40.38, 41.11, 39.04, 37.25, 36.54, 37.62], [33.49, 33.55, 31.68, 29.11, 29.43, 29.43, 29.57, 27.87, 27.05, 26.41, 27.08]],
+    mkt_fy25:168.462,
+    mkt_fy26:140.275,
+    mkt_monthly:[5.552, 6.063, 9.758, 13.053, 12.732, 18.454, 21.259, 16.549, 15.336, 12.544, 8.974]
+  }
+};
+
+function renderEletricosCard(){
+  var sel = document.getElementById('eletMarketSel');
+  var mkt = (sel ? sel.value : null) || 'T.BR Farma';
+  var d = ELET_MKT_DATA[mkt];
+  if(!d) return;
+
+  // ── Headline ──
+  var hl = document.getElementById('elet-headline');
+  if(hl){
+    var scjD = d.fytd26[0] - d.fytd25[0], rkD = d.fytd26[3] - d.fytd25[3];
+    var scjCol = scjD>=0?'#34d399':'#ef4444', rkCol = rkD>=0?'#34d399':'#ef4444';
+    var scjSign = scjD>=0?'▲':'▼', rkSign = rkD>=0?'▲':'▼';
+    hl.innerHTML = '<strong style="color:#e2e8f0;">'+mkt+'</strong>'
+      +' &nbsp;·&nbsp; SCJ <span style="color:'+scjCol+';font-weight:700;">'+scjSign+Math.abs(scjD).toFixed(2)+'pp</span>'
+      +' &nbsp;|&nbsp; RECKITT <span style="color:'+rkCol+';font-weight:700;">'+rkSign+Math.abs(rkD).toFixed(2)+'pp</span>'
+      +' &nbsp;|&nbsp; SCJ: <span style="color:#fbbf24;font-weight:700;">'+d.fytd26[0].toFixed(2)+'%</span>'
+      +' <span style="color:'+scjCol+';font-size:11px;">'+scjSign+Math.abs(scjD).toFixed(2)+'pp vs FY25</span>'
+      +' &nbsp;|&nbsp; SBP migrou <span style="color:#fbbf24;font-weight:600;">35ML→32.9ML</span>';
+  }
+
+  // ── Label & sub ──
+  var lbl = document.getElementById('elet-mkt-label');
+  if(lbl) lbl.textContent = '⚡ REPELENTES ELÉTRICOS — '+d.label;
+  var sub = document.getElementById('elet-mkt-sub');
+  if(sub) sub.textContent = d.sub;
+
+  // ── KPI chips ──
+  var kpis = document.getElementById('elet-kpis');
+  if(kpis){
+    var chipLabels = ['SC JOHNSON','EXPOSIS','RAID (SCJ)','RECKITT','SBP (Reckitt)'];
+    kpis.innerHTML = d.brands.map(function(b,i){
+      var v26=d.fytd26[i], v25=d.fytd25[i], delta=v26-v25;
+      var col=d.colors[i];
+      var dCol=delta>=0?'#34d399':'#ef4444', dSign=delta>=0?'▲':'▼';
+      return '<div style="background:#161B22;border-radius:10px;padding:12px 14px;">'
+        +'<div style="font-size:9px;font-weight:700;letter-spacing:0.1em;color:#3d6b63;margin-bottom:6px;">'+chipLabels[i]+'</div>'
+        +'<div style="display:flex;align-items:baseline;gap:6px;">'
+        +'<span style="font-size:22px;font-weight:800;color:'+col+';line-height:1;">'+v26.toFixed(2)+'%</span>'
+        +'<span style="font-size:10px;font-weight:700;color:'+dCol+';">'+dSign+Math.abs(delta).toFixed(2)+'pp</span>'
+        +'</div>'
+        +'<div style="font-size:10px;color:#94A3B8;margin-top:3px;">FY25: '+v25.toFixed(2)+'%</div>'
+        +'</div>';
+    }).join('');
+  }
+
+  // ── Mercado Elétrico FYTD ──
+  if(d.mkt_fy25 !== undefined){
+    var fmtMM = function(v){ return v >= 1000 ? 'R$'+(v/1000).toFixed(2)+'B' : 'R$'+v.toFixed(2)+'MM'; };
+    var v25 = d.mkt_fy25, v26 = d.mkt_fy26;
+    var pct = v25 > 0 ? ((v26-v25)/v25*100) : 0;
+    var pctCol = pct >= 0 ? '#34d399' : '#ef4444';
+    var el25 = document.getElementById('elet-mkt-val25');
+    var el26 = document.getElementById('elet-mkt-val26');
+    var elD  = document.getElementById('elet-mkt-delta');
+    var elArr= document.getElementById('elet-mkt-arrow');
+    if(el25) el25.textContent = fmtMM(v25);
+    if(el26) el26.textContent = fmtMM(v26);
+    if(elD)  elD.innerHTML = '<span style="color:'+pctCol+';font-weight:800;">'+(pct>=0?'+':'')+pct.toFixed(1)+'%</span>';
+    if(elArr) elArr.style.color = pctCol;
+
+    // Mini barra comparativa
+    var mbCtx = document.getElementById('elet-mkt-bar');
+    if(mbCtx){
+      if(mbCtx._ch){ try{mbCtx._ch.destroy();}catch(e){} }
+      var maxV = Math.max(v25, v26) * 1.15;
+      mbCtx._ch = new Chart(mbCtx, {
+        type:'bar',
+        data:{
+          labels:['FY25','FY26'],
+          datasets:[{
+            data:[v25, v26],
+            backgroundColor:['rgba(107,114,128,0.4)', pct>=0?'rgba(251,191,36,0.7)':'rgba(239,68,68,0.7)'],
+            borderColor:['rgba(107,114,128,0.6)', pct>=0?'#fbbf24':'#ef4444'],
+            borderWidth:1, borderRadius:4
+          }]
+        },
+        options:{
+          responsive:true, maintainAspectRatio:false,
+          plugins:{legend:{display:false}, tooltip:{callbacks:{label:function(c){return fmtMM(c.parsed.y);}}}},
+          scales:{
+            x:{grid:{display:false}, ticks:{color:'#6B7280',font:{size:10}}},
+            y:{display:false, suggestedMax:maxV}
+          }
+        }
+      });
+    }
+
+    // Mini linha mensal do mercado
+    var mlCtx = document.getElementById('elet-mkt-line');
+    if(mlCtx && d.mkt_monthly){
+      if(mlCtx._ch){ try{mlCtx._ch.destroy();}catch(e){} }
+      mlCtx._ch = new Chart(mlCtx, {
+        type:'line',
+        data:{
+          labels:['Jul','Ago','Set','Out','Nov','Dez','Jan','Fev','Mar','Abr','Mai'],
+          datasets:[{
+            data: d.mkt_monthly,
+            borderColor:'#fbbf24', backgroundColor:'rgba(251,191,36,0.06)',
+            borderWidth:2, pointRadius:3, pointBackgroundColor:'#fbbf24',
+            tension:0.35, spanGaps:false, fill:true
+          }]
+        },
+        options:{
+          responsive:true, maintainAspectRatio:false,
+          plugins:{legend:{display:false}, tooltip:{callbacks:{label:function(c){return c.parsed.y!==null?fmtMM(c.parsed.y):'—';}}}},
+          scales:{
+            x:{grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#6B7280',font:{size:9}}},
+            y:{grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#6B7280',font:{size:9},callback:function(v){return 'R$'+v+'MM';}}, suggestedMin:0}
+          }
+        }
+      });
+    }
+  }
+
+  // ── Bar chart: FYTD25 vs FYTD26 ──
+  var bCtx = document.getElementById('elet-bar-chart');
+  if(bCtx){
+    if(bCtx._ch){ try{bCtx._ch.destroy();}catch(e){} }
+    var bgColors = d.colors.map(function(c){ return c+'B3'; });
+    bCtx._ch = new Chart(bCtx, {
+      type:'bar',
+      data:{
+        labels: d.brands,
+        datasets:[
+          { label:'FY25', data:d.fytd25, backgroundColor:'rgba(148,163,184,0.22)', borderColor:'rgba(148,163,184,0.4)', borderWidth:1, borderRadius:3 },
+          { label:'FY26', data:d.fytd26, backgroundColor:bgColors, borderColor:d.colors, borderWidth:1, borderRadius:3 }
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{display:false}, tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(2)+'%';}}} },
+        scales:{
+          x:{grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#6B7280',font:{size:10}}},
+          y:{grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#6B7280',font:{size:10},callback:function(v){return v+'%';}}, suggestedMin:0}
+        }
+      }
+    });
+  }
+
+  // ── Line chart: evolução mensal FY26 ──
+  var lCtx = document.getElementById('elet-line-chart');
+  if(!lCtx) return;
+  if(lCtx._ch){ try{lCtx._ch.destroy();}catch(e){} }
+  var labels = ['Jul/25','Ago/25','Set/25','Out/25','Nov/25','Dez/25','Jan/26','Fev/26','Mar/26','Abr/26','Mai/26'];
+  var datasets = d.brands.map(function(b,i){
+    return { label:b, data:d.monthly[i], borderColor:d.colors[i],
+             backgroundColor:d.colors[i].replace('#','rgba(').replace(/^rgba\((..)(..)(..)$/, function(_,r,g,bl){
+               return 'rgba('+parseInt(r,16)+','+parseInt(g,16)+','+parseInt(bl,16)+',0.05)';
+             }),
+             borderWidth:2.5, pointRadius:3, pointBackgroundColor:d.colors[i], tension:0.35, spanGaps:false };
+  });
+  lCtx._ch = new Chart(lCtx, {
+    type:'line',
+    data:{ labels:labels, datasets:datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(c.parsed.y!==null?c.parsed.y.toFixed(2)+'%':'—');}}}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#6B7280',font:{size:10}}},
+        y:{grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#6B7280',font:{size:10},callback:function(v){return v.toFixed(1)+'%';}}, suggestedMin:0}
+      }
+    }
+  });
+
+  // ── Legenda inline ──
+  var legEl = document.getElementById('elet-legend');
+  if(legEl){
+    legEl.innerHTML = d.brands.map(function(b,i){
+      return '<span style="display:flex;align-items:center;gap:4px;font-size:10px;color:#D1D5DB;">'
+        +'<span style="width:16px;height:2px;background:'+d.colors[i]+';display:inline-block;border-radius:1px;"></span>'+b+'</span>';
+    }).join('');
+  }
+
+  // ── Diagnóstico ──
+  var diagEl = document.getElementById('elet-diag');
+  if(diagEl){
+    var NAMES = ['SCJ','EXPOSIS','RAID','RECKITT','SBP'];
+    var COLS  = d.colors;
+    function pp(val){ return (val>=0?'▲':'▼')+Math.abs(val).toFixed(2)+'pp'; }
+    function colored(val,pos){ return '<b style="color:'+(val>=0?'#34d399':'#ef4444')+';">'+pp(val)+'</b>'; }
+
+    var scjD=d.fytd26[0]-d.fytd25[0], rkD=d.fytd26[3]-d.fytd25[3];
+    var expD=d.fytd26[1]-d.fytd25[1], raD=d.fytd26[2]-d.fytd25[2], sbpD=d.fytd26[4]-d.fytd25[4];
+
+    // Tendência no último mês vs início
+    var mon = d.monthly;
+    var lastI = -1;
+    for(var x=mon[0].length-1;x>=0;x--){ if(mon[0][x]!==null){ lastI=x; break; } }
+    var scjTrend = lastI>0 ? mon[0][lastI]-mon[0][0] : null;
+
+    // Narrativa
+    var lines = [];
+
+    // Linha 1 — SCJ
+    lines.push('📊 <b style="color:#fbbf24;">SCJ</b> fechou FY26 com <b style="color:'+COLS[0]+';">'+d.fytd26[0].toFixed(2)+'%</b> de share no mercado Elétrico em <b>'+mkt+'</b> '+colored(scjD)+' vs FY25 (era '+d.fytd25[0].toFixed(2)+'%).');
+
+    // Linha 2 — RECKITT
+    lines.push('🔴 <b style="color:#f87171;">RECKITT</b> terminou em <b style="color:'+COLS[3]+';">'+d.fytd26[3].toFixed(2)+'%</b> '+colored(rkD)+'.');
+
+    // Linha 3 — Marcas
+    lines.push('&nbsp;&nbsp;&nbsp;&nbsp;EXPOSIS <b style="color:'+COLS[1]+';">'+d.fytd26[1].toFixed(2)+'%</b> '+colored(expD)
+      +' &nbsp;·&nbsp; RAID <b style="color:'+COLS[2]+';">'+d.fytd26[2].toFixed(2)+'%</b> '+colored(raD)
+      +' &nbsp;·&nbsp; SBP <b style="color:'+COLS[4]+';">'+d.fytd26[4].toFixed(2)+'%</b> '+colored(sbpD)+'.');
+
+    // Linha 4 — Interpretação estratégica
+    if(scjD>0 && rkD<0)       lines.push('✅ SCJ ganhou share às custas de RECKITT — posicionamento favorável em '+mkt+'.');
+    else if(scjD<0 && rkD>0)  lines.push('⚠️ RECKITT avançou sobre SCJ em '+mkt+' — atenção à pressão competitiva.');
+    else if(scjD>0 && rkD>0)  lines.push('📈 Ambos SCJ e RECKITT cresceram — ganho conjunto sobre outras marcas/canais em '+mkt+'.');
+    else if(scjD<0 && rkD<0)  lines.push('📉 SCJ e RECKITT perderam share simultaneamente em '+mkt+' — possível entrada de novos players ou canal.');
+
+    // Linha 5 — Tendência mensal
+    if(scjTrend!==null){
+      var tDir = scjTrend>=0?'crescente':'decrescente';
+      var tCol = scjTrend>=0?'#34d399':'#ef4444';
+      lines.push('📉 Tendência mensal SCJ em '+mkt+': <b style="color:'+tCol+';">'+tDir+'</b> (Jul/25→'+['Jul','Ago','Set','Out','Nov','Dez','Jan','Fev','Mar','Abr','Mai'][lastI]+'/26: '+(scjTrend>=0?'+':'')+scjTrend.toFixed(2)+'pp).');
+    }
+
+    diagEl.innerHTML = lines.join('<br>');
+    diagEl.style.display = 'block';
+  }
+}
+
+function eletSetMarket(){
+  renderEletricosCard();
+}
+
+function eletSetEmb(){
+  var v = (document.getElementById('eletEmbSel')||{}).value || 'todos';
+  var scjCol  = document.getElementById('elet-emb-scj');
+  var rkCol   = document.getElementById('elet-emb-reckitt');
+  var grid    = scjCol && scjCol.parentElement;
+  if(!scjCol || !rkCol) return;
+  if(v==='scj'){
+    scjCol.style.display=''; rkCol.style.display='none';
+    if(grid) grid.style.gridTemplateColumns='1fr';
+  } else if(v==='reckitt'){
+    scjCol.style.display='none'; rkCol.style.display='';
+    if(grid) grid.style.gridTemplateColumns='1fr';
+  } else {
+    scjCol.style.display=''; rkCol.style.display='';
+    if(grid) grid.style.gridTemplateColumns='1fr 1fr';
+  }
 }
 
 /* ═══════════ SÃO JOÃO — CAROLINE (CONVENIÊNCIA) ═══════════ */
@@ -39885,7 +41213,8 @@ function injectBtn(){
   var cards = [
     {selId:'msoMarketSel',  btnId:'btn-nielsen-xls-1', cardNum:1, label:'📥 Exportar Share FYTD'},
     {selId:'mso2MarketSel', btnId:'btn-nielsen-xls-2', cardNum:2, label:'📥 Exportar'},
-    {selId:'mso3MarketSel', btnId:'btn-nielsen-xls-3', cardNum:3, label:'📥 Exportar Valor/Un'}
+    {selId:'mso3MarketSel', btnId:'btn-nielsen-xls-3', cardNum:3, label:'📥 Exportar Valor/Un'},
+    {selId:'eletMarketSel', btnId:'btn-nielsen-xls-4', cardNum:4, label:'📥 Exportar Share FYTD'}
   ];
   var CSS = 'display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;'
     +'background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.35);color:#fbbf24;'
