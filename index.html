@@ -23851,8 +23851,8 @@ function renderMSO2(){
       // Share mode = Jan-Mai (5 meses); R$MM/Unidades = Jan-Mai (5 meses)
       var acum25v = fytMkt ? ((fytMkt.jan25_val||0)+(fytMkt.fev25_val||0)+(fytMkt.mar25_val||0)+(fytMkt.abr25_val||0)+(fytMkt.mai25_val||0)) : 0;
       var acum26v = fytMkt ? ((fytMkt.jan26_val||0)+(fytMkt.fev26_val||0)+(fytMkt.mar26_val||0)+(fytMkt.abr26_val||0)+(fytMkt.mai26_val||0)) : 0;
-      var acum25u = fytMkt ? (fytMkt.janmar25_un||0) : 0;
-      var acum26u = fytMkt ? (fytMkt.janmar26_un||0) : 0;
+      var acum25u = fytMkt ? ((fytMkt.jan25_un||0)+(fytMkt.fev25_un||0)+(fytMkt.mar25_un||0)+(fytMkt.abr25_un||0)+(fytMkt.mai25_un||0)) : 0;
+      var acum26u = fytMkt ? ((fytMkt.jan26_un||0)+(fytMkt.fev26_un||0)+(fytMkt.mar26_un||0)+(fytMkt.abr26_un||0)+(fytMkt.mai26_un||0)) : 0;
       acum25v = Math.round(acum25v*100)/100;
       acum26v = Math.round(acum26v*100)/100;
       acum25u = Math.round(acum25u);
@@ -23871,7 +23871,7 @@ function renderMSO2(){
       }
 
       var mktUnit = useVal ? 'R$ MM' : 'Unidades';
-      var mktPeriodLabel = isShare ? 'JAN&ndash;MAI' : 'JAN&ndash;ABR';
+      var mktPeriodLabel = 'JAN&ndash;MAI';
       var mktChartTitle = 'TOTAL MERCADO &middot; ACUM '+mktPeriodLabel+' &middot; '+mktUnit;
 
       mktTotalEl.innerHTML =
