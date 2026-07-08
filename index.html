@@ -14729,7 +14729,7 @@ const DN_INTOC_GRUPOS = {
       periodoLabel = 'Jan–Abr/25';
     } else if(_periodo === 'janabr26'){
       periodoData = data.janabr26;
-      periodoLabel = 'Jan–Abr/26';
+      periodoLabel = 'Jan–Mai/26';
     } else {
       var mesSel = document.getElementById('intoc-g-mes-sel');
       var mes = mesSel ? mesSel.value : '202604';
@@ -15729,7 +15729,7 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
       <select id="adGrpSel" onchange="renderAreaDecomp()" style="background:#161B22;color:#e2e8f0;border:0.5px solid rgba(251,191,36,0.3);border-radius:7px;padding:6px 12px;font-size:11px;cursor:pointer;font-family:inherit;">
 <optgroup label="Canais Farma (por area)"><option value="Farma Moderno">Farma Moderno</option><option value="Farma Indep">Farma Indep</option><option value="Farma Total">Farma Total</option></optgroup>
 <optgroup label="Total Brasil"><option value="T.BR Farma (Canais)">T.BR Farma (Canais)</option><option value="INFC Brasil (Regiões)">INFC Brasil (5 Regiões)</option></optgroup>
-<optgroup label="INFC por Regiao"><option value="INFC Sul">INFC Sul (detalhe)</option><option value="INFC Sudeste">INFC Sudeste</option><option value="INFC Nordeste">INFC Nordeste</option><option value="INFC Centro-Oeste">INFC Centro-Oeste</option><option value="INFC MG+ES+Int RJ">INFC MG/ES/Int RJ</option></optgroup>
+<optgroup label="INFC por Regiao"><option value="INFC Sul">INFC Sul (detalhe)</option><option value="INFC Sudeste">INFC Sudeste</option><option value="INFC Nordeste">INFC Nordeste</option><option value="INFC Centro-Oeste">INFC Centro-Oeste</option></optgroup>
 </select>
     </div>
   </div>
@@ -23316,10 +23316,10 @@ function renderMSO2(){
   if(lbl) lbl.textContent = mkt;
   var titleEl = document.getElementById('mso2-card-title');
   if(titleEl) titleEl.textContent = isShare ? 'MARKET SHARE — JAN · FEV · MAR · ABR · MAI'
-    : (isVal ? 'VENDA VALOR — JAN · FEV · MAR · ABR' : 'UNIDADES — JAN · FEV · MAR · ABR');
+    : (isVal ? 'VENDA VALOR — JAN · FEV · MAR · ABR · MAI' : 'UNIDADES — JAN · FEV · MAR · ABR · MAI');
   var subEl = document.getElementById('mso2-card-sub');
   if(subEl) subEl.innerHTML = (isShare ? 'Acum Jan–Mai/25 vs Jan–Mai/26'
-    : (isVal ? 'R$ MM · Jan–Abr/26' : 'Unidades · Jan–Abr/26'))
+    : (isVal ? 'R$ MM · Jan–Mai/26' : 'Unidades · Jan–Mai/26'))
     + ' · NielsenIQ · <span id="mso2-mkt-lbl">' + mkt + '</span>';
   var h2El = document.getElementById('mso2-card-h2');
   if(h2El) h2El.textContent = isShare ? '$ Share por Marca — 2025 vs 2026'
@@ -23346,26 +23346,28 @@ function renderMSO2(){
     if(!nbvS){ console.warn('No NIELSEN_BRAND_VAL for', mkt); return; }
     brands.forEach(function(b){
       var bd = nbvS[b]; if(!bd) return;
-      var j26 = isVal?bd.jan_val:bd.jan_un, f26 = isVal?bd.fev_val:bd.fev_un, m26 = isVal?bd.mar_val:bd.mar_un, ab26 = isVal?(bd.abr_val||0):(bd.abr_un||0);
+      var j26 = isVal?bd.jan_val:bd.jan_un, f26 = isVal?bd.fev_val:bd.fev_un, m26 = isVal?bd.mar_val:bd.mar_un, ab26 = isVal?(bd.abr_val||0):(bd.abr_un||0), mi26 = isVal?(bd.mai_val||0):(bd.mai_un||0);
       var fyt25 = isVal?bd.fytd25_val:bd.fytd25_un, fyt26 = isVal?bd.fytd26_val:bd.fytd26_un;
-      var a26 = Math.round((j26+f26+m26+ab26)*100)/100;
+      var a26 = Math.round((j26+f26+m26+ab26+mi26)*100)/100;
       var hasExact25 = isVal ? (bd.jan25_val!==undefined) : (bd.jan25_un!==undefined);
       var hasAbr25 = isVal ? (bd.abr25_val!==undefined) : (bd.abr25_un!==undefined);
-      var j25, f25, m25, ab25, a25;
+      var hasMai25 = isVal ? (bd.mai25_val!==undefined) : (bd.mai25_un!==undefined);
+      var j25, f25, m25, ab25, mi25, a25;
       if(hasExact25){
         j25 = isVal?bd.jan25_val:bd.jan25_un;
         f25 = isVal?bd.fev25_val:bd.fev25_un;
         m25 = isVal?bd.mar25_val:bd.mar25_un;
         ab25 = hasAbr25?(isVal?bd.abr25_val:bd.abr25_un):0;
-        a25 = Math.round((j25+f25+m25+ab25)*100)/100;
+        mi25 = hasMai25?(isVal?bd.mai25_val:bd.mai25_un):0;
+        a25 = Math.round((j25+f25+m25+ab25+mi25)*100)/100;
       } else {
-        j25 = null; f25 = null; m25 = null; ab25 = null;
-        var ratio = fyt26>0 ? a26/fyt26 : 1/4;
+        j25 = null; f25 = null; m25 = null; ab25 = null; mi25 = null;
+        var ratio = fyt26>0 ? a26/fyt26 : 1/5;
         a25 = Math.round(fyt25*ratio*100)/100;
         GrowthMode = true;
       }
-      d25[b] = {jan:j25, fev:f25, mar:m25, abr:ab25, acum:a25, fytd25:fyt25, fytd26:fyt26, hasExact:hasExact25};
-      d26[b] = {jan:j26, fev:f26, mar:m26, abr:ab26, acum:a26};
+      d25[b] = {jan:j25, fev:f25, mar:m25, abr:ab25, mai:mi25, acum:a25, fytd25:fyt25, fytd26:fyt26, hasExact:hasExact25};
+      d26[b] = {jan:j26, fev:f26, mar:m26, abr:ab26, mai:mi26, acum:a26};
     });
   }
 
@@ -23438,7 +23440,7 @@ function renderMSO2(){
       var topBk=allDkpi[0];
       var byDeltaKpi=allDkpi.slice().sort(function(a,b){return b.delta.raw-a.delta.raw;});
       var topGk=byDeltaKpi[0], topLk=byDeltaKpi[byDeltaKpi.length-1];
-      /* SCJ COMBINED share no mercado total (Jan-Mar) */
+      /* SCJ COMBINED share no mercado total (Jan-Mai) */
       var fytMktH2=(typeof FYTD_MARKET_TOTAL!=='undefined')?FYTD_MARKET_TOTAL[mkt]:null;
       var mktTot26k=fytMktH2?(isVal?(fytMktH2.janmar26_val||0):fytMktH2.janmar26_un):0;
       var mktTot25k=fytMktH2?(isVal?(fytMktH2.janmar25_val||0):fytMktH2.janmar25_un):0;
@@ -23447,9 +23449,9 @@ function renderMSO2(){
       var scjShrDtk=Math.round((scjShr2k-scjShr1k)*10)/10;
       var scjShrCork=scjShrDtk>=0?'#34d399':'#ef4444';
       var scjShrSubk=(scjShrDtk>=0?'+':'')+scjShrDtk.toFixed(1)+'pp vs /25';
-      /* TOTAL MERCADO para chip Jan-Abr — R$ MM ou Unidades conforme modo */
-      var mktTot26kV=fytMktH2?(isVal?(fytMktH2.janmar26_val||0):(fytMktH2.janmar26_un||0)):0;
-      var mktTot25kV=fytMktH2?(isVal?(fytMktH2.janmar25_val||0):(fytMktH2.janmar25_un||0)):0;
+      /* TOTAL MERCADO para chip Jan-Mai — R$ MM ou Unidades conforme modo */
+      var mktTot26kV=fytMktH2?(isVal?((fytMktH2.jan26_val||0)+(fytMktH2.fev26_val||0)+(fytMktH2.mar26_val||0)+(fytMktH2.abr26_val||0)+(fytMktH2.mai26_val||0)):((fytMktH2.jan26_un||0)+(fytMktH2.fev26_un||0)+(fytMktH2.mar26_un||0)+(fytMktH2.abr26_un||0)+(fytMktH2.mai26_un||0))):0;
+      var mktTot25kV=fytMktH2?(isVal?((fytMktH2.jan25_val||0)+(fytMktH2.fev25_val||0)+(fytMktH2.mar25_val||0)+(fytMktH2.abr25_val||0)+(fytMktH2.mai25_val||0)):((fytMktH2.jan25_un||0)+(fytMktH2.fev25_un||0)+(fytMktH2.mar25_un||0)+(fytMktH2.abr25_un||0)+(fytMktH2.mai25_un||0))):0;
       var mktDeltaK=mktTot25kV>0?Math.round((mktTot26kV-mktTot25kV)/mktTot25kV*1000)/10:0;
       var mktDeltaStrK=(mktDeltaK>=0?'+':'')+mktDeltaK.toFixed(1)+'% vs /25';
       var mktDeltaCorK=mktDeltaK>=0?'#34d399':'#ef4444';
@@ -23460,7 +23462,7 @@ function renderMSO2(){
       var hbKDt = calcDelta(hbK25, hbK26);
       hdEl.innerHTML = '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(255,255,255,0.06);">'
         +kpiChip('#fbbf24','TOTAL MERCADO',mktValStrK,'color:#fbbf24',mktDeltaStrK,'color:'+mktDeltaCorK)
-        +kpiChip('#3b82f6','OFF!+EXPOSIS JAN-ABR',fmtV(hbK26),'color:#3b82f6',hbKDt.str+' vs /25','color:'+hbKDt.col)
+        +kpiChip('#3b82f6','OFF!+EXPOSIS JAN-MAI',fmtV(hbK26),'color:#3b82f6',hbKDt.str+' vs /25','color:'+hbKDt.col)
         +kpiChip(colors[topBk.b]||'#e2e8f0','MAIOR VOLUME',fmtV(topBk.val26),'color:'+(colors[topBk.b]||'#e2e8f0'),topBk.b,'color:#94A3B8')
         +kpiChip(topGk.delta.raw>=0?'#34d399':'#f59e0b',topGk.delta.raw>=0?'MAIOR CRESCIM.':'MENOR QUEDA',topGk.delta.str,'color:'+(topGk.delta.raw>=0?'#34d399':'#f59e0b'),topGk.b,'color:#94A3B8')
         +kpiChip('#ef4444','MAIOR QUEDA',topLk.delta.str,'color:#ef4444',topLk.b,'color:#94A3B8')
@@ -23697,13 +23699,13 @@ function renderMSO2(){
       }
     } else {
       /* BAR CHART — grouped, accumulated Jan-Mar R$/Units 2025 vs 2026 */
-      var barTitle2 = isVal ? 'R$ MM ACUMULADO JAN–ABR · 2025 vs 2026' : 'UNIDADES ACUMULADO JAN–ABR · 2025 vs 2026';
+      var barTitle2 = isVal ? 'R$ MM ACUMULADO JAN–MAI · 2025 vs 2026' : 'UNIDADES ACUMULADO JAN–MAI · 2025 vs 2026';
       tableEl.innerHTML = '<div>'
         +'<div style="font-size:9px;font-weight:700;letter-spacing:.13em;color:#64748b;text-transform:uppercase;margin-bottom:10px;">'+barTitle2+'</div>'
         +'<div style="position:relative;height:210px;">'
           +'<canvas id="mso2-bar-canvas"></canvas>'
         +'</div>'
-        +(GrowthMode?'<div style="font-size:9px;color:#3d4451;margin-top:6px;">&#9733; Acum Jan-Abr/25 estimado proporcionalmente.</div>':'')
+        +(GrowthMode?'<div style="font-size:9px;color:#3d4451;margin-top:6px;">&#9733; Acum Jan-Mai/25 estimado proporcionalmente.</div>':'')
         +'</div>';
       var prevBChart2 = Chart.getChart('mso2-bar-canvas');
       if(prevBChart2) prevBChart2.destroy();
@@ -23846,9 +23848,9 @@ function renderMSO2(){
       mktTotalEl.innerHTML = '';
     } else {
       // Total real do mercado (todas as marcas, fonte: NielsenIQ 1-Tabela-1)
-      // Share mode = Jan-Mai (5 meses); R$MM/Unidades = Jan-Abr (4 meses)
-      var acum25v = fytMkt ? (isShare ? ((fytMkt.janmar25_val||0)+(fytMkt.mai25_val||0)) : (fytMkt.janmar25_val||0)) : 0;
-      var acum26v = fytMkt ? (isShare ? ((fytMkt.janmar26_val||0)+(fytMkt.mai26_val||0)) : (fytMkt.janmar26_val||0)) : 0;
+      // Share mode = Jan-Mai (5 meses); R$MM/Unidades = Jan-Mai (5 meses)
+      var acum25v = fytMkt ? ((fytMkt.jan25_val||0)+(fytMkt.fev25_val||0)+(fytMkt.mar25_val||0)+(fytMkt.abr25_val||0)+(fytMkt.mai25_val||0)) : 0;
+      var acum26v = fytMkt ? ((fytMkt.jan26_val||0)+(fytMkt.fev26_val||0)+(fytMkt.mar26_val||0)+(fytMkt.abr26_val||0)+(fytMkt.mai26_val||0)) : 0;
       var acum25u = fytMkt ? (fytMkt.janmar25_un||0) : 0;
       var acum26u = fytMkt ? (fytMkt.janmar26_un||0) : 0;
       acum25v = Math.round(acum25v*100)/100;
@@ -23887,7 +23889,7 @@ function renderMSO2(){
       new Chart(cvMk, {
         type: 'bar',
         data: {
-          labels: [isShare?'JAN–MAI / 25':'JAN–ABR / 25', isShare?'JAN–MAI / 26':'JAN–ABR / 26'],
+          labels: ['JAN–MAI / 25', 'JAN–MAI / 26'],
           datasets: [{
             data: [a25, a26],
             backgroundColor: ['#94A3B8', '#3B82F6'],
@@ -24574,43 +24576,43 @@ const SELLIN_TOTAL_FY26 = {hist:128947, plan:133490.73, meta:87893, real:124028,
 
 /* ─── FY27 (acompanhamento ativo — Jul/26–Jun/27) ─── */
 const SELLIN_DATA_FY27 = [
-  { nome:'São João', label:'São João', cor:'#60a5fa', canal:'Rede', hist:23638, plan:0, meta:0, real:0, hist_per:23638, verba:0,
+  { nome:'São João', label:'São João', cor:'#60a5fa', canal:'Rede', hist:23638, plan:13000, meta:0, real:1422, hist_per:23638, verba:662905,
     hist_m:[0,8132,3549,1659,1550,4571,1330,0,519,699,1001,628],
     plan_m:[0,0,0,0,0,0,0,0,0,0,0,0],
     meta_m:[0,0,0,0,0,0,0,0,0,0,0,0],
-    real_m:[0,0,0,0,0,0,0,0,0,0,0,0] },
-  { nome:'DD-Gaúcha', label:'DD-Gaúcha', cor:'#f97316', canal:'Indireto', hist:16407, plan:0, meta:0, real:0, hist_per:16407, verba:0,
+    real_m:[1422,0,0,0,0,0,0,0,0,0,0,0] },
+  { nome:'DD-Gaúcha', label:'DD-Gaúcha', cor:'#f97316', canal:'Indireto', hist:16407, plan:8000, meta:0, real:331, hist_per:16407, verba:285636,
     hist_m:[5094,2523,335,436,252,1102,1752,3585,165,484,283,396],
     plan_m:[0,0,0,0,0,0,0,0,0,0,0,0],
     meta_m:[0,0,0,0,0,0,0,0,0,0,0,0],
-    real_m:[0,0,0,0,0,0,0,0,0,0,0,0] },
-  { nome:'Panvel', label:'Panvel', cor:'#2dd4bf', canal:'Rede', hist:11423, plan:0, meta:0, real:0, hist_per:11423, verba:0,
+    real_m:[331,0,0,0,0,0,0,0,0,0,0,0] },
+  { nome:'Panvel', label:'Panvel', cor:'#2dd4bf', canal:'Rede', hist:11423, plan:2000, meta:0, real:0, hist_per:11423, verba:690168,
     hist_m:[0,0,1573,213,465,1744,3869,2265,698,346,161,89],
     plan_m:[0,0,0,0,0,0,0,0,0,0,0,0],
     meta_m:[0,0,0,0,0,0,0,0,0,0,0,0],
     real_m:[0,0,0,0,0,0,0,0,0,0,0,0] },
-  { nome:'DD-GAM', label:'DD-GAM', cor:'#34d399', canal:'Indireto', hist:49823, plan:0, meta:0, real:0, hist_per:49823, verba:0,
+  { nome:'DD-GAM', label:'DD-GAM', cor:'#34d399', canal:'Indireto', hist:49823, plan:21000, meta:0, real:0, hist_per:49823, verba:493402,
     hist_m:[0,5256,7808,7258,5620,3096,11589,5598,2390,0,1208,0],
     plan_m:[0,0,0,0,0,0,0,0,0,0,0,0],
     meta_m:[0,0,0,0,0,0,0,0,0,0,0,0],
     real_m:[0,0,0,0,0,0,0,0,0,0,0,0] },
-  { nome:'Nissei', label:'Nissei', cor:'#a78bfa', canal:'Rede', hist:10920, plan:0, meta:0, real:0, hist_per:10920, verba:0,
+  { nome:'Nissei', label:'Nissei', cor:'#a78bfa', canal:'Rede', hist:10920, plan:8000, meta:0, real:134, hist_per:10920, verba:414000,
     hist_m:[0,3490,2145,1476,1170,90,2242,54,56,0,82,115],
     plan_m:[0,0,0,0,0,0,0,0,0,0,0,0],
     meta_m:[0,0,0,0,0,0,0,0,0,0,0,0],
-    real_m:[0,0,0,0,0,0,0,0,0,0,0,0] },
-  { nome:'DD-Riomed', label:'DD-Riomed', cor:'#fb923c', canal:'Indireto', hist:6442, plan:0, meta:0, real:0, hist_per:6442, verba:0,
+    real_m:[134,0,0,0,0,0,0,0,0,0,0,0] },
+  { nome:'DD-Riomed', label:'DD-Riomed', cor:'#fb923c', canal:'Indireto', hist:6442, plan:4000, meta:0, real:0, hist_per:6442, verba:200479,
     hist_m:[0,3743,296,0,1650,238,0,0,405,0,0,110],
     plan_m:[0,0,0,0,0,0,0,0,0,0,0,0],
     meta_m:[0,0,0,0,0,0,0,0,0,0,0,0],
     real_m:[0,0,0,0,0,0,0,0,0,0,0,0] },
-  { nome:'Clamed', label:'Clamed', cor:'#f472b6', canal:'Rede', hist:5135, plan:0, meta:0, real:0, hist_per:5135, verba:0,
+  { nome:'Clamed', label:'Clamed', cor:'#f472b6', canal:'Rede', hist:5135, plan:5000, meta:0, real:0, hist_per:5135, verba:125250,
     hist_m:[0,0,4731,80,0,24,300,0,0,0,0,0],
     plan_m:[0,0,0,0,0,0,0,0,0,0,0,0],
     meta_m:[0,0,0,0,0,0,0,0,0,0,0,0],
     real_m:[0,0,0,0,0,0,0,0,0,0,0,0] }
 ];
-const SELLIN_TOTAL_FY27 = {hist:123788, plan:0, meta:0, real:0, hist_per:123788, cres_hist:0, cres_meta:0, cx_falt:0};
+const SELLIN_TOTAL_FY27 = {hist:123788, plan:61000, meta:0, real:1887, hist_per:123788, cres_hist:0, cres_meta:0, cx_falt:0};
 
 const SELLIN_MONTHS = ['JUL','AGO','SET','OUT','NOV','DEZ','JAN','FEV','MAR','ABR','MAI','JUN'];
 /* ── FY ativo (troca via setSellinFY) ─────────────────────────────────────
@@ -28819,7 +28821,7 @@ function renderAnoChart(canvasId, anos, vals, isVol, colors){
   });
 }
 
-// ── MSO2: Diagnóstico automático JAN-ABR YoY ──
+// ── MSO2: Diagnóstico automático JAN-MAI YoY ──
 function renderMSO2Insight(){
   var el = document.getElementById('mso2-insight');
   if(!el) return;
@@ -28884,8 +28886,8 @@ function renderMSO2Insight(){
   function pctI(v26,v25){ return v25>0?Math.round((v26-v25)/v25*1000)/10:0; }
   /* Mercado total Jan-Mar */
   var fytMktI=(typeof FYTD_MARKET_TOTAL!=='undefined')?FYTD_MARKET_TOTAL[mkt]:null;
-  var mtI26=fytMktI?(isValI?fytMktI.janmar26_val:fytMktI.janmar26_un):0;
-  var mtI25=fytMktI?(isValI?fytMktI.janmar25_val:fytMktI.janmar25_un):0;
+  var mtI26=fytMktI?(isValI?((fytMktI.jan26_val||0)+(fytMktI.fev26_val||0)+(fytMktI.mar26_val||0)+(fytMktI.abr26_val||0)+(fytMktI.mai26_val||0)):((fytMktI.jan26_un||0)+(fytMktI.fev26_un||0)+(fytMktI.mar26_un||0)+(fytMktI.abr26_un||0)+(fytMktI.mai26_un||0))):0;
+  var mtI25=fytMktI?(isValI?((fytMktI.jan25_val||0)+(fytMktI.fev25_val||0)+(fytMktI.mar25_val||0)+(fytMktI.abr25_val||0)+(fytMktI.mai25_val||0)):((fytMktI.jan25_un||0)+(fytMktI.fev25_un||0)+(fytMktI.mar25_un||0)+(fytMktI.abr25_un||0)+(fytMktI.mai25_un||0))):0;
   mtI26=Math.round(mtI26*100)/100; mtI25=Math.round(mtI25*100)/100;
   var mtIDelta=mtI25>0?Math.round((mtI26-mtI25)/mtI25*1000)/10:0;
   var mtICor=mtIDelta>=0?'#34d399':'#ef4444';
@@ -28897,15 +28899,19 @@ function renderMSO2Insight(){
     var j26=isValI?(bd.jan_val||0):(bd.jan_un||0);
     var f26=isValI?(bd.fev_val||0):(bd.fev_un||0);
     var m26=isValI?(bd.mar_val||0):(bd.mar_un||0);
-    scjI26 += j26+f26+m26;
+    var ab26=isValI?(bd.abr_val||0):(bd.abr_un||0);
+    var mi26=isValI?(bd.mai_val||0):(bd.mai_un||0);
+    scjI26 += j26+f26+m26+ab26+mi26;
     var hasEx=isValI?(bd.jan25_val!==undefined):(bd.jan25_un!==undefined);
     if(hasEx){
       scjI25 += (isValI?(bd.jan25_val||0):(bd.jan25_un||0))
                +(isValI?(bd.fev25_val||0):(bd.fev25_un||0))
-               +(isValI?(bd.mar25_val||0):(bd.mar25_un||0));
+               +(isValI?(bd.mar25_val||0):(bd.mar25_un||0))
+               +(isValI?(bd.abr25_val||0):(bd.abr25_un||0))
+               +(isValI?(bd.mai25_val||0):(bd.mai25_un||0));
     } else {
       var fyt25=isValI?bd.fytd25_val:bd.fytd25_un, fyt26=isValI?bd.fytd26_val:bd.fytd26_un;
-      var ratio=fyt26>0?(j26+f26+m26)/fyt26:1/3;
+      var ratio=fyt26>0?(j26+f26+m26+ab26+mi26)/fyt26:1/5;
       scjI25 += fyt25*ratio;
     }
   });
@@ -28928,15 +28934,19 @@ function renderMSO2Insight(){
     var j26=isValI?(bd.jan_val||0):(bd.jan_un||0);
     var f26=isValI?(bd.fev_val||0):(bd.fev_un||0);
     var m26=isValI?(bd.mar_val||0):(bd.mar_un||0);
-    hbI26 += j26+f26+m26;
+    var ab26=isValI?(bd.abr_val||0):(bd.abr_un||0);
+    var mi26=isValI?(bd.mai_val||0):(bd.mai_un||0);
+    hbI26 += j26+f26+m26+ab26+mi26;
     var hasEx=isValI?(bd.jan25_val!==undefined):(bd.jan25_un!==undefined);
     if(hasEx){
       hbI25 += (isValI?(bd.jan25_val||0):(bd.jan25_un||0))
               +(isValI?(bd.fev25_val||0):(bd.fev25_un||0))
-              +(isValI?(bd.mar25_val||0):(bd.mar25_un||0));
+              +(isValI?(bd.mar25_val||0):(bd.mar25_un||0))
+              +(isValI?(bd.abr25_val||0):(bd.abr25_un||0))
+              +(isValI?(bd.mai25_val||0):(bd.mai25_un||0));
     } else {
       var fyt25b=isValI?bd.fytd25_val:bd.fytd25_un, fyt26b=isValI?bd.fytd26_val:bd.fytd26_un;
-      var ratio=fyt26b>0?(j26+f26+m26)/fyt26b:1/3;
+      var ratio=fyt26b>0?(j26+f26+m26+ab26+mi26)/fyt26b:1/5;
       hbI25 += fyt25b*ratio;
     }
   });
@@ -28958,16 +28968,20 @@ function renderMSO2Insight(){
     var j26=isValI?(bd.jan_val||0):(bd.jan_un||0);
     var fv26=isValI?(bd.fev_val||0):(bd.fev_un||0);
     var m26=isValI?(bd.mar_val||0):(bd.mar_un||0);
-    var v26b=Math.round((j26+fv26+m26)*100)/100;
+    var ab26b=isValI?(bd.abr_val||0):(bd.abr_un||0);
+    var mi26b=isValI?(bd.mai_val||0):(bd.mai_un||0);
+    var v26b=Math.round((j26+fv26+m26+ab26b+mi26b)*100)/100;
     var fyt25=isValI?bd.fytd25_val:bd.fytd25_un, fyt26=isValI?bd.fytd26_val:bd.fytd26_un;
     var hasEx=isValI?(bd.jan25_val!==undefined):(bd.jan25_un!==undefined);
     var v25b;
     if(hasEx){
       v25b=Math.round(((isValI?(bd.jan25_val||0):(bd.jan25_un||0))
                       +(isValI?(bd.fev25_val||0):(bd.fev25_un||0))
-                      +(isValI?(bd.mar25_val||0):(bd.mar25_un||0)))*100)/100;
+                      +(isValI?(bd.mar25_val||0):(bd.mar25_un||0))
+                      +(isValI?(bd.abr25_val||0):(bd.abr25_un||0))
+                      +(isValI?(bd.mai25_val||0):(bd.mai25_un||0)))*100)/100;
     } else {
-      var ratio2=fyt26>0?v26b/fyt26:1/3;
+      var ratio2=fyt26>0?v26b/fyt26:1/5;
       v25b=Math.round(fyt25*ratio2*100)/100;
     }
     var pct=pctI(v26b,v25b);
@@ -28977,9 +28991,9 @@ function renderMSO2Insight(){
     return '<div style="display:flex;align-items:center;gap:5px;padding:3px 0;border-bottom:0.5px solid rgba(147,187,235,0.25);">'
       +'<span style="width:5px;height:5px;border-radius:50%;background:'+cor+';flex-shrink:0;"></span>'
       +'<span style="color:'+cor+';font-weight:700;min-width:95px;font-size:11px;">'+b+'</span>'
-      +'<span style="color:#e2e8f0;font-size:11px;">Jan-Abr/26: <strong>'+fmtNI(v26b)+'</strong></span>'
+      +'<span style="color:#e2e8f0;font-size:11px;">Jan-Mai/26: <strong>'+fmtNI(v26b)+'</strong></span>'
       +'<span style="color:#475569;margin:0 3px;">·</span>'
-      +'<span style="color:#64748b;font-size:11px;">Jan-Abr/25: '+fmtNI(v25b)+'</span>'
+      +'<span style="color:#64748b;font-size:11px;">Jan-Mai/25: '+fmtNI(v25b)+'</span>'
       +'<span style="color:'+cc+';font-weight:700;font-size:11px;margin-left:5px;">'
         +'<span style="font-size:10px;">'+trend+'</span> '+(pct>=0?'+':'')+pct.toFixed(1)+'%'
       +'</span>'
@@ -28988,14 +29002,14 @@ function renderMSO2Insight(){
   }).filter(Boolean);
   el.innerHTML=
     '<div style="padding:10px 4px;">'
-    +'<div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#1D6FA8;text-transform:uppercase;margin-bottom:12px;">📊 DIAGNÓSTICO · '+mkt+' · '+(isValI?'R$ MM':'Unidades')+' JAN–ABR/26</div>'
+    +'<div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#1D6FA8;text-transform:uppercase;margin-bottom:12px;">📊 DIAGNÓSTICO · '+mkt+' · '+(isValI?'R$ MM':'Unidades')+' JAN–MAI/26</div>'
     /* Bloco 1: Mercado Total */
     +'<div style="margin-bottom:10px;padding-bottom:9px;border-bottom:0.5px solid rgba(147,187,235,0.30);">'
       +'<div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#475569;text-transform:uppercase;margin-bottom:5px;">🌎 Mercado Total (todas as marcas)</div>'
       +'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">'
-        +'<span style="font-size:11px;color:#94a3b8;">Jan-Abr/25: <strong style="color:#e2e8f0;">'+fmtNI(mtI25)+'</strong></span>'
+        +'<span style="font-size:11px;color:#94a3b8;">Jan-Mai/25: <strong style="color:#e2e8f0;">'+fmtNI(mtI25)+'</strong></span>'
         +'<span style="color:#334155;">→</span>'
-        +'<span style="font-size:11px;color:#94a3b8;">Jan-Abr/26: <strong style="color:#e2e8f0;">'+fmtNI(mtI26)+'</strong></span>'
+        +'<span style="font-size:11px;color:#94a3b8;">Jan-Mai/26: <strong style="color:#e2e8f0;">'+fmtNI(mtI26)+'</strong></span>'
         +'<span style="background:'+mtICor+'1a;color:'+mtICor+';font-weight:700;font-size:11px;padding:2px 8px;border-radius:4px;border:0.5px solid '+mtICor+'44;">'
           +(mtIDelta>=0?'▲ +':'▼ ')+Math.abs(mtIDelta).toFixed(1)+'%'
         +'</span>'
@@ -29003,19 +29017,19 @@ function renderMSO2Insight(){
     +'</div>'
     /* Bloco 2: SCJ vs Mercado */
     +'<div style="margin-bottom:10px;padding-bottom:9px;border-bottom:0.5px solid rgba(147,187,235,0.30);">'
-      +'<div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#475569;text-transform:uppercase;margin-bottom:5px;">&#128293; OFF! + EXPOSIS (HB) &middot; JAN&ndash;ABR &middot; '+(isValI?'R$ MM':'Unidades')+'</div>'
+      +'<div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#475569;text-transform:uppercase;margin-bottom:5px;">&#128293; OFF! + EXPOSIS (HB) &middot; JAN&ndash;MAI &middot; '+(isValI?'R$ MM':'Unidades')+'</div>'
       +'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">'
-        +'<span style="font-size:11px;color:#94a3b8;">Jan-Abr/25: <strong style="color:#3b82f6;">'+fmtNI(hbI25)+'</strong></span>'
+        +'<span style="font-size:11px;color:#94a3b8;">Jan-Mai/25: <strong style="color:#3b82f6;">'+fmtNI(hbI25)+'</strong></span>'
         +'<span style="color:#334155;">→</span>'
-        +'<span style="font-size:11px;color:#94a3b8;">Jan-Abr/26: <strong style="color:#3b82f6;">'+fmtNI(hbI26)+'</strong></span>'
+        +'<span style="font-size:11px;color:#94a3b8;">Jan-Mai/26: <strong style="color:#3b82f6;">'+fmtNI(hbI26)+'</strong></span>'
         +'<span style="background:'+hbICorD+'1a;color:'+hbICorD+';font-weight:700;font-size:11px;padding:2px 8px;border-radius:4px;border:0.5px solid '+hbICorD+'44;">'
           +(hbIDelta>=0?'▲ +':'▼ ')+Math.abs(hbIDelta).toFixed(1)+'%'
         +'</span>'
       +'</div>'
       +'<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:5px;">'
-        +'<span style="font-size:11px;color:#64748b;">Share Jan-Abr/25: <strong style="color:#cbd5e1;">'+shrHbI25.toFixed(1)+'%</strong></span>'
+        +'<span style="font-size:11px;color:#64748b;">Share Jan-Mai/25: <strong style="color:#cbd5e1;">'+shrHbI25.toFixed(1)+'%</strong></span>'
         +'<span style="color:#1e293b;">|</span>'
-        +'<span style="font-size:11px;color:#64748b;">Share Jan-Abr/26: <strong style="color:#3b82f6;">'+shrHbI26.toFixed(1)+'%</strong></span>'
+        +'<span style="font-size:11px;color:#64748b;">Share Jan-Mai/26: <strong style="color:#3b82f6;">'+shrHbI26.toFixed(1)+'%</strong></span>'
         +'<span style="color:'+shrHbICor+';font-weight:700;font-size:11px;">'
           +(shrHbIDelta>=0?'▲ +':'▼ ')+Math.abs(shrHbIDelta).toFixed(1)+'pp'
         +'</span>'
@@ -30667,6 +30681,272 @@ var NBV_BRANDS = ['OFF!','EXPOSIS','XO INSETO','SUPER REPELEX','SBP'];
 var NBV_COLORS = {'OFF!':'#fbbf24','EXPOSIS':'#3b82f6','XO INSETO':'#ef4444','SUPER REPELEX':'#f97316','SBP':'#06b6d4'};
 
 /* ═══════════ NIELSEN SHARE ═══════════ */
+// ═══ PATCH MAI/26 — gerado automaticamente ═══
+(function(){
+  if(NIELSEN_BRAND_VAL['Farma Sul']){
+    var b=NIELSEN_BRAND_VAL['Farma Sul']['OFF!'];if(b){Object.assign(b,{mai_val:1.0757,mai_un:41.3656,mai25_val:1.9899,mai25_un:78.7356,abr_val:2.9484,abr_un:112.3227,abr25_val:2.9694,abr25_un:118.9345});}
+    var b=NIELSEN_BRAND_VAL['Farma Sul']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.5585,mai_un:9.107,mai25_val:1.3848,mai25_un:21.0731,abr_val:1.4649,abr_un:23.2627,abr25_val:1.7596,abr25_un:27.1224});}
+    var b=NIELSEN_BRAND_VAL['Farma Sul']['XO INSETO'];if(b){Object.assign(b,{mai_val:1.0786,mai_un:48.3843,mai25_val:1.9005,mai25_un:72.8874,abr_val:2.823,abr_un:129.2716,abr25_val:2.5588,abr25_un:99.6273});}
+    var b=NIELSEN_BRAND_VAL['Farma Sul']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.2425,mai_un:10.1904,mai25_val:0.5841,mai25_un:25.9875,abr_val:0.7257,abr_un:30.6648,abr25_val:0.8254,abr25_un:36.397});}
+    var b=NIELSEN_BRAND_VAL['Farma Sul']['SBP'];if(b){Object.assign(b,{mai_val:0.0931,mai_un:2.3641,mai25_val:0.3025,mai25_un:7.8651,abr_val:0.2565,abr_un:6.3548,abr25_val:0.4007,abr25_un:10.6271});}
+    var b=NIELSEN_BRAND_VAL['Farma Sul']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:1.2675,mai_un:74.745,mai25_val:2.3635,mai25_un:129.8126,abr_val:3.0966,abr_un:182.4676,abr25_val:3.4467,abr25_un:192.2537});}
+  }
+  if(NIELSEN_BRAND_VAL['INFC SC']){
+    var b=NIELSEN_BRAND_VAL['INFC SC']['OFF!'];if(b){Object.assign(b,{mai_val:0.4211,mai_un:15.768,mai25_val:0.6726,mai25_un:25.7414,abr_val:0.95,abr_un:35.6509,abr25_val:0.937,abr25_un:35.803});}
+    var b=NIELSEN_BRAND_VAL['INFC SC']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.2085,mai_un:3.3238,mai25_val:0.2935,mai25_un:4.4265,abr_val:0.5259,abr_un:8.1602,abr25_val:0.473,abr25_un:7.2605});}
+    var b=NIELSEN_BRAND_VAL['INFC SC']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.3125,mai_un:13.3342,mai25_val:0.6187,mai25_un:24.383,abr_val:0.641,abr_un:29.3457,abr25_val:0.7789,abr25_un:30.5764});}
+    var b=NIELSEN_BRAND_VAL['INFC SC']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.0839,mai_un:3.4273,mai25_val:0.1149,mai25_un:4.939,abr_val:0.2112,abr_un:9.0803,abr25_val:0.1798,abr25_un:7.4923});}
+    var b=NIELSEN_BRAND_VAL['INFC SC']['SBP'];if(b){Object.assign(b,{mai_val:0.0287,mai_un:0.6927,mai25_val:0.0713,mai25_un:1.8061,abr_val:0.066,abr_un:1.5691,abr25_val:0.0941,abr25_un:2.4223});}
+    var b=NIELSEN_BRAND_VAL['INFC SC']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.5955,mai_un:30.1428,mai25_val:0.8323,mai25_un:40.8692,abr_val:1.2748,abr_un:67.9406,abr25_val:1.064,abr25_un:52.7403});}
+  }
+  if(NIELSEN_BRAND_VAL['INFC RS']){
+    var b=NIELSEN_BRAND_VAL['INFC RS']['OFF!'];if(b){Object.assign(b,{mai_val:0.2172,mai_un:8.6881,mai25_val:0.6728,mai25_un:26.4096,abr_val:0.9229,abr_un:34.9999,abr25_val:1.0321,abr25_un:41.0958});}
+    var b=NIELSEN_BRAND_VAL['INFC RS']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.0998,mai_un:1.5577,mai25_val:0.624,mai25_un:9.3345,abr_val:0.3665,abr_un:5.6717,abr25_val:0.5611,abr25_un:8.4872});}
+    var b=NIELSEN_BRAND_VAL['INFC RS']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.1705,mai_un:7.525,mai25_val:0.5151,mai25_un:17.9201,abr_val:0.9056,abr_un:41.5214,abr25_val:0.6762,abr25_un:25.0905});}
+    var b=NIELSEN_BRAND_VAL['INFC RS']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.0605,mai_un:2.5817,mai25_val:0.2671,mai25_un:11.7857,abr_val:0.2843,abr_un:11.8732,abr25_val:0.3262,abr25_un:14.2647});}
+    var b=NIELSEN_BRAND_VAL['INFC RS']['SBP'];if(b){Object.assign(b,{mai_val:0.0203,mai_un:0.5117,mai25_val:0.1243,mai25_un:3.1152,abr_val:0.1052,abr_un:2.5172,abr25_val:0.1347,abr25_un:3.3313});}
+    var b=NIELSEN_BRAND_VAL['INFC RS']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.1702,mai_un:10.0903,mai25_val:0.7394,mai25_un:40.3079,abr_val:0.8702,abr_un:52.5183,abr25_val:1.1244,abr25_un:64.2278});}
+  }
+  if(NIELSEN_BRAND_VAL['INFC PR']){
+    var b=NIELSEN_BRAND_VAL['INFC PR']['OFF!'];if(b){Object.assign(b,{mai_val:0.4384,mai_un:16.9795,mai25_val:0.6447,mai25_un:26.5911,abr_val:1.0764,abr_un:41.705,abr25_val:1.0011,abr25_un:42.0578});}
+    var b=NIELSEN_BRAND_VAL['INFC PR']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.2502,mai_un:4.2264,mai25_val:0.4679,mai25_un:7.3195,abr_val:0.5727,abr_un:9.4337,abr25_val:0.7262,abr25_un:11.3833});}
+    var b=NIELSEN_BRAND_VAL['INFC PR']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.5957,mai_un:27.5337,mai25_val:0.767,mai25_un:30.5937,abr_val:1.2768,abr_un:58.4248,abr25_val:1.1045,abr25_un:43.9802});}
+    var b=NIELSEN_BRAND_VAL['INFC PR']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.0981,mai_un:4.1814,mai25_val:0.2022,mai25_un:9.267,abr_val:0.2302,abr_un:9.7113,abr25_val:0.3197,abr25_un:14.6458});}
+    var b=NIELSEN_BRAND_VAL['INFC PR']['SBP'];if(b){Object.assign(b,{mai_val:0.0441,mai_un:1.1597,mai25_val:0.1069,mai25_un:2.9438,abr_val:0.0853,abr_un:2.2684,abr25_val:0.1719,abr25_un:4.8735});}
+    var b=NIELSEN_BRAND_VAL['INFC PR']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.5122,mai_un:35.1995,mai25_val:0.8081,mai25_un:49.6776,abr_val:0.9687,abr_un:62.98,abr25_val:1.2934,abr25_un:77.3759});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma CO']){
+    var b=NIELSEN_BRAND_VAL['Farma CO']['OFF!'];if(b){Object.assign(b,{mai_val:0.8413,mai_un:32.8222,mai25_val:0.8414,mai25_un:32.2138,abr_val:1.1876,abr_un:45.9143,abr25_val:0.9278,abr25_un:36.3727});}
+    var b=NIELSEN_BRAND_VAL['Farma CO']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.7249,mai_un:12.7914,mai25_val:0.7991,mai25_un:12.6476,abr_val:1.0625,abr_un:17.8101,abr25_val:0.9073,abr25_un:14.836});}
+    var b=NIELSEN_BRAND_VAL['Farma CO']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.7912,mai_un:34.5304,mai25_val:0.8797,mai25_un:35.5117,abr_val:1.1045,abr_un:47.3093,abr25_val:0.9094,abr25_un:38.2012});}
+    var b=NIELSEN_BRAND_VAL['Farma CO']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.2666,mai_un:11.8336,mai25_val:0.4159,mai25_un:18.3532,abr_val:0.4025,abr_un:17.3144,abr25_val:0.5075,abr25_un:22.5294});}
+    var b=NIELSEN_BRAND_VAL['Farma CO']['SBP'];if(b){Object.assign(b,{mai_val:0.1171,mai_un:3.0097,mai25_val:0.2233,mai25_un:6.2579,abr_val:0.192,abr_un:4.8659,abr25_val:0.2552,abr25_un:6.9748});}
+    var b=NIELSEN_BRAND_VAL['Farma CO']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.8687,mai_un:42.9766,mai25_val:0.9435,mai25_un:42.6603,abr_val:1.1623,abr_un:57.1512,abr25_val:1.0845,abr25_un:49.7636});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Gde RJ']){
+    var b=NIELSEN_BRAND_VAL['Farma Gde RJ']['OFF!'];if(b){Object.assign(b,{mai_val:1.358,mai_un:57.613,mai25_val:1.6832,mai25_un:72.5293,abr_val:1.6562,abr_un:70.3307,abr25_val:1.4042,abr25_un:59.7875});}
+    var b=NIELSEN_BRAND_VAL['Farma Gde RJ']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.7473,mai_un:15.2023,mai25_val:1.0741,mai25_un:16.8857,abr_val:0.9996,abr_un:16.9938,abr25_val:0.9429,abr25_un:15.3948});}
+    var b=NIELSEN_BRAND_VAL['Farma Gde RJ']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.5389,mai_un:26.5951,mai25_val:0.9564,mai25_un:45.1462,abr_val:0.6546,abr_un:32.3713,abr25_val:0.604,abr25_un:28.6759});}
+    var b=NIELSEN_BRAND_VAL['Farma Gde RJ']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.1306,mai_un:6.2332,mai25_val:0.2296,mai25_un:11.2958,abr_val:0.1583,abr_un:7.6333,abr25_val:0.2057,abr25_un:10.3693});}
+    var b=NIELSEN_BRAND_VAL['Farma Gde RJ']['SBP'];if(b){Object.assign(b,{mai_val:0.0977,mai_un:2.6436,mai25_val:0.1993,mai25_un:5.5634,abr_val:0.116,abr_un:3.1672,abr25_val:0.1583,abr25_un:4.5114});}
+    var b=NIELSEN_BRAND_VAL['Farma Gde RJ']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.2042,mai_un:8.2726,mai25_val:0.5474,mai25_un:22.9884,abr_val:0.2795,abr_un:12.0518,abr25_val:0.396,abr25_un:16.5223});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Gde SP']){
+    var b=NIELSEN_BRAND_VAL['Farma Gde SP']['OFF!'];if(b){Object.assign(b,{mai_val:0.7536,mai_un:27.4939,mai25_val:0.6989,mai25_un:26.4714,abr_val:1.2742,abr_un:47.4977,abr25_val:1.1866,abr25_un:45.2434});}
+    var b=NIELSEN_BRAND_VAL['Farma Gde SP']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.8052,mai_un:15.3223,mai25_val:0.9452,mai25_un:14.353,abr_val:1.2912,abr_un:20.8838,abr25_val:1.5639,abr25_un:24.5902});}
+    var b=NIELSEN_BRAND_VAL['Farma Gde SP']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.3299,mai_un:14.2906,mai25_val:0.3927,mai25_un:15.4789,abr_val:0.7205,abr_un:29.8294,abr25_val:0.6833,abr25_un:26.7816});}
+    var b=NIELSEN_BRAND_VAL['Farma Gde SP']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.1381,mai_un:6.1795,mai25_val:0.1308,mai25_un:6.1934,abr_val:0.2647,abr_un:11.8805,abr25_val:0.2882,abr25_un:13.1618});}
+    var b=NIELSEN_BRAND_VAL['Farma Gde SP']['SBP'];if(b){Object.assign(b,{mai_val:0.1064,mai_un:2.7184,mai25_val:0.1547,mai25_un:4.1636,abr_val:0.189,abr_un:5.128,abr25_val:0.2203,abr25_un:6.1694});}
+    var b=NIELSEN_BRAND_VAL['Farma Gde SP']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.2927,mai_un:10.6843,mai25_val:0.4603,mai25_un:17.3193,abr_val:0.5304,abr_un:19.9958,abr25_val:0.754,abr25_un:26.726});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Indep CO']){
+    var b=NIELSEN_BRAND_VAL['Farma Indep CO']['OFF!'];if(b){Object.assign(b,{mai_val:0.4564,mai_un:18.4588,mai25_val:0.5096,mai25_un:19.6702,abr_val:0.6744,abr_un:26.8143,abr25_val:0.5586,abr25_un:21.8629});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep CO']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.2719,mai_un:4.5198,mai25_val:0.3425,mai25_un:5.7031,abr_val:0.4763,abr_un:7.8926,abr25_val:0.3631,abr25_un:6.0774});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep CO']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.6467,mai_un:28.2545,mai25_val:0.7277,mai25_un:28.9085,abr_val:0.9211,abr_un:39.4324,abr25_val:0.7375,abr25_un:30.6789});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep CO']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.1807,mai_un:8.1244,mai25_val:0.2853,mai25_un:12.325,abr_val:0.2678,abr_un:11.577,abr25_val:0.3471,abr25_un:15.1937});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep CO']['SBP'];if(b){Object.assign(b,{mai_val:0.0631,mai_un:1.661,mai25_val:0.1071,mai25_un:3.0348,abr_val:0.1098,abr_un:2.7939,abr25_val:0.1168,abr25_un:3.1167});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep CO']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.7382,mai_un:38.927,mai25_val:0.7075,mai25_un:34.2109,abr_val:0.985,abr_un:51.2069,abr25_val:0.851,abr25_un:41.6315});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Indep Gde RJ']){
+    var b=NIELSEN_BRAND_VAL['Farma Indep Gde RJ']['OFF!'];if(b){Object.assign(b,{mai_val:0.7384,mai_un:33.4654,mai25_val:0.8242,mai25_un:38.2821,abr_val:0.7968,abr_un:36.5394,abr25_val:0.709,abr25_un:31.2573});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Gde RJ']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.1013,mai_un:1.8448,mai25_val:0.272,mai25_un:4.8767,abr_val:0.1695,abr_un:2.9659,abr25_val:0.2345,abr25_un:4.2613});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Gde RJ']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.3149,mai_un:16.2058,mai25_val:0.5295,mai25_un:24.8353,abr_val:0.3604,abr_un:18.766,abr25_val:0.2812,abr25_un:12.9162});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Gde RJ']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.0258,mai_un:1.4161,mai25_val:0.0391,mai25_un:2.2406,abr_val:0.0236,abr_un:1.3005,abr25_val:0.051,abr25_un:2.6573});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Gde RJ']['SBP'];if(b){Object.assign(b,{mai_val:0.0121,mai_un:0.3568,mai25_val:0.0266,mai25_un:0.7995,abr_val:0.0098,abr_un:0.2945,abr25_val:0.022,abr25_un:0.6738});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Gde RJ']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.0676,mai_un:3.6086,mai25_val:0.2046,mai25_un:8.9935,abr_val:0.0965,abr_un:5.2956,abr25_val:0.1632,abr25_un:7.5745});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Indep Gde SP']){
+    var b=NIELSEN_BRAND_VAL['Farma Indep Gde SP']['OFF!'];if(b){Object.assign(b,{mai_val:0.2756,mai_un:9.6593,mai25_val:0.2652,mai25_un:9.5564,abr_val:0.4062,abr_un:14.6082,abr25_val:0.4027,abr25_un:14.4231});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Gde SP']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.0762,mai_un:1.1286,mai25_val:0.1039,mai25_un:1.5471,abr_val:0.117,abr_un:1.7494,abr25_val:0.1032,abr25_un:1.5659});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Gde SP']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.1726,mai_un:7.3233,mai25_val:0.1876,mai25_un:7.1162,abr_val:0.431,abr_un:17.0307,abr25_val:0.3316,abr25_un:12.5087});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Gde SP']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.0509,mai_un:2.0621,mai25_val:0.0136,mai25_un:0.6722,abr_val:0.0886,abr_un:3.4441,abr25_val:0.0708,abr25_un:3.0172});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Gde SP']['SBP'];if(b){Object.assign(b,{mai_val:0.0418,mai_un:1.0308,mai25_val:0.029,mai25_un:0.7251,abr_val:0.0454,abr_un:1.3088,abr25_val:0.0113,abr25_un:0.3436});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Gde SP']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.1252,mai_un:5.5505,mai25_val:0.1357,mai25_un:5.7844,abr_val:0.2414,abr_un:10.5883,abr25_val:0.2663,abr25_un:11.2427});}
+  }
+  if(NIELSEN_BRAND_VAL['T.BR Farma']){
+    var b=NIELSEN_BRAND_VAL['T.BR Farma']['OFF!'];if(b){Object.assign(b,{mai_val:13.1483,mai_un:515.8545,mai25_val:13.4217,mai25_un:544.4165,abr_val:18.3017,abr_un:716.5605,abr25_val:17.5399,abr25_un:714.5344});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma']['EXPOSIS'];if(b){Object.assign(b,{mai_val:7.0105,mai_un:126.8,mai25_val:8.9027,mai25_un:139.4175,abr_val:10.3339,abr_un:171.0349,abr25_val:12.0684,abr25_un:194.2724});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma']['XO INSETO'];if(b){Object.assign(b,{mai_val:11.1815,mai_un:532.5573,mai25_val:11.4017,mai25_un:481.6319,abr_val:15.8635,abr_un:737.8794,abr25_val:14.7612,abr25_un:621.0847});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:1.8142,mai_un:81.128,mai25_val:2.5626,mai25_un:118.0553,abr_val:2.9646,abr_un:131.5654,abr25_val:3.6591,abr25_un:167.449});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma']['SBP'];if(b){Object.assign(b,{mai_val:1.2862,mai_un:33.9103,mai25_val:2.177,mai25_un:60.1486,abr_val:1.893,abr_un:50.413,abr25_val:2.9211,abr25_un:83.273});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:6.2835,mai_un:302.1338,mai25_val:8.8495,mai25_un:418.1921,abr_val:9.69,abr_un:481.0093,abr25_val:12.2265,abr25_un:582.6955});}
+  }
+  if(NIELSEN_BRAND_VAL['T.BR Farma Indep']){
+    var b=NIELSEN_BRAND_VAL['T.BR Farma Indep']['OFF!'];if(b){Object.assign(b,{mai_val:7.3841,mai_un:296.731,mai25_val:7.6213,mai25_un:312.5131,abr_val:9.8015,abr_un:391.3483,abr25_val:9.68,abr25_un:391.9946});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma Indep']['EXPOSIS'];if(b){Object.assign(b,{mai_val:1.909,mai_un:31.3847,mai25_val:2.6724,mai25_un:43.7949,abr_val:3.0479,abr_un:49.2593,abr25_val:3.2011,abr25_un:52.3797});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma Indep']['XO INSETO'];if(b){Object.assign(b,{mai_val:8.3772,mai_un:403.2799,mai25_val:7.76,mai25_un:329.904,abr_val:11.3729,abr_un:536.1823,abr25_val:10.0463,abr25_un:424.4465});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma Indep']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.8967,mai_un:40.1772,mai25_val:1.1597,mai25_un:52.5249,abr_val:1.3343,abr_un:58.6847,abr25_val:1.6897,abr25_un:76.2089});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma Indep']['SBP'];if(b){Object.assign(b,{mai_val:0.4876,mai_un:13.0761,mai25_val:0.6939,mai25_un:18.9226,abr_val:0.6547,abr_un:17.6984,abr25_val:0.9034,abr25_un:25.6395});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma Indep']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:4.1557,mai_un:210.5007,mai25_val:5.0962,mai25_un:256.6949,abr_val:6.3379,abr_un:328.5954,abr25_val:7.2262,abr25_un:370.4373});}
+  }
+  if(NIELSEN_BRAND_VAL['T.BR Farma Moderno']){
+    var b=NIELSEN_BRAND_VAL['T.BR Farma Moderno']['OFF!'];if(b){Object.assign(b,{mai_val:5.7642,mai_un:219.1235,mai25_val:5.8005,mai25_un:231.9034,abr_val:8.5002,abr_un:325.2122,abr25_val:7.8599,abr25_un:322.5398});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma Moderno']['EXPOSIS'];if(b){Object.assign(b,{mai_val:5.1015,mai_un:95.4153,mai25_val:6.2303,mai25_un:95.6227,abr_val:7.286,abr_un:121.7756,abr25_val:8.8673,abr25_un:141.8927});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma Moderno']['XO INSETO'];if(b){Object.assign(b,{mai_val:2.8043,mai_un:129.2774,mai25_val:3.6417,mai25_un:151.7279,abr_val:4.4906,abr_un:201.6971,abr25_val:4.715,abr25_un:196.6381});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma Moderno']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.9175,mai_un:40.9508,mai25_val:1.4029,mai25_un:65.5304,abr_val:1.6304,abr_un:72.8807,abr25_val:1.9695,abr25_un:91.2401});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma Moderno']['SBP'];if(b){Object.assign(b,{mai_val:0.7986,mai_un:20.8342,mai25_val:1.4831,mai25_un:41.226,abr_val:1.2383,abr_un:32.7146,abr25_val:2.0177,abr25_un:57.6335});}
+    var b=NIELSEN_BRAND_VAL['T.BR Farma Moderno']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:2.1279,mai_un:91.6331,mai25_val:3.7534,mai25_un:161.4972,abr_val:3.3521,abr_un:152.4139,abr25_val:5.0003,abr25_un:212.2583});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma NE']){
+    var b=NIELSEN_BRAND_VAL['Farma NE']['OFF!'];if(b){Object.assign(b,{mai_val:5.2973,mai_un:208.9721,mai25_val:3.6923,mai25_un:154.1004,abr_val:5.3216,abr_un:209.706,abr25_val:4.3362,abr25_un:179.984});}
+    var b=NIELSEN_BRAND_VAL['Farma NE']['EXPOSIS'];if(b){Object.assign(b,{mai_val:1.7656,mai_un:31.1922,mai25_val:1.3354,mai25_un:21.4583,abr_val:1.7481,abr_un:29.1129,abr25_val:1.6481,abr25_un:27.1647});}
+    var b=NIELSEN_BRAND_VAL['Farma NE']['XO INSETO'];if(b){Object.assign(b,{mai_val:5.0354,mai_un:255.3262,mai25_val:3.1125,mai25_un:141.5117,abr_val:5.1361,abr_un:253.4725,abr25_val:3.8958,abr25_un:178.7156});}
+    var b=NIELSEN_BRAND_VAL['Farma NE']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.3878,mai_un:18.2434,mai25_val:0.3535,mai25_un:18.0449,abr_val:0.4207,abr_un:20.0873,abr25_val:0.4822,abr25_un:24.6625});}
+    var b=NIELSEN_BRAND_VAL['Farma NE']['SBP'];if(b){Object.assign(b,{mai_val:0.3938,mai_un:10.1037,mai25_val:0.5314,mai25_un:14.7874,abr_val:0.4009,abr_un:10.4201,abr25_val:0.6333,abr25_un:17.5425});}
+    var b=NIELSEN_BRAND_VAL['Farma NE']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:1.7042,mai_un:78.2201,mai25_val:1.5007,mai25_un:68.3943,abr_val:1.6303,abr_un:75.8619,abr25_val:1.7992,abr25_un:82.2684});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma MG+ES+Int RJ']){
+    var b=NIELSEN_BRAND_VAL['Farma MG+ES+Int RJ']['OFF!'];if(b){Object.assign(b,{mai_val:1.801,mai_un:72.4331,mai25_val:1.7902,mai25_un:72.9926,abr_val:2.6805,abr_un:108.6761,abr25_val:2.2702,abr25_un:95.4113});}
+    var b=NIELSEN_BRAND_VAL['Farma MG+ES+Int RJ']['EXPOSIS'];if(b){Object.assign(b,{mai_val:1.2052,mai_un:22.2255,mai25_val:1.2499,mai25_un:20.0391,abr_val:1.7129,abr_un:29.3284,abr25_val:1.5789,abr25_un:25.9669});}
+    var b=NIELSEN_BRAND_VAL['Farma MG+ES+Int RJ']['XO INSETO'];if(b){Object.assign(b,{mai_val:1.7249,mai_un:80.9292,mai25_val:1.7096,mai25_un:72.9381,abr_val:2.6408,abr_un:123.8061,abr25_val:2.1345,abr25_un:91.5333});}
+    var b=NIELSEN_BRAND_VAL['Farma MG+ES+Int RJ']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.2756,mai_un:12.9796,mai25_val:0.3019,mai25_un:14.0836,abr_val:0.4124,abr_un:19.0206,abr25_val:0.4015,abr25_un:18.8101});}
+    var b=NIELSEN_BRAND_VAL['Farma MG+ES+Int RJ']['SBP'];if(b){Object.assign(b,{mai_val:0.2068,mai_un:5.6092,mai25_val:0.3156,mai25_un:9.0974,abr_val:0.3093,abr_un:8.5759,abr25_val:0.4943,abr25_un:16.0318});}
+    var b=NIELSEN_BRAND_VAL['Farma MG+ES+Int RJ']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.7958,mai_un:37.6869,mai25_val:1.1643,mai25_un:59.1836,abr_val:1.2917,abr_un:61.1493,abr25_val:1.4643,abr25_un:77.3896});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Int SP']){
+    var b=NIELSEN_BRAND_VAL['Farma Int SP']['OFF!'];if(b){Object.assign(b,{mai_val:1.8762,mai_un:69.6853,mai25_val:2.5596,mai25_un:100.712,abr_val:3.0855,abr_un:116.4145,abr25_val:4.2753,abr25_un:171.9457});}
+    var b=NIELSEN_BRAND_VAL['Farma Int SP']['EXPOSIS'];if(b){Object.assign(b,{mai_val:1.1236,mai_un:19.7168,mai25_val:2.0388,mai25_un:31.8308,abr_val:1.9748,abr_un:32.3877,abr25_val:3.5842,abr25_un:57.8881});}
+    var b=NIELSEN_BRAND_VAL['Farma Int SP']['XO INSETO'];if(b){Object.assign(b,{mai_val:1.594,mai_un:68.5398,mai25_val:2.3559,mai25_un:94.1817,abr_val:2.6982,abr_un:117.9811,abr25_val:3.834,abr25_un:151.4306});}
+    var b=NIELSEN_BRAND_VAL['Farma Int SP']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.3185,mai_un:13.2429,mai25_val:0.5203,mai25_un:22.71,abr_val:0.5434,abr_un:23.1442,abr25_val:0.9161,abr25_un:39.9146});}
+    var b=NIELSEN_BRAND_VAL['Farma Int SP']['SBP'];if(b){Object.assign(b,{mai_val:0.2497,mai_un:6.8763,mai25_val:0.4279,mai25_un:11.8037,abr_val:0.4047,abr_un:11.227,abr25_val:0.6991,abr25_un:19.7385});}
+    var b=NIELSEN_BRAND_VAL['Farma Int SP']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:1.0435,mai_un:45.0402,mai25_val:1.7765,mai25_un:74.2162,abr_val:1.6155,abr_un:69.2243,abr25_val:3.1546,abr25_un:132.7953});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Indep Int SP']){
+    var b=NIELSEN_BRAND_VAL['Farma Indep Int SP']['OFF!'];if(b){Object.assign(b,{mai_val:0.9051,mai_un:32.217,mai25_val:1.2183,mai25_un:44.4608,abr_val:1.446,abr_un:51.2449,abr25_val:1.9668,abr25_un:71.307});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Int SP']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.2954,mai_un:4.327,mai25_val:0.5878,mai25_un:8.7374,abr_val:0.6467,abr_un:9.5117,abr25_val:0.8682,abr25_un:12.9056});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Int SP']['XO INSETO'];if(b){Object.assign(b,{mai_val:1.1447,mai_un:49.6112,mai25_val:1.5547,mai25_un:61.637,abr_val:1.897,abr_un:82.646,abr25_val:2.4761,abr25_un:96.6306});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Int SP']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.1904,mai_un:7.4219,mai25_val:0.262,mai25_un:10.9568,abr_val:0.2969,abr_un:11.8239,abr25_val:0.4476,abr25_un:18.4127});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Int SP']['SBP'];if(b){Object.assign(b,{mai_val:0.1353,mai_un:3.8488,mai25_val:0.1429,mai25_un:3.8259,abr_val:0.1951,abr_un:5.5658,abr25_val:0.2011,abr25_un:5.3365});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Int SP']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.6737,mai_un:29.9493,mai25_val:1.0406,mai25_un:49.0982,abr_val:1.0163,abr_un:45.9804,abr25_val:1.8931,abr25_un:90.1498});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Indep MG+ES+Int RJ']){
+    var b=NIELSEN_BRAND_VAL['Farma Indep MG+ES+Int RJ']['OFF!'];if(b){Object.assign(b,{mai_val:0.9493,mai_un:37.9444,mai25_val:1.0069,mai25_un:41.2963,abr_val:1.4454,abr_un:58.629,abr25_val:1.2397,abr25_un:52.381});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep MG+ES+Int RJ']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.4196,mai_un:6.8339,mai25_val:0.5261,mai25_un:8.7659,abr_val:0.6071,abr_un:9.9676,abr25_val:0.5631,abr25_un:9.5162});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep MG+ES+Int RJ']['XO INSETO'];if(b){Object.assign(b,{mai_val:1.2197,mai_un:57.7362,mai25_val:1.107,mai25_un:46.481,abr_val:1.8657,abr_un:87.8516,abr25_val:1.4074,abr25_un:59.1673});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep MG+ES+Int RJ']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.1468,mai_un:7.19,mai25_val:0.148,mai25_un:6.9225,abr_val:0.2115,abr_un:9.9953,abr25_val:0.1804,abr25_un:8.3077});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep MG+ES+Int RJ']['SBP'];if(b){Object.assign(b,{mai_val:0.0545,mai_un:1.4525,mai25_val:0.081,mai25_un:2.2658,abr_val:0.0935,abr_un:2.5377,abr25_val:0.1607,abr25_un:5.1351});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep MG+ES+Int RJ']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.5636,mai_un:28.1129,mai25_val:0.8216,mai25_un:44.7992,abr_val:0.9502,abr_un:45.9476,abr25_val:1.0414,abr25_un:60.2984});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Indep NE']){
+    var b=NIELSEN_BRAND_VAL['Farma Indep NE']['OFF!'];if(b){Object.assign(b,{mai_val:3.4861,mai_un:141.5766,mai25_val:2.679,mai25_un:113.1936,abr_val:3.5584,abr_un:143.0128,abr25_val:3.1013,abr25_un:130.6998});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep NE']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.5779,mai_un:9.9274,mai25_val:0.5097,mai25_un:8.5904,abr_val:0.6133,abr_un:10.3462,abr25_val:0.6262,abr25_un:10.4854});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep NE']['XO INSETO'];if(b){Object.assign(b,{mai_val:4.2142,mai_un:212.3493,mai25_val:2.5677,mai25_un:116.0919,abr_val:4.3934,abr_un:218.3445,abr25_val:3.2559,abr25_un:148.5013});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep NE']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.1707,mai_un:8.558,mai25_val:0.1811,mai25_un:9.431,abr_val:0.1691,abr_un:8.2382,abr25_val:0.2526,abr25_un:13.5542});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep NE']['SBP'];if(b){Object.assign(b,{mai_val:0.1387,mai_un:3.5806,mai25_val:0.2099,mai25_un:5.7367,abr_val:0.1243,abr_un:3.1399,abr25_val:0.2386,abr25_un:6.7019});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep NE']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:1.1779,mai_un:59.0089,mai25_val:0.9488,mai25_un:45.9303,abr_val:1.0541,abr_un:54.8039,abr25_val:1.1217,abr25_un:54.3995});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Moderno Sul']){
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Sul']['OFF!'];if(b){Object.assign(b,{mai_val:0.5451,mai_un:19.5658,mai25_val:0.9629,mai25_un:36.4746,abr_val:1.5158,abr_un:53.4828,abr25_val:1.3486,abr25_un:52.2589});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Sul']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.3917,mai_un:6.3037,mai25_val:1.0544,mai25_un:15.499,abr_val:1.0469,abr_un:16.4369,abr25_val:1.3169,abr25_un:19.5545});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Sul']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.455,mai_un:18.4039,mai25_val:0.857,mai25_un:29.8033,abr_val:1.3569,abr_un:58.8716,abr25_val:1.0835,abr25_un:39.0042});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Sul']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.1453,mai_un:6.0657,mai25_val:0.355,mai25_un:16.0862,abr_val:0.4596,abr_un:18.8225,abr25_val:0.488,abr25_un:21.4494});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Sul']['SBP'];if(b){Object.assign(b,{mai_val:0.0594,mai_un:1.4607,mai25_val:0.2051,mai25_un:5.3302,abr_val:0.1898,abr_un:4.5899,abr25_val:0.2809,abr25_un:7.246});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Sul']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.5259,mai_un:32.2306,mai25_val:1.1731,mai25_un:63.6654,abr_val:1.1443,abr_un:69.1375,abr25_val:1.6312,abr25_un:89.9417});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Moderno CO']){
+    var b=NIELSEN_BRAND_VAL['Farma Moderno CO']['OFF!'];if(b){Object.assign(b,{mai_val:0.3849,mai_un:14.3634,mai25_val:0.3318,mai25_un:12.5436,abr_val:0.5132,abr_un:19.1,abr25_val:0.3692,abr25_un:14.5097});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno CO']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.453,mai_un:8.2716,mai25_val:0.4566,mai25_un:6.9445,abr_val:0.5862,abr_un:9.9176,abr25_val:0.5442,abr25_un:8.7586});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno CO']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.1445,mai_un:6.276,mai25_val:0.152,mai25_un:6.6032,abr_val:0.1834,abr_un:7.8769,abr25_val:0.1718,abr25_un:7.5223});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno CO']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.0859,mai_un:3.7093,mai25_val:0.1306,mai25_un:6.0283,abr_val:0.1347,abr_un:5.7374,abr25_val:0.1604,abr25_un:7.3357});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno CO']['SBP'];if(b){Object.assign(b,{mai_val:0.054,mai_un:1.3488,mai25_val:0.1162,mai25_un:3.2231,abr_val:0.0823,abr_un:2.072,abr25_val:0.1384,abr25_un:3.8582});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno CO']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.1305,mai_un:4.0496,mai25_val:0.236,mai25_un:8.4494,abr_val:0.1773,abr_un:5.9443,abr25_val:0.2335,abr25_un:8.1321});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Moderno Gde RJ']){
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Gde RJ']['OFF!'];if(b){Object.assign(b,{mai_val:0.6196,mai_un:24.1475,mai25_val:0.859,mai25_un:34.2473,abr_val:0.8593,abr_un:33.7914,abr25_val:0.6951,abr25_un:28.5301});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Gde RJ']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.6459,mai_un:13.3575,mai25_val:0.8021,mai25_un:12.009,abr_val:0.8301,abr_un:14.0278,abr25_val:0.7084,abr25_un:11.1335});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Gde RJ']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.224,mai_un:10.3893,mai25_val:0.4269,mai25_un:20.3109,abr_val:0.2942,abr_un:13.6053,abr25_val:0.3227,abr25_un:15.7597});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Gde RJ']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.1048,mai_un:4.8171,mai25_val:0.1905,mai25_un:9.0551,abr_val:0.1347,abr_un:6.3328,abr25_val:0.1547,abr25_un:7.712});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Gde RJ']['SBP'];if(b){Object.assign(b,{mai_val:0.0856,mai_un:2.2868,mai25_val:0.1727,mai25_un:4.7639,abr_val:0.1062,abr_un:2.8727,abr25_val:0.1364,abr25_un:3.8376});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Gde RJ']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.1366,mai_un:4.664,mai25_val:0.3428,mai25_un:13.9949,abr_val:0.1831,abr_un:6.7562,abr25_val:0.2328,abr25_un:8.9477});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Moderno Gde SP']){
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Gde SP']['OFF!'];if(b){Object.assign(b,{mai_val:0.478,mai_un:17.8346,mai25_val:0.4338,mai25_un:16.915,abr_val:0.868,abr_un:32.8896,abr25_val:0.7838,abr25_un:30.8203});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Gde SP']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.7291,mai_un:14.1938,mai25_val:0.8413,mai25_un:12.8059,abr_val:1.1741,abr_un:19.1344,abr25_val:1.4607,abr25_un:23.0243});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Gde SP']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.1574,mai_un:6.9673,mai25_val:0.2051,mai25_un:8.3627,abr_val:0.2895,abr_un:12.7987,abr25_val:0.3517,abr25_un:14.273});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Gde SP']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.0873,mai_un:4.1174,mai25_val:0.1172,mai25_un:5.5212,abr_val:0.176,abr_un:8.4364,abr25_val:0.2174,abr25_un:10.1446});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Gde SP']['SBP'];if(b){Object.assign(b,{mai_val:0.0645,mai_un:1.6876,mai25_val:0.1257,mai25_un:3.4385,abr_val:0.1436,abr_un:3.8191,abr25_val:0.209,abr25_un:5.8257});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Gde SP']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.1675,mai_un:5.1338,mai25_val:0.3246,mai25_un:11.5349,abr_val:0.289,abr_un:9.4076,abr25_val:0.4877,abr25_un:15.4833});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Moderno Int SP']){
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Int SP']['OFF!'];if(b){Object.assign(b,{mai_val:0.971,mai_un:37.4683,mai25_val:1.3413,mai25_un:56.2512,abr_val:1.6395,abr_un:65.1696,abr25_val:2.3085,abr25_un:100.6386});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Int SP']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.8283,mai_un:15.3898,mai25_val:1.4511,mai25_un:23.0933,abr_val:1.3281,abr_un:22.8759,abr25_val:2.716,abr25_un:44.9824});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Int SP']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.4494,mai_un:18.9285,mai25_val:0.8011,mai25_un:32.5447,abr_val:0.8012,abr_un:35.335,abr25_val:1.3579,abr25_un:54.8});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Int SP']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.1282,mai_un:5.821,mai25_val:0.2583,mai25_un:11.7532,abr_val:0.2465,abr_un:11.3204,abr25_val:0.4685,abr25_un:21.5019});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Int SP']['SBP'];if(b){Object.assign(b,{mai_val:0.1144,mai_un:3.0275,mai25_val:0.285,mai25_un:7.9778,abr_val:0.2096,abr_un:5.6612,abr25_val:0.4981,abr25_un:14.402});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno Int SP']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.3698,mai_un:15.0909,mai25_val:0.7359,mai25_un:25.118,abr_val:0.5992,abr_un:23.2439,abr25_val:1.2614,abr25_un:42.6454});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Moderno MG+ES+Int RJ']){
+    var b=NIELSEN_BRAND_VAL['Farma Moderno MG+ES+Int RJ']['OFF!'];if(b){Object.assign(b,{mai_val:0.8517,mai_un:34.4887,mai25_val:0.7833,mai25_un:31.6962,abr_val:1.2351,abr_un:50.0471,abr25_val:1.0306,abr25_un:43.0303});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno MG+ES+Int RJ']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.7856,mai_un:15.3916,mai25_val:0.7238,mai25_un:11.2731,abr_val:1.1058,abr_un:19.3609,abr25_val:1.0158,abr25_un:16.4508});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno MG+ES+Int RJ']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.5052,mai_un:23.193,mai25_val:0.6026,mai25_un:26.4571,abr_val:0.775,abr_un:35.9545,abr25_val:0.7271,abr25_un:32.366});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno MG+ES+Int RJ']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.1287,mai_un:5.7896,mai25_val:0.1539,mai25_un:7.1611,abr_val:0.2008,abr_un:9.0253,abr25_val:0.2211,abr25_un:10.5024});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno MG+ES+Int RJ']['SBP'];if(b){Object.assign(b,{mai_val:0.1523,mai_un:4.1567,mai25_val:0.2346,mai25_un:6.8316,abr_val:0.2158,abr_un:6.0382,abr25_val:0.3335,abr25_un:10.8967});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno MG+ES+Int RJ']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.2322,mai_un:9.574,mai25_val:0.3427,mai25_un:14.3844,abr_val:0.3415,abr_un:15.2017,abr25_val:0.423,abr25_un:17.0912});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Moderno NE']){
+    var b=NIELSEN_BRAND_VAL['Farma Moderno NE']['OFF!'];if(b){Object.assign(b,{mai_val:1.8113,mai_un:67.3954,mai25_val:1.0133,mai25_un:40.9068,abr_val:1.7632,abr_un:66.6932,abr25_val:1.2349,abr25_un:49.2842});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno NE']['EXPOSIS'];if(b){Object.assign(b,{mai_val:1.1877,mai_un:21.2649,mai25_val:0.8256,mai25_un:12.8679,abr_val:1.1348,abr_un:18.7667,abr25_val:1.0219,abr25_un:16.6793});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno NE']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.8212,mai_un:42.9769,mai25_val:0.5448,mai25_un:25.4198,abr_val:0.7427,abr_un:35.128,abr25_val:0.6399,abr25_un:30.2144});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno NE']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.2171,mai_un:9.6854,mai25_val:0.1724,mai25_un:8.6139,abr_val:0.2515,abr_un:11.849,abr25_val:0.2296,abr25_un:11.1083});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno NE']['SBP'];if(b){Object.assign(b,{mai_val:0.2551,mai_un:6.5231,mai25_val:0.3215,mai25_un:9.0508,abr_val:0.2766,abr_un:7.2802,abr25_val:0.3947,abr25_un:10.8406});}
+    var b=NIELSEN_BRAND_VAL['Farma Moderno NE']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.5264,mai_un:19.2112,mai25_val:0.5519,mai25_un:22.464,abr_val:0.5762,abr_un:21.058,abr25_val:0.6775,abr25_un:27.8689});}
+  }
+  if(NIELSEN_BRAND_VAL['INFC Sul']){
+    var b=NIELSEN_BRAND_VAL['INFC Sul']['OFF!'];if(b){Object.assign(b,{mai_val:1.0767,mai_un:41.4356,mai25_val:1.9901,mai25_un:78.742,abr_val:2.9493,abr_un:112.3557,abr25_val:2.9702,abr25_un:118.9567});}
+    var b=NIELSEN_BRAND_VAL['INFC Sul']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.5585,mai_un:9.108,mai25_val:1.3854,mai25_un:21.0806,abr_val:1.4651,abr_un:23.2656,abr25_val:1.7603,abr25_un:27.131});}
+    var b=NIELSEN_BRAND_VAL['INFC Sul']['XO INSETO'];if(b){Object.assign(b,{mai_val:1.0788,mai_un:48.3928,mai25_val:1.9008,mai25_un:72.8969,abr_val:2.8234,abr_un:129.2919,abr25_val:2.5596,abr25_un:99.6472});}
+    var b=NIELSEN_BRAND_VAL['INFC Sul']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.2425,mai_un:10.1904,mai25_val:0.5842,mai25_un:25.9916,abr_val:0.7257,abr_un:30.6648,abr25_val:0.8257,abr25_un:36.4028});}
+    var b=NIELSEN_BRAND_VAL['INFC Sul']['SBP'];if(b){Object.assign(b,{mai_val:0.0931,mai_un:2.3641,mai25_val:0.3025,mai25_un:7.8651,abr_val:0.2565,abr_un:6.3548,abr25_val:0.4007,abr25_un:10.6271});}
+    var b=NIELSEN_BRAND_VAL['INFC Sul']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:1.2779,mai_un:75.4326,mai25_val:2.3798,mai25_un:130.8547,abr_val:3.1137,abr_un:183.4389,abr25_val:3.4818,abr25_un:194.344});}
+  }
+  if(NIELSEN_BRAND_VAL['T.BR INFC']){
+    var b=NIELSEN_BRAND_VAL['T.BR INFC']['OFF!'];if(b){Object.assign(b,{mai_val:13.2463,mai_un:519.8198,mai25_val:13.4971,mai25_un:547.7212,abr_val:18.4707,abr_un:723.1812,abr25_val:17.6495,abr25_un:718.9291});}
+    var b=NIELSEN_BRAND_VAL['T.BR INFC']['EXPOSIS'];if(b){Object.assign(b,{mai_val:7.0152,mai_un:126.8765,mai25_val:8.9152,mai25_un:139.6099,abr_val:10.3408,abr_un:171.1374,abr25_val:12.0822,abr25_un:194.4793});}
+    var b=NIELSEN_BRAND_VAL['T.BR INFC']['XO INSETO'];if(b){Object.assign(b,{mai_val:11.2225,mai_un:534.7861,mai25_val:11.4407,mai25_un:483.4766,abr_val:15.9209,abr_un:740.7862,abr25_val:14.8263,abr25_un:623.9981});}
+    var b=NIELSEN_BRAND_VAL['T.BR INFC']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:1.8403,mai_un:82.3482,mai25_val:2.5834,mai25_un:119.0648,abr_val:2.9933,abr_un:132.992,abr25_val:3.6832,abr25_un:168.6137});}
+    var b=NIELSEN_BRAND_VAL['T.BR INFC']['SBP'];if(b){Object.assign(b,{mai_val:1.2862,mai_un:33.9103,mai25_val:2.177,mai25_un:60.1486,abr_val:1.893,abr_un:50.413,abr25_val:2.9211,abr25_un:83.273});}
+    var b=NIELSEN_BRAND_VAL['T.BR INFC']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:6.3986,mai_un:308.8608,mai25_val:9.0209,mai25_un:428.6551,abr_val:9.8641,abr_un:491.9657,abr25_val:12.5043,abr25_un:598.3969});}
+  }
+  if(NIELSEN_BRAND_VAL['Farma Indep Sul']){
+    var b=NIELSEN_BRAND_VAL['Farma Indep Sul']['OFF!'];if(b){Object.assign(b,{mai_val:0.5306,mai_un:21.7998,mai25_val:1.0271,mai25_un:42.261,abr_val:1.4326,abr_un:58.8399,abr25_val:1.6207,abr25_un:66.6756});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Sul']['EXPOSIS'];if(b){Object.assign(b,{mai_val:0.1668,mai_un:2.8033,mai25_val:0.3304,mai25_un:5.5741,abr_val:0.418,abr_un:6.8259,abr25_val:0.4427,abr25_un:7.5679});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Sul']['XO INSETO'];if(b){Object.assign(b,{mai_val:0.6236,mai_un:29.9805,mai25_val:1.0435,mai25_un:43.084,abr_val:1.4661,abr_un:70.4,abr25_val:1.4753,abr25_un:60.6231});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Sul']['SUPER REPELEX'];if(b){Object.assign(b,{mai_val:0.0972,mai_un:4.1246,mai25_val:0.2291,mai25_un:9.9013,abr_val:0.2661,abr_un:11.8423,abr25_val:0.3375,abr25_un:14.9476});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Sul']['SBP'];if(b){Object.assign(b,{mai_val:0.0337,mai_un:0.9034,mai25_val:0.0974,mai25_un:2.5349,abr_val:0.0667,abr_un:1.7648,abr25_val:0.1198,abr25_un:3.3811});}
+    var b=NIELSEN_BRAND_VAL['Farma Indep Sul']['ALL OTHERS CAMP'];if(b){Object.assign(b,{mai_val:0.7416,mai_un:42.5144,mai25_val:1.1904,mai25_un:66.1472,abr_val:1.9524,abr_un:113.3302,abr25_val:1.8155,abr25_un:102.312});}
+  }
+  if(typeof FYTD_MARKET_TOTAL!=='undefined'){
+    if(FYTD_MARKET_TOTAL['Farma Sul'])Object.assign(FYTD_MARKET_TOTAL['Farma Sul'],{mai26_val:4.3159,mai26_un:186.1564,mai25_val:8.5252,mai25_un:336.3613,abr26_val:11.315,abr26_un:484.3442,abr25_val:11.9606,abr25_un:484.9619,jan26_val:23.0639,jan26_un:1062.1174,fev26_val:16.4462,fev26_un:804.1654,mar26_val:13.3806,mar26_un:609.9642,jan25_val:21.0204,jan25_un:932.3636,fev25_val:17.9538,fev25_un:777.9485,mar25_val:17.7301,mar25_un:757.5888});
+    if(FYTD_MARKET_TOTAL['INFC SC'])Object.assign(FYTD_MARKET_TOTAL['INFC SC'],{mai26_val:1.6503,mai26_un:66.6888,mai25_val:2.6033,mai25_un:102.1653,abr26_val:3.6689,abr26_un:151.7467,abr25_val:3.5268,abr25_un:136.2949,jan26_val:6.6156,jan26_un:307.3277,fev26_val:5.0187,fev26_un:231.7654,mar26_val:4.7394,mar26_un:206.4646,jan25_val:6.3192,jan25_un:260.4463,fev25_val:5.6583,fev25_un:231.7565,mar25_val:5.2919,mar25_un:213.9175});
+    if(FYTD_MARKET_TOTAL['INFC RS'])Object.assign(FYTD_MARKET_TOTAL['INFC RS'],{mai26_val:0.7386,mai26_un:30.9545,mai25_val:2.9427,mai25_un:108.8729,abr26_val:3.4545,abr26_un:149.1018,abr25_val:3.8547,abr25_un:156.4973,jan26_val:8.301,jan26_un:387.0551,fev26_val:6.0669,fev26_un:320.8362,mar26_val:4.0583,mar26_un:195.6639,jan25_val:7.0744,jan25_un:316.5191,fev25_val:5.7091,fev25_un:259.7868,mar25_val:5.2108,mar25_un:233.6512});
+    if(FYTD_MARKET_TOTAL['INFC PR'])Object.assign(FYTD_MARKET_TOTAL['INFC PR'],{mai26_val:1.9387,mai26_un:89.2802,mai25_val:2.9967,mai25_un:126.3927,abr26_val:4.2102,abr26_un:184.5232,abr25_val:4.6167,abr25_un:194.3166,jan26_val:8.1848,jan26_un:369.8584,fev26_val:5.4,fev26_un:253.9459,mar26_val:4.6236,mar26_un:210.3075,jan25_val:7.678,jan25_un:358.2911,fev25_val:6.6255,fev25_un:288.7907,mar25_val:7.3071,mar25_un:314.4844});
+    if(FYTD_MARKET_TOTAL['Farma CO'])Object.assign(FYTD_MARKET_TOTAL['Farma CO'],{mai26_val:3.6098,mai26_un:137.964,mai25_val:4.1029,mai25_un:147.6445,abr26_val:5.1114,abr26_un:190.3653,abr25_val:4.5916,abr25_un:168.6777,jan26_val:6.4056,jan26_un:239.0474,fev26_val:4.5031,fev26_un:174.3647,mar26_val:4.5212,mar26_un:173.6619,jan25_val:6.7116,jan25_un:255.9399,fev25_val:7.3189,fev25_un:271.5752,mar25_val:6.1084,mar25_un:226.5192});
+    if(FYTD_MARKET_TOTAL['Farma Gde RJ'])Object.assign(FYTD_MARKET_TOTAL['Farma Gde RJ'],{mai26_val:3.0767,mai26_un:116.5598,mai25_val:4.69,mai25_un:174.4087,abr26_val:3.8642,abr26_un:142.5481,abr25_val:3.7111,abr25_un:135.2611,jan26_val:4.08,jan26_un:159.4283,fev26_val:4.1597,fev26_un:169.8873,mar26_val:4.2808,mar26_un:164.5034,jan25_val:5.531,jan25_un:208.3629,fev25_val:4.6257,fev25_un:174.9561,mar25_val:3.6501,mar25_un:136.6087});
+    if(FYTD_MARKET_TOTAL['Farma Gde SP'])Object.assign(FYTD_MARKET_TOTAL['Farma Gde SP'],{mai26_val:2.426,mai26_un:76.689,mai25_val:2.7826,mai25_un:83.9796,abr26_val:4.27,abr26_un:135.2153,abr25_val:4.6962,abr25_un:142.6724,jan26_val:8.8617,jan26_un:284.5455,fev26_val:6.2135,fev26_un:206.9526,mar26_val:4.2947,mar26_un:137.306,jan25_val:8.5099,jan25_un:272.7661,fev25_val:9.2863,fev25_un:297.8474,mar25_val:10.1227,mar25_un:314.9679});
+    if(FYTD_MARKET_TOTAL['Farma Indep CO'])Object.assign(FYTD_MARKET_TOTAL['Farma Indep CO'],{mai26_val:2.357,mai26_un:99.9454,mai25_val:2.6798,mai25_un:103.8525,abr26_val:3.4344,abr26_un:139.7171,abr25_val:2.9742,abr25_un:118.5612,jan26_val:4.164,jan26_un:168.6147,fev26_val:2.8922,fev26_un:120.6101,mar26_val:2.9932,mar26_un:126.5457,jan25_val:4.2829,jan25_un:177.3174,fev25_val:4.7777,fev25_un:191.4352,mar25_val:3.9586,mar25_un:158.9731});
+    if(FYTD_MARKET_TOTAL['Farma Indep Gde RJ'])Object.assign(FYTD_MARKET_TOTAL['Farma Indep Gde RJ'],{mai26_val:1.2601,mai26_un:56.8976,mai25_val:1.896,mai25_un:80.0276,abr26_val:1.4566,abr26_un:65.1619,abr25_val:1.4609,abr25_un:59.3403,jan26_val:1.4424,jan26_un:66.6779,fev26_val:1.5948,fev26_un:74.25,mar26_val:1.6929,mar26_un:76.9217,jan25_val:2.0481,jan25_un:85.3892,fev25_val:1.6552,fev25_un:69.8172,mar25_val:1.2336,mar25_un:50.6181});
+    if(FYTD_MARKET_TOTAL['Farma Indep Gde SP'])Object.assign(FYTD_MARKET_TOTAL['Farma Indep Gde SP'],{mai26_val:0.7423,mai26_un:26.7545,mai25_val:0.7349,mai25_un:25.4014,abr26_val:1.3297,abr26_un:48.7294,abr25_val:1.1859,abr25_un:43.1011,jan26_val:2.8321,jan26_un:99.7768,fev26_val:2.1227,fev26_un:75.2879,mar26_val:1.264,mar26_un:43.7605,jan25_val:2.3272,jan25_un:83.5266,fev25_val:2.5594,fev25_un:92.9508,mar25_val:2.7747,mar25_un:97.4201});
+    if(FYTD_MARKET_TOTAL['T.BR Farma'])Object.assign(FYTD_MARKET_TOTAL['T.BR Farma'],{mai26_val:40.7243,mai26_un:1592.3838,mai25_val:47.3153,mai25_un:1761.862,abr26_val:59.0468,abr26_un:2288.4625,abr25_val:63.1763,abr25_un:2363.309,jan26_val:84.9283,jan26_un:3338.0849,fev26_val:67.6611,fev26_un:2776.7856,mar26_val:64.4136,mar26_un:2558.4363,jan25_val:90.8977,jan25_un:3522.0089,fev25_val:88.4474,fev25_un:3369.849,mar25_val:89.8949,mar25_un:3398.7596});
+    if(FYTD_MARKET_TOTAL['T.BR Farma Indep'])Object.assign(FYTD_MARKET_TOTAL['T.BR Farma Indep'],{mai26_val:23.2103,mai26_un:995.1496,mai25_val:25.0034,mai25_un:1014.3544,abr26_val:32.5492,abr26_un:1381.7684,abr25_val:32.7466,abr25_un:1341.1065,jan26_val:44.433,jan26_un:1874.3084,fev26_val:35.46,fev26_un:1515.0301,mar26_val:35.2914,mar26_un:1518.5903,jan25_val:46.6876,jan25_un:1924.4527,fev25_val:46.0735,fev25_un:1875.722,mar25_val:45.1748,mar25_un:1850.7973});
+    if(FYTD_MARKET_TOTAL['T.BR Farma Moderno'])Object.assign(FYTD_MARKET_TOTAL['T.BR Farma Moderno'],{mai26_val:17.514,mai26_un:597.2342,mai25_val:22.3119,mai25_un:747.5076,abr26_val:26.4976,abr26_un:906.6941,abr25_val:30.4296,abr25_un:1022.2025,jan26_val:40.4953,jan26_un:1463.7765,fev26_val:32.2011,fev26_un:1261.7555,mar26_val:29.1222,mar26_un:1039.846,jan25_val:44.2101,jan25_un:1597.5562,fev25_val:42.374,fev25_un:1494.1269,mar25_val:44.7201,mar25_un:1547.9623});
+    if(FYTD_MARKET_TOTAL['Farma NE'])Object.assign(FYTD_MARKET_TOTAL['Farma NE'],{mai26_val:14.5842,mai26_un:602.0577,mai25_val:10.5257,mai25_un:418.2971,abr26_val:14.6576,abr26_un:598.6608,abr25_val:12.7948,abr25_un:510.3377,jan26_val:11.803,jan26_un:466.8664,fev26_val:12.0116,fev26_un:489.5168,mar26_val:16.2329,mar26_un:653.7247,jan25_val:12.1184,jan25_un:485.7732,fev25_val:15.0743,fev25_un:605.4907,mar25_val:16.2127,mar25_un:660.268});
+    if(FYTD_MARKET_TOTAL['Farma MG+ES+Int RJ'])Object.assign(FYTD_MARKET_TOTAL['Farma MG+ES+Int RJ'],{mai26_val:6.0093,mai26_un:231.8636,mai25_val:6.5316,mai25_un:248.3344,abr26_val:9.0476,abr26_un:350.5564,abr25_val:8.3437,abr25_un:325.1431,jan26_val:12.5024,jan26_un:475.6106,fev26_val:10.4497,fev26_un:414.2507,mar26_val:9.9585,mar26_un:388.6543,jan25_val:15.6569,jan25_un:595.1318,fev25_val:12.4868,fev25_un:480.0441,mar25_val:10.8642,mar25_un:422.7356});
+    if(FYTD_MARKET_TOTAL['Farma Int SP'])Object.assign(FYTD_MARKET_TOTAL['Farma Int SP'],{mai26_val:6.2055,mai26_un:223.1013,mai25_val:9.6789,mai25_un:335.4545,abr26_val:10.3222,abr26_un:370.3786,abr25_val:16.4632,abr25_un:573.7126,jan26_val:17.6214,jan26_un:629.1133,fev26_val:13.3501,fev26_un:498.2762,mar26_val:11.2195,mar26_un:411.7011,jan25_val:20.3671,jan25_un:734.6571,fev25_val:20.8716,fev25_un:730.4825,mar25_val:24.4019,mar25_un:849.7505});
+    if(FYTD_MARKET_TOTAL['Farma Indep Int SP'])Object.assign(FYTD_MARKET_TOTAL['Farma Indep Int SP'],{mai26_val:3.3445,mai26_un:127.3752,mai25_val:4.8063,mai25_un:178.7162,abr26_val:5.498,abr26_un:206.7726,abr25_val:7.8529,abr25_un:294.7423,jan26_val:9.241,jan26_un:343.3529,fev26_val:7.1838,fev26_un:273.7176,mar26_val:5.8423,mar26_un:226.6219,jan25_val:10.2193,jan25_un:381.567,fev25_val:10.2976,fev25_un:375.2055,mar25_val:11.2647,mar25_un:422.3489});
+    if(FYTD_MARKET_TOTAL['Farma Indep MG+ES+Int RJ'])Object.assign(FYTD_MARKET_TOTAL['Farma Indep MG+ES+Int RJ'],{mai26_val:3.3536,mai26_un:139.2698,mai25_val:3.6906,mai25_un:150.5308,abr26_val:5.1734,abr26_un:214.9288,abr25_val:4.5926,abr25_un:194.8057,jan26_val:7.0295,jan26_un:284.8165,fev26_val:6.0683,fev26_un:254.8163,mar26_val:5.7363,mar26_un:241.4083,jan25_val:8.7194,jan25_un:346.5399,fev25_val:7.2185,fev25_un:289.1163,mar25_val:5.8682,mar25_un:241.0658});
+    if(FYTD_MARKET_TOTAL['Farma Indep NE'])Object.assign(FYTD_MARKET_TOTAL['Farma Indep NE'],{mai26_val:9.7654,mai26_un:435.0007,mai25_val:7.0962,mai25_un:298.9739,abr26_val:9.9126,abr26_un:437.8856,abr25_val:8.5963,abr25_un:364.3421,jan26_val:7.7496,jan26_un:324.6919,fev26_val:7.7395,fev26_un:332.6518,mar26_val:10.9316,mar26_un:473.1166,jan25_val:8.0684,jan25_un:343.2382,fev25_val:10.2739,fev25_un:432.9803,mar25_val:10.9506,mar25_un:467.9358});
+    if(FYTD_MARKET_TOTAL['Farma Moderno Sul'])Object.assign(FYTD_MARKET_TOTAL['Farma Moderno Sul'],{mai26_val:2.1223,mai26_un:84.0304,mai25_val:4.6074,mai25_un:166.8586,abr26_val:5.7132,abr26_un:221.3411,abr25_val:6.149,abr25_un:229.4546,jan26_val:11.2461,jan26_un:482.1249,fev26_val:8.7246,fev26_un:426.0681,mar26_val:6.6949,mar26_un:285.5439,jan25_val:10.3331,jan25_un:439.1663,fev25_val:9.0332,fev25_un:369.2156,mar25_val:8.9603,mar25_un:359.4182});
+    if(FYTD_MARKET_TOTAL['Farma Moderno CO'])Object.assign(FYTD_MARKET_TOTAL['Farma Moderno CO'],{mai26_val:1.2528,mai26_un:38.0186,mai25_val:1.4232,mai25_un:43.792,abr26_val:1.677,abr26_un:50.6482,abr25_val:1.6174,abr25_un:50.1165,jan26_val:2.2416,jan26_un:70.4327,fev26_val:1.6109,fev26_un:53.7546,mar26_val:1.5279,mar26_un:47.1161,jan25_val:2.4287,jan25_un:78.6225,fev25_val:2.5412,fev25_un:80.14,mar25_val:2.1498,mar25_un:67.5461});
+    if(FYTD_MARKET_TOTAL['Farma Moderno Gde RJ'])Object.assign(FYTD_MARKET_TOTAL['Farma Moderno Gde RJ'],{mai26_val:1.8166,mai26_un:59.6622,mai25_val:2.794,mai25_un:94.3811,abr26_val:2.4076,abr26_un:77.3862,abr25_val:2.2502,abr25_un:75.9208,jan26_val:2.6376,jan26_un:92.7504,fev26_val:2.5649,fev26_un:95.6372,mar26_val:2.5879,mar26_un:87.5817,jan25_val:3.4828,jan25_un:122.9736,fev25_val:2.9705,fev25_un:105.1389,mar25_val:2.4165,mar25_un:85.9906});
+    if(FYTD_MARKET_TOTAL['Farma Moderno Gde SP'])Object.assign(FYTD_MARKET_TOTAL['Farma Moderno Gde SP'],{mai26_val:1.6837,mai26_un:49.9345,mai25_val:2.0477,mai25_un:58.5782,abr26_val:2.9403,abr26_un:86.4859,abr25_val:3.5104,abr25_un:99.5712,jan26_val:6.0297,jan26_un:184.7687,fev26_val:4.0907,fev26_un:131.6647,mar26_val:3.0307,mar26_un:93.5455,jan25_val:6.1827,jan25_un:189.2395,fev25_val:6.7269,fev25_un:204.8966,mar25_val:7.348,mar25_un:217.5477});
+    if(FYTD_MARKET_TOTAL['Farma Moderno Int SP'])Object.assign(FYTD_MARKET_TOTAL['Farma Moderno Int SP'],{mai26_val:2.861,mai26_un:95.7261,mai25_val:4.8725,mai25_un:156.7382,abr26_val:4.8242,abr26_un:163.606,abr25_val:8.6104,abr25_un:278.9704,jan26_val:8.3804,jan26_un:285.7604,fev26_val:6.1663,fev26_un:224.5586,mar26_val:5.3773,mar26_un:185.0792,jan25_val:10.1478,jan25_un:353.0902,fev25_val:10.574,fev25_un:355.277,mar25_val:13.1372,mar25_un:427.4016});
+    if(FYTD_MARKET_TOTAL['Farma Moderno MG+ES+Int RJ'])Object.assign(FYTD_MARKET_TOTAL['Farma Moderno MG+ES+Int RJ'],{mai26_val:2.6557,mai26_un:92.5938,mai25_val:2.841,mai25_un:97.8036,abr26_val:3.8742,abr26_un:135.6276,abr25_val:3.7511,abr25_un:130.3373,jan26_val:5.4729,jan26_un:190.7942,fev26_val:4.3814,fev26_un:159.4344,mar26_val:4.2222,mar26_un:147.2459,jan25_val:6.9375,jan25_un:248.5919,fev25_val:5.2682,fev25_un:190.9278,mar25_val:4.996,mar25_un:181.6698});
+    if(FYTD_MARKET_TOTAL['Farma Moderno NE'])Object.assign(FYTD_MARKET_TOTAL['Farma Moderno NE'],{mai26_val:4.8187,mai26_un:167.057,mai25_val:3.4294,mai25_un:119.3232,abr26_val:4.745,abr26_un:160.7751,abr25_val:4.1984,abr25_un:145.9957,jan26_val:4.0534,jan26_un:142.1745,fev26_val:4.2721,fev26_un:156.865,mar26_val:5.3013,mar26_un:180.6081,jan25_val:4.05,jan25_un:142.535,fev25_val:4.8004,fev25_un:172.5104,mar25_val:5.2621,mar25_un:192.3322});
+    if(FYTD_MARKET_TOTAL['INFC Sul'])Object.assign(FYTD_MARKET_TOTAL['INFC Sul'],{mai26_val:4.3276,mai26_un:186.9234,mai25_val:8.5427,mai25_un:337.4309,abr26_val:11.3336,abr26_un:485.3716,abr25_val:11.9982,abr25_un:487.1087,jan26_val:23.1014,jan26_un:1064.2412,fev26_val:16.4857,fev26_un:806.5476,mar26_val:13.4214,mar26_un:612.436,jan25_val:21.0716,jan25_un:935.2565,fev25_val:17.9928,fev25_un:780.334,mar25_val:17.8097,mar25_un:762.0531});
+    if(FYTD_MARKET_TOTAL['T.BR INFC'])Object.assign(FYTD_MARKET_TOTAL['T.BR INFC'],{mai26_val:41.0092,mai26_un:1606.6017,mai25_val:47.6343,mai25_un:1778.6763,abr26_val:59.4828,abr26_un:2310.4754,abr25_val:63.6666,abr25_un:2387.6902,jan26_val:85.6268,jan26_un:3373.597,fev26_val:68.1202,fev26_un:2800.8583,mar26_val:64.9086,mar26_un:2583.8467,jan25_val:91.7889,jan25_un:3566.5866,fev25_val:89.1862,fev25_un:3405.6694,mar25_val:90.6841,mar25_un:3438.9264});
+    if(FYTD_MARKET_TOTAL['Farma Indep Sul'])Object.assign(FYTD_MARKET_TOTAL['Farma Indep Sul'],{mai26_val:2.1936,mai26_un:102.126,mai25_val:3.9179,mai25_un:169.5027,abr26_val:5.6018,abr26_un:263.0032,abr25_val:5.8116,abr25_un:255.5073,jan26_val:11.8178,jan26_un:579.9925,fev26_val:7.7215,fev26_un:378.0974,mar26_val:6.6858,mar26_un:324.4204,jan25_val:10.6873,jan25_un:493.1972,fev25_val:8.9206,fev25_un:408.7329,mar25_val:8.7698,mar25_un:398.1706});
+  }
+})();
 const NIELSEN_MESES = ['Jul/25','Ago/25','Set/25','Out/25','Nov/25','Dez/25','Jan/26','Fev/26','Mar/26','Abr/26','Mai/26'];
 const NIELSEN_MARCAS = ['OFF!','EXPOSIS','XO INSETO','SUPER REPELEX','SBP'];
 const NIELSEN_CORES = {
