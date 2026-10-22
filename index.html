@@ -17626,8 +17626,9 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
   <div id="cpt2-pm-card" style="background:#0D1117;border-radius:10px;padding:16px;border:0.5px solid rgba(94,153,208,0.2);margin-bottom:18px;">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
       <div>
-        <div style="font-size:10px;font-weight:700;color:#CBD5E1;letter-spacing:0.06em;">PREÇO MÉDIO (R$/UN.) — SCJ × CIMED_OTHERS × RB_OTHERS</div>
+        <div style="font-size:10px;font-weight:700;color:#CBD5E1;letter-spacing:0.06em;">PREÇO MÉDIO (R$/UN.) — SCJ × CIMED + OUTROS × RB_OTHERS</div>
         <div style="font-size:9px;color:#475569;margin-top:2px;">Repelentes · Abr–Set/26 · IQVIA CPT edição 202609 · R$ CPP ÷ unidades · segue os filtros da aba (o seletor de período não se aplica)</div>
+        <div style="font-size:9px;color:#475569;margin-top:2px;"><b>Cimed + outros</b> = grupo CIMED_OTHERS da IQVIA: tudo que não é SCJ nem RB. No Brasil, Abr–Set/26, <b>~85% das unidades são Cimed (XO)</b>; o resto são outros fabricantes e marcas próprias (Pague Menos, Dahuer, Hertz, DPSP…). Em redes com marca própria forte o peso da Cimed é menor.</div>
       </div>
       <div id="cpt2-pm-sel" style="display:flex;border-radius:6px;overflow:hidden;border:1px solid rgba(148,163,184,0.25);"></div>
     </div>
@@ -46326,7 +46327,7 @@ function _cptToggleMax(){
 var _cpt2ChartPM = null, _cpt2PMSerie = 'SCJ';
 var CPT_PM_SER = [
   {id:'SCJ',   lb:'SCJ',          cor:'rgba(96,165,250,0.95)'},
-  {id:'CIMED', lb:'CIMED_OTHERS', cor:'rgba(248,113,113,0.9)'},
+  {id:'CIMED', lb:'Cimed + outros', cor:'rgba(248,113,113,0.9)'},
   {id:'RB',    lb:'RB_OTHERS',    cor:'rgba(251,191,36,0.9)'}
 ];
 function _cpt2PMIdx(){
