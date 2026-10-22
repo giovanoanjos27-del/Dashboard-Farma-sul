@@ -1,0 +1,9 @@
+# Whitelist: só o dashboard principal e scripts Python vão para o GitHub
+/*
+!/.gitignore
+!/*.py
+!/CLAUDE.md
+!/Dashboard_farma_sul/
+/Dashboard_farma_sul/*
+!/Dashboard_farma_sul/Dashboard_Farma_Sul_20260512_2220.html
+!/Dashboard_farma_sul/*.py
