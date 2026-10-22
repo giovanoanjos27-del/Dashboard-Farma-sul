@@ -46409,19 +46409,26 @@ function _cpt2RenderPM(){
   /* preço IQVIA por SKU (3 SCJ + 2 XO): um preço por SKU por mês para o Brasil todo, igual em toda bandeira */
   if(typeof CPT_PM_SKU!=='undefined'){
     var P=CPT_PM_SKU, br=P.reg.BRASIL, sul=P.reg.SUL;
-    var xoR=0, xoU=0; P.sku.forEach(function(k){ if(k.marca==='CIMED'){ xoR+=br[k.id].rs.reduce(function(x,y){return x+y;},0); xoU+=br[k.id].un.reduce(function(x,y){return x+y;},0); } });
-    var xo6=xoU?xoR/xoU:null;
+    /* par XO do mesmo formato: spray × XO Spray, loções × XO Loção */
+    var PAR={'409979':'241105','338434':'218926','143374':'218926'}, NOMEXO={'241105':'XO Spray','218926':'XO Loção'};
+    var soma=function(a){ return a.reduce(function(x,y){return x+y;},0); };
+    var pm6=function(o){ var u=soma(o.un); return u?soma(o.rs)/u:null; };
     var s='<div style="font-size:10px;font-weight:700;color:#CBD5E1;letter-spacing:0.06em;margin-bottom:4px;">PREÇO IQVIA POR SKU (R$/UN.) — 3 SKUs SCJ × 2 SKUs CIMED XO</div>'+
       '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="'+th+'text-align:left;">SKU</th>'+P.meses.map(function(m){return '<th style="'+th+'">'+m+'</th>';}).join('')+
-      '<th style="'+th+'">Abr–Set</th><th style="'+th+'" title="Preço Abr–Set do SKU ÷ preço médio dos 2 SKUs XO × 100">Índ. vs XO</th><th style="'+th+'">Un. Brasil</th><th style="'+th+'">Un. Sul</th></tr></thead><tbody>';
+      '<th style="'+th+'">Abr–Set</th><th style="'+th+'">vs XO do formato</th><th style="'+th+'" title="Preço Abr–Set do SKU ÷ preço Abr–Set do XO do mesmo formato × 100">Índ.</th><th style="'+th+'" title="Preço Abr–Set do SKU − preço Abr–Set do XO do mesmo formato">Dif. R$/un.</th><th style="'+th+'">Un. Brasil</th><th style="'+th+'">Un. Sul</th></tr></thead><tbody>';
     P.sku.forEach(function(k){
       var o=br[k.id], so=sul[k.id], cor=k.marca==='SCJ'?'rgba(96,165,250,0.95)':'rgba(248,113,113,0.9)';
-      var tR=o.rs.reduce(function(x,y){return x+y;},0), tU=o.un.reduce(function(x,y){return x+y;},0), v6=tU?tR/tU:null;
+      var v6=pm6(o), px=PAR[k.id], x6=px?pm6(br[px]):null, dif=(v6!=null&&x6!=null)?v6-x6:null;
+      var nada='<span style="color:#64748B;">—</span>';
       s+='<tr><td style="'+td+'text-align:left;font-weight:700;color:'+cor+';">'+k.id+' · '+k.nome+'</td>';
       for(var m=0;m<6;m++) s+='<td style="'+td+'">'+_cpt2PMfmt(o.un[m]>=1?o.rs[m]/o.un[m]:null)+'</td>';
-      s+='<td style="'+td+'font-weight:700;">'+_cpt2PMfmt(v6)+'</td><td style="'+td+'">'+(k.marca==='CIMED'?'<span style="color:#64748B;">—</span>':_cpt2PMind(v6,xo6))+'</td><td style="'+td+'color:#94A3B8;">'+Math.round(tU).toLocaleString('pt-BR')+'</td><td style="'+td+'color:#94A3B8;">'+Math.round(so.un.reduce(function(x,y){return x+y;},0)).toLocaleString('pt-BR')+'</td></tr>';
+      s+='<td style="'+td+'font-weight:700;">'+_cpt2PMfmt(v6)+'</td>'+
+        '<td style="'+td+'color:#94A3B8;">'+(px?NOMEXO[px]+' '+_cpt2PMfmt(x6):nada)+'</td>'+
+        '<td style="'+td+'">'+(px?_cpt2PMind(v6,x6):nada)+'</td>'+
+        '<td style="'+td+'font-weight:700;color:'+(dif==null?'#64748B':dif>=0?'#60A5FA':'#F87171')+';">'+(dif==null?'—':(dif>=0?'+':'−')+'R$ '+Math.abs(dif).toFixed(2).replace('.',','))+'</td>'+
+        '<td style="'+td+'color:#94A3B8;">'+Math.round(soma(o.un)).toLocaleString('pt-BR')+'</td><td style="'+td+'color:#94A3B8;">'+Math.round(soma(so.un)).toLocaleString('pt-BR')+'</td></tr>';
     });
-    document.getElementById('cpt2-pm-sku').innerHTML=s+'</tbody></table><div style="font-size:9px;color:#475569;margin-top:6px;">IQVIA CPT 202609 · Overview da Categoria · a IQVIA usa <b>um preço por SKU por mês para o Brasil todo</b> (igual em toda bandeira, UF e loja), por isso esta tabela não muda com os filtros. Índ. vs XO = preço do SKU ÷ preço médio dos 2 XO × 100. Spray Family OE 200ml (409978) e Loção Kids 117ml (87602) não tiveram venda em Abr–Set/26 nas bandeiras do Giovano.</div>';
+    document.getElementById('cpt2-pm-sku').innerHTML=s+'</tbody></table><div style="font-size:9px;color:#475569;margin-top:6px;">IQVIA CPT 202609 · Overview da Categoria · a IQVIA usa <b>um preço por SKU por mês para o Brasil todo</b> (igual em toda bandeira, UF e loja), por isso esta tabela não muda com os filtros. Comparação formato a formato: Spray OFF! × XO Spray; Loções OFF! × XO Loção. Índ. = preço OFF! ÷ preço XO × 100; Dif. = R$ a mais por unidade. Spray Family OE 200ml (409978) e Loção Kids 117ml (87602) não tiveram venda em Abr–Set/26 nas bandeiras do Giovano.</div>';
   }
   /* tabela por bandeira (série escolhida) */
   var por={}, D=CPT_PM_DIC;
