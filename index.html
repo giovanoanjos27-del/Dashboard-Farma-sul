@@ -46283,7 +46283,7 @@ var CPT2_MES_FY25=["Jul/24","Ago/24","Set/24","Out/24","Nov/24","Dez/24","Jan/25
 var CPT2_MES_FY26=["Jul/25","Ago/25","Set/25","Out/25","Nov/25","Dez/25","Jan/26","Fev/26","Mar/26","Abr/26","Mai/26","Jun/26"];
 cpt2BuildView();
 </script>
-/* ═══ CPT_PM · preço médio IQVIA CPT 202609 (gerado por injetar_preco_medio.py) ═══ */
+<!-- ═══ CPT_PM · preço médio IQVIA CPT 202609 (gerado por injetar_preco_medio.py) ═══ -->
 <script>
 /* Preço médio = Σ R$ ÷ Σ unidades · Repelentes · edição 202609 · Abr–Set/26 · Matriz de Lojas › Analítico – 6 Meses.
    CPT_PM_K[i] = [UF, Cidade, Bandeira, Canal] (índices de CPT_PM_DIC); CPT_PM_D[i][m*6+s] = catR,catU,scjR,scjU,rbR,rbU (vazio = 0).
@@ -46295,7 +46295,7 @@ var CPT_PM_D=[[193,12],[,,,,,,300,16,,,,,81,3,,,,,159,10,,,,,86,3],[213,6,,,,,11
 /* Preço IQVIA por SKU (Brasil e Sul, SKU × mês): sku/preco_sku_202609.json (gerar_preco_sku.py) */
 var CPT_PM_SKU={"meses":["Abr/26","Mai/26","Jun/26","Jul/26","Ago/26","Set/26"],"sku":[{"id":"409979","nome":"OFF! Spray Family Oferta Especial 170ml","marca":"SCJ"},{"id":"338434","nome":"OFF! Loção Family 30% desc. 200ml","marca":"SCJ"},{"id":"143374","nome":"OFF! Loção Kids grátis 83ml 200ml","marca":"SCJ"},{"id":"241105","nome":"XO Inseto Spray 15% 200ml","marca":"CIMED"},{"id":"218926","nome":"XO Inseto Loção 15% 200ml","marca":"CIMED"}],"reg":{"BRASIL":{"409979":{"rs":[2262677.76,1225007.55,734636.14,893749.43,1063947.24,1094342.58],"un":[100296.0,55809.0,32767.0,39599.0,45939.0,46887.0]},"338434":{"rs":[4508263.62,2927239.26,1731514.58,1953429.78,2191380.45,2174967.3],"un":[213966.0,138666.0,83126.0,93287.0,97265.0,95645.0]},"143374":{"rs":[3565963.17,2474862.08,1496190.08,1630519.2,1874755.84,1953851.32],"un":[149391.0,100768.0,60722.0,66120.0,74632.0,76742.0]},"241105":{"rs":[6424434.98,3481343.69,2308612.41,2549297.69,3251503.84,4323035.9],"un":[324139.0,177529.0,122343.0,133541.0,155129.0,225746.0]},"218926":{"rs":[5787631.54,3744035.65,2455340.86,2330664.18,2775692.97,3713951.58],"un":[306386.0,195511.0,133879.0,126529.0,134677.0,197761.0]}},"SUL":{"409979":{"rs":[412103.52,76429.9,34975.2,61728.95,246630.84,289135.92],"un":[18267.0,3482.0,1560.0,2735.0,10649.0,12388.0]},"338434":{"rs":[479679.62,85495.5,31474.13,113180.7,319407.81,311583.48],"un":[22766.0,4050.0,1511.0,5405.0,14177.0,13702.0]},"143374":{"rs":[401350.18,84142.56,28040.32,60293.7,268784.0,299842.42],"un":[16814.0,3426.0,1138.0,2445.0,10700.0,11777.0]},"241105":{"rs":[856442.02,162331.58,69856.74,188513.75,633327.36,1026057.0],"un":[43211.0,8278.0,3702.0,9875.0,30216.0,53580.0]},"218926":{"rs":[529373.36,93681.8,43392.44,99523.26,339426.09,520375.02],"un":[28024.0,4892.0,2366.0,5403.0,16469.0,27709.0]}}}};
 </script>
-/* ═══ fim CPT_PM dados ═══ */
+<!-- ═══ fim CPT_PM dados ═══ -->
 
 
 
@@ -46321,7 +46321,7 @@ function _cptToggleMax(){
 }
 </script>
 
-/* ═══ CPT_PM render ═══ */
+<!-- ═══ CPT_PM render ═══ -->
 <script>
 var _cpt2ChartPM = null, _cpt2PMSerie = 'SCJ';
 var CPT_PM_SER = [
@@ -46447,7 +46447,7 @@ function _cpt2RenderPM(){
   document.getElementById('cpt2-pm-ban').innerHTML='<div style="font-size:9.5px;color:#F59E0B;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:6px;padding:6px 9px;margin-bottom:8px;">⚠ Diferença entre bandeiras = <b>só mix de SKUs</b>. A IQVIA valoriza cada SKU pelo mesmo preço no Brasil todo; uma bandeira com preço médio maior vende mais itens caros (ex.: Exposis), não pratica preço mais alto.</div>'+t+'</tbody></table><div style="font-size:9px;color:#475569;margin-top:6px;">'+lin.length+' bandeiras · ordenadas por unidades '+lbS+' Abr–Set/26.</div>';
 }
 </script>
-/* ═══ fim CPT_PM render ═══ */
+<!-- ═══ fim CPT_PM render ═══ -->
 <script>
 /* ── CPT2 Filtros & Render ──────────────────────────────────── */
 var _cpt2ChartFab = null, _cpt2ChartShr = null;
@@ -46456,9 +46456,9 @@ function _cpt2SetTableMode(mode){
   _cpt2TableMode = mode;
   var bd=document.getElementById('cpt2-mode-detail'), bu=document.getElementById('cpt2-mode-uf');
   if(bd) bd.style.background = mode==='detail' ? 'rgba(94,153,208,0.25)' : 'transparent';
-  if(bd) bd.style.color      = mode==='detail' ? '#CBD5E1' : '#94A3B8';
+  if(bd) bd.style.color      = mode==='detail' ? '#3B82F6' : '#94A3B8';
   if(bu) bu.style.background = mode==='uf' ? 'rgba(94,153,208,0.25)' : 'transparent';
-  if(bu) bu.style.color      = mode==='uf' ? '#CBD5E1' : '#94A3B8';
+  if(bu) bu.style.color      = mode==='uf' ? '#3B82F6' : '#94A3B8';
   _cpt2Render();
 }
 
@@ -46850,18 +46850,40 @@ function _cpt2RenderChartsCore(agg){
   }
 }
 
+var _cpt2TabUFs = [], _cpt2UFOpen = false;   /* filtro de Estado da tabela (vazio = todos) */
+function _cpt2UFPos(){ var p=document.getElementById('cpt2-uf-pop'), b=document.getElementById('cpt2-uf-btn'); if(!p||!b) return; document.querySelectorAll('body > #cpt2-uf-pop').forEach(function(o){ if(o!==p) o.remove(); }); if(p.parentElement!==document.body) document.body.appendChild(p); /* fora do painel (que tem transform) para o fixed valer na tela */ var r=b.getBoundingClientRect(); p.style.position='fixed'; p.style.top=(r.bottom+4)+'px'; p.style.left=r.left+'px'; }
+function _cpt2UFToggle(ev){ if(ev) ev.stopPropagation(); _cpt2UFOpen=!_cpt2UFOpen; var p=document.getElementById('cpt2-uf-pop'); if(p){ p.style.display=_cpt2UFOpen?'block':'none'; if(_cpt2UFOpen) _cpt2UFPos(); } }
+window.addEventListener('scroll', function(){ if(_cpt2UFOpen) _cpt2UFPos(); }, true);
+function _cpt2UFSet(lista){ _cpt2TabUFs=lista; _cpt2Render(); }
+function _cpt2UFChk(uf, on){ var s=_cpt2TabUFs.slice(), i=s.indexOf(uf); if(on && i<0) s.push(uf); if(!on && i>=0) s.splice(i,1); _cpt2UFSet(s); }
+document.addEventListener('click', function(e){ if(!_cpt2UFOpen) return; var p=document.getElementById('cpt2-uf-pop'), b=document.getElementById('cpt2-uf-btn'); if(p && !p.contains(e.target) && b && !b.contains(e.target)){ _cpt2UFOpen=false; p.style.display='none'; } });
 function _cpt2RenderTable(indices, agg){
   var thead=document.getElementById('cpt2-thead');
   var tbody=document.getElementById('cpt2-tbody');
   if(!thead||!tbody) return;
 
   var byUF = _cpt2TableMode==='uf';
+  var ufsDisp = {}; indices.forEach(function(i){ ufsDisp[CPT2_KEYS[i][0]]=1; }); ufsDisp=Object.keys(ufsDisp).sort();
+  _cpt2TabUFs = _cpt2TabUFs.filter(function(u){ return ufsDisp.indexOf(u)>=0; });
+  if(_cpt2TabUFs.length) indices = indices.filter(function(i){ return _cpt2TabUFs.indexOf(CPT2_KEYS[i][0])>=0; });
+  var ufLbl = _cpt2TabUFs.length===0 ? 'Todos' : (_cpt2TabUFs.length<=3 ? _cpt2TabUFs.join(', ') : _cpt2TabUFs.length+' estados');
+  var qb = 'border:1px solid rgba(148,163,184,0.35);background:transparent;border-radius:4px;padding:2px 7px;font-size:9px;font-weight:700;cursor:pointer;color:#3B82F6;';
+  var ufCell = '<span style="position:relative;display:inline-block;">'
+    +'<button id="cpt2-uf-btn" onclick="_cpt2UFToggle(event)" title="Filtrar estados desta tabela" style="border:1px solid rgba(59,130,246,0.45);background:rgba(59,130,246,0.10);color:#3B82F6;border-radius:5px;padding:3px 8px;font-size:9px;font-weight:700;cursor:pointer;white-space:nowrap;">UF · '+ufLbl+' ▾</button>'
+    +'<div id="cpt2-uf-pop" onclick="event.stopPropagation()" style="display:'+(_cpt2UFOpen?'block':'none')+';position:absolute;top:26px;left:0;z-index:9999;background:#FFFFFF;border:1px solid rgba(59,130,246,0.35);border-radius:8px;padding:8px;box-shadow:0 6px 18px rgba(0,0,0,0.25);min-width:190px;text-transform:none;letter-spacing:0;">'
+    +'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px;">'
+    +'<button style="'+qb+'" onclick="_cpt2UFSet([])">Todos</button>'
+    +'<button style="'+qb+'" onclick="_cpt2UFSet([\'PR\',\'SC\',\'RS\'])">Sul</button>'
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px 8px;max-height:220px;overflow:auto;">'
+    +ufsDisp.map(function(u){ var on=_cpt2TabUFs.indexOf(u)>=0; return '<label style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:#1E293B;cursor:pointer;"><input type="checkbox" '+(on?'checked':'')+' onchange="_cpt2UFChk(\''+u+'\',this.checked)">'+u+'</label>'; }).join('')
+    +'</div></div></span>';
 
   var hS='style="padding:6px 8px;text-align:right;font-weight:700;font-size:9px;border-bottom:2px solid rgba(94,153,208,0.4);white-space:nowrap;color:#CBD5E1;"';
   var hSL='style="padding:6px 10px;text-align:left;font-weight:700;font-size:9px;border-bottom:2px solid rgba(94,153,208,0.4);white-space:nowrap;color:#CBD5E1;"';
 
   thead.innerHTML='<tr style="background:rgba(29,111,168,0.12);">'
-    +'<th '+hSL+' style="color:#CBD5E1;">UF</th>'
+    +'<th '+hSL+' style="color:#CBD5E1;">'+ufCell+'</th>'
     +(byUF?'':'<th '+hSL+' style="color:#CBD5E1;">Cidade</th><th '+hSL+' style="color:#CBD5E1;">Bandeira</th>')
     +'<th '+hS+' style="color:#3b82f6;">Fab '+_C2.p+'</th>'
     +'<th '+hS+' style="color:#34d399;">Fab '+_C2.c+'</th>'
@@ -46871,6 +46893,7 @@ function _cpt2RenderTable(indices, agg){
     +'<th '+hS+' style="color:#34d399;">Shr '+_C2.c+'</th>'
     +'<th '+hS+' style="color:#F5E1A4;">Δ pp</th>'
     +'</tr>';
+  if(_cpt2UFOpen) setTimeout(_cpt2UFPos,0);
 
   var raw=indices.map(function(i){
     var f=CPT2_FAB[i], c=CPT2_CAT[i], k=CPT2_KEYS[i];
