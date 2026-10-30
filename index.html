@@ -49871,6 +49871,8 @@ var CPT2_LOJAS={"AC|ABRAFARMA|DROGASIL":[6,6],"AC|ABRAFARMA|PAGUE MENOS":[17,17]
 function _cpt2Esc(s){ return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
 function _cpt2MesSel(k){ window._cpt2MesK = k; window._cpt2MesModo = 'um';
   var b = document.getElementById('cpt2-mes'); if(b){ b.innerHTML = _cpt2MesHtml(); b.scrollIntoView({behavior:'smooth', block:'nearest'}); } }
+function _cpt2MesKSet(k){ window._cpt2MesK = k; var b = document.getElementById('cpt2-mes'); if(b) b.innerHTML = _cpt2MesHtml(); }
+function _cpt2MesChSet(c, modo){ window._cpt2MesCh = c; if(modo) window._cpt2MesModo = modo; var b = document.getElementById('cpt2-mes'); if(b) b.innerHTML = _cpt2MesHtml(); }
 function _cpt2MesModoSet(m){ window._cpt2MesModo = m; var b = document.getElementById('cpt2-mes'); if(b) b.innerHTML = _cpt2MesHtml(); }
 function _cpt2MesHtml(){
   var D = window._cpt2MesD; if(!D || !D.L.length) return '';
@@ -49882,6 +49884,10 @@ function _cpt2MesHtml(){
   var z = function(){ var a=[]; for(var m=0;m<n;m++) a.push(0); return a; };
   var T = {k:'TOTAL DO FILTRO', mfp:z(), mfc:z(), mcp:z(), mcc:z()};
   D.L.forEach(function(o){ for(var m=0;m<n;m++){ T.mfp[m]+=o.mfp[m]||0; T.mfc[m]+=o.mfc[m]||0; T.mcp[m]+=o.mcp[m]||0; T.mcc[m]+=o.mcc[m]||0; } });
+  T.ch = {}; D.L.forEach(function(o){ Object.keys(o.ch||{}).forEach(function(c){ var x = o.ch[c], y = T.ch[c] || (T.ch[c] = {mfp:z(), mfc:z(), mcp:z(), mcc:z()});
+    for(var m=0;m<n;m++){ y.mfp[m]+=x.mfp[m]||0; y.mfc[m]+=x.mfc[m]||0; y.mcp[m]+=x.mcp[m]||0; y.mcc[m]+=x.mcc[m]||0; } }); });
+  var sum = function(a){ var t=0; for(var m=0;m<n;m++) t+=a[m]||0; return t; };
+  var canaisDe = function(o){ return Object.keys(o.ch||{}).filter(function(c){ var x=o.ch[c]; return sum(x.mcp)+sum(x.mcc)+sum(x.mfp)+sum(x.mfc)>0; }).sort(function(a,b){ return sum(o.ch[b].mcc)-sum(o.ch[a].mcc); }); };
   var leitura = function(vf, vm){ if(vf==null||vm==null) return {t:'', g:null};
     var g = (vf-vm)*100; if(Math.abs(g)<0.05) return {t:'igual ao mercado', g:0};
     return {t:(g>0 ? (vf<0?'caímos menos':'crescemos mais') : (vf<0?'caímos mais':'crescemos menos'))+' que o mercado', g:g}; };
@@ -49893,7 +49899,7 @@ function _cpt2MesHtml(){
   var head = '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;">'
     +'<div><div style="font-size:10px;font-weight:800;letter-spacing:0.1em;color:#1D6FA8;">📅 MÊS A MÊS — MERCADO (CATEGORIA) × SCJ</div>'
     +'<div style="font-size:10px;color:#475569;margin-top:2px;">Cada mês de '+D.C+' contra o mesmo mês de '+D.P+' ('+LP[0]+' → '+LC[0]+' …) · demanda IQVIA em R$ · share = SCJ ÷ categoria</div></div>'
-    +'<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">'+btn('um','Uma '+dimPl)+btn('grade','Todas — grade')+'</div></div>';
+    +'<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">'+btn('um','Uma '+dimPl)+btn('grade','Todas — grade')+btn('canal','Share por canal')+'</div></div>';
   if(modo==='grade'){
     var _gl = window._cpt2MesAll ? D.L.length : 15;
     var rowsG = [T].concat(D.L.slice(0,_gl)).map(function(o, ri){
@@ -49927,9 +49933,54 @@ function _cpt2MesHtml(){
   if(K && K!=='__T') o = D.L.filter(function(x){ return x.k===K; })[0] || null;
   if(!o && K!=='__T') o = D.L[0];
   if(!o) o = T;
-  var sel = '<select onchange="_cpt2MesSel(this.value)" style="font-size:11px;padding:3px 8px;border-radius:6px;border:1px solid rgba(29,111,168,0.45);color:#0D1B2E;background:#FFFFFF;max-width:320px;">'
+  var sel = '<select onchange="_cpt2MesKSet(this.value)" style="font-size:11px;padding:3px 8px;border-radius:6px;border:1px solid rgba(29,111,168,0.45);color:#0D1B2E;background:#FFFFFF;max-width:320px;">'
     +'<option value="__T"'+(o===T?' selected':'')+'>Total do filtro</option>'
     +D.L.map(function(x){ return '<option value="'+hEsc(x.k)+'"'+(x===o?' selected':'')+'>'+hEsc(x.k)+'</option>'; }).join('')+'</select>';
+  var CL = canaisDe(o), CH = window._cpt2MesCh || '';
+  if(CH && CL.indexOf(CH) < 0) CH = '';
+  var lblB = '<span style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.06em;">'+(D.dim==='Cliente'?'Bandeira':D.dim)+'</span>';
+  var selCh = '<span style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-left:6px;">Canal IQVIA</span>'
+    +'<select onchange="_cpt2MesChSet(this.value)" style="font-size:11px;padding:3px 8px;border-radius:6px;border:1px solid rgba(29,111,168,0.45);color:#0D1B2E;background:#FFFFFF;max-width:260px;">'
+    +'<option value=""'+(CH?'':' selected')+'>— Todos os canais —</option>'
+    +CL.map(function(c){ return '<option value="'+hEsc(c)+'"'+(c===CH?' selected':'')+'>'+hEsc(c)+'</option>'; }).join('')+'</select>';
+  var ppT = function(a,b){ return (a==null||b==null) ? '—' : ((b-a>=0?'+':'')+(b-a).toFixed(2)+'pp'); };
+  if(modo==='canal'){
+    var linhas = [{k:'TOTAL '+(o===T?'DO FILTRO':o.k), s:o, tot:true}].concat(CL.map(function(c){ return {k:c, s:o.ch[c]}; }));
+    var ganhou = 0, perdeu = 0;
+    var rowsC = linhas.map(function(L){
+      var x = L.s, cells = '';
+      for(var m=0;m<n;m++){
+        var sp = x.mcp[m]>0 ? x.mfp[m]/x.mcp[m]*100 : null, sc = x.mcc[m]>0 ? x.mfc[m]/x.mcc[m]*100 : null, d = (sp==null||sc==null) ? null : sc-sp;
+        var bg = d==null ? '' : (d>0 ? 'background:rgba(5,150,105,0.10) !important;' : (d<0 ? 'background:rgba(220,38,38,0.09) !important;' : ''));
+        var tip = L.k+' · '+LP[m]+' → '+LC[m]+' | Mercado '+fR2(x.mcp[m])+' → '+fR2(x.mcc[m])+' | SCJ '+fR2(x.mfp[m])+' → '+fR2(x.mfc[m]);
+        cells += '<td title="'+hEsc(tip)+'" style="text-align:center;white-space:nowrap;padding:4px 8px;font-size:10.5px;border-bottom:0.5px solid rgba(94,153,208,0.18);border-left:1px solid rgba(94,153,208,0.15);'+bg+(L.tot?'font-weight:800;':'')+'">'
+          +'<div style="font-weight:800;color:'+(d==null?'#64748B':(d<0?'#DC2626':'#059669'))+';">'+ppT(sp,sc)+'</div>'
+          +'<div style="color:#64748B;font-size:9.5px;">'+(sp==null?'—':sp.toFixed(1)+'%')+' → '+(sc==null?'—':sc.toFixed(1)+'%')+'</div></td>';
+      }
+      var aP = sum(x.mfp), aC = sum(x.mfc), kP = sum(x.mcp), kC = sum(x.mcc);
+      var spA = kP>0 ? aP/kP*100 : null, scA = kC>0 ? aC/kC*100 : null, dA = (spA==null||scA==null) ? null : scA-spA;
+      var vfA = aP>0 ? aC/aP-1 : null, vmA = kP>0 ? kC/kP-1 : null;
+      if(!L.tot){ if(dA>0) ganhou++; else if(dA<0) perdeu++; }
+      var imp = !L.tot && sum(o.mcc)>0 ? kC/sum(o.mcc)*100 : null;
+      var nmTd = L.tot ? td(L.k,'left','#0D1B2E',true)
+        : td('<span onclick="_cpt2MesChSet(\''+_cpt2Esc(L.k)+'\',\'um\')" title="Abrir mês a mês deste canal" style="cursor:pointer;border-bottom:1px dashed rgba(29,111,168,0.6);">'+L.k+'</span>'
+             +(imp!=null?' <span style="color:#94A3B8;font-size:9.5px;font-weight:600;">'+imp.toFixed(0)+'% da cat.</span>':''),'left','#0D1B2E',true);
+      return '<tr'+(L.tot?' style="background:rgba(29,111,168,0.07) !important;"':'')+'>'+nmTd+cells
+        +'<td style="text-align:center;white-space:nowrap;padding:4px 8px;font-size:10.5px;border-bottom:0.5px solid rgba(94,153,208,0.18);border-left:2px solid rgba(29,111,168,0.35);'+(dA==null?'':(dA>0?'background:rgba(5,150,105,0.10) !important;':'background:rgba(220,38,38,0.09) !important;'))+'">'
+        +'<div style="font-weight:800;color:'+(dA==null?'#64748B':(dA<0?'#DC2626':'#059669'))+';">'+ppT(spA,scA)+'</div>'
+        +'<div style="color:#64748B;font-size:9.5px;">'+(spA==null?'—':spA.toFixed(1)+'%')+' → '+(scA==null?'—':scA.toFixed(1)+'%')+'</div>'
+        +'<div style="font-size:9px;"><span style="color:#64748B;">SCJ</span> <b style="color:'+cor(vfA)+';">'+pc(vfA)+'</b> <span style="color:#64748B;">· MERC.</span> <b style="color:'+cor(vmA)+';">'+pc(vmA)+'</b></div></td></tr>';
+    }).join('');
+    var hC = th('Canal IQVIA','left');
+    for(var m=0;m<n;m++) hC += th(LC[m].split('/')[0]+'<div style="font-weight:600;color:#94A3B8;letter-spacing:0;text-transform:none;">Δ share '+LP[m]+'→'+LC[m]+'</div>','center');
+    hC += th('Acumulado','center','border-left:2px solid rgba(29,111,168,0.35);');
+    return head
+      +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">'+lblB+sel
+      +'<span style="font-size:11px;color:#0D1B2E;"><b>'+(o===T?'Total do filtro':o.k)+'</b>: ganhou share em <b style="color:#059669;">'+ganhou+'</b> de '+CL.length+' canais'+(perdeu?' · perdeu em <b style="color:#DC2626;">'+perdeu+'</b>':'')+' (acumulado)</span></div>'
+      +'<div style="font-size:9.5px;color:#64748B;margin-bottom:6px;">Share = SCJ ÷ categoria no canal · Δ em p.p. vs mesmo mês de '+D.P+' · verde = ganhou share · vermelho = perdeu · clique no canal para abrir a tabela mês a mês</div>'
+      +'<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;"><thead><tr>'+hC+'</tr></thead><tbody>'+rowsC+'</tbody></table></div>';
+  }
+  var oB = o; if(CH) o = o.ch[CH];
   var rows = '', S = {mfp:0, mfc:0, mcp:0, mcc:0}, melhor = 0, pior = 0;
   for(var m=0;m<n;m++){
     var mp = o.mcp[m], mc = o.mcc[m], fp = o.mfp[m], fc = o.mfc[m];
@@ -49954,11 +50005,11 @@ function _cpt2MesHtml(){
     +f(spT==null||scT==null?'—':((scT-spT>=0?'+':'')+(scT-spT).toFixed(2)+'pp'),(spT!=null&&scT!=null&&scT<spT)?'#DC2626':'#059669')
     +f(lT.t ? ((lT.g>0?'▲ ':'▼ ')+lT.t+' ('+(lT.g>0?'+':'')+lT.g.toFixed(1)+' p.p.)') : '—', lT.g==null?'#64748B':(lT.g>0?'#059669':'#DC2626'),'left')
     +'</tr></tfoot>';
-  var resumo = '<b>'+(o===T?'Total do filtro':o.k)+'</b>: SCJ melhor que o mercado em <b style="color:#059669;">'+melhor+'</b> de '+n+' meses'
+  var resumo = '<b>'+(oB===T?'Total do filtro':oB.k)+(CH?' · '+CH:'')+'</b>: SCJ melhor que o mercado em <b style="color:#059669;">'+melhor+'</b> de '+n+' meses'
     +(pior ? ' · pior em <b style="color:#DC2626;">'+pior+'</b>' : '')
     +' · acumulado SCJ <b style="color:'+cor(vfT)+';">'+pc(vfT)+'</b> vs mercado <b style="color:'+cor(vmT)+';">'+pc(vmT)+'</b>';
   return head
-    +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;"><span style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.06em;">'+(D.dim==='Cliente'?'Bandeira':D.dim)+'</span>'+sel
+    +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;"><span style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.06em;">'+(D.dim==='Cliente'?'Bandeira':D.dim)+'</span>'+sel+selCh
     +'<span style="font-size:11px;color:#0D1B2E;">'+resumo+'</span></div>'
     +'<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;"><thead>'
     +'<tr><th></th><th colspan="3" style="text-align:center;padding:4px 10px;font-size:9px;font-weight:800;letter-spacing:0.08em;color:#475569;'+MK+'border-bottom:1px solid rgba(94,153,208,0.25);">MERCADO (CATEGORIA)</th>'
@@ -49982,6 +50033,8 @@ function _cpt2RenderDiag(idx){
     var k = CPT2_KEYS[i][dimI], f = CPT2_FAB[i], c = CPT2_CAT[i];
     var o = g[k] || (g[k] = {k:k, fp:0, fc:0, cp:0, cc:0, uf:{}, lk:{}, mfp:[], mfc:[], mcp:[], mcc:[]});
     for(var z=0;z<n;z++){ o.mfp[z]=(o.mfp[z]||0)+(f[z]||0); o.mfc[z]=(o.mfc[z]||0)+(f[12+z]||0); o.mcp[z]=(o.mcp[z]||0)+(c[z]||0); o.mcc[z]=(o.mcc[z]||0)+(c[12+z]||0); }
+    var _ch = (o.ch || (o.ch = {})), _cn = CPT2_KEYS[i][3] || '—', w = _ch[_cn] || (_ch[_cn] = {mfp:[], mfc:[], mcp:[], mcc:[]});
+    for(var z=0;z<n;z++){ w.mfp[z]=(w.mfp[z]||0)+(f[z]||0); w.mfc[z]=(w.mfc[z]||0)+(f[12+z]||0); w.mcp[z]=(w.mcp[z]||0)+(c[z]||0); w.mcc[z]=(w.mcc[z]||0)+(c[12+z]||0); }
     o.lk[CPT2_KEYS[i][0]+'|'+CPT2_KEYS[i][3]+'|'+CPT2_KEYS[i][2]] = 1;
     var a0 = sum(f,0), a1 = sum(f,12), u = CPT2_KEYS[i][0];
     o.fp += a0; o.fc += a1; o.cp += sum(c,0); o.cc += sum(c,12);
