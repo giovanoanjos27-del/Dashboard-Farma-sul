@@ -52846,7 +52846,8 @@ function _cpt2RenderDiag(idx){
   /* dimensão: cliente (bandeira); com 1 bandeira só → UF; com 1 UF só → cidade */
   var bans={}, ufs={};
   idx.forEach(function(i){ bans[CPT2_KEYS[i][2]]=1; ufs[CPT2_KEYS[i][0]]=1; });
-  var dimI = Object.keys(bans).length>1 ? 2 : (Object.keys(ufs).length>1 ? 0 : 1);
+  var _ufFil = (typeof CPT2_MS!=='undefined') && (CPT2_MS.uf.length || CPT2_MS.cid.length);  /* abre por UF/cidade só com filtro de UF ou cidade */
+  var dimI = (Object.keys(bans).length>1 || !_ufFil) ? 2 : (Object.keys(ufs).length>1 ? 0 : 1);
   var dimNome = ['UF','Cidade','Cliente'][dimI===2?2:dimI];
   var g = {};
   idx.forEach(function(i){
