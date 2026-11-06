@@ -61,6 +61,12 @@ class Cat:
         self.per = {p["label"]:i for i,p in enumerate(d["periods"])}
         self.idx = {(r[0],r[1],r[2],r[3]):r for r in d["rows"]}
         ms = sorted([p for p in d["periods"] if p["kind"]=="month"], key=lambda p:p["sort"])
+        # os cards leem NQ_PR por posição a partir de Jul do FY-2 (FY27 → Jul/24: 0–11 FY25, 12–23 FY26, 24–35 FY27);
+        # a base Out26 veio desde Out/23 — corta os meses anteriores para manter a posição
+        if ms:
+            mon, yy = ms[-1]["label"].split('-'); fy = int(yy) + (1 if MON_EN.index(mon) < 6 else 0)
+            ini = f"Jul-{(fy-3) % 100:02d}"; lbl = [p["label"] for p in ms]
+            if ini in lbl: ms = ms[lbl.index(ini):]
         self.months = [p["label"] for p in ms]
     def has(self, m): return m in self.M
     def v(self, m, b, period, metric, prod=None):
