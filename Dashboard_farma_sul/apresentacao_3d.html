@@ -191,12 +191,15 @@ var bars=C.map(function(c,i){
   gl.rotation.x=-Math.PI/2; gl.position.set(x,.02,.6); S.add(gl);
   var lb=document.createElement('div'); lb.className='lb'; lbBox.appendChild(lb);
   var nm=document.createElement('div'); nm.className='nm'; nm.textContent=c.nome; lbBox.appendChild(nm);
-  return {c:c,b:b,g:gm,gl:gl,lb:lb,nm:nm,h:0,ht:0,gh:0,ght:0,x:x};
+  return {c:c,b:b,g:gm,gl:gl,lb:lb,nm:nm,h:0,ht:0,gh:0,ght:0,x:x,xt:x,rk:i};
 });
 
 function update(){
   var vs=bars.map(function(o){ return {a:val(o.c,'26'),p:val(o.c,'25')}; });
   var mx=0; vs.forEach(function(v){ mx=Math.max(mx,v.a.v||0,v.p.v||0); });
+  /* ordem decrescente pelo valor FY27 da métrica/período escolhidos (maior à esquerda) */
+  bars.map(function(o,i){ return {o:o,v:vs[i].a.v||0}; }).sort(function(a,b){ return b.v-a.v; })
+    .forEach(function(r,k){ r.o.rk=k; r.o.xt=-W/2+GAP*(k+.5); });
   var t26=0,t25=0,best=null,pendAny=false;
   bars.forEach(function(o,i){
     var v=vs[i]; o.ht=v.a.v?v.a.v/mx*HMAX:0.02; o.ght=v.p.v?v.p.v/mx*HMAX:0.02;
@@ -251,13 +254,14 @@ var v3=new THREE.Vector3(), clk=new THREE.Clock();
   if(hit) bars.forEach(function(o){ if(o.b===hit.object||o.g===hit.object) nh=o; });
   if(nh!==hov){ hov=nh; showDet(hov); cv.style.cursor=hov?'pointer':''; }
   bars.forEach(function(o,i){
-    o.h+=(o.ht-o.h)*.07; o.gh+=(o.ght-o.gh)*.07;
+    o.h+=(o.ht-o.h)*.07; o.gh+=(o.ght-o.gh)*.07; o.x+=(o.xt-o.x)*.08;
+    o.b.position.x=o.x; o.g.position.x=o.x; o.gl.position.x=o.x;
     o.b.scale.y=Math.max(o.h,.001); o.b.position.y=o.h/2;
     o.g.scale.y=Math.max(o.gh,.001); o.g.position.y=o.gh/2;
     var on=o===hov;
     o.b.material.emissiveIntensity=(on?1.1:.5)+Math.sin(t*2+i)*.06;
     o.gl.material.opacity=on?1:.6;
-    v3.set(o.x,o.h+.35+(i%2?1.1:0),.6).project(cam);
+    v3.set(o.x,o.h+.35+(o.rk%2?1.1:0),.6).project(cam);
     o.lb.style.left=(v3.x*.5+.5)*innerWidth+'px'; o.lb.style.top=(-v3.y*.5+.5)*innerHeight+'px'; o.lb.style.opacity=v3.z<1?1:0;
     v3.set(o.x,0,D/2+.3).project(cam);
     o.nm.style.left=(v3.x*.5+.5)*innerWidth+'px'; o.nm.style.top=(-v3.y*.5+.5)*innerHeight+'px';
