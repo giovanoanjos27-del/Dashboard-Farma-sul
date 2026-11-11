@@ -68,9 +68,9 @@ footer{position:fixed;left:22px;bottom:18px;font-size:10px;color:var(--mut);max-
 <canvas id="cv"></canvas>
 <div id="labels"></div>
 <header>
-  <div class="tt"><h1>Sell Out <b>Farma Sul</b> · FY27</h1><p id="sub">HB Repelentes &amp; Inseticidas · por cliente · vs FY26 · <span id="fonte"></span></p></div>
+  <div class="tt"><h1><span id="ttl">Sell Out </span><b>Farma Sul</b> · FY27</h1><p id="sub">HB Repelentes &amp; Inseticidas · por cliente · vs FY26 · <span id="fonte"></span></p></div>
   <div class="ctl">
-    <div style="display:flex;gap:8px"><div class="seg"><button id="fs" title="Tela cheia">⛶ Tela cheia</button></div><div class="seg" id="segM"><button data-m="r" class="on">R$</button><button data-m="u">Unidades</button></div></div>
+    <div style="display:flex;gap:8px"><div class="seg"><button id="fs" title="Tela cheia">⛶ Tela cheia</button></div><div class="seg" id="segF"><button data-f="so" class="on">Sell Out</button><button data-f="si">Sell In</button></div><div class="seg" id="segM"><button data-m="r" class="on">R$</button><button data-m="u">Unidades</button></div></div>
     <div class="seg" id="segP"></div>
   </div>
 </header>
@@ -117,7 +117,29 @@ var FONTE='snapshot de 11/11/2026';
     MES=idx.map(function(m){return NM[m-6];}); FONTE='dados ao vivo do dashboard';
   }catch(e){ /* fora do dashboard ou bloqueado (file://): usa o snapshot acima */ }
 })();
-var ST={m:'r',p:'T'};
+/* ── Sell In (caixas): FY27 real Jul/26 → mês atual × FY26 real mesmos meses. Snapshot 11/11/2026 (Nov/26 parcial) ── */
+var SI_IDS={'São João':'SJ','DD-GAM':'GAM','Nissei':'NS','Panvel':'PV','DD-Gaúcha':'GA','Clamed':'CL','DD-Riomed':'RM','Riomed':'RM'};
+var SI={MES:['Jul','Ago','Set','Out','Nov'], parcial:'Nov/26', ext25:[0,0,0,240,0], ext26:[0,0,0,0,0], extNomes:'Peniel', raw:{
+  SJ:{u25:[0,8132,3549,1659,1550],u26:[3231,13671,1849,4324,1691]}, GAM:{u25:[0,5256,7808,7258,5620],u26:[17157,0,0,5036,0]},
+  NS:{u25:[0,3490,2145,1476,1170],u26:[134,0,81,3978,0]}, PV:{u25:[0,0,1573,213,465],u26:[0,143,1365,14,923]},
+  GA:{u25:[5094,2523,335,436,252],u26:[274,8494,161,398,0]}, CL:{u25:[0,0,4731,80,0],u26:[0,0,4407,0,0]},
+  RM:{u25:[0,3743,296,0,1650],u26:[0,0,3198,75,79]} }};
+(function(){
+  try{
+    var P=window.parent; if(!P||P===window) return;
+    var d27=P.eval('SELLIN_DATA_FY27'), d26=P.eval('SELLIN_DATA_FY26'), ma=P.eval('SELLIN_MES_ATUAL'), lbl=P.eval('SELLIN_MES_ATUAL_LBL');
+    var NM=['Jul','Ago','Set','Out','Nov','Dez','Jan','Fev','Mar','Abr','Mai','Jun'], n=ma+1, raw={}, e25=[], e26=[], extra={};
+    for(var i=0;i<n;i++){ e25.push(0); e26.push(0); }
+    C.forEach(function(c){ raw[c.id]={u25:e25.slice(),u26:e26.slice()}; });
+    var add=function(lst,key,ext){ lst.forEach(function(c){ var id=SI_IDS[c.nome], r=c.real_m||[];
+      for(var i=0;i<n;i++){ var v=+(r[i]||0); if(id&&raw[id]) raw[id][key][i]+=v; else { ext[i]+=v; if(v) extra[c.nome]=1; } } }); };
+    add(d27,'u26',e26); add(d26,'u25',e25);
+    SI={MES:NM.slice(0,n), parcial:String(lbl).charAt(0)+String(lbl).slice(1).toLowerCase(), ext25:e25, ext26:e26, extNomes:Object.keys(extra).join(', '), raw:raw};
+  }catch(e){}
+})();
+SI.C=C.map(function(c){ var r=SI.raw[c.id]||{u25:SI.MES.map(function(){return 0;}),u26:SI.MES.map(function(){return 0;})}; return {id:c.id,nome:c.nome,u25:r.u25,u26:r.u26,r25:r.u25,r26:r.u26}; });
+var SO={MES:MES,C:C};
+var ST={m:'r',p:'T',f:'so',mSO:'r'};
 var PLAB='Jul–'+MES[MES.length-1];
 
 function val(c,ano){ // soma comparável: só meses com dado em 2026
@@ -127,6 +149,7 @@ function val(c,ano){ // soma comparável: só meses com dado em 2026
 }
 function fmt(v){
   if(v==null) return '—';
+  if(ST.f==='si') return Math.round(v).toLocaleString('pt-BR')+' cx';
   if(ST.m==='u') return Math.round(v).toLocaleString('pt-BR')+' un';
   return v>=1e6?'R$ '+(v/1e6).toFixed(2).replace('.',',')+' mi':'R$ '+Math.round(v/1e3).toLocaleString('pt-BR')+' mil';
 }
@@ -209,13 +232,15 @@ function update(){
     if(v.a.pend) pendAny=true;
     if(v.a.v!=null){ t26+=v.a.v; t25+=v.p.v; if(!best||v.a.v>best.v) best={n:o.c.nome,v:v.a.v}; }
   });
+  if(ST.f==='si'){ (ST.p==='T'?MES.map(function(_,i){return i;}):[ST.p]).forEach(function(i){ t25+=SI.ext25[i]||0; t26+=SI.ext26[i]||0; }); }
   var tp=pct(t26,t25), plb=ST.p==='T'?PLAB+'/26':MES[ST.p]+'/26';
+  var parc=ST.f==='si'&&SI.parcial&&(ST.p==='T'||ST.p===MES.length-1);
   var cres=bars.map(function(o,i){return {n:o.c.nome,p:pct(vs[i].a.v,vs[i].p.v)};}).filter(function(x){return x.p!=null;}).sort(function(a,b){return b.p-a.p;})[0];
   document.getElementById('kpis').innerHTML=
-    '<div class="k"><div class="l">Sell Out total · '+plb+'</div><div class="n">'+fmt(t26)+'</div><div class="s '+(tp>=0?'up':'down')+'">'+pctTxt(tp)+' vs FY26</div></div>'+
+    '<div class="k"><div class="l">'+(ST.f==='si'?'Sell In acumulado':'Sell Out total')+' · '+plb+(parc?' (Nov parcial)':'')+'</div><div class="n">'+fmt(t26)+'</div><div class="s '+(tp>=0?'up':'down')+'">'+pctTxt(tp)+' vs FY26</div></div>'+
     '<div class="k"><div class="l">Maior cliente</div><div class="n" style="font-size:17px">'+best.n+'</div><div class="s" style="color:var(--mut)">'+fmt(best.v)+' · '+(best.v/t26*100).toFixed(0)+'% do total</div></div>'+
     '<div class="k"><div class="l">Maior crescimento</div><div class="n" style="font-size:17px">'+cres.n+'</div><div class="s up">'+pctTxt(cres.p)+'</div></div>';
-  document.getElementById('nota').textContent=(ST.m==='r'&&pendAny)?'Clamed: receita de Ago–Out/26 ainda não está na planilha; a comparação usa só os meses com dado. ':(ST.m==='u'?'Panvel FY26 em unidades é estimado (receita ÷ ticket médio). ':'');
+  document.getElementById('nota').textContent=ST.f==='si'?'Sell In em caixas (real) · '+SI.parcial+' parcial, comparado com o mês cheio do FY26'+(SI.extNomes?' · total inclui '+SI.extNomes+' (sem barra)':'')+'. ':(ST.m==='r'&&pendAny)?'Clamed: receita de Ago–Out/26 ainda não está na planilha; a comparação usa só os meses com dado. ':(ST.m==='u'?'Panvel FY26 em unidades é estimado (receita ÷ ticket médio). ':'');
 }
 
 /* hover → detalhe */
@@ -225,7 +250,7 @@ cv.addEventListener('pointerleave',function(){ mouse.set(-9,-9); });
 function showDet(o){
   if(!o){ det.classList.remove('on'); return; }
   var c=o.c, a=c[ST.m+'26'], p=c[ST.m+'25'], mx=0; for(var i=0;i<MES.length;i++) mx=Math.max(mx,a[i]||0,p[i]||0);
-  var h='<h3>'+c.nome+'</h3><div class="sub">'+(ST.m==='r'?'Receita':'Unidades')+' por mês · FY27 × FY26</div>';
+  var h='<h3>'+c.nome+'</h3><div class="sub">'+(ST.f==='si'?'Sell In (caixas)':ST.m==='r'?'Receita':'Unidades')+' por mês · FY27 × FY26</div>';
   for(var i=0;i<MES.length;i++){ var q=pct(a[i],p[i]);
     h+='<div class="mb"><span style="color:var(--mut)">'+MES[i]+'</span><div class="bars"><div class="b c" style="width:'+((a[i]||0)/mx*100)+'%"></div><div class="b a" style="width:'+(p[i]/mx*100)+'%"></div></div><span class="r">'+fmt(a[i])+(q!=null?'<br><span class="'+(q>=0?'up':'down')+'">'+pctTxt(q)+'</span>':'')+'</span></div>'; }
   det.innerHTML=h+'<div class="leg"><span><i style="background:var(--gold2)"></i>2026</span><span><i style="background:rgba(245,197,66,.3);border:1px solid rgba(245,197,66,.5)"></i>2025</span></div>';
@@ -236,7 +261,17 @@ function showDet(o){
 function seg(id,key){ document.getElementById(id).addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
   [].forEach.call(this.children,function(x){x.classList.remove('on');}); b.classList.add('on');
   var v=b.dataset[key]; ST[key]=v==='T'||v==='r'||v==='u'?v:+v; bars.forEach(function(o){o.h*=.0001;o.gh*=.0001;}); update(); if(hov) showDet(hov); }); }
-document.getElementById('segP').innerHTML=MES.map(function(m,i){return '<button data-p="'+i+'">'+m+'</button>';}).join('')+'<button data-p="T" class="on">'+PLAB+'</button>';
+function buildPer(){ document.getElementById('segP').innerHTML=MES.map(function(m,i){return '<button data-p="'+i+'">'+m+'</button>';}).join('')+'<button data-p="T" class="on">'+PLAB+'</button>'; }
+buildPer();
+document.getElementById('segF').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b||b.dataset.f===ST.f) return;
+  [].forEach.call(this.children,function(x){x.classList.remove('on');}); b.classList.add('on');
+  if(ST.f==='so') ST.mSO=ST.m;
+  ST.f=b.dataset.f; var DS=ST.f==='si'?SI:SO;
+  MES=DS.MES; PLAB='Jul–'+MES[MES.length-1]; ST.p='T'; ST.m=ST.f==='si'?'u':ST.mSO;
+  bars.forEach(function(o){ o.c=DS.C.filter(function(c){return c.id===o.c.id;})[0]; o.h*=.0001; o.gh*=.0001; });
+  document.getElementById('segM').style.display=ST.f==='si'?'none':'';
+  document.getElementById('ttl').textContent=ST.f==='si'?'Sell In ':'Sell Out ';
+  buildPer(); update(); if(hov) showDet(hov); });
 document.getElementById('fonte').textContent=FONTE;
 document.getElementById('fs').onclick=function(){ var d=document; if(d.fullscreenElement) d.exitFullscreen(); else d.documentElement.requestFullscreen&&d.documentElement.requestFullscreen(); };
 seg('segM','m'); seg('segP','p');
