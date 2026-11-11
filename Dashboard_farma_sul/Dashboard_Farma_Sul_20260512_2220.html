@@ -52477,38 +52477,40 @@ function _cpt2RenderPM(){
   var por={}, D=CPT_PM_DIC;
   idx.forEach(function(i){ var b=D.ban[CPT_PM_K[i][2]]; (por[b]=por[b]||[]).push(i); });
   var S=_cpt2PMSerie, lbS=CPT_PM_SER.filter(function(s){return s.id===S;})[0].lb;
-  /* por bandeira: meses da série escolhida + Abr–Set das 3 séries (preço e unidades) e share SCJ */
+  /* por bandeira: análise só Jul–Set/26 (FY27 T1) — meses Jul/Ago/Set da série escolhida + Jul–Set das 3 séries (preço e unidades) e share SCJ */
+  var MJ=[3,4,5];
+  var jR=function(o){ return o.rs[3]+o.rs[4]+o.rs[5]; }, jU=function(o){ return o.un[3]+o.un[4]+o.un[5]; };
+  var jP=function(o){ var u=jU(o); return u>=1?jR(o)/u:null; };
   var lin=Object.keys(por).map(function(b){ var x=_cpt2PMSoma(por[b]); return {b:b, a:x, o:x[S]}; })
-    .filter(function(r){ return r.a.CAT.un[6]>=1; }).sort(function(p,q){ return q.o.un[6]-p.o.un[6] || q.a.CAT.un[6]-p.a.CAT.un[6]; });
+    .filter(function(r){ return jU(r.a.CAT)>=1; }).sort(function(p,q){ return jU(q.o)-jU(p.o) || jU(q.a.CAT)-jU(p.a.CAT); });
   var thS=th+'border-left:1px solid rgba(148,163,184,0.15);', hl=function(id){ return id===S?'background:rgba(94,153,208,0.10);':''; };
-  var shr=function(a){ var u=a.SCJ.un[6]+a.CIMED.un[6]+a.RB.un[6]; return u>=1?a.SCJ.un[6]/u*100:null; };
+  var shr=function(a){ var u=jU(a.SCJ)+jU(a.CIMED)+jU(a.RB); return u>=1?jU(a.SCJ)/u*100:null; };
   var shrFmt=function(v){ return v==null?'<span style="color:#334155;">—</span>':v.toFixed(1).replace('.',',')+'%'; };
   var unFmt=function(v){ return Math.round(v).toLocaleString('pt-BR'); };
   var linha=function(nome,a,o,tot){
     var st=tot?'font-weight:700;background:rgba(148,163,184,0.10);':'';
     var r='<tr><td style="'+td+st+'text-align:left;">'+nome+'</td>';
-    for(var m=0;m<6;m++) r+='<td style="'+td+st+'">'+_cpt2PMfmt(_cpt2PM(o,m))+'</td>';
-    var jsR=o.rs[3]+o.rs[4]+o.rs[5], jsU=o.un[3]+o.un[4]+o.un[5];
-    r+='<td style="'+td+st+'font-weight:700;background:rgba(94,153,208,0.08);">'+_cpt2PMfmt(jsU>=1?jsR/jsU:null)+'</td>';
+    MJ.forEach(function(m){ r+='<td style="'+td+st+'">'+_cpt2PMfmt(_cpt2PM(o,m))+'</td>'; });
+    r+='<td style="'+td+st+'font-weight:700;background:rgba(94,153,208,0.08);">'+_cpt2PMfmt(jP(o))+'</td>';
     ['CIMED','RB'].forEach(function(id,j){ var s=CPT_PM_SER.filter(function(x){return x.id===id;})[0]; r+='<td style="'+td+st+(j===0?'border-left:1px solid rgba(148,163,184,0.15);':'')+'background:rgba(248,113,113,0.06);font-weight:700;color:'+s.cor+';">'+_cpt2PMfmt(_cpt2PM(a[id],5))+'</td>'; });
-    CPT_PM_SER.forEach(function(s,j){ r+='<td style="'+td+st+hl(s.id)+(j===0?'border-left:1px solid rgba(148,163,184,0.15);':'')+'font-weight:700;color:'+s.cor+';">'+_cpt2PMfmt(_cpt2PM(a[s.id],6))+'</td>'; });
-    CPT_PM_SER.forEach(function(s,j){ r+='<td style="'+td+st+hl(s.id)+(j===0?'border-left:1px solid rgba(148,163,184,0.15);':'')+'color:#94A3B8;">'+unFmt(a[s.id].un[6])+'</td>'; });
+    CPT_PM_SER.forEach(function(s,j){ r+='<td style="'+td+st+hl(s.id)+(j===0?'border-left:1px solid rgba(148,163,184,0.15);':'')+'font-weight:700;color:'+s.cor+';">'+_cpt2PMfmt(jP(a[s.id]))+'</td>'; });
+    CPT_PM_SER.forEach(function(s,j){ r+='<td style="'+td+st+hl(s.id)+(j===0?'border-left:1px solid rgba(148,163,184,0.15);':'')+'color:#94A3B8;">'+unFmt(jU(a[s.id]))+'</td>'; });
     return r+'<td style="'+td+st+'border-left:1px solid rgba(148,163,184,0.15);font-weight:700;color:#60A5FA;">'+shrFmt(shr(a))+'</td></tr>';
   };
   var t='<table style="width:100%;border-collapse:collapse;"><thead>'+
-    '<tr><th style="'+th+'"></th><th colspan="7" style="'+th+'text-align:center;">'+(S==='CIMED'?'Cimed + outros (XO ≈ 85%)':lbS)+' · R$/un. por mês</th>'+
+    '<tr><th style="'+th+'"></th><th colspan="4" style="'+th+'text-align:center;">'+(S==='CIMED'?'Cimed + outros (XO ≈ 85%)':lbS)+' · R$/un. por mês</th>'+
     '<th colspan="2" style="'+thS+'text-align:center;">Concorrência · '+M[5]+'</th>'+
-    '<th colspan="3" style="'+thS+'text-align:center;">R$/un. Abr–Set</th><th colspan="3" style="'+thS+'text-align:center;">Unidades Abr–Set</th><th style="'+thS+'"></th></tr>'+
-    '<tr><th style="'+th+'text-align:left;">Bandeira</th>'+M.map(function(m){return '<th style="'+th+'">'+m+'</th>';}).join('')+
+    '<th colspan="3" style="'+thS+'text-align:center;">R$/un. Jul–Set</th><th colspan="3" style="'+thS+'text-align:center;">Unidades Jul–Set</th><th style="'+thS+'"></th></tr>'+
+    '<tr><th style="'+th+'text-align:left;">Bandeira</th>'+MJ.map(function(m){return '<th style="'+th+'">'+M[m]+'</th>';}).join('')+
     '<th style="'+th+'" title="Preço médio acumulado Jul–Set/26 (Σ R$ ÷ Σ un.)">Jul–Set</th>'+
     ['CIMED','RB'].map(function(id,j){ var s=CPT_PM_SER.filter(function(x){return x.id===id;})[0]; return '<th style="'+(j===0?thS:th)+'color:'+s.cor+';">'+s.lb+'</th>'; }).join('')+
     CPT_PM_SER.map(function(s,j){ return '<th style="'+(j===0?thS:th)+'color:'+s.cor+';">'+s.lb+'</th>'; }).join('')+
     CPT_PM_SER.map(function(s,j){ return '<th style="'+(j===0?thS:th)+'color:'+s.cor+';">'+s.lb+'</th>'; }).join('')+
-    '<th style="'+thS+'" title="Unidades SCJ ÷ (SCJ + Cimed + outros + RB_OTHERS)">Share SCJ un.</th></tr></thead><tbody>';
+    '<th style="'+thS+'" title="Unidades SCJ ÷ (SCJ + Cimed + outros + RB_OTHERS), Jul–Set/26">Share SCJ un.</th></tr></thead><tbody>';
   lin.forEach(function(r){ t+=linha(r.b,r.a,r.o,false); });
   if(lin.length>1){ var aT=_cpt2PMSoma(idx); t+=linha('Total ('+lin.length+' bandeiras)',aT,aT[S],true); }
-  if(!lin.length) t+='<tr><td colspan="17" style="'+td+'text-align:center;color:#475569;">Sem venda de repelentes para os filtros selecionados.</td></tr>';
-  document.getElementById('cpt2-pm-ban').innerHTML=(S==='CIMED'?'<div style="font-size:9.5px;color:#DC2626;background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.3);border-radius:6px;padding:6px 9px;margin-bottom:6px;">⚠ <b>Não é o preço do XO.</b> É o preço médio de tudo que não é SCJ nem RB na bandeira (XO ≈ 85% das unidades + outras marcas e marcas próprias). O XO tem preço único por SKU em todas as bandeiras: XO Spray 15% 200ml R$ 19,62 · XO Loção 15% 200ml R$ 19,01 (Abr–Set/26, tabela acima).</div>':'')+'<div style="font-size:9.5px;color:#F59E0B;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:6px;padding:6px 9px;margin-bottom:8px;">⚠ Diferença entre bandeiras = <b>só mix de SKUs</b>. A IQVIA valoriza cada SKU pelo mesmo preço no Brasil todo; uma bandeira com preço médio maior vende mais itens caros (ex.: Exposis), não pratica preço mais alto.</div>'+t+'</tbody></table><div style="font-size:9px;color:#475569;margin-top:6px;">'+lin.length+' bandeiras · ordenadas por unidades '+lbS+' Abr–Set/26 · meses = série escolhida no seletor acima · colunas Abr–Set mostram SCJ e concorrência (Cimed + outros, RB_OTHERS) lado a lado.</div>';
+  if(!lin.length) t+='<tr><td colspan="14" style="'+td+'text-align:center;color:#475569;">Sem venda de repelentes para os filtros selecionados.</td></tr>';
+  document.getElementById('cpt2-pm-ban').innerHTML=(S==='CIMED'?'<div style="font-size:9.5px;color:#DC2626;background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.3);border-radius:6px;padding:6px 9px;margin-bottom:6px;">⚠ <b>Não é o preço do XO.</b> É o preço médio de tudo que não é SCJ nem RB na bandeira (XO ≈ 85% das unidades + outras marcas e marcas próprias). O XO tem preço único por SKU em todas as bandeiras: XO Spray 15% 200ml R$ 19,62 · XO Loção 15% 200ml R$ 19,01 (Abr–Set/26, tabela acima).</div>':'')+'<div style="font-size:9.5px;color:#F59E0B;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:6px;padding:6px 9px;margin-bottom:8px;">⚠ Diferença entre bandeiras = <b>só mix de SKUs</b>. A IQVIA valoriza cada SKU pelo mesmo preço no Brasil todo; uma bandeira com preço médio maior vende mais itens caros (ex.: Exposis), não pratica preço mais alto.</div>'+t+'</tbody></table><div style="font-size:9px;color:#475569;margin-top:6px;">'+lin.length+' bandeiras · análise Jul–Set/26 · ordenadas por unidades '+lbS+' Jul–Set · meses = série escolhida no seletor acima · colunas Jul–Set mostram SCJ e concorrência (Cimed + outros, RB_OTHERS) lado a lado.</div>';
 }
 </script>
 <!-- ═══ fim CPT_PM render ═══ -->
