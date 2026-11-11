@@ -19405,8 +19405,8 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
       <div>
         <div style="font-size:10px;font-weight:700;color:#CBD5E1;letter-spacing:0.06em;">PREÇO MÉDIO (R$/UN.) — SCJ × CIMED + OUTROS × RB_OTHERS</div>
-        <div style="font-size:9px;color:#475569;margin-top:2px;">Repelentes · Abr–Set/26 · IQVIA CPT edição 202609 · R$ CPP ÷ unidades · segue os filtros da aba (o seletor de período não se aplica)</div>
-        <div style="font-size:9px;color:#475569;margin-top:2px;"><b>Cimed + outros</b> = grupo CIMED_OTHERS da IQVIA: tudo que não é SCJ nem RB. No Brasil, Abr–Set/26, <b>~85% das unidades são Cimed (XO)</b>; o resto são outros fabricantes e marcas próprias (Pague Menos, Dahuer, Hertz, DPSP…). Em redes com marca própria forte o peso da Cimed é menor.</div>
+        <div style="font-size:9px;color:#475569;margin-top:2px;">Repelentes · Jul–Set/26 · IQVIA CPT edição 202609 · R$ CPP ÷ unidades · segue os filtros da aba (o seletor de período não se aplica)</div>
+        <div style="font-size:9px;color:#475569;margin-top:2px;"><b>Cimed + outros</b> = grupo CIMED_OTHERS da IQVIA: tudo que não é SCJ nem RB. No Brasil, Jul–Set/26, <b>~85% das unidades são Cimed (XO)</b>; o resto são outros fabricantes e marcas próprias (Pague Menos, Dahuer, Hertz, DPSP…). Em redes com marca própria forte o peso da Cimed é menor.</div>
       </div>
       <div id="cpt2-pm-sel" style="display:flex;border-radius:6px;overflow:hidden;border:1px solid rgba(148,163,184,0.25);"></div>
     </div>
@@ -52380,7 +52380,7 @@ function _cpt2PMIdx(){
   }
   return res;
 }
-/* soma R$ e un. por série × mês (posição 6 = Abr–Set) */
+/* soma R$ e un. por série × mês (posição 6 = Jul–Set, acumulado da análise) */
 function _cpt2PMSoma(idx){
   var z=function(){ return {rs:[0,0,0,0,0,0,0], un:[0,0,0,0,0,0,0]}; };
   var a={SCJ:z(), CIMED:z(), RB:z(), CAT:z()};
@@ -52392,7 +52392,7 @@ function _cpt2PMSoma(idx){
       a.CIMED.rs[m]+=cR-sR-rR; a.CIMED.un[m]+=cU-sU-rU;
     }
   });
-  Object.keys(a).forEach(function(s){ var o=a[s]; for(var m=0;m<6;m++){ o.rs[6]+=o.rs[m]; o.un[6]+=o.un[m]; } });
+  Object.keys(a).forEach(function(s){ var o=a[s]; for(var m=3;m<6;m++){ o.rs[6]+=o.rs[m]; o.un[6]+=o.un[m]; } });
   return a;
 }
 function _cpt2PM(o,m){ return o.un[m]>=1 ? o.rs[m]/o.un[m] : null; }
@@ -52405,7 +52405,7 @@ function _cpt2PMind(v,c){
 function _cpt2PMSetSerie(s){ _cpt2PMSerie=s; _cpt2RenderPM(); }
 function _cpt2RenderPM(){
   var card=document.getElementById('cpt2-pm-card'); if(!card || typeof CPT_PM_K==='undefined') return;
-  var idx=_cpt2PMIdx(), a=_cpt2PMSoma(idx), M=CPT_PM_MES;
+  var idx=_cpt2PMIdx(), a=_cpt2PMSoma(idx), M=CPT_PM_MES, MJ=[3,4,5];
   var th='padding:5px 7px;color:#94A3B8;font-weight:700;font-size:9px;letter-spacing:0.04em;text-align:right;border-bottom:1px solid rgba(148,163,184,0.2);white-space:nowrap;position:sticky;top:0;background:#0D1117;';
   var td='padding:4px 7px;text-align:right;color:#CBD5E1;font-size:10.5px;border-bottom:0.5px solid rgba(148,163,184,0.08);white-space:nowrap;';
   /* seletor de série da tabela por bandeira */
@@ -52414,14 +52414,14 @@ function _cpt2RenderPM(){
     return '<button onclick="_cpt2PMSetSerie(\''+s.id+'\')" style="border:none;cursor:pointer;padding:5px 10px;font-size:10px;font-weight:700;background:'+(on?'rgba(94,153,208,0.25)':'transparent')+';color:'+(on?'#CBD5E1':'#94A3B8')+';">'+s.lb+'</button>';
   }).join('');
   /* resumo da seleção */
-  var h='<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="'+th+'text-align:left;">R$/un.</th>'+M.map(function(m){return '<th style="'+th+'">'+m+'</th>';}).join('')+'<th style="'+th+'">Abr–Set</th></tr></thead><tbody>';
+  var h='<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="'+th+'text-align:left;">R$/un.</th>'+MJ.map(function(m){return '<th style="'+th+'">'+M[m]+'</th>';}).join('')+'<th style="'+th+'">Jul–Set</th></tr></thead><tbody>';
   CPT_PM_SER.forEach(function(s){
     var o=a[s.id];
     h+='<tr><td style="'+td+'text-align:left;font-weight:700;color:'+s.cor+';">'+s.lb+'</td>';
-    for(var m=0;m<6;m++) h+='<td style="'+td+'">'+_cpt2PMfmt(_cpt2PM(o,m))+'</td>';
+    for(var m=3;m<6;m++) h+='<td style="'+td+'">'+_cpt2PMfmt(_cpt2PM(o,m))+'</td>';
     h+='<td style="'+td+'font-weight:700;">'+_cpt2PMfmt(_cpt2PM(o,6))+'</td></tr>';
   });
-  h+='<tr><td style="'+td+'text-align:left;color:#64748B;">Un. Abr–Set</td><td colspan="7" style="'+td+'color:#64748B;font-size:9.5px;">'+CPT_PM_SER.map(function(s){ return s.lb+' '+Math.round(a[s.id].un[6]).toLocaleString('pt-BR'); }).join(' · ')+'</td></tr>';
+  h+='<tr><td style="'+td+'text-align:left;color:#64748B;">Un. Jul–Set</td><td colspan="4" style="'+td+'color:#64748B;font-size:9.5px;">'+CPT_PM_SER.map(function(s){ return s.lb+' '+Math.round(a[s.id].un[6]).toLocaleString('pt-BR'); }).join(' · ')+'</td></tr>';
   document.getElementById('cpt2-pm-res').innerHTML=h+'</tbody></table>';
   /* gráfico */
   var cv=document.getElementById('cpt2-canvas-pm');
@@ -52429,8 +52429,8 @@ function _cpt2RenderPM(){
     if(_cpt2ChartPM){ _cpt2ChartPM.destroy(); _cpt2ChartPM=null; }
     var _o=Chart.getChart(cv); if(_o) _o.destroy();
     _cpt2ChartPM=new Chart(cv.getContext('2d'),{type:'line',
-      data:{labels:M, datasets:CPT_PM_SER.map(function(s){
-        var arr=[]; for(var m=0;m<6;m++){ var v=_cpt2PM(a[s.id],m); arr.push(v==null?null:+v.toFixed(2)); }
+      data:{labels:MJ.map(function(m){return M[m];}), datasets:CPT_PM_SER.map(function(s){
+        var arr=[]; for(var m=3;m<6;m++){ var v=_cpt2PM(a[s.id],m); arr.push(v==null?null:+v.toFixed(2)); }
         return {label:s.lb,data:arr,borderColor:s.cor,backgroundColor:'transparent',borderWidth:2,pointRadius:3,tension:0.3,spanGaps:true};
       })},
       options:{animation:false,responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
@@ -52444,15 +52444,15 @@ function _cpt2RenderPM(){
     var P=CPT_PM_SKU, br=P.reg.BRASIL, sul=P.reg.SUL;
     /* par XO do mesmo formato: spray × XO Spray, loções × XO Loção */
     var PAR={'409979':'241105','338434':'218926','143374':'218926','409978':'241105','87602':'218926'}, NOMEXO={'241105':'XO Spray','218926':'XO Loção'};
-    var soma=function(a){ return a.reduce(function(x,y){return x+y;},0); };
+    var soma=function(a){ return a.slice(3,6).reduce(function(x,y){return x+y;},0); };
     var pm6=function(o){ var u=soma(o.un); return u?soma(o.rs)/u:null; };
     var s='<div style="font-size:10px;font-weight:700;color:#CBD5E1;letter-spacing:0.06em;margin-bottom:4px;">PREÇO IQVIA POR SKU (R$/UN.) — 3 SKUs SCJ × 2 SKUs CIMED XO</div>'+
-      '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="'+th+'text-align:left;">SKU</th>'+P.meses.map(function(m){return '<th style="'+th+'">'+m+'</th>';}).join('')+
-      '<th style="'+th+'">Abr–Set</th><th style="'+th+'">vs XO do formato</th><th style="'+th+'" title="Preço Abr–Set do SKU ÷ preço Abr–Set do XO do mesmo formato × 100">Índ.</th><th style="'+th+'" title="Preço Abr–Set do SKU − preço Abr–Set do XO do mesmo formato">Dif. R$/un.</th><th style="'+th+'" title="Unidades só deste SKU (ou da linha toda, nas linhas de total), Brasil, Abr–Set/26">Un. SKU Brasil</th></tr></thead><tbody>';
+      '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="'+th+'text-align:left;">SKU</th>'+P.meses.slice(3,6).map(function(m){return '<th style="'+th+'">'+m+'</th>';}).join('')+
+      '<th style="'+th+'">Jul–Set</th><th style="'+th+'">vs XO do formato</th><th style="'+th+'" title="Preço Jul–Set do SKU ÷ preço Jul–Set do XO do mesmo formato × 100">Índ.</th><th style="'+th+'" title="Preço Jul–Set do SKU − preço Jul–Set do XO do mesmo formato">Dif. R$/un.</th><th style="'+th+'" title="Unidades só deste SKU (ou da linha toda, nas linhas de total), Brasil, Jul–Set/26">Un. SKU Brasil</th></tr></thead><tbody>';
     var LIN={SCJ:{id:'LINHA_OFF',nome:'Total linha OFF! (todos os SKUs)',cor:'rgba(96,165,250,0.95)'},CIMED:{id:'LINHA_XO',nome:'Total linha XO (todos os SKUs)',cor:'rgba(248,113,113,0.9)'}};
     var totLinha=function(g){ var L=LIN[g], o=br[L.id]; if(!o) return ''; var v6=pm6(o), x=(g==='SCJ'&&br.LINHA_XO)?pm6(br.LINHA_XO):null, dif=(v6!=null&&x!=null)?v6-x:null, nada='<span style="color:#64748B;">—</span>', bg='background:rgba(148,163,184,0.10);';
       var r='<tr><td style="'+td+bg+'text-align:left;font-weight:700;font-style:italic;color:'+L.cor+';">'+L.nome+'</td>';
-      for(var m=0;m<6;m++) r+='<td style="'+td+bg+'font-style:italic;">'+_cpt2PMfmt(o.un[m]>=1?o.rs[m]/o.un[m]:null)+'</td>';
+      for(var m=3;m<6;m++) r+='<td style="'+td+bg+'font-style:italic;">'+_cpt2PMfmt(o.un[m]>=1?o.rs[m]/o.un[m]:null)+'</td>';
       return r+'<td style="'+td+bg+'font-weight:700;font-style:italic;">'+_cpt2PMfmt(v6)+'</td><td style="'+td+bg+'color:#94A3B8;">'+(x!=null?'Linha XO '+_cpt2PMfmt(x):nada)+'</td><td style="'+td+bg+'">'+(x!=null?_cpt2PMind(v6,x):nada)+'</td>'+
         '<td style="'+td+bg+'font-weight:700;color:'+(dif==null?'#64748B':dif>=0?'#60A5FA':'#F87171')+';">'+(dif==null?'—':(dif>=0?'+':'−')+'R$ '+Math.abs(dif).toFixed(2).replace('.',','))+'</td><td style="'+td+bg+'font-weight:700;color:#94A3B8;">'+Math.round(soma(o.un)).toLocaleString('pt-BR')+'</td></tr>'; };
     var gAnt=null;
@@ -52461,9 +52461,9 @@ function _cpt2RenderPM(){
       var o=br[k.id], cor=k.marca==='SCJ'?'rgba(96,165,250,0.95)':'rgba(248,113,113,0.9)';
       var v6=pm6(o), px=PAR[k.id], x6=px?pm6(br[px]):null, dif=(v6!=null&&x6!=null)?v6-x6:null;
       var nada='<span style="color:#64748B;">—</span>';
-      var baixo=soma(o.un)<10000?' <span style="font-size:8.5px;font-weight:600;color:#F59E0B;">volume baixo</span>':'';
+      var baixo=soma(o.un)<5000?' <span style="font-size:8.5px;font-weight:600;color:#F59E0B;">volume baixo</span>':'';
       s+='<tr><td style="'+td+'text-align:left;font-weight:700;color:'+cor+';">'+k.id+' · '+k.nome+baixo+'</td>';
-      for(var m=0;m<6;m++) s+='<td style="'+td+'">'+_cpt2PMfmt(o.un[m]>=1?o.rs[m]/o.un[m]:null)+'</td>';
+      for(var m=3;m<6;m++) s+='<td style="'+td+'">'+_cpt2PMfmt(o.un[m]>=1?o.rs[m]/o.un[m]:null)+'</td>';
       s+='<td style="'+td+'font-weight:700;">'+_cpt2PMfmt(v6)+'</td>'+
         '<td style="'+td+'color:#94A3B8;">'+(px?NOMEXO[px]+' '+_cpt2PMfmt(x6):nada)+'</td>'+
         '<td style="'+td+'">'+(px?_cpt2PMind(v6,x6):nada)+'</td>'+
@@ -52471,7 +52471,7 @@ function _cpt2RenderPM(){
         '<td style="'+td+'color:#94A3B8;">'+Math.round(soma(o.un)).toLocaleString('pt-BR')+'</td></tr>';
     });
     if(gAnt) s+=totLinha(gAnt);
-    document.getElementById('cpt2-pm-sku').innerHTML=s+'</tbody></table><div style="font-size:9px;color:#475569;margin-top:6px;">IQVIA CPT 202609 · Overview da Categoria · a IQVIA usa <b>um preço por SKU por mês para o Brasil todo</b> (igual em toda bandeira, UF e loja), por isso esta tabela não muda com os filtros. Comparação formato a formato: Spray OFF! × XO Spray; Loções OFF! × XO Loção. Índ. = preço OFF! ÷ preço XO × 100; Dif. = R$ a mais por unidade. <b>Un. SKU Brasil</b> = unidades só daquele SKU no Brasil (Abr–Set/26); as linhas de total somam todos os SKUs OFF! (sem Exposis) e todos os XO.</div>';
+    document.getElementById('cpt2-pm-sku').innerHTML=s+'</tbody></table><div style="font-size:9px;color:#475569;margin-top:6px;">IQVIA CPT 202609 · Overview da Categoria · a IQVIA usa <b>um preço por SKU por mês para o Brasil todo</b> (igual em toda bandeira, UF e loja), por isso esta tabela não muda com os filtros. Comparação formato a formato: Spray OFF! × XO Spray; Loções OFF! × XO Loção. Índ. = preço OFF! ÷ preço XO × 100; Dif. = R$ a mais por unidade. <b>Un. SKU Brasil</b> = unidades só daquele SKU no Brasil (Jul–Set/26); as linhas de total somam todos os SKUs OFF! (sem Exposis) e todos os XO.</div>';
   }
   /* tabela por bandeira (série escolhida) */
   var por={}, D=CPT_PM_DIC;
@@ -52510,7 +52510,7 @@ function _cpt2RenderPM(){
   lin.forEach(function(r){ t+=linha(r.b,r.a,r.o,false); });
   if(lin.length>1){ var aT=_cpt2PMSoma(idx); t+=linha('Total ('+lin.length+' bandeiras)',aT,aT[S],true); }
   if(!lin.length) t+='<tr><td colspan="14" style="'+td+'text-align:center;color:#475569;">Sem venda de repelentes para os filtros selecionados.</td></tr>';
-  document.getElementById('cpt2-pm-ban').innerHTML=(S==='CIMED'?'<div style="font-size:9.5px;color:#DC2626;background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.3);border-radius:6px;padding:6px 9px;margin-bottom:6px;">⚠ <b>Não é o preço do XO.</b> É o preço médio de tudo que não é SCJ nem RB na bandeira (XO ≈ 85% das unidades + outras marcas e marcas próprias). O XO tem preço único por SKU em todas as bandeiras: XO Spray 15% 200ml R$ 19,62 · XO Loção 15% 200ml R$ 19,01 (Abr–Set/26, tabela acima).</div>':'')+'<div style="font-size:9.5px;color:#F59E0B;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:6px;padding:6px 9px;margin-bottom:8px;">⚠ Diferença entre bandeiras = <b>só mix de SKUs</b>. A IQVIA valoriza cada SKU pelo mesmo preço no Brasil todo; uma bandeira com preço médio maior vende mais itens caros (ex.: Exposis), não pratica preço mais alto.</div>'+t+'</tbody></table><div style="font-size:9px;color:#475569;margin-top:6px;">'+lin.length+' bandeiras · análise Jul–Set/26 · ordenadas por unidades '+lbS+' Jul–Set · meses = série escolhida no seletor acima · colunas Jul–Set mostram SCJ e concorrência (Cimed + outros, RB_OTHERS) lado a lado.</div>';
+  document.getElementById('cpt2-pm-ban').innerHTML=(S==='CIMED'?'<div style="font-size:9.5px;color:#DC2626;background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.3);border-radius:6px;padding:6px 9px;margin-bottom:6px;">⚠ <b>Não é o preço do XO.</b> É o preço médio de tudo que não é SCJ nem RB na bandeira (XO ≈ 85% das unidades + outras marcas e marcas próprias). O XO tem preço único por SKU em todas as bandeiras: XO Spray 15% 200ml R$ 19,68 · XO Loção 15% 200ml R$ 19,22 (Jul–Set/26, tabela acima).</div>':'')+'<div style="font-size:9.5px;color:#F59E0B;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:6px;padding:6px 9px;margin-bottom:8px;">⚠ Diferença entre bandeiras = <b>só mix de SKUs</b>. A IQVIA valoriza cada SKU pelo mesmo preço no Brasil todo; uma bandeira com preço médio maior vende mais itens caros (ex.: Exposis), não pratica preço mais alto.</div>'+t+'</tbody></table><div style="font-size:9px;color:#475569;margin-top:6px;">'+lin.length+' bandeiras · análise Jul–Set/26 · ordenadas por unidades '+lbS+' Jul–Set · meses = série escolhida no seletor acima · colunas Jul–Set mostram SCJ e concorrência (Cimed + outros, RB_OTHERS) lado a lado.</div>';
 }
 </script>
 <!-- ═══ fim CPT_PM render ═══ -->
