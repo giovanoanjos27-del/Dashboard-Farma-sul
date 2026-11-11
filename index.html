@@ -2564,6 +2564,7 @@ function doLogin(){
   }
   /* Restrições específicas por usuário (role full com visão parcial) */
   if(u === 'Giovano'){
+    var _b3d=document.getElementById('btn-3d'); if(_b3d) _b3d.style.display='';
     ['cob-card-top-cidades','cob-card-posit-comp',
      'cob-card-white-space','cob-card-universe'].forEach(function(id){
       var el=document.getElementById(id);
@@ -2688,6 +2689,7 @@ function showAccessDenied(){
   <button class="ctab" onclick="switchClient('sellout',this)">Sell Out <span class="cdot cdot-live"></span></button>
   
   <button class="ctab" onclick="switchClient('cpt',this)">CPT Clientes <span class="cdot cdot-empty"></span></button>
+  <button id="btn-3d" class="ctab" style="display:none;" onclick="switchClient('3d',this)">3D <span class="cdot cdot-live"></span></button>
 
 </div>
 
@@ -19357,6 +19359,13 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
 
 
 <!-- ═══════════ CPT CLIENTES ═══════════ -->
+
+<!-- ═══════════ 3D — Sell Out por cliente (só login Giovano) ═══════════ -->
+<div class="main" id="panel-3d">
+  <div style="height:calc(100vh - 190px);min-height:560px;border-radius:14px;overflow:hidden;background:#06060a;box-shadow:0 2px 8px rgba(10,40,80,0.15);">
+    <iframe id="frame-3d" data-src="apresentacao_3d.html" title="Sell Out 3D" allowfullscreen style="width:100%;height:100%;border:0;display:block;"></iframe>
+  </div>
+</div>
 
 <div class="main" id="panel-cpt">
 
@@ -42476,6 +42485,11 @@ function switchClient(id,btn){
     /* SCJ vê: apenas Nielsen */
     var scjAllowed = ['nielsen','cpt'];
     if(scjAllowed.indexOf(id)===-1){ showAccessDenied(); return; }
+  }
+  if(id==='3d'){
+    if(_loginUser!=='Giovano'){ return; }
+    var _f3d=document.getElementById('frame-3d'); if(_f3d && !_f3d.getAttribute('src')) _f3d.setAttribute('src', _f3d.getAttribute('data-src'));
+    initialized['3d']=true;
   }
   // Sempre esconder todos os sellout-client-content ao trocar de aba
   document.querySelectorAll('.sellout-client-content').forEach(function(el){el.style.display='none';});
