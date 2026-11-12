@@ -73,6 +73,20 @@ header>*{pointer-events:auto}
 #leg3d i.cur{background:linear-gradient(#ffdf7a,#c9961f)}
 #leg3d i.prv{background:rgba(207,198,176,.34);border:1px solid #f3ead2}
 @media (max-width:760px){#leg3d{display:none}}
+#falha{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center;background:var(--bg);z-index:20}
+#falha[hidden]{display:none}
+#falha h2{font-size:18px;color:var(--gold2)} #falha p{font-size:13px;color:var(--txt);max-width:460px;line-height:1.5}
+#falha button,#tbx{background:rgba(245,197,66,.18);color:var(--gold2);border:1px solid var(--gold-dim);border-radius:10px;font:700 12px Inter;padding:8px 14px;cursor:pointer}
+#falha button:focus-visible,#tbx:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+#tbl{position:fixed;top:92px;right:22px;width:min(520px,calc(100vw - 44px));max-height:calc(100vh - 140px);overflow:auto;border:1px solid var(--gold-dim);background:rgba(14,11,6,.94);backdrop-filter:blur(8px);border-radius:14px;padding:14px 16px;z-index:5}
+#tbl .th{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+#tbl h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+#tbl table{width:100%;border-collapse:collapse;font:600 12px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
+#tbl th{font:700 11px Inter;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);text-align:right;padding:6px 8px;border-bottom:1px solid var(--gold-dim)}
+#tbl th:first-child,#tbl td:first-child{text-align:left;font-family:Inter;color:var(--txt)}
+#tbl td{text-align:right;padding:7px 8px;border-bottom:1px solid rgba(245,197,66,.1);color:var(--txt)}
+@media (prefers-reduced-motion: reduce){ #det,.lb{transition:none!important} }
+@media (max-width:760px){ #tbl{top:auto;bottom:70px;left:16px;right:16px;width:auto;max-height:55vh} }
 footer{position:fixed;left:22px;bottom:18px;font-size:11px;color:var(--mut);max-width:560px;line-height:1.5}
 @media (max-width:760px){
   header{top:12px;left:16px;right:16px}
@@ -92,7 +106,7 @@ footer{position:fixed;left:22px;bottom:18px;font-size:11px;color:var(--mut);max-
 <header>
   <div class="tt"><h1><span id="ttl">Sell Out </span><b>Farma Sul</b> · <span id="fy">FY27</span></h1><p id="sub">HB Repelentes &amp; Inseticidas · por cliente · vs FY26 · <span id="fonte"></span></p></div>
   <div class="ctl">
-    <div style="display:flex;gap:8px"><div class="seg" id="segNV" style="display:none" title="Visão Nielsen"><button data-v="acum" class="on">Acumulado</button><button data-v="mes">Mês a mês</button></div><div class="seg"><button id="rv" hidden title="Voltar à vista de frente">Reset vista</button><button id="fs" title="Tela cheia">Tela cheia</button></div><div class="seg" id="segF"><button data-f="so" class="on">Sell Out</button><button data-f="si">Sell In</button><button data-f="nq">Nielsen</button></div><div class="seg" id="segM"><button data-m="r" class="on">R$</button><button data-m="u">Unidades</button></div></div>
+    <div style="display:flex;gap:8px"><div class="seg" id="segNV" style="display:none" title="Visão Nielsen"><button data-v="acum" class="on">Acumulado</button><button data-v="mes">Mês a mês</button></div><div class="seg"><button id="rv" hidden title="Voltar à vista de frente">Reset vista</button><button id="tb" aria-expanded="false" aria-controls="tbl" title="Os mesmos números em tabela">Ver tabela</button><button id="fs" title="Tela cheia">Tela cheia</button></div><div class="seg" id="segF"><button data-f="so" class="on">Sell Out</button><button data-f="si">Sell In</button><button data-f="nq">Nielsen</button></div><div class="seg" id="segM"><button data-m="r" class="on">R$</button><button data-m="u">Unidades</button></div></div>
     <div class="seg" id="segP"></div>
     <div class="seg" id="segB" title="Marca (Sell Out) · clique em várias para somar"></div>
     <div class="seg" id="segNQ" style="display:none" title="Market Nielsen"><select id="mkt"></select></div>
@@ -101,12 +115,19 @@ footer{position:fixed;left:22px;bottom:18px;font-size:11px;color:var(--mut);max-
 </header>
 <div id="kpis" aria-live="polite"></div>
 <div id="det" role="status" aria-live="polite"></div>
+<section id="tbl" hidden aria-label="Tabela do gráfico"><div class="th"><h2 id="tblT">Tabela</h2><button type="button" id="tbx" aria-label="Fechar tabela">Fechar</button></div><table><thead><tr><th scope="col">Nome</th><th scope="col">Atual</th><th scope="col">Ano anterior</th><th scope="col">Variação</th></tr></thead><tbody id="tblB"></tbody></table></section>
 <div id="srbars" class="sr" role="list" aria-label="Barras do gráfico (Tab para ver o detalhe de cada uma)"></div>
 <footer><div id="leg3d" aria-hidden="true"><span><i class="cur"></i>Ano atual</span><span><i class="prv"></i>Ano anterior (mesmo período)</span></div>Arraste para girar · role para aproximar · passe o mouse numa barra (ou use Tab) para ver os meses. Barra sólida = FY27 (2026), contorno = FY26 (mesmo período de 2025). <span id="nota"></span></footer>
 
+<div id="falha" hidden role="alert"><h2>Não foi possível montar o gráfico 3D</h2><p id="falhaMsg"></p><p>Os mesmos números estão nas abas do dashboard (Sell Out, Sell In e Nielsen). Recarregue a página para tentar de novo.</p><button type="button" onclick="location.reload()">Recarregar</button></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
+(function(){ var why=null;
+  if(!window.THREE || !THREE.OrbitControls) why='A biblioteca 3D não carregou (sem internet ou bloqueada pela rede).';
+  else { try{ var c=document.createElement('canvas'); if(!(c.getContext('webgl')||c.getContext('experimental-webgl'))) why='Este navegador ou computador não tem WebGL ativo.'; }catch(e){ why='Este navegador não tem WebGL ativo.'; } }
+  if(why){ var f=document.getElementById('falha'); document.getElementById('falhaMsg').textContent=why; f.hidden=false; throw new Error('3D indisponível: '+why); }
+})();
 /* Dados: snapshot do dashboard (index.html) — meses Jul–Nov (Nov/26 parcial até 11/11) de 2025 (FY26) e 2026 (FY27). null = sem dado na planilha. */
 var MES=['Jul','Ago','Set','Out','Nov'];
 var C=[
@@ -233,6 +254,7 @@ function pctTxt(p){ return p==null?'':(p>=0?'▲ +':'▼ ')+p.toFixed(1).replace
 
 /* ── cena ── */
 var cv=document.getElementById('cv');
+var RM=false; try{ RM=matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
 var R=new THREE.WebGLRenderer({canvas:cv,antialias:true});
 R.setPixelRatio(Math.min(devicePixelRatio,2));
 var S=new THREE.Scene(); S.fog=new THREE.FogExp2(0x06060a,0.028);
@@ -407,6 +429,18 @@ document.getElementById('segB').addEventListener('click',function(e){ var b=e.ta
   applyDS(); });
 document.getElementById('fonte').textContent=FONTE;
 document.getElementById('rv').onclick=function(){ resetVista(); this.hidden=true; };
+function tblFill(){ var T=document.getElementById('tbl'); if(T.hidden) return;
+  document.getElementById('tblT').textContent=document.querySelector('.tt h1').innerText;
+  var rows=bars.filter(function(o){ return !o.c.hide && o.lb.style.display!=='none' && o.lb.innerHTML; }).sort(function(a,b){ return a.xt-b.xt; });
+  var q=function(o,s){ var e=o.lb.querySelector(s); return e?e.textContent.trim():'—'; };
+  document.getElementById('tblB').innerHTML=rows.map(function(o){ var d=o.lb.querySelector('.d'), cl=d?(d.classList.contains('up')?'up':'down'):'';
+    var pv=q(o,'.pv').replace(/^(FY26|FYTD26|2025|\w{3}\/25)\s*/,''), dv=d?d.textContent.replace(/\s*vs .*$/,''):(q(o,'.pend')!=='—'?q(o,'.pend'):'—');
+    return '<tr><td>'+o.c.nome+'</td><td>'+q(o,'.v')+'</td><td>'+pv+'</td><td class="'+cl+'">'+dv+'</td></tr>'; }).join(''); }
+function tblShow(on){ var T=document.getElementById('tbl'), b=document.getElementById('tb'); T.hidden=!on; b.setAttribute('aria-expanded',on?'true':'false'); b.classList.toggle('on',on); if(on){ tblFill(); document.getElementById('tbx').focus(); } else b.focus(); }
+document.getElementById('tb').onclick=function(){ tblShow(document.getElementById('tbl').hidden); };
+document.getElementById('tbx').onclick=function(){ tblShow(false); };
+document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !document.getElementById('tbl').hidden) tblShow(false); });
+document.addEventListener('click',function(){ setTimeout(tblFill,60); });
 document.getElementById('fs').onclick=function(){ var d=document; if(d.fullscreenElement) d.exitFullscreen(); else d.documentElement.requestFullscreen&&d.documentElement.requestFullscreen(); };
 seg('segM','m'); seg('segP','p');
 /* login SCJ no dashboard: a aba 3D abre direto no Nielsen, sem Sell Out / Sell In */
@@ -587,7 +621,10 @@ var kbHov=null;
 (function(){ var box=document.getElementById('srbars');
   bars.forEach(function(o){ var b=document.createElement('button'); b.type='button'; b.setAttribute('role','listitem'); o.sr=b; box.appendChild(b);
     b.addEventListener('focus',function(){ kbHov=o; hov=o; o.lb.classList.add('kb'); showDet(o); });
-    b.addEventListener('blur',function(){ o.lb.classList.remove('kb'); kbHov=null; hov=null; showDet(null); }); });
+    b.addEventListener('blur',function(){ o.lb.classList.remove('kb'); kbHov=null; hov=null; showDet(null); });
+    b.addEventListener('keydown',function(e){ var k=e.key; if(['ArrowRight','ArrowLeft','ArrowDown','ArrowUp','Home','End'].indexOf(k)<0) return; e.preventDefault();
+      var vis=bars.filter(function(q){ return q.sr&&!q.sr.hidden; }).sort(function(a,b){ return a.xt-b.xt; }), i=vis.indexOf(o), n=vis.length;
+      var j=k==='Home'?0:k==='End'?n-1:(k==='ArrowRight'||k==='ArrowDown')?(i+1)%n:(i-1+n)%n; vis[j].sr.focus(); }); });
 })();
 function srSync(){ bars.forEach(function(o){ if(!o.sr) return; var off=o.c.hide||o.lb.style.display==='none';
   o.sr.hidden=!!off; o.sr.textContent=o.c.nome+': '+o.lb.innerText.replace(/\s+/g,' ').trim(); });
@@ -610,7 +647,7 @@ function declutter(){
 (function loop(){
   requestAnimationFrame(loop);
   var t=clk.getElapsedTime();
-  if(camAnim){ camAnim.k=Math.min(1,camAnim.k+.04); var e=1-Math.pow(1-camAnim.k,3);
+  if(camAnim){ camAnim.k=RM?1:Math.min(1,camAnim.k+.04); var e=1-Math.pow(1-camAnim.k,3);
     cam.position.lerpVectors(camAnim.p0,CAM0,e); ctl.target.lerpVectors(camAnim.t0,TGT0,e); if(camAnim.k>=1) camAnim=null; }
   ctl.update();
   ray.setFromCamera(mouse,cam);
@@ -620,14 +657,14 @@ function declutter(){
   if(nh!==hov){ hov=nh; showDet(hov); cv.style.cursor=hov?'pointer':''; }
   }
   bars.forEach(function(o,i){
-    o.h+=(o.ht-o.h)*.07; o.gh+=(o.ght-o.gh)*.07; o.x+=(o.xt-o.x)*.08;
+    if(RM){ o.h=o.ht; o.gh=o.ght; o.x=o.xt; } else { o.h+=(o.ht-o.h)*.07; o.gh+=(o.ght-o.gh)*.07; o.x+=(o.xt-o.x)*.08; }
     o.b.position.x=o.x; o.g.position.x=o.x+GOFF; o.gl.position.x=o.x;
     o.b.scale.y=Math.max(o.h,.001); o.b.position.y=o.h/2;
     o.g.scale.y=Math.max(o.gh,.001); o.g.position.y=o.gh/2;
     o.cp.position.x=o.x; o.cp.position.y=o.h; o.cp.scale.y=Math.min(1,Math.max(o.h,.001)/CAP_T);
     o.gc.position.x=o.x+GOFF; o.gc.position.y=o.gh; o.gc.scale.y=Math.min(1,Math.max(o.gh,.001)/CAP_T);
     var on=o===hov;
-    o.b.material.emissiveIntensity=(on?1.1:.5)+Math.sin(t*2+i)*.06;
+    o.b.material.emissiveIntensity=(on?1.1:.5)+(RM?0:Math.sin(t*2+i)*.06);
     o.gl.material.opacity=on?1:.6;
     v3.set(o.x,o.h+.35,.6).project(cam);
     o.lb.style.left=(v3.x*.5+.5)*innerWidth+'px'; o.lb.style.top=(-v3.y*.5+.5)*innerHeight+'px'; o.lb.style.opacity=v3.z<1?1:0;
@@ -638,7 +675,7 @@ function declutter(){
   });
   declutter();
   nqPlace();
-  pl.intensity=1.2+Math.sin(t*1.3)*.25;
+  pl.intensity=RM?1.2:1.2+Math.sin(t*1.3)*.25;
   R.render(S,cam);
 })();
 </script>
