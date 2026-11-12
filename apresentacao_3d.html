@@ -91,7 +91,7 @@ var C=[
  {id:'PV', nome:'Panvel',   r25:[88313,100145,206411,335650,742987], r26:[127479.29,214148.73,174541.86,272247.38,285669.31], u25:[2309,2619,5397,8775,19425], u26:[3205,5861,3665,5911,8788]},
  {id:'GA', nome:'DD-Gaúcha',r25:[33717,26887,332149,514813,361218], r26:[54261.59,98748.75,420390.89,165716.77,134251.21], u25:[2889,3150,26067,35201,24764], u26:[2489,4429,24038,8936,7571]},
  {id:'CL', nome:'Clamed',   r25:[37736.83,46320.02,108334.34,169244.04,254849.03], r26:[64025.36,null,null,null,null], u25:[1073,1324,3339,4911,7564], u26:[2036,1041,2465,4497,null]},
- {id:'RM', nome:'Riomed',   r25:[2554,3282,124428,126377,245462], r26:[8981.34,46724.93,110351.51,89576.23,null], u25:[104,128,4343,4721,9470], u26:[492,2763,4976,5327,null]}
+ {id:'RM', nome:'Riomed',   r25:[2554,3282,124428,126377,245462], r26:[8981.34,46724.93,110351.51,89576.23,29310.07], u25:[104,128,4343,4721,9470], u26:[492,2763,4976,5327,1743]}
 ];
 var FONTE='snapshot de 12/11/2026';
 /* São João só Isadora (OFF+EXPOSIS+RAID) = SJ total − Caroline · Jul–Nov */
@@ -160,18 +160,29 @@ var BR={ref:'Set/26',ytd:'Jan–Set',U:{CL:1},B:{"OFF!":{"SJ":[1923,2346.9,208.5
     BR={ref:O.ref,ytd:O.ytd,U:U,B:B};
   }catch(e){}
 })();
+/* ── Out e Nov por marca (marca_outnov.py, 12/11/2026): total do cliente no mês = dashboard; quebra por marca real na Panvel, Nissei,
+   Riomed e GAM Nov; estimada pelo mix de Set (SO_OP) em São João, Gaúcha, GAM Out e Clamed. [out26, nov26, out25, nov25] em R$ mil (Clamed un) ── */
+var BRM={"meses":["Out","Nov"],"B":{"OFF!":{"SJ":[258.4,455.8,339.0,649.0],"NS":[36.7,43.9,144.1,295.6],"PV":[119.8,139.2,162.1,426.5],"GAM":[530.8,453.9,734.1,782.4],"GA":[130.8,106.0,352.4,247.2],"RM":[62.0,17.7,86.0,167.1],"CL":[3708.9,0.0,4183.2,6432.8]},"EXPOSIS":{"SJ":[111.9,197.4,145.1,221.4],"NS":[126.1,32.6,85.7,150.0],"PV":[141.2,137.2,160.2,291.2],"GAM":[193.6,144.2,301.0,320.9],"GA":[11.7,9.5,81.3,57.0],"RM":[15.2,4.1,31.9,62.0],"CL":[647.6,0.0,727.8,1131.2]},"RAID":{"SJ":[24.8,43.7,43.4,81.1],"NS":[27.6,11.9,14.3,36.1],"PV":[11.3,9.3,13.3,25.3],"GAM":[16.2,11.3,8.6,9.2],"GA":[6.8,5.5,28.1,19.7],"RM":[9.0,7.3,7.4,14.4]},"LYSOFORM":{"SJ":[82.9,51.6,50.5,58.9],"GAM":[0.0,2.7,0.0,0.0],"GA":[0.0,0.0,4.9,3.4],"RM":[1.6,0.0,0.6,1.1]},"GLADE":{"SJ":[80.0,49.8,22.9,32.2],"GA":[16.4,13.3,41.2,28.9],"RM":[0.9,0.2,0.4,0.8]},"PATO":{"SJ":[60.3,37.5,27.9,37.2],"GAM":[1.9,0.0,0.0,0.0],"GA":[0.0,0.0,3.6,2.5]},"PATO BLOCK":{"GAM":[0.0,0.1,0.0,0.0],"RM":[0.9,0.1,0.0,0.0],"CL":[140.5,0.0,0.0,0.0]},"MR MUSCULO":{"GA":[0.0,0.0,3.3,2.3]}}};
 var MARCAS=[['all','Todas'],['OFF!','OFF'],['EXPOSIS','Exposis'],['RAID','Raid'],['GLADE','Glade'],['LYSOFORM','Lysoform'],['PATO','Pato'],['PATO BLOCK','Pato Block']];
 /* várias marcas marcadas = soma das marcas por cliente */
 function brandDS(bs){
-  var t={}; bs.forEach(function(b){ var x=BR.B[b]||{}; Object.keys(x).forEach(function(id){ var r=t[id]=t[id]||[0,0,0,0]; for(var i=0;i<4;i++) r[i]+=x[id][i]; }); });
-  return {MES:[String(BR.ref).split('/')[0]], PLAB:BR.ytd, C:C.map(function(c){ var r=t[c.id], un=!!BR.U[c.id], k=un?1:1000;
-    if(!r) return {id:c.id,nome:c.nome,none:true,un:un,r26:[0],r25:[0],u26:[0],u25:[0],y26:0,y25:0};
-    return {id:c.id,nome:c.nome,un:un,r26:[r[2]*k],r25:[r[3]*k],u26:[r[2]*k],u25:[r[3]*k],y26:r[0]*k,y25:r[1]*k}; })};
+  var t={}, o={}; bs.forEach(function(b){ var x=BR.B[b]||{}, y=BRM.B[b]||{};
+    Object.keys(x).forEach(function(id){ var r=t[id]=t[id]||[0,0,0,0]; for(var i=0;i<4;i++) r[i]+=x[id][i]; });
+    Object.keys(y).forEach(function(id){ var r=o[id]=o[id]||[0,0,0,0]; for(var i=0;i<4;i++) r[i]+=y[id][i]; }); });
+  var ref=String(BR.ref).split('/')[0], mes=[ref].concat(BRM.meses), plab='Jan–'+BRM.meses[BRM.meses.length-1];
+  return {MES:mes, PLAB:plab, C:C.map(function(c){ var r=t[c.id], q=o[c.id], un=!!BR.U[c.id], k=un?1:1000;
+    if(!r&&!q) return {id:c.id,nome:c.nome,none:true,un:un,r26:mes.map(function(){return 0;}),r25:mes.map(function(){return 0;}),u26:mes.map(function(){return 0;}),u25:mes.map(function(){return 0;}),y26:0,y25:0};
+    r=r||[0,0,0,0]; q=q||[0,0,0,0];
+    var nov=q[1]?q[1]*k:null; /* sem Nov/26 (ex.: Clamed) → fica pendente e o Nov/25 sai da comparação */
+    var a26=[r[2]*k,q[0]*k,nov], a25=[r[3]*k,q[2]*k,q[3]*k];
+    return {id:c.id,nome:c.nome,un:un,r26:a26,r25:a25,u26:a26,u25:a25,y26:(r[0]+q[0])*k+(nov||0),y25:(r[1]+q[2]+(nov==null?0:q[3]))*k}; })};
 }
 var ST={m:'r',p:'T',f:'so',mSO:'r',b:'all',bs:[]};
 function bNome(){ return ST.bs.map(function(b){ return MARCAS.filter(function(m){return m[0]===b;})[0][1]; }).join(' + '); }
 function hbMode(){ return ST.f==='so'&&ST.bs.length===3&&['OFF!','EXPOSIS','RAID'].every(function(b){return ST.bs.indexOf(b)>=0;}); }
-function mbMode(){ return ST.f==='so'&&ST.b!=='all'&&!hbMode(); }
+/* todas as marcas marcadas = total do cliente (igual a 'Todas'), mensal até Nov */
+function fullMode(){ return ST.f==='so'&&ST.bs.length===MARCAS.length-1; }
+function mbMode(){ return ST.f==='so'&&ST.b!=='all'&&!hbMode()&&!fullMode(); }
 function cmpTxt(){ return mbMode()?'vs 2025':'vs FY26'; }
 var PLAB='Jul–'+MES[MES.length-1];
 
@@ -255,7 +266,7 @@ var bars=C.map(function(c,i){
 
 function update(){
   var vs=bars.map(function(o){ return {a:val(o.c,'26'),p:val(o.c,'25')}; });
-  var MB=mbMode(), HBm=hbMode(), fora=function(o){ return MB&&o.c.un; }; // Clamed em unidades fica fora do total por marca
+  var MB=mbMode(), HBm=hbMode()||fullMode(), fora=function(o){ return MB&&o.c.un; }; // Clamed em unidades fica fora do total por marca
   var mx=0; vs.forEach(function(v,i){ if(fora(bars[i])) return; mx=Math.max(mx,v.a.v||0,v.p.v||0); });
   /* ordem decrescente pelo valor 2026 da métrica/período escolhidos (maior à esquerda) */
   bars.map(function(o,i){ return {o:o,v:fora(o)?-1:(vs[i].a.v||0)}; }).sort(function(a,b){ return b.v-a.v; })
@@ -278,14 +289,15 @@ function update(){
   var tp=pct(t26,t25), plb=ST.p==='T'?PLAB+'/26':MES[ST.p]+'/26';
   var parc=ST.f==='si'&&SI.parcial&&(ST.p==='T'||ST.p===MES.length-1);
   var cres=bars.map(function(o,i){return {n:o.c.nome,p:fora(o)?null:pct(vs[i].a.v,vs[i].p.v)};}).filter(function(x){return x.p!=null;}).sort(function(a,b){return b.p-a.p;})[0];
-  var mNome=(MB||HBm)?' '+bNome():'';
+  var mNome=fullMode()?' todas as marcas':(MB||HBm)?' '+bNome():'';
   document.getElementById('kpis').innerHTML=
     '<div class="k"><div class="l">'+(ST.f==='si'?'Sell In acumulado':'Sell Out'+mNome+((MB||HBm)?'':' total'))+' · '+plb+(parc?' (Nov parcial)':'')+'</div><div class="n">'+(best?fmtK(t26):'—')+'</div><div class="s '+(tp>=0?'up':'down')+'">'+pctTxt(tp)+' '+cmpTxt()+'</div></div>'+
     '<div class="k"><div class="l">Maior cliente</div><div class="n" style="font-size:17px">'+(best?best.n:'—')+'</div><div class="s" style="color:var(--mut)">'+(best?fmtK(best.v)+' · '+(best.v/t26*100).toFixed(0)+'% do total':'')+'</div></div>'+
     '<div class="k"><div class="l">Maior crescimento</div><div class="n" style="font-size:17px">'+(cres?cres.n:'—')+'</div><div class="s '+(cres&&cres.p<0?'down':'up')+'">'+(cres?pctTxt(cres.p):'')+'</div></div>';
   document.getElementById('nota').textContent=ST.f==='si'?'Sell In em caixas (real) · '+SI.parcial+' parcial, comparado com o mês cheio do FY26'+(SI.extNomes?' · total inclui '+SI.extNomes+' (sem barra)':'')+' · Sell In não tem quebra por marca. '
+    :fullMode()?'Todas as marcas marcadas = Sell Out total do cliente por mês (igual a Todas), FY27 × FY26 até '+MES[MES.length-1]+'/26 (Nov parcial vs Nov/25 cheio). '
     :HBm?'OFF + Exposis + Raid = linha HB do dashboard por mês, FY27 × FY26 (até '+MES[MES.length-1]+'/26; Nov parcial vs Nov/25 cheio) · São João só Isadora · DD-Gaúcha inclui Glade e GAM/Riomed incluem Lysoform/Pato residuais (o mensal não tem quebra por marca) · Clamed: receita só até Jul/26. '
-    :MB?'Por marca: acumulado '+BR.ytd+'/26 × '+BR.ytd+'/25 e mês '+BR.ref+' × mesmo mês de 2025 (ano-calendário, base SKU do card Sell-out por Marca) · São João = Isadora + Caroline · Clamed só em unidades (fora do total). '
+    :MB?'Por marca: acumulado '+PLAB+'/26 × '+PLAB+'/25 e cada mês × mesmo mês de 2025 · Nov/26 parcial até 11/11 (vs Nov/25 cheio) · Jan–Set = base SKU do card Sell-out por Marca; Out/Nov = total do cliente no dashboard quebrado por marca (real: Panvel, Nissei, Riomed e GAM Nov; estimado pelo mix de Set: São João, Gaúcha, GAM Out e Clamed) · São João = Isadora + Caroline · Clamed só em unidades (fora do total). '
     :(ST.m==='r'&&pendAny)?'Clamed: receita de Ago–Out/26 ainda não está na planilha; a comparação usa só os meses com dado. ':(ST.m==='u'?'Panvel FY26 em unidades é estimado (receita ÷ ticket médio). ':'');
 }
 
@@ -296,7 +308,7 @@ cv.addEventListener('pointerleave',function(){ mouse.set(-9,-9); });
 function showDet(o){
   if(!o){ det.classList.remove('on'); return; }
   var c=o.c, a=c[ST.m+'26'].slice(), p=c[ST.m+'25'].slice(), lb=MES.slice(), MB=c.y26!==undefined;
-  if(MB){ a.unshift(c.y26); p.unshift(c.y25); lb.unshift(BR.ytd); }
+  if(MB){ a.unshift(c.y26); p.unshift(c.y25); lb.unshift(PLAB); }
   var mx=0; for(var i=0;i<lb.length;i++) mx=Math.max(mx,a[i]||0,p[i]||0);
   var h='<h3>'+c.nome+'</h3><div class="sub">'+(ST.f==='si'?'Sell In (caixas) por mês · FY27 × FY26':MB?(ST.bs.length>1?'Marcas ':'Marca ')+bNome()+' · 2026 × 2025':(ST.m==='r'?'Receita':'Unidades')+' por mês · FY27 × FY26')+'</div>';
   if(c.none) h+='<div class="sub">Sem venda desta marca no cliente.</div>';
@@ -314,13 +326,13 @@ function buildPer(){ document.getElementById('segP').innerHTML=MES.map(function(
 buildPer();
 /* troca de base: Sell Out (todas as marcas) · Sell Out por marca · Sell In */
 function applyDS(){
-  var MB=mbMode(), DS=ST.f==='si'?SI:hbMode()?HB:MB?brandDS(ST.bs):SO;
+  var MB=mbMode(), DS=ST.f==='si'?SI:fullMode()?SO:hbMode()?HB:MB?brandDS(ST.bs):SO;
   MES=DS.MES; PLAB=DS.PLAB||('Jul–'+MES[MES.length-1]); ST.p='T'; ST.m=ST.f==='si'?'u':MB?'r':ST.mSO;
   bars.forEach(function(o){ o.c=DS.C.filter(function(c){return c.id===o.c.id;})[0]; o.h*=.0001; o.gh*=.0001; });
   document.getElementById('segM').style.display=(ST.f==='si'||MB)?'none':'';
   document.getElementById('segB').style.display=ST.f==='si'?'none':'';
   document.getElementById('ttl').textContent=ST.f==='si'?'Sell In ':'Sell Out ';
-  document.getElementById('fy').textContent=MB?BR.ytd+'/26':'FY27';
+  document.getElementById('fy').textContent=MB?PLAB+'/26':'FY27';
   buildPer(); update(); if(hov) showDet(hov);
 }
 document.getElementById('segF').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b||b.dataset.f===ST.f) return;
