@@ -53552,6 +53552,16 @@ function _cpt2DiagInsight(idx, T, tv, cv, shP, shC, caiu, subiu, F, dimNome){
     +'<div style="font-size:10px;font-weight:800;letter-spacing:0.08em;color:#1D6FA8;margin-bottom:4px;">📊 DIAGNÓSTICO · '+onde+'</div>'
     +L.map(function(x){ return '<div>'+x+'</div>'; }).join('')+'</div>';
 }
+/* bandeira → grupo econômico para a tabela do diagnóstico. Bandeira em vários grupos (ex.: INDEPENDENTES, associativismos):
+   restringe pelos grupos filtrados e pelos grupos do OL filtrado; se ainda ficar ambígua (ou sem grupo), mostra a própria bandeira. */
+function _cpt2GrpDe(ban){
+  var inv = _cpt2GrpDe._inv;
+  if(!inv){ inv = _cpt2GrpDe._inv = {}; Object.keys(CPT2_GRP_BANS).forEach(function(g){ CPT2_GRP_BANS[g].forEach(function(b){ (inv[b]=inv[b]||[]).push(g); }); }); }
+  var c = (inv[ban]||[]).slice(), M = (typeof CPT2_MS!=='undefined') ? CPT2_MS : {grp:[], ol:[]};
+  if(c.length>1 && M.grp && M.grp.length){ var f=c.filter(function(g){ return M.grp.indexOf(g)>=0; }); if(f.length) c=f; }
+  if(c.length>1 && M.ol && M.ol.length && typeof CPT_OL_GRUPOS!=='undefined'){ var og=[]; M.ol.forEach(function(o){ og=og.concat(CPT_OL_GRUPOS[o]||[]); }); var f2=c.filter(function(g){ return og.indexOf(g)>=0; }); if(f2.length) c=f2; }
+  return c.length===1 ? c[0] : ban;
+}
 function _cpt2RenderDiag(idx){
   var box = document.getElementById('cpt2-diag'); if(!box) return;
   if(!idx || !idx.length){ box.innerHTML=''; return; }
@@ -53559,14 +53569,15 @@ function _cpt2RenderDiag(idx){
   var sum = function(a, o){ var s=0; for(var m=0;m<n;m++) s += (a[o+m]||0); return s; };
   /* dimensão: cliente (bandeira); com 1 bandeira só → UF; com 1 UF só → cidade */
   var bans={}, ufs={};
-  idx.forEach(function(i){ bans[CPT2_KEYS[i][2]]=1; ufs[CPT2_KEYS[i][0]]=1; });
+  idx.forEach(function(i){ bans[_cpt2GrpDe(CPT2_KEYS[i][2])]=1; ufs[CPT2_KEYS[i][0]]=1; });   /* conta grupos econômicos */
   var _ufFil = (typeof CPT2_MS!=='undefined') && (CPT2_MS.uf.length || CPT2_MS.cid.length);  /* abre por UF/cidade só com filtro de UF ou cidade */
   var dimI = (Object.keys(bans).length>1 || !_ufFil) ? 2 : (Object.keys(ufs).length>1 ? 0 : 1);
   var dimNome = ['UF','Cidade','Cliente'][dimI===2?2:dimI];
   var g = {};
   idx.forEach(function(i){
-    var k = CPT2_KEYS[i][dimI], f = CPT2_FAB[i], c = CPT2_CAT[i];
-    var o = g[k] || (g[k] = {k:k, fp:0, fc:0, cp:0, cc:0, uf:{}, lk:{}, mfp:[], mfc:[], mcp:[], mcc:[]});
+    var k = dimI===2 ? _cpt2GrpDe(CPT2_KEYS[i][2]) : CPT2_KEYS[i][dimI], f = CPT2_FAB[i], c = CPT2_CAT[i];   /* linha = grupo econômico */
+    var o = g[k] || (g[k] = {k:k, fp:0, fc:0, cp:0, cc:0, uf:{}, lk:{}, bn:{}, mfp:[], mfc:[], mcp:[], mcc:[]});
+    o.bn[CPT2_KEYS[i][2]] = 1;
     for(var z=0;z<n;z++){ o.mfp[z]=(o.mfp[z]||0)+(f[z]||0); o.mfc[z]=(o.mfc[z]||0)+(f[12+z]||0); o.mcp[z]=(o.mcp[z]||0)+(c[z]||0); o.mcc[z]=(o.mcc[z]||0)+(c[12+z]||0); }
     var _ch = (o.ch || (o.ch = {})), _cn = CPT2_KEYS[i][3] || '—', w = _ch[_cn] || (_ch[_cn] = {mfp:[], mfc:[], mcp:[], mcc:[]});
     for(var z=0;z<n;z++){ w.mfp[z]=(w.mfp[z]||0)+(f[z]||0); w.mfc[z]=(w.mfc[z]||0)+(f[12+z]||0); w.mcp[z]=(w.mcp[z]||0)+(c[z]||0); w.mcc[z]=(w.mcc[z]||0)+(c[12+z]||0); }
@@ -53659,7 +53670,7 @@ function _cpt2RenderDiag(idx){
       +'</tr></tfoot>'; };
   var rows = ord.slice(0,_lim).map(function(o){
     var neg = o.d<0, bw = neg ? (perda<0 ? Math.max(2, Math.round(o.d/perda*100)) : 0) : (ganho>0 ? Math.max(2, Math.round(o.d/ganho*100)) : 0);
-    return '<tr>'+td('<span onclick="_cpt2MesSel(\''+_cpt2Esc(o.k)+'\')" title="Ver mês a mês: mercado × '+_c2M()+'" style="cursor:pointer;border-bottom:1px dashed rgba(29,111,168,0.6);">'+o.k+'</span> <span onclick="_cpt2MesSel(\''+_cpt2Esc(o.k)+'\')" title="Ver mês a mês" style="cursor:pointer;font-size:10px;">📅</span>','left','#0D1B2E',true)+(comReg?td(regDe(o),'left','#334155'):'')+(comUF?td(ufDe(o),'left','#334155'):'')+(comLj?ljTd(o):'')+td(fR2(o.cp),'right','#64748B')+td(fR2(o.fp),'right','#3B82F6')+mkTd(o)+td(_cpt2ImpBar(T.cc>0?o.cc/T.cc*100:null),'right')+td(fR2(o.cc),'right','#475569')+td(fR2(o.fc),'right','#059669')
+    return '<tr>'+td('<span onclick="_cpt2MesSel(\''+_cpt2Esc(o.k)+'\')" title="Ver mês a mês: mercado × '+_c2M()+'" style="cursor:pointer;border-bottom:1px dashed rgba(29,111,168,0.6);">'+o.k+'</span> <span onclick="_cpt2MesSel(\''+_cpt2Esc(o.k)+'\')" title="Ver mês a mês" style="cursor:pointer;font-size:10px;">📅</span>'+(dimI===2&&o.bn&&(Object.keys(o.bn).length>1||Object.keys(o.bn)[0]!==o.k)?'<div style="font-size:9.5px;font-weight:500;color:#64748B;margin-top:2px;" title="Bandeiras do grupo no filtro">'+Object.keys(o.bn).sort().join(' · ')+'</div>':''),'left','#0D1B2E',true)+(comReg?td(regDe(o),'left','#334155'):'')+(comUF?td(ufDe(o),'left','#334155'):'')+(comLj?ljTd(o):'')+td(fR2(o.cp),'right','#64748B')+td(fR2(o.fp),'right','#3B82F6')+mkTd(o)+td(_cpt2ImpBar(T.cc>0?o.cc/T.cc*100:null),'right')+td(fR2(o.cc),'right','#475569')+td(fR2(o.fc),'right','#059669')
       +td(fR2(o.d),'right',neg?'#DC2626':'#059669',true)+td(pc(o.v),'right',cor(o.v),true)+td(pp(o.sp,o.sc),'right',(o.sc!=null&&o.sp!=null&&o.sc<o.sp)?'#DC2626':'#059669')
       +'<td style="padding:6px 10px;border-bottom:0.5px solid rgba(94,153,208,0.18);"><div style="height:7px;width:110px;background:'+(neg?'rgba(220,38,38,0.12)':'rgba(5,150,105,0.12)')+';border-radius:4px;"><div style="height:7px;width:'+bw+'%;background:'+(neg?'#DC2626':'#059669')+';border-radius:4px;"></div></div></td></tr>';
   }).join('');
@@ -53678,11 +53689,11 @@ function _cpt2RenderDiag(idx){
         +chip('Var. mercado', pc(cv), cK(cv), 'Categoria '+P+' → '+C)
         +(function(){ var B=0; for(var i=0;i<CPT2_CAT.length;i++){ B+=sum(CPT2_CAT[i],12); } var p=B>0?T.cc/B*100:null; return chip('Importância da categoria', p==null?'—':(p<10?p.toFixed(1):p.toFixed(0)).replace('.',',')+'%', '#6366F1', fR2(T.cc)+' de '+fR2(B)+' · categoria '+C+' no Brasil'); })()
         +chip('Share '+_c2M()+' '+C, shC==null?'—':shC.toFixed(2)+'%', cK(shC!=null&&shP!=null?shC-shP:null), (shP==null?'':'era '+shP.toFixed(2)+'% · ')+pp(shP,shC))
-        +(function(x){ return x.replace('<div class="kpi-cell" style="', '<div class="kpi-cell" title="Clique para ver só os que caíram" onclick="window._cpt2DiagSel=(window._cpt2DiagSel===\'queda\'?\'todos\':\'queda\');window._cpt2DiagAll=false;_cpt2Render();" style="cursor:pointer;'+((window._cpt2DiagSel==='queda')?'box-shadow:0 0 0 2px #DC2626;':'')); })(chip(dimNome==='Cliente'?'Clientes em queda':(dimNome==='UF'?'UFs em queda':'Cidades em queda'), caiu.length+' de '+L.length, caiu.length?'#ef4444':'#34d399', 'perda '+fR2(perda)+' · ganho '+fR2(ganho)))
+        +(function(x){ return x.replace('<div class="kpi-cell" style="', '<div class="kpi-cell" title="Clique para ver só os que caíram" onclick="window._cpt2DiagSel=(window._cpt2DiagSel===\'queda\'?\'todos\':\'queda\');window._cpt2DiagAll=false;_cpt2Render();" style="cursor:pointer;'+((window._cpt2DiagSel==='queda')?'box-shadow:0 0 0 2px #DC2626;':'')); })(chip(dimNome==='Cliente'?'Grupos em queda':(dimNome==='UF'?'UFs em queda':'Cidades em queda'), caiu.length+' de '+L.length, caiu.length?'#ef4444':'#34d399', 'perda '+fR2(perda)+' · ganho '+fR2(ganho)))
       +'</div>'+_cpt2DiagInsight(idx, T, tv, cv, shP, shC, caiu, subiu, F, dimNome)+'</div>'
     +'<div style="font-size:11.5px;color:#0D1B2E;line-height:1.5;padding:8px 12px;border-radius:8px;background:rgba(29,111,168,0.07);border-left:3px solid #1D6FA8;margin-bottom:10px;">'+frase+'</div>'
-    +(L.length ? '<div style="font-size:9.5px;font-weight:700;letter-spacing:0.06em;color:#475569;text-transform:uppercase;margin:0 0 6px;display:flex;align-items:center;flex-wrap:wrap;gap:4px;">'+(dimNome==='Cliente'?'Clientes':dimNome==='UF'?'Estados':'Cidades')+' do filtro — por importância da categoria (maior → menor)'+_segs+'</div><div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:720px;"><thead><tr>'
-        +th(dimNome,'left')+(comReg?th('Região','left'):'')+(comUF?th('Estado (var. · lojas) — maior impacto 1º','left'):'')+(comLj?th('CNPJs (lojas)'):'')+th('Dem. Cat '+P)+th('Dem. Fab '+P)+'<th style="text-align:center;padding:6px 10px;font-size:9px;font-weight:700;letter-spacing:0.06em;color:#1D6FA8;text-transform:uppercase;border-bottom:1px solid rgba(94,153,208,0.35);background:rgba(29,111,168,0.08);">Mercado (categoria) × '+_c2M()+' — var. %</th>'+'<th title="Categoria (repelentes) da linha ÷ categoria do filtro, '+C+'" style="text-align:right;white-space:nowrap;padding:6px 10px;font-size:9px;font-weight:700;letter-spacing:0.06em;color:#4F46E5;text-transform:uppercase;border-bottom:1px solid rgba(94,153,208,0.35);">Imp. categoria</th>'+th('Dem. Cat '+C)+th('Dem. Fab '+C)+th('Δ R$')+th('Var. %')+th('Δ Share')+th('Peso (perda / ganho)','left')
+    +(L.length ? '<div style="font-size:9.5px;font-weight:700;letter-spacing:0.06em;color:#475569;text-transform:uppercase;margin:0 0 6px;display:flex;align-items:center;flex-wrap:wrap;gap:4px;">'+(dimNome==='Cliente'?'Grupos econômicos':dimNome==='UF'?'Estados':'Cidades')+' do filtro — por importância da categoria (maior → menor)'+_segs+'</div><div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:720px;"><thead><tr>'
+        +th(dimNome==='Cliente'?'Grupo econômico':dimNome,'left')+(comReg?th('Região','left'):'')+(comUF?th('Estado (var. · lojas) — maior impacto 1º','left'):'')+(comLj?th('CNPJs (lojas)'):'')+th('Dem. Cat '+P)+th('Dem. Fab '+P)+'<th style="text-align:center;padding:6px 10px;font-size:9px;font-weight:700;letter-spacing:0.06em;color:#1D6FA8;text-transform:uppercase;border-bottom:1px solid rgba(94,153,208,0.35);background:rgba(29,111,168,0.08);">Mercado (categoria) × '+_c2M()+' — var. %</th>'+'<th title="Categoria (repelentes) da linha ÷ categoria do filtro, '+C+'" style="text-align:right;white-space:nowrap;padding:6px 10px;font-size:9px;font-weight:700;letter-spacing:0.06em;color:#4F46E5;text-transform:uppercase;border-bottom:1px solid rgba(94,153,208,0.35);">Imp. categoria</th>'+th('Dem. Cat '+C)+th('Dem. Fab '+C)+th('Δ R$')+th('Var. %')+th('Δ Share')+th('Peso (perda / ganho)','left')
         +'</tr></thead><tbody>'+rows+'</tbody>'+totRow()+'</table></div>'
         +(ord.length>10 ? '<button onclick="window._cpt2DiagAll=!window._cpt2DiagAll;_cpt2Render();" style="margin-top:6px;padding:4px 10px;border-radius:6px;border:1px solid rgba(29,111,168,0.45);background:#FFFFFF;color:#1D6FA8;font-size:9.5px;font-weight:700;cursor:pointer;">'
           +(window._cpt2DiagAll ? '▲ Mostrar só os 10 primeiros' : '▼ Ver todos os '+ord.length+' ('+caiu.length+' em queda)')+'</button>' : '')
