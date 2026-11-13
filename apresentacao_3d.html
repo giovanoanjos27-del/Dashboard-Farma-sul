@@ -107,6 +107,7 @@ footer{position:fixed;left:22px;bottom:18px;font-size:11px;color:var(--mut);max-
   <div class="tt"><h1><span id="ttl">Sell Out </span><b>Farma Sul</b> · <span id="fy">FY27</span></h1><p id="sub">HB Repelentes &amp; Inseticidas · por cliente · vs FY26 · <span id="fonte"></span></p></div>
   <div class="ctl">
     <div style="display:flex;gap:8px"><div class="seg" id="segNV" style="display:none" title="Visão Nielsen"><button data-v="acum" class="on">Acumulado</button><button data-v="mes">Mês a mês</button></div><div class="seg"><button id="rv" hidden title="Voltar à vista de frente">Reset vista</button><button id="tb" aria-expanded="false" aria-controls="tbl" title="Os mesmos números em tabela">Ver tabela</button><button id="fs" title="Tela cheia">Tela cheia</button></div><div class="seg" id="segF"><button data-f="so" class="on">Sell Out</button><button data-f="si">Sell In</button><button data-f="nq">Nielsen</button></div><div class="seg" id="segM"><button data-m="r" class="on">R$</button><button data-m="u">Unidades</button></div></div>
+    <div class="seg" id="segY" title="Período de comparação"><button data-y="fy" class="on">Ano fiscal FY27 × FY26</button><button data-y="cal">Ano-calendário 2026 × 2025</button></div>
     <div class="seg" id="segP"></div>
     <div class="seg" id="segB" title="Marca (Sell Out) · clique em várias para somar"></div>
     <div class="seg" id="segNQ" style="display:none" title="Market Nielsen"><select id="mkt"></select></div>
@@ -131,15 +132,18 @@ footer{position:fixed;left:22px;bottom:18px;font-size:11px;color:var(--mut);max-
 /* Dados: snapshot do dashboard (index.html) — meses Jul–Nov (Nov/26 parcial até 11/11) de 2025 (FY26) e 2026 (FY27). null = sem dado na planilha. */
 var MES=['Jul','Ago','Set','Out','Nov'];
 var C=[
- {id:'SJ', nome:'São João', r25:[138670,147269,236894,628781,1079791], r26:[315428.05,554511.1,517413.29,618274.1,835727], u25:[5923,5092,7137,21121,41181], u26:[13620,22184,19632,20517,38419]},
+ {id:'SJ', nome:'São João', r25:[138853.92,147477.91,238418.66,630622.01,1087977.32], r26:[315428.05,554511.1,517413.29,618274.1,895306.53], u25:[5923,5092,7137,21121,41182], u26:[13638,22184,19632,20517,41052]},
  {id:'GAM',nome:'DD-GAM',   r25:[90680,109575,815540,1043727,1112491], r26:[135457.8,1114162.9,533293.67,742478.16,612213.54], u25:[5258,6854,50574,72566,71996], u26:[7829,60077,25937,40466,36845]},
- {id:'NS', nome:'Nissei',   r25:[81669,102098,181264,244150,481640], r26:[65192.44,248308.33,235947.45,190488,88446.87], u25:[2947,3661,5992,8735,18223], u26:[1995,6044,5287,4234,1952]},
+ {id:'NS', nome:'Nissei',   r25:[79554.52,101077.45,180664.72,240714.34,475124.42], r26:[63846.69,165088.09,145660.41,156368.2,79050.56], u25:[2774,3575,5936,8598,17978], u26:[1995,6044,5287,4234,2141]},
  {id:'PV', nome:'Panvel',   r25:[88313,100145,206411,335650,742987], r26:[127479.29,214148.73,174541.86,272247.38,285669.31], u25:[2309,2619,5397,8775,19425], u26:[3205,5861,3665,5911,8788]},
  {id:'GA', nome:'DD-Gaúcha',r25:[33717,26887,332149,514813,361218], r26:[54261.59,98748.75,420390.89,165716.77,134251.21], u25:[2889,3150,26067,35201,24764], u26:[2489,4429,24038,8936,7571]},
  {id:'CL', nome:'Clamed',   r25:[37736.83,46320.02,108334.34,169244.04,254849.03], r26:[64025.36,null,null,null,null], u25:[1073,1324,3339,4911,7564], u26:[2036,1041,2465,4497,null]},
  {id:'RM', nome:'Riomed',   r25:[2554,3282,124428,126377,245462], r26:[8981.34,46724.93,110351.51,89576.23,29310.07], u25:[104,128,4343,4721,9470], u26:[492,2763,4976,5327,1743]}
 ];
 var FONTE='snapshot de 12/11/2026';
+/* ano-calendário Jan→último mês de 2026 × mesmo período de 2025 (snapshot; dentro do dashboard é refeito ao vivo) */
+var CALD={n:11,c:{"SJ":{"r25":[1388413.72,1093860.48,868299.86,538324.01,340818.34,145583.33,138853.92,147477.91,238418.66,630622.01,1087977.32],"r26":[1149803.7,871695.94,731573.95,588860.1,285013.83,247603.88,315428.05,554511.1,517413.29,618274.1,895306.53],"u25":[57194.0,43733.0,31660.0,16858.0,11050.0,5776.0,5923.0,5092.0,7137.0,21121.0,41182.0],"u26":[36766.0,28539.0,24361.0,18774.0,11816.0,10597.0,13638.0,22184.0,19632.0,20517.0,41052.0]},"GAM":{"r25":[899992.0,1111875.0,533429.0,503784.0,312905.0,61698.0,90680.0,109575.0,815540.0,1043727.0,1112491.0],"r26":[1555042.0,1152927.0,736481.0,569974.95,201974.48,118603.14,135457.8,1114162.9,533293.67,742478.16,612213.54],"u25":[50822.0,67517.0,29896.0,27084.0,16950.0,3178.0,5258.0,6854.0,50574.0,72566.0,71996.0],"u26":[86399.0,74669.0,40439.0,32246.0,11179.0,6153.0,7829.0,60077.0,25937.0,40466.0,36845.0]},"NS":{"r25":[385517.46,463370.5,343920.35,222814.98,143506.99,58676.06,79554.52,101077.45,180664.72,240714.34,475124.42],"r26":[460506.77,409230.25,463039.03,315453.74,72504.36,35844.12,63846.69,165088.09,145660.41,156368.2,79050.56],"u25":[11612.0,13659.0,9532.0,6014.0,4160.0,1854.0,2774.0,3575.0,5936.0,8598.0,17978.0],"u26":[13253.0,12543.0,14655.0,9724.0,2628.0,1817.0,1995.0,6044.0,5287.0,4234.0,2141.0]},"PV":{"r25":[792187.0,912184.0,728966.0,683376.0,440785.57,83428.0,88313.0,100145.0,206411.0,335650.0,742987.0],"r26":[780611.0,641756.0,636694.0,499628.0,114839.83,50284.45,127479.29,214148.73,174541.86,272247.38,285669.31],"u25":[20712.0,23851.0,19059.0,17872.0,11189.0,2181.0,2309.0,2619.0,5397.0,8775.0,19425.0],"u26":[20892.0,17449.0,17349.0,12017.0,2985.0,1310.0,3205.0,5861.0,3665.0,5911.0,8788.0]},"GA":{"r25":[363534.0,376375.0,262908.42,193266.5,97947.16,48305.0,33717.0,26887.0,332149.0,514813.0,361218.0],"r26":[415756.0,222894.0,306025.24,427404.11,107322.57,50785.47,54261.59,98748.75,420390.89,165716.77,134251.21],"u25":[21971.0,24876.0,17266.0,13574.0,7515.0,4344.0,2889.0,3150.0,26067.0,35201.0,24764.0],"u26":[26019.0,13265.0,18517.0,23649.0,5990.0,2683.0,2489.0,4429.0,24038.0,8936.0,7571.0]},"CL":{"r25":[490240.87,502702.54,414628.34,254529.11,157325.2,40994.49,37736.83,46320.02,108334.34,169244.04,254849.03],"r26":[511009.0,474208.0,501017.0,352568.84,74402.75,44465.55,64025.36,null,null,null,null],"u25":[16112.0,15911.0,12971.0,8094.0,4913.0,1163.0,1073.0,1324.0,3339.0,4911.0,7564.0],"u26":[13965.0,16070.0,11233.0,9892.0,2366.0,1414.0,2036.0,1041.0,2465.0,4497.0,null]},"RM":{"r25":[296117.0,196606.0,168592.0,151424.0,70673.0,14914.0,2554.0,3282.0,124428.0,126377.0,245462.0],"r26":[146204.0,118027.0,171759.0,93983.28,19423.06,7356.67,8981.34,46724.93,110351.51,89576.23,29310.07],"u25":[10709.0,7331.0,6225.0,5370.0,2349.0,522.0,104.0,128.0,4343.0,4721.0,9470.0],"u26":[5683.0,4593.0,9409.0,6092.0,1064.0,403.0,492.0,2763.0,4976.0,5327.0,1743.0]}}};
+var SJIC={"r25":[1238486.42,962221.0,724630.45,412321.14,204892.3,30956.59,33026.53,57358.08,168743.78,529297.46,959638.28,1369618.15],"r26":[1019692.05,745830.72,557967.65,368574.94,62483.59,27808.28,48877.0,144011.9,318513.46,395048.79,751197.96,null],"u25":[50873.0,38064.0,25162.0,12111.0,5300.0,769.0,734.0,1205.0,4366.0,16500.0,34554.0,43231.0],"u26":[31869.0,23806.0,17045.0,9267.0,1691.0,753.0,946.0,3094.0,11181.0,11241.0,33777.0,null]};
 /* São João só Isadora (OFF+EXPOSIS+RAID) = SJ total − Caroline · Jul–Nov */
 var SJI={r25:[32843,57150,167220,527457,951465], r26:[48877,144011.9,318513.46,395048.79,696869], u25:[734,1205,4366,16500,34554], u26:[928,3094,11181,11241,31332]};
 /* Dentro do dashboard (aba 3D): lê os arrays ao vivo do próprio dashboard; FY27 = Jul–Dez/26 até o último mês com dado */
@@ -164,6 +168,13 @@ var SJI={r25:[32843,57150,167220,527457,951465], r26:[48877,144011.9,318513.46,3
       r25:idx.map(function(m){return z(s[2]('2025')[m]);}), r26:idx.map(function(m){return nv(s[2]('2026')[m]);}),
       u25:idx.map(function(m){return z(s[3]('2025')[m]);}), u26:idx.map(function(m){return nv(s[3]('2026')[m]);})}; });
     MES=idx.map(function(m){return NM[m-6];}); FONTE='dados ao vivo do dashboard';
+    var nC=0; for(var q=0;q<12;q++){ if(src.some(function(s){ return s[2]('2026')[q]!=null||s[3]('2026')[q]!=null; })) nC=q+1; }
+    var cc={}; src.forEach(function(s){ var sl=function(a,z){ var o=[]; for(var q=0;q<nC;q++){ var v=a[q]; o.push(v==null?(z?0:null):+v); } return o; };
+      cc[s[0]]={r25:sl(s[2]('2025'),1),r26:sl(s[2]('2026')),u25:sl(s[3]('2025'),1),u26:sl(s[3]('2026'))}; });
+    if(nC) CALD={n:nC,c:cc};
+    var dd=function(a,b,z){ return a.map(function(x,q){ return x==null?(z?0:null):+x-(+((b||[])[q]||0)); }); };
+    SJIC={r25:dd(yr(g('SJ_REC'),'2025'),g('SJC_REC'),1), r26:dd(yr(g('SJ_REC'),'2026'),g('SJC_REC_26')),
+          u25:dd(yr(g('SJ_UNID'),'2025'),g('SJC_VOL'),1), u26:dd(yr(g('SJ_UNID'),'2026'),g('SJC_VOL_26'))};
     var dif=function(a,b,z){ return idx.map(function(m){ var x=a[m]; return x==null?(z?0:null):+x-(+(b[m]||0)); }); };
     SJI={r25:dif(yr(g('SJ_REC'),'2025'),g('SJC_REC'),1), r26:dif(yr(g('SJ_REC'),'2026'),g('SJC_REC_26')),
          u25:dif(yr(g('SJ_UNID'),'2025'),g('SJC_VOL'),1), u26:dif(yr(g('SJ_UNID'),'2026'),g('SJC_VOL_26'))};
@@ -189,9 +200,31 @@ var SI={MES:['Jul','Ago','Set','Out','Nov'], parcial:'Nov/26', ext25:[0,0,0,240,
     SI={MES:NM.slice(0,n), parcial:String(lbl).charAt(0)+String(lbl).slice(1).toLowerCase(), ext25:e25, ext26:e26, extNomes:Object.keys(extra).join(', '), raw:raw};
   }catch(e){}
 })();
+var SICALD={"n":11,"raw":{"SJ":{"u25":[497.0,915.0,317.0,75.0,533.0,779.0,0.0,8132.0,3549.0,1659.0,1550.0],"u26":[1330.0,0.0,519.0,699.0,1001.0,628.0,3231.0,13671.0,1849.0,4324.0,1691.0]},"GA":{"u25":[1990.0,490.0,944.0,960.0,193.0,180.0,5094.0,2523.0,335.0,436.0,252.0],"u26":[1752.0,3585.0,165.0,484.0,283.0,396.0,274.0,8494.0,161.0,398.0,0.0]},"PV":{"u25":[1433.0,2084.0,3364.0,166.0,970.0,185.0,0.0,0.0,1573.0,213.0,465.0],"u26":[3869.0,2265.0,698.0,346.0,161.0,89.0,0.0,143.0,1365.0,14.0,923.0]},"GAM":{"u25":[4359.0,1701.0,5586.0,930.0,101.0,943.0,0.0,5256.0,7808.0,7258.0,5620.0],"u26":[11589.0,5598.0,2390.0,0.0,1208.0,0.0,17157.0,0.0,0.0,5036.0,0.0]},"NS":{"u25":[0.0,865.0,736.0,494.0,792.0,230.0,0.0,3490.0,2145.0,1476.0,1170.0],"u26":[2242.0,54.0,56.0,0.0,82.0,115.0,134.0,0.0,81.0,3978.0,0.0]},"RM":{"u25":[23.0,12.0,0.0,193.0,378.0,0.0,0.0,3743.0,296.0,0.0,1650.0],"u26":[0.0,0.0,405.0,0.0,0.0,110.0,0.0,0.0,3198.0,75.0,79.0]},"CL":{"u25":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4731.0,80.0,0.0],"u26":[300.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4407.0,0.0,0.0]}},"ext25":[0.0,299.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,240.0,0.0],"ext26":[0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,0,0],"extNomes":"Peniel"};
+/* ao vivo: ano-calendário do Sell In = FY26 (Jan–Jun/26 real, Jan–Jun/25 = hist) + FY27 (Jul→mês atual) */
+(function(){ try{ var P=window.parent; if(!P||P===window) return;
+  var d27=P.eval('SELLIN_DATA_FY27'), d26=P.eval('SELLIN_DATA_FY26'), ma=P.eval('SELLIN_MES_ATUAL'), n=6+ma+1, raw={}, e25=[], e26=[], ex={}, f27={};
+  for(var k=0;k<n;k++){ e25.push(0); e26.push(0); }
+  d27.forEach(function(c){ f27[c.nome]=c; });
+  d26.forEach(function(c){ var id=SI_IDS[c.nome], r27=(f27[c.nome]||{}).real_m||[], y26=[], y25=[];
+    for(var k=0;k<6;k++){ y26.push(+((c.real_m||[])[6+k]||0)); y25.push(+((c.hist_m||[])[6+k]||0)); }
+    for(var k=0;k<=ma;k++){ y26.push(+(r27[k]||0)); y25.push(+((c.real_m||[])[k]||0)); }
+    if(id){ var r=raw[id]=raw[id]||{u25:e25.map(function(){return 0;}),u26:e26.map(function(){return 0;})}; for(var k=0;k<n;k++){ r.u25[k]+=y25[k]; r.u26[k]+=y26[k]; } }
+    else { for(var k=0;k<n;k++){ e25[k]+=y25[k]; e26[k]+=y26[k]; } if(y25.concat(y26).some(function(v){return v;})) ex[c.nome]=1; } });
+  SICALD={n:n,raw:raw,ext25:e25,ext26:e26,extNomes:Object.keys(ex).join(', ')};
+}catch(e){} })();
+var SICAL=(function(){ var NM=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'], m=NM.slice(0,SICALD.n);
+  return {MES:m, PLAB:'Jan–'+m[m.length-1], parcial:SI.parcial, ext25:SICALD.ext25, ext26:SICALD.ext26, extNomes:SICALD.extNomes,
+    C:C.map(function(c){ var r=SICALD.raw[c.id]||{u25:m.map(function(){return 0;}),u26:m.map(function(){return 0;})}; return {id:c.id,nome:c.nome,u25:r.u25,u26:r.u26,r25:r.u25,r26:r.u26}; })}; })();
+var CURDS=null;
 SI.C=C.map(function(c){ var r=SI.raw[c.id]||{u25:SI.MES.map(function(){return 0;}),u26:SI.MES.map(function(){return 0;})}; return {id:c.id,nome:c.nome,u25:r.u25,u26:r.u26,r25:r.u25,r26:r.u26}; });
 var SO={MES:MES,C:C};
+var CAL=(function(){ var NM=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return {MES:NM.slice(0,CALD.n), PLAB:'Jan–'+NM[CALD.n-1], C:C.map(function(c){ var d=CALD.c[c.id]; return {id:c.id,nome:c.nome,r25:d.r25,r26:d.r26,u25:d.u25,u26:d.u26}; })}; })();
 /* OFF + Exposis + Raid juntos = linha HB do dashboard, mensal até o último mês (Nov/26): São João só Isadora; demais clientes = total do cliente */
+/* OFF + Exposis + Raid no ano-calendário: São João só Isadora, demais clientes = total */
+var HBCAL={MES:CAL.MES, PLAB:CAL.PLAB, C:CAL.C.map(function(c){ if(c.id!=='SJ') return c; var n=CAL.MES.length, s=function(a){ return a.slice(0,n); };
+  return {id:'SJ',nome:c.nome,r25:s(SJIC.r25),r26:s(SJIC.r26),u25:s(SJIC.u25),u26:s(SJIC.u26)}; })};
 var HB={MES:MES,C:C.map(function(c){ return c.id==='SJ'?{id:'SJ',nome:c.nome,r25:SJI.r25,r26:SJI.r26,u25:SJI.u25,u26:SJI.u26}:c; })};
 /* ── Sell Out por marca: base SKU do card "Sell-out por Marca" (SO_OP) — acumulado Jan–Set/26 × Jan–Set/25 e mês Set/26 × Set/25.
    Valores em R$ mil (Clamed em unidades). São João = Isadora + Caroline. Snapshot 11/11/2026; dentro do dashboard lê SO_OP ao vivo. ── */
@@ -211,34 +244,39 @@ var BR={ref:'Set/26',ytd:'Jan–Set',U:{"CL": 1},B:{"OFF!":{"SJ":[1923.0,2346.9,
 var BRM={"meses":["Out","Nov"],"B":{"OFF!":{"SJ":[258.4,455.8,339.0,649.0],"NS":[36.7,43.9,144.1,295.6],"PV":[119.8,139.2,162.1,426.5],"GAM":[530.8,453.9,734.1,782.4],"GA":[130.8,106.0,352.4,247.2],"RM":[62.0,17.7,86.0,167.1],"CL":[3952.0,0.0,4183.2,6432.8]},"EXPOSIS":{"SJ":[111.9,197.4,145.1,221.4],"NS":[126.1,32.6,85.7,150.0],"PV":[141.2,137.2,160.2,291.2],"GAM":[193.6,144.2,301.0,320.9],"GA":[11.7,9.5,81.3,57.0],"RM":[15.2,4.1,31.9,62.0],"CL":[545.0,0.0,727.8,1131.2]},"RAID":{"SJ":[24.8,43.7,43.4,81.1],"NS":[27.6,11.9,14.3,36.1],"PV":[11.3,9.3,13.3,25.3],"GAM":[16.2,11.3,8.6,9.2],"GA":[6.8,5.5,28.1,19.7],"RM":[9.0,7.3,7.4,14.4]},"LYSOFORM":{"SJ":[82.9,51.6,50.5,58.9],"GAM":[0.0,2.7,0.0,0.0],"GA":[0.0,0.0,4.9,3.4],"RM":[1.6,0.0,0.6,1.1]},"GLADE":{"SJ":[80.0,49.8,22.9,32.2],"GA":[16.4,13.3,41.2,28.9],"RM":[0.9,0.2,0.4,0.8]},"PATO":{"SJ":[50.7,31.5,27.9,37.2],"GAM":[1.9,0.0,0.0,0.0],"GA":[0.0,0.0,3.6,2.5]},"PATO BLOCK":{"SJ":[9.6,6.0,0.0,0.0],"GAM":[0.0,0.1,0.0,0.0],"RM":[0.9,0.1,0.0,0.0],"CL":[124.0,0.0,0.0,0.0]},"MR MUSCULO":{"GA":[0.0,0.0,3.3,2.3]}}};
 var MARCAS=[['all','Todas'],['OFF!','OFF'],['EXPOSIS','Exposis'],['RAID','Raid'],['GLADE','Glade'],['LYSOFORM','Lysoform'],['PATO','Pato'],['PATO BLOCK','Pato Block']];
 /* várias marcas marcadas = soma das marcas por cliente */
+/* venda mensal por marca × cliente, Jan–Nov 2026 e 2025 (marca_mensal.py, 13/11/2026). Jan–Set real em SJ, Panvel e Clamed; estimado (acumulado da marca distribuído pela venda mensal do cliente) em Nissei, GAM, Gaúcha e Riomed; Out/Nov como na base BRM. R$ (Clamed un) */
+var BRMM={"meses":["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov"],"B":{"GLADE":{"GA":{"r26":[73186.58,39236.59,53870.39,75237.02,18892.26,8939.89,9551.8,17382.99,74002.47,16400.0,13300.0],"r25":[42134.26,43622.55,30471.57,22399.94,11352.26,5598.64,3907.86,3116.25,38496.68,41200.0,28900.0]},"RM":{"r26":[768.63,620.5,902.98,494.09,102.11,38.68,47.22,245.64,580.15,900.0,200.0],"r25":[1295.49,860.14,737.58,662.47,309.19,65.25,11.17,14.36,544.36,400.0,800.0]},"SJ":{"r26":[38583.03,38863.79,43073.23,77664.47,64212.03,72035.9,90443.94,172839.09,71153.82,80862.55,47790.24],"r25":[70045.03,58333.13,63107.64,49544.17,49278.48,35721.62,31526.43,34079.69,27079.76,22923.2,32213.45]}},"PATO BLOCK":{"CL":{"r26":[0.0,0.0,0.0,0.0,0.0,0.0,298.0,0.0,77.0,124.0,null],"r25":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},"GAM":{"r26":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,100.0],"r25":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},"RM":{"r26":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,900.0,100.0],"r25":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},"SJ":{"r26":[5689.67,8055.58,6126.39,6059.83,6488.95,8928.19,10832.09,21857.22,8594.15,10415.78,5755.9],"r25":[0,0,0,0,0,0,0,0,0,0,19.9]}},"EXPOSIS":{"GA":{"r26":[33144.45,17769.31,24396.61,34073.04,8555.85,4048.66,4325.78,7872.34,33513.94,11700.0,9500.0],"r25":[40269.54,41691.97,29123.0,21408.6,10849.84,5350.86,3734.91,2978.34,36792.95,81300.0,57000.0]},"PV":{"r26":[378765.91,319390.28,255329.5,215573.17,63093.88,37891.19,75848.82,123205.97,90490.39,141200.0,137200.0],"r25":[365947.19,419688.21,371465.76,410994.38,262613.5,52123.4,56360.46,57060.75,105232.11,160200.0,291200.0]},"RM":{"r26":[21986.91,17749.51,25830.0,14133.69,2920.94,1106.33,1350.66,7026.74,16595.23,15200.0,4100.0],"r25":[33337.24,22134.16,18980.31,17047.51,7956.46,1679.04,287.53,369.49,14008.27,31900.0,62000.0]},"GAM":{"r26":[350232.34,259666.51,165872.99,128371.88,45489.44,26712.24,30508.31,250935.91,120110.38,193600.0,144200.0],"r25":[265062.59,327465.65,157103.7,148372.75,92155.72,18171.09,26706.77,32271.66,240190.07,301000.0,320900.0]},"NS":{"r26":[165649.5,123184.56,105546.74,101790.11,29405.83,14896.92,29237.19,81147.35,85529.01,94430.0,29807.85],"r25":[202128.6,224940.82,170911.87,83631.48,51052.5,17521.65,21640.44,25488.36,52773.01,74759.19,130130.24]},"CL":{"r26":[1420.0,1392.0,1217.0,979.0,256.0,172.0,235.0,0.0,350.0,545.0,null],"r25":[2791.0,3004.0,1806.0,1170.0,770.0,223.0,186.0,211.0,420.0,727.8,1131.2]},"SJ":{"r26":[291029.44,236056.1,208993.56,164995.66,35889.89,15931.71,30059.54,65816.81,90251.52,112246.22,137141.11],"r25":[217697.11,225091.04,207140.81,167518.7,92989.95,15327.61,19753.94,36793.58,80334.67,145568.55,223277.74]}},"RAID":{"GA":{"r26":[22886.86,12270.04,16846.32,23528.08,5907.98,2795.68,2987.03,5436.0,23142.01,6800.0,5500.0],"r25":[18584.33,19240.78,13440.22,9880.03,5007.19,2469.41,1723.66,1374.5,16979.89,28100.0,19700.0]},"PV":{"r26":[52534.42,43797.73,41724.71,38974.51,7834.63,2914.06,4690.66,6868.65,6392.4,11300.0,9300.0],"r25":[42936.89,45213.66,34670.59,35952.19,25480.66,4503.55,2545.18,3085.35,8435.57,13300.0,25300.0]},"RM":{"r26":[9971.98,8050.14,11714.99,6410.22,1324.77,501.77,612.58,3186.92,7526.63,9000.0,7300.0],"r25":[6304.71,4185.99,3589.54,3224.01,1504.72,317.54,54.38,69.88,2649.23,7400.0,14400.0]},"GAM":{"r26":[32611.08,24178.25,15444.88,11953.05,4235.65,2487.25,2840.71,23365.32,11183.8,16200.0,11300.0],"r25":[12487.84,15427.83,7401.6,6990.26,4341.71,856.09,1258.23,1520.41,11316.03,8600.0,9200.0]},"NS":{"r26":[54437.11,42935.43,44469.11,42157.8,8253.03,5102.4,7015.75,27736.18,18987.23,18715.65,9075.8],"r25":[26401.6,31316.37,12581.99,5759.06,3105.55,1056.97,1104.55,1464.65,4451.02,9428.15,26348.11]},"SJ":{"r26":[99478.28,49051.59,30063.39,19025.76,3696.07,2072.48,2124.36,6368.99,19948.77,31845.01,31007.65],"r25":[118402.72,87110.76,87934.59,61258.01,41746.99,6214.79,2962.34,4984.27,12445.02,43578.53,81761.72]}},"OFF!":{"GA":{"r26":[273397.22,146572.99,201239.31,281056.9,70574.31,33396.05,35681.91,64936.24,276445.08,130800.0,106000.0],"r25":[237007.81,245379.56,171404.46,126001.06,63857.14,31492.69,21981.97,17529.11,216546.2,352400.0,247200.0]},"PV":{"r26":[430735.15,374419.99,273741.94,245080.87,52560.48,21770.34,46939.81,84074.11,77659.07,119800.0,139200.0],"r25":[400898.86,456633.08,331706.62,258678.95,154989.68,29344.15,30421.61,41744.23,96123.71,162100.0,426500.0]},"RM":{"r26":[92316.7,74525.07,108452.74,59343.29,12264.18,4645.18,5671.03,29503.24,69678.58,62000.0,17700.0],"r25":[165275.54,109734.2,94098.39,84516.2,39445.62,8324.14,1425.5,1831.82,69448.58,86000.0,167100.0]},"GAM":{"r26":[1066456.08,790683.47,505082.59,390891.85,138515.17,81338.66,92897.68,764098.85,365735.64,530800.0,453900.0],"r25":[509082.35,628934.42,301735.23,284966.47,176995.37,34899.6,51293.33,61981.33,461311.9,734100.0,782400.0]},"NS":{"r26":[240420.16,243110.26,313023.18,171505.83,34845.5,15844.8,27593.75,56204.56,41144.17,43222.55,40166.91],"r25":[156987.26,207113.31,160426.49,133424.44,89348.94,40097.44,56809.53,74124.44,123440.69,156527,318646.07]},"CL":{"r26":[12482.0,14629.0,9946.0,8875.0,2092.0,1234.0,1819.0,0.0,2033.0,3952.0,null],"r25":[13239.0,12848.0,11088.0,6884.0,4093.0,926.0,879.0,1101.0,2905.0,4183.2,6432.8]},"SJ":{"r26":[629184.33,460723.03,318910.7,184553.52,22897.63,9804.09,16693.1,71826.1,208313.17,250957.56,583049.2],"r25":[902386.59,650019.2,429555.05,183544.43,70155.36,9414.19,10310.25,15580.23,75964.09,340150.38,654598.82]}},"MR MUSCULO":{"GA":{"r26":[968.44,519.2,712.84,995.57,249.99,118.3,126.39,230.02,979.24,0.0,0.0],"r25":[1257.11,1301.52,909.15,668.32,338.7,167.04,116.59,92.98,1148.58,3300.0,2300.0]}},"PATO":{"GA":{"r26":[237.17,127.15,174.57,243.81,61.22,28.97,30.95,56.33,239.81,0.0,0.0],"r25":[2493.28,2581.34,1803.14,1325.51,671.76,331.3,231.25,184.4,2278.02,3600.0,2500.0]},"RM":{"r26":[586.59,473.54,689.12,377.07,77.93,29.52,36.03,187.47,442.74,0.0,0.0],"r25":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},"GAM":{"r26":[2973.89,2204.88,1408.46,1090.03,386.26,226.82,259.05,2130.74,1019.88,1900.0,0.0],"r25":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},"SJ":{"r26":[26700.35,24669.55,48211.95,48576.02,45269.77,46574.41,53446.21,95774.69,45228.23,56395.31,37939.92],"r25":[27849.65,26649.01,28847.08,25984.02,26640.69,24079.86,18892.8,14702.63,9616.47,27873.17,37193.14]}},"LYSOFORM":{"GA":{"r26":[1699.72,911.25,1251.11,1747.34,438.76,207.62,221.84,403.71,1718.66,0.0,0.0],"r25":[1990.43,2060.74,1439.48,1058.18,536.28,264.48,184.61,147.21,1818.59,4900.0,3400.0]},"RM":{"r26":[1031.58,832.77,1211.9,663.13,137.05,51.91,63.37,329.68,778.62,1600.0,0.0],"r25":[546.98,363.17,311.42,279.71,130.55,27.55,4.72,6.06,229.84,600.0,1100.0]},"GAM":{"r26":[4778.55,3542.88,2263.16,1751.5,620.66,364.46,416.25,3423.76,1638.78,0.0,2700.0],"r25":[2108.34,2604.7,1249.62,1180.17,733.02,144.53,212.43,256.69,1910.5,0.0,0.0]},"SJ":{"r26":[59138.6,54276.3,76194.73,87984.84,106559.49,92257.1,111828.81,120028.2,73923.63,75551.67,52622.51],"r25":[52032.62,46657.34,51714.69,50474.68,60006.87,54825.26,55408.16,41337.51,32978.65,50528.18,58912.55]}}},"fonte":{"GA":"estimado","SJ":"real","PV":"real","RM":"estimado","GAM":"estimado","NS":"real","CL":"real"}};
 function brandDS(bs){
-  var t={}, o={}; bs.forEach(function(b){ var x=BR.B[b]||{}, y=BRM.B[b]||{};
-    Object.keys(x).forEach(function(id){ var r=t[id]=t[id]||[0,0,0,0]; for(var i=0;i<4;i++) r[i]+=x[id][i]; });
-    Object.keys(y).forEach(function(id){ var r=o[id]=o[id]||[0,0,0,0]; for(var i=0;i<4;i++) r[i]+=y[id][i]; }); });
-  var ref=String(BR.ref).split('/')[0], mes=[ref].concat(BRM.meses), plab='Jan–'+BRM.meses[BRM.meses.length-1];
-  return {MES:mes, PLAB:plab, C:C.map(function(c){ var r=t[c.id], q=o[c.id], un=!!BR.U[c.id], k=un?1:1000;
-    if(!r&&!q) return {id:c.id,nome:c.nome,none:true,un:un,r26:mes.map(function(){return 0;}),r25:mes.map(function(){return 0;}),u26:mes.map(function(){return 0;}),u25:mes.map(function(){return 0;}),y26:0,y25:0};
-    r=r||[0,0,0,0]; q=q||[0,0,0,0];
-    var nov=q[1]?q[1]*k:null; /* sem Nov/26 (ex.: Clamed) → fica pendente e o Nov/25 sai da comparação */
-    var a26=[r[2]*k,q[0]*k,nov], a25=[r[3]*k,q[2]*k,q[3]*k];
-    return {id:c.id,nome:c.nome,un:un,r26:a26,r25:a25,u26:a26,u25:a25,y26:(r[0]+q[0])*k+(nov||0),y25:(r[1]+q[2]+(nov==null?0:q[3]))*k}; })};
+  var mes=BRMM.meses, n=mes.length, t={};
+  bs.forEach(function(b){ var x=BRMM.B[b]||{}; Object.keys(x).forEach(function(id){ var r=t[id]=t[id]||{r26:mes.map(function(){return 0;}),r25:mes.map(function(){return 0;}),nul:mes.map(function(){return false;})};
+    for(var i=0;i<n;i++){ var a=x[id].r26[i]; if(a==null) r.nul[i]=true; else r.r26[i]+=a; r.r25[i]+=x[id].r25[i]||0; } }); });
+  return {MES:mes, PLAB:'Jan–'+mes[n-1], C:C.map(function(c){ var r=t[c.id], un=!!BR.U[c.id];
+    if(!r) return {id:c.id,nome:c.nome,none:true,un:un,r26:mes.map(function(){return 0;}),r25:mes.map(function(){return 0;}),u26:mes.map(function(){return 0;}),u25:mes.map(function(){return 0;})};
+    var a26=r.r26.map(function(v,i){ return r.nul[i]?null:v; });
+    return {id:c.id,nome:c.nome,un:un,r26:a26,r25:r.r25,u26:a26,u25:r.r25}; })};
 }
-var ST={m:'r',p:'T',f:'so',mSO:'r',b:'all',bs:[]};
+var ST={m:'r',p:'T',ps:[],f:'so',mSO:'r',b:'all',bs:[],y:'fy'};
 function bNome(){ return ST.bs.map(function(b){ return MARCAS.filter(function(m){return m[0]===b;})[0][1]; }).join(' + '); }
 function hbMode(){ return ST.f==='so'&&ST.bs.length===3&&['OFF!','EXPOSIS','RAID'].every(function(b){return ST.bs.indexOf(b)>=0;}); }
 /* todas as marcas marcadas = total do cliente (igual a 'Todas'), mensal até Nov */
 function fullMode(){ return ST.f==='so'&&ST.bs.length===MARCAS.length-1; }
 function mbMode(){ return ST.f==='so'&&ST.b!=='all'&&!hbMode()&&!fullMode(); }
-function prevTxt(){ return mbMode()?'2025':'FY26'; }
-function cmpTxt(){ return mbMode()?'vs 2025':'vs FY26'; }
+function calMode(){ return ST.y==='cal'&&(ST.f==='si'||(ST.f==='so'&&(ST.b==='all'||hbMode()||fullMode()))); }
+function selMs(){ return ST.p==='T'?MES.map(function(_,i){return i;}):ST.ps.slice(); }
+function perLbl(suf){ if(ST.p==='T') return PLAB+suf; var s=ST.ps.slice().sort(function(a,b){return a-b;});
+  if(s.length===1) return MES[s[0]]+suf;
+  var seq=s.every(function(v,i){ return !i||v===s[i-1]+1; });
+  return seq?MES[s[0]]+'–'+MES[s[s.length-1]]+suf:s.map(function(i){return MES[i];}).join('+')+suf; }
+function prevTxt(){ return (mbMode()||calMode())?'2025':'FY26'; }
+function cmpTxt(){ return (mbMode()||calMode())?'vs 2025':'vs FY26'; }
 var PLAB='Jul–'+MES[MES.length-1];
 
 function val(c,ano){ // soma comparável: só meses com dado em 2026
   if(c.none) return {v:null,pend:0,ms:1};
   if(c.y26!==undefined && ST.p==='T') return {v:c['y'+ano],pend:0,ms:1};
-  var a26=c[ST.m+'26'], a=c[ST.m+ano], ms=ST.p==='T'?MES.map(function(_,i){return i;}):[ST.p], s=0, n=0, pend=0;
+  var a26=c[ST.m+'26'], a=c[ST.m+ano], ms=selMs(), s=0, n=0, pend=0;
   ms.forEach(function(i){ if(a26[i]==null){pend++;return;} s+=a[i]; n++; });
-  return {v:n?s:null, pend:pend, ms:ms.length};
+  return {v:n?(c.sh?s/n:s):null, pend:pend, ms:ms.length}; /* share: média dos meses; valores e caixas: soma */
 }
 function fmt(v,c){
   if(v==null) return '—';
@@ -350,20 +388,20 @@ function update(){
   });
   /* marca vendida só onde a base é em unidades (ex.: Pato Block só na Clamed): KPIs em unidades */
   if(!best&&unB){ best={n:unB.n,v:unB.v}; t26=unB.v; t25=unB.p; fmtK=function(v){ return fmt(v,unB.c); }; }
-  if(ST.f==='si'){ (ST.p==='T'?MES.map(function(_,i){return i;}):[ST.p]).forEach(function(i){ t25+=SI.ext25[i]||0; t26+=SI.ext26[i]||0; }); }
-  var tp=pct(t26,t25), plb=ST.p==='T'?PLAB+'/26':MES[ST.p]+'/26';
-  var parc=ST.f==='si'&&SI.parcial&&(ST.p==='T'||ST.p===MES.length-1);
+  if(ST.f==='si'){ selMs().forEach(function(i){ var X=(CURDS&&CURDS.ext25)?CURDS:SI; t25+=X.ext25[i]||0; t26+=X.ext26[i]||0; }); }
+  var tp=pct(t26,t25), plb=perLbl('/26');
+  var parc=ST.f==='si'&&SI.parcial&&selMs().indexOf(MES.length-1)>=0;
   var cres=bars.map(function(o,i){return {n:o.c.nome,p:fora(o)?null:pct(vs[i].a.v,vs[i].p.v)};}).filter(function(x){return x.p!=null;}).sort(function(a,b){return b.p-a.p;})[0];
   var mNome=fullMode()?' todas as marcas':(MB||HBm)?' '+bNome():'';
   document.getElementById('kpis').innerHTML=
     '<div class="k"><div class="l">'+(ST.f==='si'?'Sell In acumulado':'Sell Out'+mNome+((MB||HBm)?'':' total'))+' · '+plb+(parc?' (Nov parcial)':'')+'</div><div class="n">'+(best?fmtK(t26):'—')+'</div><div class="s '+(tp>=0?'up':'down')+'">'+(tp==null?'sem venda no mesmo período de 2025':pctTxt(tp)+' '+cmpTxt())+'</div></div>'+
     '<div class="k"><div class="l">Maior cliente</div><div class="n" style="font-size:17px">'+(best?best.n:'—')+'</div><div class="s" style="color:var(--mut)">'+(best?fmtK(best.v)+' · '+(best.v/t26*100).toFixed(0)+'% do total':'')+'</div></div>'+
     '<div class="k"><div class="l">Maior crescimento</div><div class="n" style="font-size:17px">'+(cres?cres.n:'—')+'</div><div class="s '+(cres&&cres.p<0?'down':'up')+'">'+(cres?pctTxt(cres.p):'')+'</div></div>';
-  document.getElementById('nota').textContent=ST.f==='si'?'Sell In em caixas (real) · '+SI.parcial+' parcial, comparado com o mês cheio do FY26'+(SI.extNomes?' · total inclui '+SI.extNomes+' (sem barra)':'')+' · Sell In não tem quebra por marca. '
+  document.getElementById('nota').textContent=ST.f==='si'?'Sell In em caixas (real) · '+(calMode()?'ano-calendário '+PLAB+'/26 × '+PLAB+'/25 · ':'')+SI.parcial+' parcial, comparado com o mês cheio do '+(calMode()?'ano anterior':'FY26')+(SI.extNomes?' · total inclui '+SI.extNomes+' (sem barra)':'')+' · Sell In não tem quebra por marca. '
     :fullMode()?'Todas as marcas marcadas = Sell Out total do cliente por mês (igual a Todas), FY27 × FY26 até '+MES[MES.length-1]+'/26 (Nov parcial vs Nov/25 cheio). '
-    :HBm?'OFF + Exposis + Raid = linha HB do dashboard por mês, FY27 × FY26 (até '+MES[MES.length-1]+'/26; Nov parcial vs Nov/25 cheio) · São João só Isadora · DD-Gaúcha inclui Glade e GAM/Riomed incluem Lysoform/Pato residuais (o mensal não tem quebra por marca) · Clamed: receita só até Jul/26. '
-    :MB?'Por marca: acumulado '+PLAB+'/26 × '+PLAB+'/25 e cada mês × mesmo mês de 2025 · Nov/26 parcial até 11/11 (vs Nov/25 cheio) · Jan–Set = base SKU do card Sell-out por Marca; Out/Nov = total do cliente no dashboard quebrado por marca (real: Panvel, Nissei, Riomed e GAM Nov; estimado pelo mix de Set: São João, Gaúcha e GAM Out; Clamed Out pelos CSVs do portal, sem Nov) · São João = Isadora + Caroline · Clamed só em unidades (fora do total). '
-    :(ST.m==='r'&&pendAny)?'Clamed: receita de Ago–Out/26 ainda não está na planilha; a comparação usa só os meses com dado. ':(ST.m==='u'?'Panvel FY26 em unidades é estimado (receita ÷ ticket médio). ':'');
+    :HBm?'OFF + Exposis + Raid = linha HB do dashboard por mês, '+(calMode()?PLAB+'/26 × '+PLAB+'/25':'FY27 × FY26')+' (até '+MES[MES.length-1]+'/26; Nov parcial vs Nov/25 cheio) · São João só Isadora · DD-Gaúcha inclui Glade e GAM/Riomed incluem Lysoform/Pato residuais (o mensal não tem quebra por marca) · Clamed: receita só até Jul/26. '
+    :MB?'Por marca, mês a mês: '+perLbl('/26')+' × mesmo período de 2025 · Nov/26 parcial até 11/11 (vs Nov/25 cheio) · Jan–Set real por SKU em São João, Panvel e Clamed; estimado em Nissei, GAM, Gaúcha e Riomed (acumulado da marca no card Sell-out por Marca distribuído pela venda mensal do cliente) · Out/Nov = total do cliente quebrado por marca · São João = Isadora + Caroline · Clamed só em unidades (fora do total). '
+    :(ST.m==='r'&&pendAny)?(calMode()?'Ano-calendário: '+PLAB+'/26 × '+PLAB+'/25 · Nov/26 parcial (até 11/11) contra Nov/25 cheio · ':'')+'Clamed: receita de 2026 só até Jul/26 na planilha; a comparação usa só os meses com dado. ':(ST.m==='u'?'Panvel FY26 em unidades é estimado (receita ÷ ticket médio). ':'');
 }
 
 /* hover → detalhe */
@@ -393,13 +431,13 @@ function showDet(o){
 function seg(id,key){ document.getElementById(id).addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
   [].forEach.call(this.children,function(x){x.classList.remove('on');}); b.classList.add('on');
   var v=b.dataset[key]; ST[key]=v==='T'||v==='r'||v==='u'?v:+v; bars.forEach(function(o){o.h*=.0001;o.gh*=.0001;}); update(); if(hov) showDet(hov); }); }
-function buildPer(){ document.getElementById('segP').innerHTML=MES.map(function(m,i){return '<button data-p="'+i+'">'+m+'</button>';}).join('')+'<button data-p="T" class="on">'+PLAB+'</button>'; }
+function buildPer(){ document.getElementById('segP').innerHTML=MES.map(function(m,i){return '<button data-p="'+i+'">'+m+'</button>';}).join('')+'<button data-p="T" class="on">'+PLAB+'</button>'; document.getElementById('segP').title='Clique em vários meses para somar; '+PLAB+' = acumulado'; }
 buildPer();
 /* troca de base: Sell Out (todas as marcas) · Sell Out por marca · Sell In */
 function applyDS(){
   var NQm=ST.f==='nq'; nqShow(NQm); if(hov){ hov=null; showDet(null); }
-  var MB=mbMode(), DS=NQm?nqDS():ST.f==='si'?SI:fullMode()?SO:hbMode()?HB:MB?brandDS(ST.bs):SO;
-  MES=DS.MES; PLAB=DS.PLAB||('Jul–'+MES[MES.length-1]); ST.p='T'; ST.m=ST.f==='si'?'u':MB?'r':ST.mSO;
+  var MB=mbMode(), DS=NQm?nqDS():ST.f==='si'?(calMode()?SICAL:SI):fullMode()?(calMode()?CAL:SO):hbMode()?(calMode()?HBCAL:HB):MB?brandDS(ST.bs):calMode()?CAL:SO;
+  MES=DS.MES; PLAB=DS.PLAB||('Jul–'+MES[MES.length-1]); ST.p='T'; ST.ps=[]; ST.m=ST.f==='si'?'u':MB?'r':ST.mSO;
   bars.forEach(function(o,k){ o.c=DS.C.filter(function(c){return c.id===o.cid;})[0]; o.h*=.0001; o.gh*=.0001; o.nm.textContent=o.c.nome;
     var col=NQm?new THREE.Color(NQS.vw==='mes'?nqBrCor(NQS.br):NQ_BR[k][2]):null; /* Nielsen: cor de cada marca; demais visões: dourado */
     var hid=!!o.c.hide; [o.b,o.g,o.cp,o.gc,o.gl].forEach(function(m){ m.visible=!hid; }); o.lb.style.display=o.nm.style.display=hid?'none':'';
@@ -407,9 +445,16 @@ function applyDS(){
     o.g.material.color.set(NQm?col:PREV); o.g.material.emissive.set(NQm?col:PREV); o.g.children[0].material.color.set(NQm?col:PREV_EDGE); });
   if(NQm) ST.m='r';
   document.getElementById('segM').style.display=(ST.f==='si'||MB||NQm)?'none':'';
+  document.getElementById('segY').style.display=(ST.f==='si'||ST.f==='so')?'':'none';
+  /* marca isolada ou combinação parcial: só existe base de ano-calendário (Jan–Set por SKU + Set/Out/Nov) */
+  (function(){ var fy=document.querySelector('#segY [data-y="fy"]'), ca=document.querySelector('#segY [data-y="cal"]'), so=MB;
+    fy.disabled=so; fy.title=so?'Por marca só há base de ano-calendário (2026 × 2025)':''; fy.style.opacity=so?'.45':'';
+    fy.classList.toggle('on',!so&&ST.y==='fy'); ca.classList.toggle('on',so||ST.y==='cal'); })();
+  CURDS=DS;
   document.getElementById('segB').style.display=(ST.f==='si'||NQm)?'none':'';
   if(!NQm) document.getElementById('ttl').textContent=ST.f==='si'?'Sell In ':'Sell Out ';
-  document.getElementById('fy').textContent=NQm?NQS.mk:MB?PLAB+'/26':'FY27';
+  document.getElementById('fy').textContent=NQm?NQS.mk:(MB||calMode())?PLAB+'/26':'FY27';
+  if(ST.f==='si'||ST.f==='so') document.querySelector('#segY [data-y="fy"]').textContent=ST.f==='si'?'Ano fiscal FY27 × FY26':'Ano fiscal FY27 × FY26';
   buildPer(); update(); if(hov) showDet(hov);
 }
 document.getElementById('segF').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b||b.dataset.f===ST.f) return;
@@ -442,7 +487,15 @@ document.getElementById('tbx').onclick=function(){ tblShow(false); };
 document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !document.getElementById('tbl').hidden) tblShow(false); });
 document.addEventListener('click',function(){ setTimeout(tblFill,60); });
 document.getElementById('fs').onclick=function(){ var d=document; if(d.fullscreenElement) d.exitFullscreen(); else d.documentElement.requestFullscreen&&d.documentElement.requestFullscreen(); };
-seg('segM','m'); seg('segP','p');
+seg('segM','m');
+/* período: clique marca/desmarca meses e soma; o botão do acumulado limpa a seleção */
+document.getElementById('segP').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return; var v=b.dataset.p;
+  if(v==='T'){ if(ST.p==='T') return; ST.p='T'; ST.ps=[]; }
+  else { var i=+v, k=ST.ps.indexOf(i); if(k>=0) ST.ps.splice(k,1); else ST.ps.push(i); ST.ps.sort(function(a,b){return a-b;}); ST.p=ST.ps.length?'S':'T'; }
+  [].forEach.call(this.children,function(x){ x.classList.toggle('on', x.dataset.p==='T'?ST.p==='T':ST.ps.indexOf(+x.dataset.p)>=0); });
+  bars.forEach(function(o){o.h*=.0001;o.gh*=.0001;}); update(); if(hov) showDet(hov); });
+document.getElementById('segY').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b||b.dataset.y===ST.y) return; ST.y=b.dataset.y;
+  [].forEach.call(this.children,function(x){ x.classList.toggle('on',x===b); }); applyDS(); });
 /* login SCJ no dashboard: a aba 3D abre direto no Nielsen, sem Sell Out / Sell In */
 var SCJ_ONLY=/[?&]perfil=scj/i.test(location.search); try{ if(window.parent!==window && window.parent._loginRole==='scj') SCJ_ONLY=true; }catch(e){}
 if(SCJ_ONLY){ [].forEach.call(document.querySelectorAll('#segF button'),function(b){ b.classList.toggle('on',b.dataset.f==='nq'); if(b.dataset.f!=='nq') b.style.display='none'; }); ST.f='nq'; }
@@ -553,10 +606,10 @@ function nqBars(){
   } else
   /* ordem decrescente, mas 'Outros' sempre por último */
   bars.map(function(o,i){ return {o:o,v:o.c.nome==='Outros'?-1:(vs[i].a.v||0)}; }).sort(function(a,b){ return b.v-a.v; }).forEach(function(r,k){ r.o.rk=k; r.o.xt=-W/2+GAP*(k+.5); });
-  var cmp=ST.p==='T'?'vs FYTD26':'vs '+MES[ST.p]+'/25';
+  var cmp=ST.p==='T'?'vs FYTD26':'vs '+perLbl('/25');
   bars.forEach(function(o,i){ var v=vs[i], d=(v.a.v==null||v.p.v==null)?null:v.a.v-v.p.v; if(o.c.hide){ o.ht=o.ght=0; return; } if(o.c.mm) cmp='vs '+o.c.m25;
     o.ht=v.a.v?v.a.v/mx*HMAX:.02; o.ght=v.p.v?v.p.v/mx*HMAX:.02;
-    o.lb.innerHTML='<div class="v">'+fmt(v.a.v,o.c)+'</div>'+(v.p.v!=null?'<div class="pv">'+(o.c.mm?o.c.m25:ST.p==='T'?'FYTD26':MES[ST.p]+'/25')+' '+fmt(v.p.v,o.c)+'</div>':'')+(d!=null?'<div class="d '+(d>=0?'up':'down')+'">'+ppTxt(d)+' '+cmp+'</div>':''); });
+    o.lb.innerHTML='<div class="v">'+fmt(v.a.v,o.c)+'</div>'+(v.p.v!=null?'<div class="pv">'+(o.c.mm?o.c.m25:ST.p==='T'?'FYTD26':perLbl('/25'))+' '+fmt(v.p.v,o.c)+'</div>':'')+(d!=null?'<div class="d '+(d>=0?'up':'down')+'">'+ppTxt(d)+' '+cmp+'</div>':''); });
 }
 function nqShow(on){
   document.querySelector('.tt h1 b').style.display=on?'none':'';
@@ -633,10 +686,14 @@ document.addEventListener('click',function(){ setTimeout(srSync,0); });
 /* rótulos sem sobreposição: o maior valor fica no lugar; os seguintes sobem até não colidirem */
 function declutter(){
   var vis=bars.filter(function(o){ return o.lb.style.display!=='none' && o.lb.innerHTML; }).sort(function(a,b){ return a.rk-b.rk; }), placed=[];
+  var kr=document.getElementById('kpis').getBoundingClientRect();
   vis.forEach(function(o){
     var w=o.lb.offsetWidth, hh=o.lb.offsetHeight, x=parseFloat(o.lb.style.left)-w/2, y=parseFloat(o.lb.style.top)-hh;
     for(var g=0;g<8;g++){ var hit=placed.filter(function(r){ return x<r.x+r.w+6 && x+w+6>r.x && y<r.y+r.h+4 && y+hh+4>r.y; })[0];
       if(!hit) break; y=hit.y-hh-6; }
+    var yMin=(innerWidth<760?150:120); if(y<yMin) y=yMin;
+    /* não deixa o rótulo atrás dos cartões de KPI: empurra para a direita deles */
+    if(innerWidth>=760 && kr && x<kr.right+8 && y<kr.bottom+4){ x=kr.right+8; o.lb.style.left=(x+w/2)+'px'; }
     placed.push({x:x,y:y,w:w,h:hh}); o.lb.style.top=(y+hh)+'px';
   });
   /* nomes dos clientes: se encostam no vizinho, descem uma linha (alternando) */
