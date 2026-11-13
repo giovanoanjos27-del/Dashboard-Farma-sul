@@ -53374,6 +53374,9 @@ function _cpt2MesSel(k){ window._cpt2MesK = k; window._cpt2MesModo = 'um';
 function _cpt2MesKSet(k){ window._cpt2MesK = k; var b = document.getElementById('cpt2-mes'); if(b) b.innerHTML = _cpt2MesHtml(); }
 function _cpt2MesChSet(c, modo){ window._cpt2MesCh = c; if(modo) window._cpt2MesModo = modo; var b = document.getElementById('cpt2-mes'); if(b) b.innerHTML = _cpt2MesHtml(); }
 function _cpt2MesModoSet(m){ window._cpt2MesModo = m; var b = document.getElementById('cpt2-mes'); if(b) b.innerHTML = _cpt2MesHtml(); }
+/* filtro de marca OFF/EXPOSIS: Jul e Ago do ano anterior não vêm separados na IQVIA (só o YTD e o último mês) → divididos pela proporção do SCJ; a variação desses meses é estimada */
+function _c2Est(m){ return (typeof CPT2_MARCA_SEL!=='undefined') && (CPT2_MARCA_SEL==='OFF' || CPT2_MARCA_SEL==='EXP') && (m===0 || m===1); }
+var _C2_EST_TXT = 'Jul e Ago do ano anterior por marca não vêm separados na IQVIA (edição traz só o acumulado e o último mês); foram divididos pela proporção do SCJ — variação estimada. Acumulado e Set são exatos.';
 function _cpt2MesHtml(){
   var D = window._cpt2MesD; if(!D || !D.L.length) return '';
   var n = D.n, LP = CPT2_MES_FY25, LC = CPT2_MES_FY26, modo = window._cpt2MesModo || 'um';
@@ -53408,9 +53411,9 @@ function _cpt2MesHtml(){
       for(var m=0;m<n;m++){
         var vm = o.mcp[m]>0 ? o.mcc[m]/o.mcp[m]-1 : null, vf = o.mfp[m]>0 ? o.mfc[m]/o.mfp[m]-1 : null, l = leitura(vf, vm);
         var bg = l.g==null ? '' : (l.g>0 ? 'background:rgba(5,150,105,0.10) !important;' : (l.g<0 ? 'background:rgba(220,38,38,0.09) !important;' : ''));
-        var tip = LP[m]+' → '+LC[m]+' | Mercado '+fR2(o.mcp[m])+' → '+fR2(o.mcc[m])+' ('+pc(vm)+') | '+_c2M()+' '+fR2(o.mfp[m])+' → '+fR2(o.mfc[m])+' ('+pc(vf)+')'+(l.t?' | '+l.t:'');
+        var tip = LP[m]+' → '+LC[m]+' | Mercado '+fR2(o.mcp[m])+' → '+fR2(o.mcc[m])+' ('+pc(vm)+') | '+_c2M()+' '+fR2(o.mfp[m])+' → '+fR2(o.mfc[m])+' ('+pc(vf)+')'+(l.t?' | '+l.t:'')+(_c2Est(m)?' | ≈ '+_C2_EST_TXT:'');
         cells += '<td title="'+hEsc(tip)+'" style="text-align:center;white-space:nowrap;padding:4px 8px;font-size:10.5px;border-bottom:0.5px solid rgba(94,153,208,0.18);border-left:1px solid rgba(94,153,208,0.15);'+bg+(tot?'font-weight:800;':'')+'">'
-          +'<div><span style="color:#64748B;font-size:8.5px;">'+_c2M()+'</span> <b style="color:'+cor(vf)+';">'+pc(vf)+'</b></div>'
+          +'<div><span style="color:#64748B;font-size:8.5px;">'+_c2M()+'</span> <b style="color:'+cor(vf)+';">'+(_c2Est(m)?'<span title="estimado" style="color:#B45309;">≈</span>':'')+pc(vf)+'</b></div>'
           +'<div><span style="color:#64748B;font-size:8.5px;">MERC.</span> <span style="color:'+cor(vm)+';">'+pc(vm)+'</span></div></td>';
       }
       var sP = o.mfp.reduce(function(a,b){return a+b;},0), sC = o.mfc.reduce(function(a,b){return a+b;},0), kP = o.mcp.reduce(function(a,b){return a+b;},0), kC = o.mcc.reduce(function(a,b){return a+b;},0);
@@ -53424,7 +53427,7 @@ function _cpt2MesHtml(){
     for(var m=0;m<n;m++) hG += th(LC[m].split('/')[0]+'<div style="font-weight:600;color:#94A3B8;letter-spacing:0;text-transform:none;">'+LP[m]+'→'+LC[m]+'</div>','center');
     hG += th('Acumulado','center','border-left:2px solid rgba(29,111,168,0.35);');
     return head
-      +'<div style="font-size:9.5px;color:#64748B;margin-bottom:6px;">Verde = '+_c2M()+' melhor que o mercado no mês · vermelho = pior · passe o mouse para ver os R$ · clique na bandeira para abrir a tabela</div>'
+      +'<div style="font-size:9.5px;color:#64748B;margin-bottom:6px;">Verde = '+_c2M()+' melhor que o mercado no mês · vermelho = pior · passe o mouse para ver os R$ · clique na bandeira para abrir a tabela'+(_c2Est(0)?' · <b style="color:#B45309;">≈ = estimado</b>: '+_C2_EST_TXT:'')+'</div>'
       +'<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;"><thead><tr>'+hG+'</tr></thead><tbody>'+rowsG+'</tbody></table></div>'
       +(D.L.length>15 ? '<button onclick="window._cpt2MesAll=!window._cpt2MesAll;_cpt2MesModoSet(&#39;grade&#39;)" style="margin-top:6px;padding:4px 10px;border-radius:6px;border:1px solid rgba(29,111,168,0.45);background:#FFFFFF;color:#1D6FA8;font-size:9.5px;font-weight:700;cursor:pointer;">'+(window._cpt2MesAll ? '▲ Mostrar só as 15 maiores' : '▼ Ver todas as '+D.L.length+' (por importância da categoria)')+'</button>' : '');
   }
@@ -53489,7 +53492,7 @@ function _cpt2MesHtml(){
     if(l.g>0) melhor++; else if(l.g<0) pior++;
     rows += '<tr>'+td('<b>'+LC[m].split('/')[0]+'</b> <span style="color:#64748B;font-size:10px;">'+LP[m]+' → '+LC[m]+'</span>','left')
       +td(fR2(mp),'right','#475569',false,MK)+td(fR2(mc),'right','#475569',false,MK)+td(seta(vm)+pc(vm),'right',cor(vm),true,MK)
-      +td(fR2(fp),'right','#3B82F6',false,SC)+td(fR2(fc),'right','#059669',false,SC)+td(seta(vf)+pc(vf),'right',cor(vf),true,SC)
+      +td(fR2(fp),'right','#3B82F6',false,SC)+td(fR2(fc),'right','#059669',false,SC)+td((_c2Est(m)?'<span title="'+_C2_EST_TXT+'" style="color:#B45309;">≈</span>':'')+seta(vf)+pc(vf),'right',cor(vf),true,SC)
       +td((sp==null?'—':sp.toFixed(2)+'%')+' → '+(sc==null?'—':sc.toFixed(2)+'%'),'right','#334155')
       +td(sp==null||sc==null?'—':((sc-sp>=0?'+':'')+(sc-sp).toFixed(2)+'pp'),'right',(sp!=null&&sc!=null&&sc<sp)?'#DC2626':'#059669',true)
       +td(l.t ? ((l.g>0?'▲ ':'▼ ')+l.t+' ('+(l.g>0?'+':'')+l.g.toFixed(1)+' p.p.)') : '—','left',l.g==null?'#64748B':(l.g>0?'#059669':'#DC2626'),true)
