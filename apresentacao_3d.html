@@ -69,6 +69,11 @@ header>*{pointer-events:auto}
 .lb.kb .v{outline:2px solid var(--gold2);outline-offset:2px}
 ::selection{background:rgba(245,197,66,.35);color:var(--txt)}
 .lb .pv{font:600 11px 'JetBrains Mono',monospace;color:#d8cfb8;margin-top:3px}
+.lb .tn{font:600 11px 'JetBrains Mono',monospace;color:#ffe9a8;margin-top:4px;padding:2px 6px;border:1px dashed rgba(255,233,168,.55);border-radius:7px;background:rgba(255,214,102,.08)}
+.lb .tn b{font-weight:700} .lb .tn .up{color:var(--up)} .lb .tn .down{color:var(--down)}
+#leg3d i.tnd{background:rgba(255,214,102,.16);border:1px dashed #ffe9a8}
+.k.tk{border-style:dashed;border-color:rgba(255,233,168,.6);max-width:220px}
+.k.tk .s+.s{margin-top:3px;line-height:1.35}
 #leg3d{display:flex;margin-bottom:8px;gap:14px;font:600 11px Inter;color:var(--txt);letter-spacing:.04em}
 #leg3d i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-2px}
 #leg3d i.cur{background:linear-gradient(#ffdf7a,#c9961f)}
@@ -107,7 +112,7 @@ footer{position:fixed;left:22px;bottom:18px;font-size:11px;color:var(--mut);max-
 <header>
   <div class="tt"><h1><span id="ttl">Sell Out </span><b>Farma Sul</b> · <span id="fy">FY27</span></h1><p id="sub">HB Repelentes &amp; Inseticidas · por cliente · vs FY26 · <span id="fonte"></span></p></div>
   <div class="ctl">
-    <div style="display:flex;gap:8px"><div class="seg" id="segNV" style="display:none" title="Visão Nielsen"><button data-v="acum" class="on">Acumulado</button><button data-v="mes">Mês a mês</button></div><div class="seg"><button id="rv" hidden title="Voltar à vista de frente">Reset vista</button><button id="tb" aria-expanded="false" aria-controls="tbl" title="Os mesmos números em tabela">Ver tabela</button><button id="fs" title="Tela cheia">Tela cheia</button></div><div class="seg" id="segF"><button data-f="so" class="on">Sell Out</button><button data-f="si">Sell In</button><button data-f="nq">Nielsen</button><button data-f="es" title="Estoque por cliente · cobertura em dias">Estoque</button></div><div class="seg" id="segM"><button data-m="r" class="on">R$</button><button data-m="u">Unidades</button></div></div>
+    <div style="display:flex;gap:8px"><div class="seg" id="segNV" style="display:none" title="Visão Nielsen"><button data-v="acum" class="on">Acumulado</button><button data-v="mes">Mês a mês</button></div><div class="seg"><button id="rv" hidden title="Voltar à vista de frente">Reset vista</button><button id="tdb" class="on" title="Tendência de fechamento do mês parcial: ritmo diário de unidades × dias do mês × preço médio">Tendência</button><button id="tb" aria-expanded="false" aria-controls="tbl" title="Os mesmos números em tabela">Ver tabela</button><button id="fs" title="Tela cheia">Tela cheia</button></div><div class="seg" id="segF"><button data-f="so" class="on">Sell Out</button><button data-f="si">Sell In</button><button data-f="nq">Nielsen</button><button data-f="es" title="Estoque por cliente · cobertura em dias">Estoque</button></div><div class="seg" id="segM"><button data-m="r" class="on">R$</button><button data-m="u">Unidades</button></div></div>
     <div class="seg" id="segY" title="Período de comparação"><button data-y="fy" class="on">Ano fiscal FY27 × FY26</button><button data-y="cal">Ano-calendário 2026 × 2025</button></div>
     <div class="seg" id="segP"></div>
     <div class="seg" id="segB" title="Marca (Sell Out) · clique em várias para somar"></div>
@@ -119,7 +124,7 @@ footer{position:fixed;left:22px;bottom:18px;font-size:11px;color:var(--mut);max-
 <div id="det" role="status" aria-live="polite"></div>
 <section id="tbl" hidden aria-label="Tabela do gráfico"><div class="th"><h2 id="tblT">Tabela</h2><button type="button" id="tbx" aria-label="Fechar tabela">Fechar</button></div><table><thead><tr><th scope="col">Nome</th><th scope="col">Atual</th><th scope="col">Ano anterior</th><th scope="col">Variação</th></tr></thead><tbody id="tblB"></tbody></table></section>
 <div id="srbars" class="sr" role="list" aria-label="Barras do gráfico (Tab para ver o detalhe de cada uma)"></div>
-<footer><div id="leg3d" aria-hidden="true"><span><i class="cur"></i><b id="lgA" style="font-weight:inherit">Ano atual</b></span><span><i class="prv"></i><b id="lgP" style="font-weight:inherit">Ano anterior (mesmo período)</b></span></div><span id="ftx">Arraste para girar · role para aproximar · passe o mouse numa barra (ou use Tab) para ver os meses. Barra sólida = FY27 (2026), contorno = FY26 (mesmo período de 2025). </span><span id="nota"></span></footer>
+<footer><div id="leg3d" aria-hidden="true"><span><i class="cur"></i><b id="lgA" style="font-weight:inherit">Ano atual</b></span><span><i class="prv"></i><b id="lgP" style="font-weight:inherit">Ano anterior (mesmo período)</b></span><span id="lgT" hidden><i class="tnd"></i>Tendência do mês (o que falta)</span></div><span id="ftx">Arraste para girar · role para aproximar · passe o mouse numa barra (ou use Tab) para ver os meses. Barra sólida = FY27 (2026), contorno = FY26 (mesmo período de 2025). </span><span id="nota"></span></footer>
 
 <div id="falha" hidden role="alert"><h2>Não foi possível montar o gráfico 3D</h2><p id="falhaMsg"></p><p>Os mesmos números estão nas abas do dashboard (Sell Out, Sell In e Nielsen). Recarregue a página para tentar de novo.</p><button type="button" onclick="location.reload()">Recarregar</button></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -181,6 +186,9 @@ var SJI={r25:[32843,57150,167220,527457,951465], r26:[48877,144011.9,318513.46,3
          u25:dif(yr(g('SJ_UNID'),'2025'),g('SJC_VOL'),1), u26:dif(yr(g('SJ_UNID'),'2026'),g('SJC_VOL_26'))};
   }catch(e){ /* fora do dashboard ou bloqueado (file://): usa o snapshot acima */ }
 })();
+/* Mês parcial do Sell Out (SO_PARCIAL do dashboard): mes = índice 0–11, ate = 'dd/mm'. Snapshot; dentro do dashboard lê ao vivo. */
+var PARC={mes:10,ate:'15/11'};
+try{ if(window.parent&&window.parent!==window){ var _sp=window.parent.eval('typeof SO_PARCIAL!=="undefined"?SO_PARCIAL:null'); if(_sp&&_sp.ate) PARC={mes:+_sp.mes,ate:String(_sp.ate)}; } }catch(e){}
 /* ── Sell In (caixas): FY27 real Jul/26 → mês atual × FY26 real mesmos meses. Snapshot 11/11/2026 (Nov/26 parcial) ── */
 var SI_IDS={'São João':'SJ','DD-GAM':'GAM','Nissei':'NS','Panvel':'PV','DD-Gaúcha':'GA','Clamed':'CL','DD-Riomed':'RM','Riomed':'RM'};
 var SI={MES:['Jul','Ago','Set','Out','Nov'], parcial:'Nov/26', ext25:[0,0,0,240,0], ext26:[0,0,0,0,0], extNomes:'Peniel', raw:{
@@ -303,7 +311,26 @@ function esDet(o){ var c=o.c;
     h+='<div class="mb es"><div><span class="nmk" title="'+s[1].replace(/"/g,'')+'">'+esNm(s[1])+'</span><div class="bars"><div class="b c" style="width:'+(s[2]/mx*100)+'%"></div><div class="b a" style="width:'+(s[3]/mx*100)+'%"></div></div></div><span class="r">'+s[2].toLocaleString('pt-BR')+' un'+(d!=null?'<br><span class="'+esCls(d)+'">'+d.toLocaleString('pt-BR')+' d</span>':'<br><span style="color:var(--mut)">sem venda</span>')+'</span></div>'; });
   if(sk.length>N) h+='<div class="sub" style="margin:6px 0 0">+ '+(sk.length-N)+' SKUs · lista completa no card Estoque do dashboard</div>';
   det.innerHTML=h+'<div class="leg"><span><i style="background:var(--gold2)"></i>estoque</span><span><i style="background:rgba(245,197,66,.3);border:1px solid rgba(245,197,66,.5)"></i>venda/mês</span></div>'; det.classList.add('on'); }
-var ST={m:'r',p:'T',ps:[],f:'so',mSO:'r',b:'all',bs:[],y:'fy'};
+var ST={m:'r',p:'T',ps:[],f:'so',mSO:'r',b:'all',bs:[],y:'fy',t:true};
+/* Tendência do mês parcial: vale no Sell Out total / HB (não por marca, cuja base mensal tem outro corte) quando o mês parcial está no período escolhido.
+   k = dias do mês ÷ dias decorridos (corridos: farmácia vende todo dia). */
+var NMF=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+function tendInfo(){
+  if(ST.f!=='so'||!ST.t||mbMode()||!PARC||!PARC.ate) return null;
+  var L=MES.length-1; if(MES[L]!==NMF[PARC.mes]||selMs().indexOf(L)<0) return null;
+  var dE=parseInt(PARC.ate,10), ano=PARC.mes>=6?2026:2027, dM=new Date(ano,PARC.mes+1,0).getDate();
+  if(!(dE>0)||dE>=dM) return null;
+  return {L:L,dE:dE,dM:dM,falta:dM-dE,k:dM/dE,mes:NMF[PARC.mes],ano:ano};
+}
+/* projeção de um cliente: unidades/dia × dias do mês = unidades projetadas; × preço médio do mês (R$ ÷ un) = R$ projetado */
+function tendBar(c,TD){
+  if(!TD||!c||c.none||c.sh||c.es) return null;
+  var L=TD.L, r=(c.r26||[])[L], u=(c.u26||[])[L], a=(c[ST.m+'26']||[])[L];
+  if(a==null||!a) return null;
+  var pm=(r&&u&&c.r26!==c.u26)?r/u:null, pu=u?u*TD.k:null;
+  var proj=ST.m==='u'?a*TD.k:(pm&&pu?pu*pm:a*TD.k);
+  return {cur:a,proj:proj,extra:proj-a,pm:pm,pu:pu,ud:u?u/TD.dE:null,p25:(c[ST.m+'25']||[])[L]||0,r:r,u:u};
+}
 function bNome(){ return ST.bs.map(function(b){ return MARCAS.filter(function(m){return m[0]===b;})[0][1]; }).join(' + '); }
 function hbMode(){ return ST.f==='so'&&ST.bs.length===3&&['OFF!','EXPOSIS','RAID'].every(function(b){return ST.bs.indexOf(b)>=0;}); }
 /* todas as marcas marcadas = total do cliente (igual a 'Todas'), mensal até Nov */
@@ -407,19 +434,29 @@ var bars=C.map(function(c,i){
   var gg=bodyGeo(BW*.9), gm=new THREE.Mesh(gg,gmat); gm.position.set(x+GOFF,.5,GZ); gm.scale.y=.001; S.add(gm);
   var ge=new THREE.LineSegments(new THREE.EdgesGeometry(gg,25),new THREE.LineBasicMaterial({color:PREV_EDGE,transparent:true,opacity:.9})); gm.add(ge);
   var gc=new THREE.Mesh(capGeo(BW*.9),gmat); gc.position.set(x+GOFF,0,GZ); S.add(gc);
+  /* tendência: bloco translúcido com contorno claro empilhado no topo da barra (o que falta vender no mês) */
+  var tmat=new THREE.MeshStandardMaterial({color:0xffd666,emissive:GOLD,emissiveIntensity:.3,metalness:.2,roughness:.5,transparent:true,opacity:.17,depthWrite:false});
+  var tg=bodyGeo(BW), tm=new THREE.Mesh(tg,tmat); tm.position.set(x,.5,.6); tm.scale.y=.001; tm.visible=false; S.add(tm);
+  tm.add(new THREE.LineSegments(new THREE.EdgesGeometry(tg,25),new THREE.LineBasicMaterial({color:0xffe9a8,transparent:true,opacity:.85})));
   var gl=new THREE.Mesh(new THREE.PlaneGeometry(3.2,3.2),new THREE.MeshBasicMaterial({map:glowTex,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));
   gl.rotation.x=-Math.PI/2; gl.position.set(x,.02,.6); S.add(gl);
   var lb=document.createElement('div'); lb.className='lb'; lbBox.appendChild(lb);
   var nm=document.createElement('div'); nm.className='nm'; nm.textContent=c.nome; lbBox.appendChild(nm);
-  return {cid:c.id,c:c,b:b,g:gm,cp:cp,gc:gc,gl:gl,lb:lb,nm:nm,h:0,ht:0,gh:0,ght:0,x:x,xt:x,rk:i};
+  return {cid:c.id,c:c,b:b,g:gm,cp:cp,gc:gc,gl:gl,tm:tm,lb:lb,nm:nm,h:0,ht:0,gh:0,ght:0,th:0,tt:0,x:x,xt:x,rk:i};
 });
 
 function update(){
-  if(ST.f==='nq'){ nqBars(); nqKpis(); return; }
-  if(ST.f==='es'){ esBars(); return; }
+  bars.forEach(function(o){ o.tt=0; o.td=null; });
+  var TD=tendInfo(), lgT=document.getElementById('lgT');
+  document.getElementById('tdb').style.display=(ST.f==='so'&&!mbMode())?'':'none';
+  if(ST.f==='nq'){ lgT.hidden=true; nqBars(); nqKpis(); return; }
+  if(ST.f==='es'){ lgT.hidden=true; esBars(); return; }
   var vs=bars.map(function(o){ return {a:val(o.c,'26'),p:val(o.c,'25')}; });
   var MB=mbMode(), HBm=hbMode()||fullMode(), fora=function(o){ return MB&&o.c.un; }; // Clamed em unidades fica fora do total por marca
-  var mx=0; vs.forEach(function(v,i){ if(fora(bars[i])) return; mx=Math.max(mx,v.a.v||0,v.p.v||0); });
+  bars.forEach(function(o){ o.td=fora(o)?null:tendBar(o.c,TD); });
+  lgT.hidden=!bars.some(function(o){ return o.td; });
+  var mx=0; vs.forEach(function(v,i){ if(fora(bars[i])) return; mx=Math.max(mx,(v.a.v||0)+(bars[i].td?bars[i].td.extra:0),v.p.v||0); });
+  if(!lgT.hidden) mx/=.85; /* com a tendência o rótulo tem uma linha a mais: barras um pouco mais baixas para caber acima delas */
   /* ordem decrescente pelo valor 2026 da métrica/período escolhidos (maior à esquerda) */
   bars.map(function(o,i){ return {o:o,v:fora(o)?-1:(vs[i].a.v||0)}; }).sort(function(a,b){ return b.v-a.v; })
     .forEach(function(r,k){ r.o.rk=k; r.o.xt=-W/2+GAP*(k+.5); });
@@ -430,7 +467,9 @@ function update(){
     if(o.c.none){ o.lb.innerHTML='<div class="v">—</div><div class="pend">sem venda da marca</div>'; return; }
     o.lb.innerHTML='<div class="v">'+fmt(v.a.v,o.c)+'</div>'+(v.p.v?'<div class="pv">'+prevTxt()+' '+fmt(v.p.v,o.c)+'</div>':'')+(p!=null?'<div class="d '+(p>=0?'up':'down')+'">'+pctTxt(p)+' '+cmpTxt()+'</div>':'')+
       (f?'<div class="pend">só unidades · fora do total</div>':'')+
-      (v.a.pend?'<div class="pend">'+(v.a.pend===v.a.ms?'receita pendente':'receita '+(v.a.ms-v.a.pend)+' de '+v.a.ms+' meses')+'</div>':'');
+      (v.a.pend?'<div class="pend">'+(v.a.pend===v.a.ms?'receita pendente':'receita '+(v.a.ms-v.a.pend)+' de '+v.a.ms+' meses')+'</div>':'')+
+      (o.td?(function(td){ var q=pct(td.proj,td.p25); return '<div class="tn">tend. '+TD.mes+' <b>'+fmt(td.proj,o.c)+'</b>'+(q!=null?' <span class="'+(q>=0?'up':'down')+'">'+pctTxt(q)+'</span>':'')+'</div>'; })(o.td):'');
+    if(o.td&&mx) o.tt=o.td.extra/mx*HMAX;
     if(v.a.pend) pendAny=true;
     if(v.a.v!=null&&!f){ t26+=v.a.v; t25+=v.p.v; if(!best||v.a.v>best.v) best={n:o.c.nome,v:v.a.v}; }
     if(f&&v.a.v!=null) unB={n:o.c.nome,v:v.a.v,p:v.p.v,c:o.c};
@@ -445,12 +484,20 @@ function update(){
   document.getElementById('kpis').innerHTML=
     '<div class="k"><div class="l">'+(ST.f==='si'?'Sell In acumulado':'Sell Out'+mNome+((MB||HBm)?'':' total'))+' · '+plb+(parc?' (Nov parcial)':'')+'</div><div class="n">'+(best?fmtK(t26):'—')+'</div><div class="s '+(tp>=0?'up':'down')+'">'+(tp==null?'sem venda no mesmo período de 2025':pctTxt(tp)+' '+cmpTxt())+'</div></div>'+
     '<div class="k"><div class="l">Maior cliente</div><div class="n" style="font-size:17px">'+(best?best.n:'—')+'</div><div class="s" style="color:var(--mut)">'+(best?fmtK(best.v)+' · '+(best.v/t26*100).toFixed(0)+'% do total':'')+'</div></div>'+
-    '<div class="k"><div class="l">Maior crescimento</div><div class="n" style="font-size:17px">'+(cres?cres.n:'—')+'</div><div class="s '+(cres&&cres.p<0?'down':'up')+'">'+(cres?pctTxt(cres.p):'')+'</div></div>';
+    '<div class="k"><div class="l">Maior crescimento</div><div class="n" style="font-size:17px">'+(cres?cres.n:'—')+'</div><div class="s '+(cres&&cres.p<0?'down':'up')+'">'+(cres?pctTxt(cres.p):'')+'</div></div>'+
+    (function(){ var T=bars.filter(function(o){ return o.td; }); if(!T.length) return '';
+      var pj=0,cu=0,p25=0,sr=0,su=0,ex=0; T.forEach(function(o){ pj+=o.td.proj; cu+=o.td.cur; p25+=o.td.p25; ex+=o.td.extra; if(o.td.r&&o.td.u&&o.c.r26!==o.c.u26){ sr+=o.td.r; su+=o.td.u; } });
+      var q=pct(pj,p25), ac=ST.p==='T'&&selMs().length>1?' · '+plb+' projetado '+fmtK(t26+ex):'';
+      var rit=ST.m==='u'?Math.round(su/TD.dE).toLocaleString('pt-BR')+' un/dia':(su?'preço médio R$ '+(sr/su).toFixed(2).replace('.',',')+'/un · '+Math.round(su/TD.dE).toLocaleString('pt-BR')+' un/dia':'');
+      return '<div class="k tk"><div class="l">Tendência '+TD.mes+'/'+String(TD.ano).slice(2)+' · faltam '+TD.falta+' de '+TD.dM+' dias</div><div class="n">'+fmtK(pj)+'</div>'+
+        '<div class="s '+(q!=null&&q<0?'down':'up')+'">'+(q!=null?pctTxt(q)+' vs '+TD.mes+'/25 cheio':'')+'</div>'+
+        '<div class="s" style="color:var(--mut)">até '+PARC.ate+': '+fmtK(cu)+(rit?' · '+rit:'')+ac+'</div></div>'; })();
   document.getElementById('nota').textContent=ST.f==='si'?'Sell In em caixas (real) · '+(calMode()?'ano-calendário '+PLAB+'/26 × '+PLAB+'/25 · ':'')+SI.parcial+' parcial, comparado com o mês cheio do '+(calMode()?'ano anterior':'FY26')+(SI.extNomes?' · total inclui '+SI.extNomes+' (sem barra)':'')+' · Sell In não tem quebra por marca. '
     :fullMode()?'Todas as marcas marcadas = Sell Out total do cliente por mês (igual a Todas), FY27 × FY26 até '+MES[MES.length-1]+'/26 (Nov parcial vs Nov/25 cheio). '
     :HBm?'OFF + Exposis + Raid = linha HB do dashboard por mês, '+(calMode()?PLAB+'/26 × '+PLAB+'/25':'FY27 × FY26')+' (até '+MES[MES.length-1]+'/26; Nov parcial vs Nov/25 cheio) · São João só Isadora · DD-Gaúcha inclui Glade e GAM/Riomed incluem Lysoform/Pato residuais (o mensal não tem quebra por marca) · Clamed: receita só até Jul/26. '
     :MB?'Por marca, mês a mês: '+perLbl('/26')+' × mesmo período de 2025 · Nov/26 parcial até 11/11 (vs Nov/25 cheio) · Jan–Set real por SKU em São João, Panvel e Clamed; estimado em Nissei, GAM, Gaúcha e Riomed (acumulado da marca no card Sell-out por Marca distribuído pela venda mensal do cliente) · Out/Nov = total do cliente quebrado por marca · São João = Isadora + Caroline · Clamed só em unidades (fora do total). '
     :(ST.m==='r'&&pendAny)?(calMode()?'Ano-calendário: '+PLAB+'/26 × '+PLAB+'/25 · Nov/26 parcial (até 11/11) contra Nov/25 cheio · ':'')+'Clamed: receita de 2026 só até Jul/26 na planilha; a comparação usa só os meses com dado. ':(ST.m==='u'?'Panvel FY26 em unidades é estimado (receita ÷ ticket médio). ':'');
+  if(TD&&bars.some(function(o){ return o.td; })) document.getElementById('nota').textContent+='Tendência '+TD.mes+' (bloco tracejado no topo) = unidades vendidas até '+PARC.ate+' ÷ '+TD.dE+' dias × '+TD.dM+' dias × preço médio do mês (R$ ÷ un) de cada cliente; é o ritmo atual mantido nos '+TD.falta+' dias que faltam, comparado com '+TD.mes+'/25 cheio. ';
 }
 
 /* hover → detalhe */
@@ -473,6 +520,14 @@ function showDet(o){
   if(c.none) h+='<div class="sub">Sem venda desta marca no cliente.</div>';
   else for(var i=0;i<lb.length;i++){ var q=c.sh?(a[i]==null||p[i]==null?null:a[i]-p[i]):pct(a[i],p[i]);
     h+='<div class="mb"><span style="color:var(--mut)">'+lb[i]+'</span><div class="bars"><div class="b c" style="width:'+((a[i]||0)/(mx||1)*100)+'%"></div><div class="b a" style="width:'+((p[i]||0)/(mx||1)*100)+'%"></div></div><span class="r">'+fmt(a[i],c)+(q!=null?'<br><span class="'+(q>=0?'up':'down')+'">'+(c.sh?ppTxt(q):pctTxt(q))+'</span>':'')+'</span></div>'; }
+  var td=o.td, TDi=td&&tendInfo();
+  if(td&&TDi){ var q2=pct(td.proj,td.p25);
+    h+='<div class="sub" style="margin:10px 0 4px;color:#ffe9a8">Tendência '+TDi.mes+' · faltam '+TDi.falta+' de '+TDi.dM+' dias</div>'+
+      '<div class="mb" style="grid-template-columns:1fr auto"><span style="color:var(--mut)">até '+PARC.ate+'</span><span class="r">'+fmt(td.cur,c)+'</span></div>'+
+      (td.ud?'<div class="mb" style="grid-template-columns:1fr auto"><span style="color:var(--mut)">ritmo</span><span class="r">'+Math.round(td.ud).toLocaleString('pt-BR')+' un/dia</span></div>':'')+
+      (td.pm?'<div class="mb" style="grid-template-columns:1fr auto"><span style="color:var(--mut)">preço médio</span><span class="r">R$ '+td.pm.toFixed(2).replace('.',',')+'/un</span></div>':'')+
+      '<div class="mb" style="grid-template-columns:1fr auto"><span style="color:var(--mut)">projeção '+TDi.dM+' dias</span><span class="r">'+fmt(td.proj,c)+(td.pu&&ST.m==='r'?'<br><span style="color:var(--mut)">'+Math.round(td.pu).toLocaleString('pt-BR')+' un</span>':'')+'</span></div>'+
+      (q2!=null?'<div class="mb" style="grid-template-columns:1fr auto"><span style="color:var(--mut)">vs '+TDi.mes+'/25 cheio ('+fmt(td.p25,c)+')</span><span class="r '+(q2>=0?'up':'down')+'">'+pctTxt(q2)+'</span></div>':''); }
   det.innerHTML=h+'<div class="leg"><span><i style="background:var(--gold2)"></i>2026</span><span><i style="background:rgba(245,197,66,.3);border:1px solid rgba(245,197,66,.5)"></i>2025</span></div>';
   det.classList.add('on');
 }
@@ -529,6 +584,7 @@ document.getElementById('segB').addEventListener('click',function(e){ var b=e.ta
   applyDS(); });
 document.getElementById('fonte').textContent=FONTE;
 document.getElementById('rv').onclick=function(){ resetVista(); this.hidden=true; };
+document.getElementById('tdb').onclick=function(){ ST.t=!ST.t; this.classList.toggle('on',ST.t); update(); if(hov) showDet(hov); };
 function tblFill(){ var T=document.getElementById('tbl'); if(T.hidden) return;
   document.getElementById('tblT').textContent=document.querySelector('.tt h1').innerText;
   var rows=bars.filter(function(o){ return !o.c.hide && o.lb.style.display!=='none' && o.lb.innerHTML; }).sort(function(a,b){ return a.xt-b.xt; });
@@ -744,11 +800,14 @@ function declutter(){
   var kr=document.getElementById('kpis').getBoundingClientRect();
   vis.forEach(function(o){
     var w=o.lb.offsetWidth, hh=o.lb.offsetHeight, x=parseFloat(o.lb.style.left)-w/2, y=parseFloat(o.lb.style.top)-hh;
-    for(var g=0;g<8;g++){ var hit=placed.filter(function(r){ return x<r.x+r.w+6 && x+w+6>r.x && y<r.y+r.h+4 && y+hh+4>r.y; })[0];
-      if(!hit) break; y=hit.y-hh-6; }
-    var yMin=(innerWidth<760?150:120); if(y<yMin) y=yMin;
+    var yMin=(innerWidth<760?150:120), x0=x;
     /* não deixa o rótulo atrás dos cartões de KPI: empurra para a direita deles */
-    if(innerWidth>=760 && kr && x<kr.right+8 && y<kr.bottom+4){ x=kr.right+8; o.lb.style.left=(x+w/2)+'px'; }
+    if(innerWidth>=760 && kr && x<kr.right+8 && y<kr.bottom+4) x=kr.right+8;
+    /* colisão: sobe; se não cabe acima do topo, desvia para o lado do rótulo que bate */
+    for(var g=0;g<12;g++){ var hit=placed.filter(function(r){ return x<r.x+r.w+6 && x+w+6>r.x && y<r.y+r.h+4 && y+hh+4>r.y; })[0];
+      if(!hit) break; if(hit.y-hh-6>=yMin) y=hit.y-hh-6; else x=hit.x+hit.w+8; }
+    if(y<yMin) y=yMin;
+    if(x!==x0) o.lb.style.left=(x+w/2)+'px';
     placed.push({x:x,y:y,w:w,h:hh}); o.lb.style.top=(y+hh)+'px';
   });
   /* nomes dos clientes: se encostam no vizinho, descem uma linha (alternando) */
@@ -769,7 +828,8 @@ function declutter(){
   if(nh!==hov){ hov=nh; showDet(hov); cv.style.cursor=hov?'pointer':''; }
   }
   bars.forEach(function(o,i){
-    if(RM){ o.h=o.ht; o.gh=o.ght; o.x=o.xt; } else { o.h+=(o.ht-o.h)*.07; o.gh+=(o.ght-o.gh)*.07; o.x+=(o.xt-o.x)*.08; }
+    if(RM){ o.h=o.ht; o.gh=o.ght; o.x=o.xt; o.th=o.tt; } else { o.h+=(o.ht-o.h)*.07; o.gh+=(o.ght-o.gh)*.07; o.x+=(o.xt-o.x)*.08; o.th+=(o.tt-o.th)*.07; }
+    o.tm.visible=o.th>.01&&o.b.visible; o.tm.position.x=o.x; o.tm.scale.y=Math.max(o.th,.001); o.tm.position.y=o.h+o.th/2;
     o.b.position.x=o.x; o.g.position.x=o.x+GOFF; o.gl.position.x=o.x;
     o.b.scale.y=Math.max(o.h,.001); o.b.position.y=o.h/2;
     o.g.scale.y=Math.max(o.gh,.001); o.g.position.y=o.gh/2;
@@ -778,7 +838,7 @@ function declutter(){
     var on=o===hov;
     o.b.material.emissiveIntensity=(on?1.1:.5)+(RM?0:Math.sin(t*2+i)*.06);
     o.gl.material.opacity=on?1:.6;
-    v3.set(o.x,o.h+.35,.6).project(cam);
+    v3.set(o.x,o.h+Math.max(o.th,0)+.35,.6).project(cam);
     o.lb.style.left=(v3.x*.5+.5)*innerWidth+'px'; o.lb.style.top=(-v3.y*.5+.5)*innerHeight+'px'; o.lb.style.opacity=v3.z<1?1:0;
     if(o.plTxt!==o.nm.textContent){ o.plTxt=o.nm.textContent; if(o.pl.material.map) o.pl.material.map.dispose(); o.pl.material.map=nameTex(o.plTxt); o.pl.material.needsUpdate=true; }
     o.pl.position.x=o.x; o.pl.visible=!!o.plTxt && o.nm.style.display!=='none' && o.b.visible;
