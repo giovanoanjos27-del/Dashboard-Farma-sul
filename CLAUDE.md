@@ -41,7 +41,7 @@
 | **Cobertura** | Cob_SJoao (isadora) · Cob_SJoao ( Caroline) · Cob_Nissei · Cob_Clamed · Cob_Panvel |
 
 **Comando de atualização:** `python atualizar_dados.py`
-Exporta automaticamente cópia para `~\Downloads\Dashboard_FarmaSul_Giovano_YYYYMMDD_HHMM.html`
+Exporta automaticamente cópia para `Dashboard_farma_sul\Dashboard_FarmaSul_Giovano_YYYYMMDD_HHMM.html` (pasta do projeto — **nunca em Downloads**)
 
 ---
 

@@ -18,7 +18,7 @@ PROTOCOLO:
   2. Extrair dados → normalizar (12 valores por ano, None para meses futuros)
   3. Verificar integridade (Total SJ = Isadora + Caroline; NS total = André + Edmar ±tol)
   4. Patching no HTML via regex
-  5. Versão timestampada + cópia em Downloads
+  5. Versão timestampada + cópia na pasta Dashboard_farma_sul
 """
 
 import os, re, sys, shutil, json, math
@@ -40,7 +40,7 @@ HTML_DIR = os.path.join(BASE, "Dashboard_farma_sul")
 SRC_HTML = os.path.join(HTML_DIR, "Dashboard_Farma_Sul_20260512_2220.html")
 XLSX     = os.path.join(HTML_DIR, "Planilha_Mestre_FarmaSul_Giovano.xlsx")
 VER_DIR  = os.path.join(HTML_DIR, "versoes")
-DOWNLOADS = os.path.expanduser(r"~\Downloads")
+DOWNLOADS = HTML_DIR   # cópia exportada fica na pasta do projeto (pedido do Giovano 17/11/2026), não em ~\Downloads
 
 os.makedirs(VER_DIR, exist_ok=True)
 
@@ -527,11 +527,11 @@ VER = os.path.join(VER_DIR, f"Dashboard_Farma_Sul_{ts}_AtualizacaoDados.html")
 shutil.copy2(SRC_HTML, VER)
 print(f"  Versão   : {VER}")
 
-# Cópia em Downloads
+# Cópia na pasta do projeto (Dashboard_farma_sul)
 dl_name = f"Dashboard_FarmaSul_Giovano_{ts}.html"
 DL_PATH = os.path.join(DOWNLOADS, dl_name)
 shutil.copy2(SRC_HTML, DL_PATH)
-print(f"  Downloads: {DL_PATH}")
+print(f"  Cópia    : {DL_PATH}")
 
 wb.close()
 
