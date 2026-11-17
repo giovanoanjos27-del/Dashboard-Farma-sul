@@ -43167,7 +43167,7 @@ function switchClient(id,btn){
   if(id==='3d'){
     if(_loginUser!=='Giovano' && _loginRole!=='scj'){ return; }
     /* perfil vai no endereço: em file:// a página 3D não consegue ler o login do dashboard */
-    var _f3d=document.getElementById('frame-3d'); if(_f3d){ var _s3d=_f3d.getAttribute('data-src')+(_loginRole==='scj'?'?perfil=scj':''); if(_f3d.getAttribute('src')!==_s3d) _f3d.setAttribute('src', _s3d); }
+    var _f3d=document.getElementById('frame-3d'); if(_f3d){ var _s3d=_f3d.getAttribute('data-src')+(_loginRole==='scj'?'?perfil=scj&':'?')+'v='+Date.now(); /* v = sempre a versão mais nova do 3D (sem cache do navegador) */ if(!_f3d.getAttribute('src')||(_f3d.getAttribute('src').indexOf('perfil=scj')>=0)!==(_loginRole==='scj')) _f3d.setAttribute('src', _s3d); }
     initialized['3d']=true;
   }
   // Sempre esconder todos os sellout-client-content ao trocar de aba
