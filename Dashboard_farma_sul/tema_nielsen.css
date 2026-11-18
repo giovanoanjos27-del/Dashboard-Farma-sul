@@ -1,0 +1,291 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   TEMA NIELSEN — camada visual final (somente CSS)
+   Referência: Dashboard Nielsen - AC.PC.HC UXUI
+   Não altera HTML, IDs, classes, JS, gráficos nem dados.
+   Para trocar cores no futuro: editar só os tokens --nx-* abaixo.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. TOKENS ─────────────────────────────────────────────────────────── */
+:root {
+  --nx-bg:        #f3f5f7;   /* fundo geral — cinza muito claro */
+  --nx-surface:   #ffffff;   /* cards */
+  --nx-surface-2: #f7f8f9;   /* superfícies secundárias / zebra */
+  --nx-surface-3: #eef3f7;   /* barras de filtro / cabeçalho de tabela */
+  --nx-ink:       #18242e;   /* títulos */
+  --nx-text:      #26323b;   /* texto principal */
+  --nx-muted:     #62717d;   /* texto secundário */
+  --nx-border:    #dfe4e8;   /* bordas suaves */
+  --nx-border-2:  #d8e0e6;   /* bordas de inputs */
+  --nx-grid:      #e9eef2;   /* divisórias */
+  --nx-navy:      #17365d;   /* cabeçalho corporativo */
+  --nx-navy-2:    #1c4b78;
+  --nx-navy-dk:   #112b4b;
+  --nx-blue:      #2367d1;   /* cor primária */
+  --nx-tab-hi:    #7ac6ef;   /* sublinhado da aba ativa */
+  --nx-green:     #18865f;   /* positivo */
+  --nx-red:       #c74650;   /* negativo */
+  --nx-amber:     #d49b3b;   /* alerta */
+  --nx-shadow-xs: 0 1px 2px rgba(20,42,61,.04);
+  --nx-shadow-sm: 0 5px 16px rgba(20,42,61,.07);
+  --nx-shadow-md: 0 14px 40px rgba(20,42,61,.14);
+  --nx-font:      Aptos, "Segoe UI", Inter, Arial, sans-serif;
+
+  /* Tokens já existentes no dashboard → redirecionados para a paleta Nielsen */
+  --nielsen-bg: var(--nx-bg);
+  --nielsen-card: var(--nx-surface);
+  --nielsen-card-kpi: var(--nx-surface);
+  --nielsen-input: var(--nx-surface);
+  --nielsen-surface: var(--nx-surface-2);
+  --nielsen-border: var(--nx-border);
+  --nielsen-border-strong: var(--nx-border-2);
+  --nielsen-border-faint: var(--nx-grid);
+  --nielsen-heading: var(--nx-ink);
+  --nielsen-text: var(--nx-text);
+  --nielsen-body: var(--nx-text);
+  --nielsen-muted: var(--nx-muted);
+  --nielsen-faint: var(--nx-muted);
+  --nielsen-primary: var(--nx-blue);
+  --nielsen-accent: var(--nx-navy-2);
+  --nielsen-positive: var(--nx-green);
+  --nielsen-negative: var(--nx-red);
+  --nielsen-warning: var(--nx-amber);
+  --nielsen-shadow-sm: var(--nx-shadow-xs);
+  --nielsen-shadow-md: var(--nx-shadow-sm);
+  --nielsen-shadow-lg: var(--nx-shadow-md);
+  --nielsen-font: var(--nx-font);
+  --bg-base: var(--nx-bg);
+  --bg-base-filter: var(--nx-surface-3);
+  --bg-card: var(--nx-surface);
+  --bg-card-alt: var(--nx-surface-2);
+  --bg-subtle: var(--nx-surface-3);
+  --bg-hover: #e8eef3;
+  --card: var(--nx-surface);
+  --border-card: var(--nx-border);
+  --shadow-card: var(--nx-shadow-xs);
+  --shadow-hover: var(--nx-shadow-sm);
+  --shadow-sm: var(--nx-shadow-xs);
+  --card-text-heading: var(--nx-ink);
+  --card-text-primary: var(--nx-text);
+  --card-text-body: var(--nx-text);
+  --card-text-muted: var(--nx-muted);
+  --card-text-faint: var(--nx-muted);
+}
+
+/* ── 2. PÁGINA ─────────────────────────────────────────────────────────── */
+:root:root:root body,
+:root:root:root body .main {
+  background: var(--nx-bg) !important;
+  color: var(--nx-text);
+  font-family: var(--nx-font) !important;
+}
+
+/* ── 3. CABEÇALHO — azul-marinho corporativo ───────────────────────────── */
+:root:root:root body .header {
+  background: linear-gradient(118deg, #0e2947 0%, #153b63 58%, #1d507f 100%) !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+:root:root:root body .header h1,
+:root:root:root body .header #dash-main-title { color: #ffffff !important; }
+:root:root:root body .header .header-sub      { color: rgba(255,255,255,.72) !important; }
+/* botões e selo do cabeçalho: mesmos significados (verde = atualizar/ok, âmbar = salvar), tons claros para fundo navy */
+:root:root:root body .header #btn-update-data,
+:root:root:root body .header #dash-update-badge {
+  color: #4dd3a3 !important;
+  background: rgba(77,211,163,.12) !important;
+  border-color: rgba(77,211,163,.38) !important;
+}
+:root:root:root body .header #btn-save-dashboard {
+  color: #f4c45e !important;
+  background: rgba(244,196,94,.12) !important;
+  border-color: rgba(244,196,94,.38) !important;
+}
+:root:root:root body .header #btn-update-data:hover    { background: rgba(77,211,163,.22) !important; }
+:root:root:root body .header #btn-save-dashboard:hover { background: rgba(244,196,94,.22) !important; }
+
+/* faixa-título do One Page → mesmo navy do cabeçalho */
+:root:root:root body .op1-hdr {
+  background: linear-gradient(118deg, #0e2947 0%, #153b63 58%, #1d507f 100%) !important;
+}
+
+/* ── 4. ABAS PRINCIPAIS — navy, destaque azul na ativa ─────────────────── */
+:root:root:root body .ctabs {
+  background: #153b63 !important;
+  border-bottom: 1px solid rgba(255,255,255,.12) !important;
+  box-shadow: 0 8px 28px rgba(11,31,49,.22) !important;
+}
+:root:root:root body .ctabs .ctab {
+  color: rgba(255,255,255,.73) !important;
+  background: transparent !important;
+  border-bottom: 3px solid transparent !important;
+  border-radius: 8px 8px 0 0 !important;
+}
+:root:root:root body .ctabs .ctab:hover:not(.active) {
+  color: #ffffff !important;
+  background: rgba(255,255,255,.10) !important;
+}
+:root:root:root body .ctabs .ctab.active {
+  color: #ffffff !important;
+  background: rgba(255,255,255,.13) !important;
+  border-bottom-color: var(--nx-tab-hi) !important;
+  font-weight: 700 !important;
+}
+:root:root:root body .ctabs::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25) !important; }
+
+/* ── 5. CARDS E CONTAINERS — brancos, borda suave, sombra discreta ─────── */
+:root:root:root body .card,
+:root:root:root body .card.full,
+:root:root:root body .cards-row > .card {
+  background: var(--nx-surface) !important;
+  border: 1px solid var(--nx-border) !important;
+  box-shadow: var(--nx-shadow-xs) !important;
+}
+:root:root:root body .card:hover { box-shadow: var(--nx-shadow-sm) !important; }
+:root:root:root body .card::before { background: var(--nx-blue) !important; }
+:root:root:root body .card-header { border-bottom-color: var(--nx-grid) !important; }
+:root:root:root body .card-title  { color: var(--nx-ink) !important; }
+:root:root:root body .card-sub    { color: var(--nx-muted) !important; }
+
+/* KPIs */
+:root:root:root body .kpi-cell {
+  background: var(--nx-surface) !important;
+  border: 1px solid var(--nx-border) !important;
+  box-shadow: var(--nx-shadow-xs) !important;
+}
+:root:root:root body .kpi-cell:hover { box-shadow: var(--nx-shadow-sm) !important; }
+
+/* ── 6. FILTROS ────────────────────────────────────────────────────────── */
+:root:root:root body .filters {
+  background: var(--nx-surface-3) !important;
+  border-color: var(--nx-border) !important;
+  box-shadow: none !important;
+}
+:root:root:root body select,
+:root:root:root body input[type="text"],
+:root:root:root body input[type="search"],
+:root:root:root body input[type="number"],
+:root:root:root body input[type="date"] {
+  background-color: var(--nx-surface) !important;
+  border-color: var(--nx-border-2) !important;
+  color: var(--nx-text) !important;
+}
+:root:root:root body select:focus,
+:root:root:root body input:focus { outline: 2px solid rgba(35,103,209,.25) !important; border-color: var(--nx-blue) !important; }
+
+/* ── 7. SUBABAS E BOTÕES DE SELEÇÃO ────────────────────────────────────── */
+:root:root:root body .stab,
+:root:root:root body .sellin-fy-btn {
+  background: var(--nx-surface) !important;
+  border-color: var(--nx-border-2) !important;
+  color: var(--nx-muted) !important;
+}
+:root:root:root body .stab:hover:not(.active),
+:root:root:root body .sellin-fy-btn:hover:not(.active) {
+  background: var(--nx-surface-3) !important;
+  color: var(--nx-navy) !important;
+}
+:root:root:root body .stab.active,
+:root:root:root body .sellin-fy-btn.active {
+  background: var(--nx-navy) !important;
+  border-color: var(--nx-navy) !important;
+  color: #ffffff !important;
+}
+
+/* ── 8. TABELAS ────────────────────────────────────────────────────────── */
+:root:root:root body table th:not([style*="background"]) {
+  background-color: var(--nx-surface-3) !important;
+}
+:root:root:root body table th {
+  color: #44545f !important;
+  border-bottom: 1px solid var(--nx-border-2) !important;
+}
+:root:root:root body table td { border-color: var(--nx-grid) !important; }
+/* tabelas que já usam cabeçalho escuro → mesmo navy do cabeçalho */
+:root:root:root body .d-table th { background-color: var(--nx-navy) !important; color: #ffffff !important; }
+
+/* ── 9. TOOLTIPS HTML ──────────────────────────────────────────────────── */
+:root:root:root body .chartjs-tooltip {
+  background: var(--nx-surface) !important;
+  border: 1px solid var(--nx-border) !important;
+  color: var(--nx-text) !important;
+  box-shadow: var(--nx-shadow-sm) !important;
+}
+
+/* ── 10. TELA DE LOGIN ─────────────────────────────────────────────────── */
+:root:root:root body #login-overlay { background: var(--nx-bg) !important; }
+
+/* ── 11. FILTROS FIXOS EM AZUL — continuação do cabeçalho, presos logo abaixo das abas ──
+   Só CSS (nada de HTML/JS). Faixa navy de ponta a ponta = "aqui é filtro".
+   Em telas < 761 px continuam rolando com a página (não ocupam o celular). */
+@media (min-width: 761px) {
+  :root:root:root body #nq-fy-bar,
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title),
+  :root:root:root body #panel-sellout > .filters,
+  :root:root:root body #panel-cpt > .card.full > .card-header {
+    position: sticky !important;
+    top: calc(var(--header-h, 110px) + 31px) !important;
+    z-index: 90 !important;
+    background: linear-gradient(118deg, #102f52 0%, #143a62 60%, #1a4874 100%) !important;
+    border: 0 !important;
+    border-top: 1px solid rgba(255,255,255,.10) !important;
+    border-radius: 0 0 14px 14px !important;
+    box-shadow: 0 10px 24px rgba(11,31,49,.24) !important;
+    color: #ffffff !important;
+  }
+  /* encostar nas abas e ir de ponta a ponta (anula o recuo do painel) */
+  :root:root:root body #nq-fy-bar,
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title),
+  :root:root:root body #panel-sellout > .filters {
+    margin: -26px -24px 16px !important;
+    padding-left: 24px !important; padding-right: 24px !important;
+  }
+  :root:root:root body #panel-cpt > .card.full {
+    overflow: clip !important;            /* hidden impede o sticky; clip corta igual */
+    margin: -22px -18px 16px !important;
+    border-top-left-radius: 0 !important; border-top-right-radius: 0 !important;
+  }
+  :root:root:root body #panel-cpt > .card.full > .card-header {
+    margin: -20px -20px 16px !important;
+    padding: 14px 24px 12px !important;
+  }
+
+  /* textos claros sobre o azul (rótulos, títulos, ajuda) — campos e listas continuam brancos */
+  :root:root:root body #nq-fy-bar :is(span,div,label,b,strong,p,small):not(button *):not(select *):not(#nq-br-pop):not(#nq-br-pop *),
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title) :is(span,div,label,b,strong,p,small):not(button *):not(select *):not(#nq-br-pop):not(#nq-br-pop *),
+  :root:root:root body #panel-sellout > .filters :is(span,div,label,b,strong,p,small):not(button *):not(select *):not(#nq-br-pop):not(#nq-br-pop *),
+  :root:root:root body #panel-cpt > .card.full > .card-header :is(span,div,label,b,strong,p,small):not(button *):not(select *):not(#nq-br-pop):not(#nq-br-pop *) { color: rgba(255,255,255,.90) !important; }
+  :root:root:root body #nq-fy-bar #nq-fy-info,
+  :root:root:root body #sellin-main-sub,
+  :root:root:root body #panel-sellout > .filters .filter-label { color: rgba(255,255,255,.68) !important; }
+  :root:root:root body #sellin-main-title,
+  :root:root:root body #panel-cpt > .card.full > .card-header .card-title { color: #ffffff !important; }
+
+  /* botões de seleção (FY, clientes, compradores) no padrão das abas */
+  :root:root:root body #nq-fy-bar :is(.tgl,.stab),
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title) :is(.tgl,.stab),
+  :root:root:root body #panel-sellout > .filters :is(.tgl,.stab),
+  :root:root:root body #panel-cpt > .card.full > .card-header :is(.tgl,.stab) {
+    background: rgba(255,255,255,.08) !important;
+    border: 1px solid rgba(255,255,255,.22) !important;
+    color: rgba(255,255,255,.88) !important;
+  }
+  :root:root:root body #nq-fy-bar :is(.tgl,.stab):hover:not(.active),
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title) :is(.tgl,.stab):hover:not(.active),
+  :root:root:root body #panel-sellout > .filters :is(.tgl,.stab):hover:not(.active),
+  :root:root:root body #panel-cpt > .card.full > .card-header :is(.tgl,.stab):hover:not(.active) { background: rgba(255,255,255,.16) !important; color: #fff !important; }
+  :root:root:root body #nq-fy-bar :is(.tgl,.stab).active,
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title) :is(.tgl,.stab).active,
+  :root:root:root body #panel-sellout > .filters :is(.tgl,.stab).active,
+  :root:root:root body #panel-cpt > .card.full > .card-header :is(.tgl,.stab).active {
+    background: #ffffff !important; border-color: #ffffff !important; color: #17365d !important;
+    box-shadow: inset 0 -2px 0 #7ac6ef !important;
+  }
+  /* campos (selects e botões-lista) brancos com borda suave */
+  :root:root:root body #nq-fy-bar :is(select, button:not(.tgl):not(.stab)),
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title) :is(select, button:not(.tgl):not(.stab)),
+  :root:root:root body #panel-sellout > .filters :is(select, button:not(.tgl):not(.stab)),
+  :root:root:root body #panel-cpt > .card.full > .card-header :is(select, button:not(.tgl):not(.stab)) { border-color: rgba(255,255,255,.35) !important; }
+}
+
+/* ── 12. Botão de imprimir do One Page oculto (pedido do Giovano 18/11; função op1Print continua no código) ── */
+:root:root:root body button.stab[onclick^="op1Print"] { display: none !important; }

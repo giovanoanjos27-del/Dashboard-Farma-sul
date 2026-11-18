@@ -2671,7 +2671,7 @@ function showAccessDenied(){
       <h1 id="dash-main-title">Dashboard Sell Out — Farma Sul</h1>
       <div class="header-sub">Repelentes &amp; Inseticidas · Unidades &amp; Receita · 2024–2026</div>
     </div>
-    <span id="dash-update-badge" style="font-size:10px;font-weight:600;color:#34d399;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:4px;padding:3px 8px;white-space:nowrap;align-self:flex-start;">✓ Atualizado 17/11/2026</span>
+    <span id="dash-update-badge" style="font-size:10px;font-weight:600;color:#34d399;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:4px;padding:3px 8px;white-space:nowrap;align-self:flex-start;">✓ Atualizado 18/11/2026</span>
   </div>
 
   <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
@@ -2691,7 +2691,7 @@ function showAccessDenied(){
   <button class="ctab" onclick="switchClient('sellout',this)">Sell Out <span class="cdot cdot-live"></span></button>
   
   <button class="ctab" onclick="switchClient('cpt',this)">CPT Clientes <span class="cdot cdot-empty"></span></button>
-  <button id="btn-3d" class="ctab" style="display:none;" onclick="switchClient('3d',this)">3D <span class="cdot cdot-live"></span></button>
+  <button id="btn-3d" class="ctab" style="display:none;" onclick="switchClient('3d',this)">Visão Geral 3D <span class="cdot cdot-live"></span></button>
 
 </div>
 
@@ -22529,8 +22529,8 @@ const SJ_LOJAS_SKU = [
 /* ═════════════════════════════════════════════ */
 const NS = {
   total: {
-    vol:{ '2024':[15867,27073,6980,14640,25713,5961,3566,4704,8417,15813,16980,19481], '2025':[11612,13659,9532,6014,4160,1854,2774,3575,5936,8598,17978,25497], '2026':[13253,12543,14655,9724,2628,1817,1995,5873,5134,4054,4313,null] },
-    rec:{ '2024':[387279,737438,194592,458282,881746,183813,105919,144058,236598,412613,453962,557746], '2025':[385517.46,463370.5,343920.35,222814.98,143506.99,58676.06,79554.52,101077.45,180664.72,240714.34,475124.42,814118.61], '2026':[460506.77,409230.25,463039.03,315453.74,72504.36,35844.12,63846.69,165088.09,145660.41,156368.2,152923.07,null] },
+    vol:{ '2024':[15867,27073,6980,14640,25713,5961,3566,4704,8417,15813,16980,19481], '2025':[11612,13659,9532,6014,4160,1854,2774,3575,5936,8598,17978,25497], '2026':[13253,12543,14655,9724,2628,1817,1995,5873,5134,4054,4919,null] },
+    rec:{ '2024':[387279,737438,194592,458282,881746,183813,105919,144058,236598,412613,453962,557746], '2025':[385517.46,463370.5,343920.35,222814.98,143506.99,58676.06,79554.52,101077.45,180664.72,240714.34,475124.42,814118.61], '2026':[460506.77,409230.25,463039.03,315453.74,72504.36,35844.12,63846.69,165088.09,145660.41,156368.2,172533.31,null] },
     rank:{
       '2024':[['OFF Spray Family 170ML',26960,'#3b82f6'],['OFF Kids LV200ML',25306,'#60a5fa'],['OFF Locao Family 200ML',23584,'#818cf8'],['OFF Aero 165ML',12229,'#2dd4bf'],['OFF Gel Toque Leve 100G',9336,'#c084fc'],['EXPOSIS Spray Extreme',7057,'#34d399'],['OFF Gel Baby 117G',6129,'#2dd4bf'],['EXPOSIS Infantil Gel',5951,'#fb923c'],['RAID Multi Base D\'Agua',4634,'#f472b6'],['OFF Locao Longa Dur.',4140,'#facc15']],
       '2025':[['OFF Spray Family 170ML',23182,'#3b82f6'],['OFF Locao Family 200ML',17096,'#60a5fa'],['OFF Aero 165ML',14255,'#818cf8'],['OFF Kids LV200ML',13976,'#2dd4bf'],['OFF Locao Longa Dur.',6172,'#c084fc'],['OFF Gel Toque Leve 100G',5789,'#34d399'],['OFF Gel Baby 117G',5480,'#2dd4bf'],['EXPOSIS Spray Extreme',4909,'#fb923c'],['EXPOSIS Infantil Gel',3263,'#f472b6'],['EXPOSIS Icaridina',2361,'#facc15']],
@@ -22540,8 +22540,8 @@ const NS = {
   },
   // COMPRADOR ANDRE (OFF + EXPOSIS)
   andre: {
-    vol:{ '2024':[11491,20443,2553,11263,22027,4656,2745,3843,7170,14223,14373,17200], '2025':[10455,12274,8986,5771,4031,1811,2725,3508,5738,8269,17151,23201], '2026':[11234,11004,13123,8131,2293,1515,1555,4361,3982,3260,3824,null] },
-    rec:{ '2024':[304480,611663,105157,392296,804666,157284,90306,127313,209410,377861,399269,508328], '2025':[359115.86,432054.13,331338.36,217055.92,140401.44,57619.09,78449.97,99612.8,176213.7,231286.19,448776.31,740970.24], '2026':[406069.66,366294.82,418569.92,273295.94,64251.33,30741.72,56830.94,137351.91,126673.18,137652.55,140750.14,null] },
+    vol:{ '2024':[11491,20443,2553,11263,22027,4656,2745,3843,7170,14223,14373,17200], '2025':[10455,12274,8986,5771,4031,1811,2725,3508,5738,8269,17151,23201], '2026':[11234,11004,13123,8131,2293,1515,1555,4361,3982,3260,4398,null] },
+    rec:{ '2024':[304480,611663,105157,392296,804666,157284,90306,127313,209410,377861,399269,508328], '2025':[359115.86,432054.13,331338.36,217055.92,140401.44,57619.09,78449.97,99612.8,176213.7,231286.19,448776.31,740970.24], '2026':[406069.66,366294.82,418569.92,273295.94,64251.33,30741.72,56830.94,137351.91,126673.18,137652.55,159532.3,null] },
     rank:{
       '2024':[['OFF Spray Family 170ML',26960,'#3b82f6'],['OFF Kids LV200ML',25306,'#60a5fa'],['OFF Locao Family 200ML',23584,'#818cf8'],['OFF Aero 165ML',12229,'#2dd4bf'],['OFF Gel Toque Leve 100G',9336,'#c084fc'],['EXPOSIS Spray Extreme',7057,'#34d399'],['OFF Gel Baby 117G',6129,'#2dd4bf'],['EXPOSIS Infantil Gel',5951,'#fb923c'],['OFF Locao Longa Dur.',4140,'#f472b6'],['EXPOSIS Gel 100ML',3200,'#facc15']],
       '2025':[['OFF Spray Family 170ML',23182,'#3b82f6'],['OFF Locao Family 200ML',17096,'#60a5fa'],['OFF Aero 165ML',14255,'#818cf8'],['OFF Kids LV200ML',13976,'#2dd4bf'],['OFF Locao Longa Dur.',6172,'#c084fc'],['OFF Gel Toque Leve 100G',5789,'#34d399'],['OFF Gel Baby 117G',5480,'#2dd4bf'],['EXPOSIS Spray Extreme',4909,'#fb923c'],['EXPOSIS Infantil Gel',3263,'#f472b6'],['EXPOSIS Icaridina',2361,'#facc15']],
@@ -22551,8 +22551,8 @@ const NS = {
   },
   // COMPRADOR EDMAR (RAID + Eletricos)
   edmar: {
-    vol:{ '2024':[4376,6630,4427,3377,3686,1305,821,861,1247,1590,2607,2281], '2025':[1157,1385,546,243,129,43,49,67,198,329,827,2296], '2026':[2019,1539,1532,1593,335,302,440,1512,1152,794,489,null] },
-    rec:{ '2024':[82799,125775,89435,65986,77080,26529,15613,16745,27188,34752,54693,49418], '2025':[26401.6,31316.37,12581.99,5759.06,3105.55,1056.97,1104.55,1464.65,4451.02,9428.15,26348.11,73148.37], '2026':[54437.11,42935.43,44469.11,42157.8,8253.03,5102.4,7015.75,27736.18,18987.23,18715.65,12172.93,null] },
+    vol:{ '2024':[4376,6630,4427,3377,3686,1305,821,861,1247,1590,2607,2281], '2025':[1157,1385,546,243,129,43,49,67,198,329,827,2296], '2026':[2019,1539,1532,1593,335,302,440,1512,1152,794,521,null] },
+    rec:{ '2024':[82799,125775,89435,65986,77080,26529,15613,16745,27188,34752,54693,49418], '2025':[26401.6,31316.37,12581.99,5759.06,3105.55,1056.97,1104.55,1464.65,4451.02,9428.15,26348.11,73148.37], '2026':[54437.11,42935.43,44469.11,42157.8,8253.03,5102.4,7015.75,27736.18,18987.23,18715.65,13001.01,null] },
 rank:{
       '2024':[['RAID Multi Base D\'Agua',4634,'#3b82f6'],['RAID Elet Family Refil 45N',3200,'#60a5fa'],['RAID Aqua Protection',2800,'#818cf8'],['RAID Elet AP Refil 45N',2600,'#2dd4bf'],['RAID Elet Family 2un',2280,'#c084fc'],['RAID Multi Eucalipto',1900,'#34d399'],['EXPOSIS Elet Casa Refil',1800,'#2dd4bf'],['RAID Elet 2un',1600,'#fb923c'],['RAID Elet Refil 45N',1400,'#f472b6'],['EXPOSIS Elet AP Casa',1200,'#facc15']],
       '2025':[['RAID Multi Base D\'Agua',1197,'#3b82f6'],['RAID Multi Eucalipto',900,'#60a5fa'],['RAID Elet 2un',780,'#818cf8'],['RAID Elet Family 2un',640,'#2dd4bf'],['RAID Elet Family Refil',560,'#c084fc'],['RAID Elet AP Refil',480,'#34d399'],['RAID Aqua Protection',420,'#2dd4bf'],['EXPOSIS Elet Casa',380,'#fb923c'],['RAID Elet Refil',320,'#f472b6'],['EXPOSIS Elet AP Casa',260,'#facc15']],

@@ -2376,6 +2376,385 @@ function toggleCmp(pfx, btn) {
 #cpt-table.hide-sum th:nth-child(n+28),
 #cpt-table.hide-sum td:nth-child(n+28) { display:none; }
 </style>
+<style id="tema-nielsen">
+/* ── 0. REMAPEAMENTO DE PALETA (gerado por aplicar_tema_nielsen.py) ── */
+:root:root .fsel { background-color: #ffffff !important; }
+:root:root .kpi-cell, :root:root [id*="kpis"] > div { background-color: #ffffff !important; }
+:root:root table td { background-color: #ffffff !important; }
+:root:root table tr:nth-child(even) td { background-color: #f7f8f9 !important; }
+:root:root table tr:hover td { background-color: #e8eef3 !important; }
+:root:root .d-table td { background-color: #ffffff !important; }
+:root:root #panel-nielsen .card, :root:root #panel-nielsen .card.full, :root:root #panel-nielsen #reg-perf-card, :root:root #panel-nielsen #sku-shr-card, :root:root #panel-nielsen #shr-trend, :root:root #panel-nielsen #diag-geral-card { background-color: #ffffff !important; }
+:root:root #panel-nielsen [id*="kpis"] > div, :root:root #panel-nielsen .kpi-cell, :root:root #panel-nielsen .mso2-br { background-color: #ffffff !important; }
+:root:root #panel-nielsen [style*="background:#EAEEF4"], :root:root #panel-nielsen [style*="background:#EBF0F5"], :root:root #panel-nielsen [style*="background:#EEF5FF"] { background-color: #ffffff !important; }
+:root:root [style*="background:linear-gradient(135deg,#0D1117"], :root:root [style*="rgba(245,225,164,0.35)"] { background-color: #ffffff !important; }
+:root:root .diag-group-wrap, :root:root .pln-kpi-card, :root:root .ol-kpi, :root:root .e2-kpi, :root:root .x-kcard, :root:root .xcard { background-color: #ffffff !important; }
+:root:root [style*="background:linear-gradient(135deg,#0D1117"] { background-color: #ffffff !important; }
+:root:root #panel-sellout .card, :root:root #panel-saojoao-inner .card, :root:root #panel-nissei-inner .card, :root:root #panel-clamed-inner .card, :root:root #panel-panvel-inner .card, :root:root #panel-ddgam-inner .card, :root:root #panel-ddgaucha-inner .card, :root:root #panel-ddriomed-inner .card, :root:root #panel-sellin .card, :root:root #panel-diagnostico .card, :root:root #panel-cobertura .card, :root:root #panel-ol .card, :root:root #panel-plano .card, :root:root #panel-expd .card { background-color: #ffffff !important; }
+:root:root #panel-sellout .kpi-cell, :root:root #panel-saojoao-inner .kpi-cell, :root:root #panel-nissei-inner .kpi-cell, :root:root #panel-clamed-inner .kpi-cell, :root:root #panel-panvel-inner .kpi-cell, :root:root #panel-ddgam-inner .kpi-cell, :root:root #panel-ddgaucha-inner .kpi-cell, :root:root #panel-ddriomed-inner .kpi-cell { background-color: #ffffff !important; }
+:root:root .ol-kpi { background-color: #ffffff !important; }
+:root:root .ol-card { background-color: #ffffff !important; }
+:root:root .ol-tabs-fbar { background-color: #ffffff !important; }
+:root:root .ol-fsel { background-color: #ffffff !important; }
+:root:root .pln-kpi-card { background-color: #ffffff !important; }
+:root:root .pln-dc { background-color: #ffffff !important; }
+:root:root .e2-kpi { background-color: #ffffff !important; }
+:root:root .e2-chart-box { background-color: #ffffff !important; }
+:root:root .e2-tbl-section { background-color: #ffffff !important; }
+:root:root .e2-ol15-section { background-color: #ffffff !important; }
+:root:root .x-kcard { background-color: #ffffff !important; }
+:root:root .xcard { background-color: #ffffff !important; }
+:root:root .xbn-tbl { background-color: #ffffff !important; }
+:root:root .diag-group-wrap { background-color: #ffffff !important; }
+:root:root .diag-card { background-color: #ffffff !important; }
+:root:root #diag-cobertura-card { background-color: #ffffff !important; }
+:root:root .acum-diag-card { background-color: #ffffff !important; }
+:root:root [style*="background:#111e35"], :root:root [style*="background: #111e35"] { background-color: #ffffff !important; }
+:root:root [style*="background:#0a1a26"], :root:root [style*="background: #0a1a26"] { background-color: #ffffff !important; }
+:root:root [style*="background:#10172a"], :root:root [style*="background: #10172a"] { background-color: #ffffff !important; }
+:root:root [style*="background:#0c1824"], :root:root [style*="background: #0c1824"] { background-color: #ffffff !important; }
+:root:root [style*="background:#0b1220"], :root:root [style*="background: #0b1220"] { background-color: #ffffff !important; }
+:root:root [style*="background:#080e1b"], :root:root [style*="background: #080e1b"] { background-color: #ffffff !important; }
+:root:root [style*="background:rgb(17, 30, 53)"] { background-color: #ffffff !important; }
+:root:root [style*="background:rgb(10, 26, 38)"] { background-color: #ffffff !important; }
+:root:root [style*="background:rgb(11, 18, 32)"] { background-color: #ffffff !important; }
+:root:root [id^="acum-diag-"] { background-color: #ffffff !important; }
+:root:root [id^="acum-"] [style*="background:#FFFFFF"], :root:root [id^="acum-"] [style*="background: #FFFFFF"] { background-color: #ffffff !important; }
+:root:root #ol-gc-insights { background-color: #ffffff !important; }
+:root:root #ol-diag-share, :root:root #ol-diag-so { background-color: #ffffff !important; }
+:root:root #panel-saojoao-inner [style*="background:#161B22"], :root:root #panel-saojoao-inner [style*="background:#0D1117"], :root:root #panel-saojoao-inner [style*="background:#1f2937"], :root:root #panel-saojoao-inner [style*="background:#1E293B"], :root:root #panel-nissei-inner  [style*="background:#161B22"], :root:root #panel-nissei-inner  [style*="background:#0D1117"], :root:root #panel-clamed-inner  [style*="background:#161B22"], :root:root #panel-panvel-inner  [style*="background:#161B22"], :root:root #panel-panvel-inner  [style*="background:#0D1117"], :root:root #panel-ddgam-inner   [style*="background:#161B22"], :root:root #panel-ddgaucha-inner [style*="background:#161B22"], :root:root #panel-ddgaucha-inner [style*="background:#0D1117"], :root:root #panel-ddriomed-inner [style*="background:#161B22"], :root:root #panel-sellin        [style*="background:#161B22"], :root:root #panel-sellin        [style*="background:#1E293B"], :root:root #panel-cobertura     [style*="background:#161B22"], :root:root #panel-cobertura     [style*="background:#0D1117"], :root:root #panel-diagnostico   [style*="background:#161B22"], :root:root #panel-diagnostico   [style*="background:#1E293B"] { background-color: #ffffff !important; }
+:root:root #panel-cobertura .kpi-grid-4 { background-color: #eef3f7 !important; }
+:root:root #panel-nielsen #reg-perf-kpis > div { background-color: #ffffff !important; }
+:root:root #panel-nielsen #sku-diagnostico { background-color: #ffffff !important; }
+:root:root #panel-nielsen #shr-diagnostico { background-color: #ffffff !important; }
+:root:root #panel-nielsen { background-color: #f3f5f7 !important; }
+:root:root #panel-nielsen .card.full { background-color: #ffffff !important; }
+:root:root #panel-nielsen .card.full[data-accent="amber"] .card-header select, :root:root #panel-nielsen .card.full:not([data-ob]):not([data-accent]) .card-header select { background-color: #ffffff !important; }
+:root:root #panel-nielsen #mso-kpis > div { background-color: #ffffff !important; }
+:root:root #panel-nielsen #ob-share-kpis > div, :root:root #panel-nielsen #ob-preco-kpis > div { background-color: #ffffff !important; }
+:root:root #panel-nielsen #reg-perf-card { background-color: #ffffff !important; }
+:root:root #panel-nielsen #sku-shr-card { background-color: #ffffff !important; }
+:root:root #panel-nielsen #shr-trend { background-color: #ffffff !important; }
+:root:root #panel-nielsen #diag-geral-card { background-color: #ffffff !important; }
+:root:root #panel-nielsen [style*="background:#161B22"], :root:root #panel-nielsen [style*="background:#161b22"], :root:root #panel-nielsen [style*="background:#0D1117"], :root:root #panel-nielsen [style*="background:#0d1117"], :root:root #panel-nielsen [style*="background:#1F2937"], :root:root #panel-nielsen [style*="background:#1f2937"], :root:root #panel-nielsen [style*="background:#1e293b"], :root:root #panel-nielsen [style*="background:#0a1a18"] { background-color: #ffffff !important; }
+:root:root #panel-nielsen table thead tr { background-color: #ffffff !important; }
+:root:root #panel-nielsen [style*="background:#0a1a18"] { background-color: #ffffff !important; }
+:root:root #panel-nielsen [style*="background:#10172a"] { background-color: #ffffff !important; }
+:root:root #panel-nielsen .mso2-br { background-color: #ffffff !important; }
+:root:root body.nielsen-theme #ob-mkt-table thead tr { background-color: #ffffff !important; }
+:root:root body.nielsen-theme #ob-mkt-diag, :root:root body.nielsen-theme #ob-share-diag, :root:root body.nielsen-theme #ob-preco-diag { background-color: #ffffff !important; }
+:root:root #panel-nielsen [style*="background: rgb(31, 41, 55)"], :root:root #panel-nielsen [style*="background:rgb(31, 41, 55)"], :root:root #panel-nielsen [style*="background: rgb(22, 27, 34)"], :root:root #panel-nielsen [style*="background:rgb(22, 27, 34)"], :root:root #panel-nielsen [style*="background: rgb(10, 26, 24)"], :root:root #panel-nielsen [style*="background:rgb(10, 26, 24)"] { background-color: #ffffff !important; }
+:root:root body.nielsen-theme #shr-brand-filters button { background-color: #ffffff !important; }
+:root:root #panel-nielsen #mso-area-kpis > div { background-color: #ffffff !important; }
+:root:root body.nielsen-theme { background-color: #f3f5f7 !important; }
+:root:root body { background-color: #f3f5f7 !important; }
+:root:root .kpi-grid { background-color: #eef3f7 !important; }
+:root:root [id$="-diag"], :root:root [id$="-insight"], :root:root [id$="-diagnostico"] { background-color: #ffffff !important; }
+:root:root [style*="background:#0D1117"], :root:root [style*="background: #0D1117"], :root:root [style*="background:#161B22"], :root:root [style*="background: #161B22"], :root:root [style*="background:#0F172A"], :root:root [style*="background: #0F172A"], :root:root [style*="background:#1E293B"], :root:root [style*="background: #1E293B"], :root:root [style*="background:#1f2937"], :root:root [style*="background: #1f2937"], :root:root [style*="background:#111827"], :root:root [style*="background: #111827"], :root:root [style*="background:#0a1a18"], :root:root [style*="background: #0a1a18"], :root:root [style*="background:#141B24"], :root:root [style*="background: #141B24"], :root:root [style*="background:rgb(13, 17, 23)"], :root:root [style*="background:rgb(22, 27, 34)"], :root:root [style*="background:rgb(31, 41, 55)"] { background-color: #ffffff !important; }
+:root:root body [style*="background:#eaeef4" i], :root:root body [style*="background: #eaeef4" i], :root:root body [style*="background:rgb(234, 238, 244)" i], :root:root body [style*="background: rgb(234, 238, 244)" i], :root:root body [style*="background-color:#eaeef4" i], :root:root body [style*="background-color: #eaeef4" i], :root:root body [style*="background-color:rgb(234, 238, 244)" i], :root:root body [style*="background-color: rgb(234, 238, 244)" i] { background-color: #ffffff !important; }
+:root:root body [style*="background:#e4eaf2" i], :root:root body [style*="background: #e4eaf2" i], :root:root body [style*="background:rgb(228, 234, 242)" i], :root:root body [style*="background: rgb(228, 234, 242)" i], :root:root body [style*="background-color:#e4eaf2" i], :root:root body [style*="background-color: #e4eaf2" i], :root:root body [style*="background-color:rgb(228, 234, 242)" i], :root:root body [style*="background-color: rgb(228, 234, 242)" i] { background-color: #ffffff !important; }
+:root:root body [style*="background:#dfecfb" i], :root:root body [style*="background: #dfecfb" i], :root:root body [style*="background:rgb(223, 236, 251)" i], :root:root body [style*="background: rgb(223, 236, 251)" i], :root:root body [style*="background-color:#dfecfb" i], :root:root body [style*="background-color: #dfecfb" i], :root:root body [style*="background-color:rgb(223, 236, 251)" i], :root:root body [style*="background-color: rgb(223, 236, 251)" i] { background-color: #f3f5f7 !important; }
+:root:root body [style*="background:#e2e7ef" i], :root:root body [style*="background: #e2e7ef" i], :root:root body [style*="background:rgb(226, 231, 239)" i], :root:root body [style*="background: rgb(226, 231, 239)" i], :root:root body [style*="background-color:#e2e7ef" i], :root:root body [style*="background-color: #e2e7ef" i], :root:root body [style*="background-color:rgb(226, 231, 239)" i], :root:root body [style*="background-color: rgb(226, 231, 239)" i] { background-color: #f7f8f9 !important; }
+:root:root body [style*="background:#f4f7fc" i], :root:root body [style*="background: #f4f7fc" i], :root:root body [style*="background:rgb(244, 247, 252)" i], :root:root body [style*="background: rgb(244, 247, 252)" i], :root:root body [style*="background-color:#f4f7fc" i], :root:root body [style*="background-color: #f4f7fc" i], :root:root body [style*="background-color:rgb(244, 247, 252)" i], :root:root body [style*="background-color: rgb(244, 247, 252)" i] { background-color: #f7f8f9 !important; }
+:root:root body [style*="background:#d6dce8" i], :root:root body [style*="background: #d6dce8" i], :root:root body [style*="background:rgb(214, 220, 232)" i], :root:root body [style*="background: rgb(214, 220, 232)" i], :root:root body [style*="background-color:#d6dce8" i], :root:root body [style*="background-color: #d6dce8" i], :root:root body [style*="background-color:rgb(214, 220, 232)" i], :root:root body [style*="background-color: rgb(214, 220, 232)" i] { background-color: #e8eef3 !important; }
+:root:root body [style*="background:#dde3ed" i], :root:root body [style*="background: #dde3ed" i], :root:root body [style*="background:rgb(221, 227, 237)" i], :root:root body [style*="background: rgb(221, 227, 237)" i], :root:root body [style*="background-color:#dde3ed" i], :root:root body [style*="background-color: #dde3ed" i], :root:root body [style*="background-color:rgb(221, 227, 237)" i], :root:root body [style*="background-color: rgb(221, 227, 237)" i] { background-color: #eef3f7 !important; }
+:root:root body [style*="background:#dce3ec" i], :root:root body [style*="background: #dce3ec" i], :root:root body [style*="background:rgb(220, 227, 236)" i], :root:root body [style*="background: rgb(220, 227, 236)" i], :root:root body [style*="background-color:#dce3ec" i], :root:root body [style*="background-color: #dce3ec" i], :root:root body [style*="background-color:rgb(220, 227, 236)" i], :root:root body [style*="background-color: rgb(220, 227, 236)" i] { background-color: #eef3f7 !important; }
+:root:root body [style*="background:#c5d5ec" i], :root:root body [style*="background: #c5d5ec" i], :root:root body [style*="background:rgb(197, 213, 236)" i], :root:root body [style*="background: rgb(197, 213, 236)" i], :root:root body [style*="background-color:#c5d5ec" i], :root:root body [style*="background-color: #c5d5ec" i], :root:root body [style*="background-color:rgb(197, 213, 236)" i], :root:root body [style*="background-color: rgb(197, 213, 236)" i] { background-color: #eef3f7 !important; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   TEMA NIELSEN — camada visual final (somente CSS)
+   Referência: Dashboard Nielsen - AC.PC.HC UXUI
+   Não altera HTML, IDs, classes, JS, gráficos nem dados.
+   Para trocar cores no futuro: editar só os tokens --nx-* abaixo.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. TOKENS ─────────────────────────────────────────────────────────── */
+:root {
+  --nx-bg:        #f3f5f7;   /* fundo geral — cinza muito claro */
+  --nx-surface:   #ffffff;   /* cards */
+  --nx-surface-2: #f7f8f9;   /* superfícies secundárias / zebra */
+  --nx-surface-3: #eef3f7;   /* barras de filtro / cabeçalho de tabela */
+  --nx-ink:       #18242e;   /* títulos */
+  --nx-text:      #26323b;   /* texto principal */
+  --nx-muted:     #62717d;   /* texto secundário */
+  --nx-border:    #dfe4e8;   /* bordas suaves */
+  --nx-border-2:  #d8e0e6;   /* bordas de inputs */
+  --nx-grid:      #e9eef2;   /* divisórias */
+  --nx-navy:      #17365d;   /* cabeçalho corporativo */
+  --nx-navy-2:    #1c4b78;
+  --nx-navy-dk:   #112b4b;
+  --nx-blue:      #2367d1;   /* cor primária */
+  --nx-tab-hi:    #7ac6ef;   /* sublinhado da aba ativa */
+  --nx-green:     #18865f;   /* positivo */
+  --nx-red:       #c74650;   /* negativo */
+  --nx-amber:     #d49b3b;   /* alerta */
+  --nx-shadow-xs: 0 1px 2px rgba(20,42,61,.04);
+  --nx-shadow-sm: 0 5px 16px rgba(20,42,61,.07);
+  --nx-shadow-md: 0 14px 40px rgba(20,42,61,.14);
+  --nx-font:      Aptos, "Segoe UI", Inter, Arial, sans-serif;
+
+  /* Tokens já existentes no dashboard → redirecionados para a paleta Nielsen */
+  --nielsen-bg: var(--nx-bg);
+  --nielsen-card: var(--nx-surface);
+  --nielsen-card-kpi: var(--nx-surface);
+  --nielsen-input: var(--nx-surface);
+  --nielsen-surface: var(--nx-surface-2);
+  --nielsen-border: var(--nx-border);
+  --nielsen-border-strong: var(--nx-border-2);
+  --nielsen-border-faint: var(--nx-grid);
+  --nielsen-heading: var(--nx-ink);
+  --nielsen-text: var(--nx-text);
+  --nielsen-body: var(--nx-text);
+  --nielsen-muted: var(--nx-muted);
+  --nielsen-faint: var(--nx-muted);
+  --nielsen-primary: var(--nx-blue);
+  --nielsen-accent: var(--nx-navy-2);
+  --nielsen-positive: var(--nx-green);
+  --nielsen-negative: var(--nx-red);
+  --nielsen-warning: var(--nx-amber);
+  --nielsen-shadow-sm: var(--nx-shadow-xs);
+  --nielsen-shadow-md: var(--nx-shadow-sm);
+  --nielsen-shadow-lg: var(--nx-shadow-md);
+  --nielsen-font: var(--nx-font);
+  --bg-base: var(--nx-bg);
+  --bg-base-filter: var(--nx-surface-3);
+  --bg-card: var(--nx-surface);
+  --bg-card-alt: var(--nx-surface-2);
+  --bg-subtle: var(--nx-surface-3);
+  --bg-hover: #e8eef3;
+  --card: var(--nx-surface);
+  --border-card: var(--nx-border);
+  --shadow-card: var(--nx-shadow-xs);
+  --shadow-hover: var(--nx-shadow-sm);
+  --shadow-sm: var(--nx-shadow-xs);
+  --card-text-heading: var(--nx-ink);
+  --card-text-primary: var(--nx-text);
+  --card-text-body: var(--nx-text);
+  --card-text-muted: var(--nx-muted);
+  --card-text-faint: var(--nx-muted);
+}
+
+/* ── 2. PÁGINA ─────────────────────────────────────────────────────────── */
+:root:root:root body,
+:root:root:root body .main {
+  background: var(--nx-bg) !important;
+  color: var(--nx-text);
+  font-family: var(--nx-font) !important;
+}
+
+/* ── 3. CABEÇALHO — azul-marinho corporativo ───────────────────────────── */
+:root:root:root body .header {
+  background: linear-gradient(118deg, #0e2947 0%, #153b63 58%, #1d507f 100%) !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+:root:root:root body .header h1,
+:root:root:root body .header #dash-main-title { color: #ffffff !important; }
+:root:root:root body .header .header-sub      { color: rgba(255,255,255,.72) !important; }
+/* botões e selo do cabeçalho: mesmos significados (verde = atualizar/ok, âmbar = salvar), tons claros para fundo navy */
+:root:root:root body .header #btn-update-data,
+:root:root:root body .header #dash-update-badge {
+  color: #4dd3a3 !important;
+  background: rgba(77,211,163,.12) !important;
+  border-color: rgba(77,211,163,.38) !important;
+}
+:root:root:root body .header #btn-save-dashboard {
+  color: #f4c45e !important;
+  background: rgba(244,196,94,.12) !important;
+  border-color: rgba(244,196,94,.38) !important;
+}
+:root:root:root body .header #btn-update-data:hover    { background: rgba(77,211,163,.22) !important; }
+:root:root:root body .header #btn-save-dashboard:hover { background: rgba(244,196,94,.22) !important; }
+
+/* faixa-título do One Page → mesmo navy do cabeçalho */
+:root:root:root body .op1-hdr {
+  background: linear-gradient(118deg, #0e2947 0%, #153b63 58%, #1d507f 100%) !important;
+}
+
+/* ── 4. ABAS PRINCIPAIS — navy, destaque azul na ativa ─────────────────── */
+:root:root:root body .ctabs {
+  background: #153b63 !important;
+  border-bottom: 1px solid rgba(255,255,255,.12) !important;
+  box-shadow: 0 8px 28px rgba(11,31,49,.22) !important;
+}
+:root:root:root body .ctabs .ctab {
+  color: rgba(255,255,255,.73) !important;
+  background: transparent !important;
+  border-bottom: 3px solid transparent !important;
+  border-radius: 8px 8px 0 0 !important;
+}
+:root:root:root body .ctabs .ctab:hover:not(.active) {
+  color: #ffffff !important;
+  background: rgba(255,255,255,.10) !important;
+}
+:root:root:root body .ctabs .ctab.active {
+  color: #ffffff !important;
+  background: rgba(255,255,255,.13) !important;
+  border-bottom-color: var(--nx-tab-hi) !important;
+  font-weight: 700 !important;
+}
+:root:root:root body .ctabs::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25) !important; }
+
+/* ── 5. CARDS E CONTAINERS — brancos, borda suave, sombra discreta ─────── */
+:root:root:root body .card,
+:root:root:root body .card.full,
+:root:root:root body .cards-row > .card {
+  background: var(--nx-surface) !important;
+  border: 1px solid var(--nx-border) !important;
+  box-shadow: var(--nx-shadow-xs) !important;
+}
+:root:root:root body .card:hover { box-shadow: var(--nx-shadow-sm) !important; }
+:root:root:root body .card::before { background: var(--nx-blue) !important; }
+:root:root:root body .card-header { border-bottom-color: var(--nx-grid) !important; }
+:root:root:root body .card-title  { color: var(--nx-ink) !important; }
+:root:root:root body .card-sub    { color: var(--nx-muted) !important; }
+
+/* KPIs */
+:root:root:root body .kpi-cell {
+  background: var(--nx-surface) !important;
+  border: 1px solid var(--nx-border) !important;
+  box-shadow: var(--nx-shadow-xs) !important;
+}
+:root:root:root body .kpi-cell:hover { box-shadow: var(--nx-shadow-sm) !important; }
+
+/* ── 6. FILTROS ────────────────────────────────────────────────────────── */
+:root:root:root body .filters {
+  background: var(--nx-surface-3) !important;
+  border-color: var(--nx-border) !important;
+  box-shadow: none !important;
+}
+:root:root:root body select,
+:root:root:root body input[type="text"],
+:root:root:root body input[type="search"],
+:root:root:root body input[type="number"],
+:root:root:root body input[type="date"] {
+  background-color: var(--nx-surface) !important;
+  border-color: var(--nx-border-2) !important;
+  color: var(--nx-text) !important;
+}
+:root:root:root body select:focus,
+:root:root:root body input:focus { outline: 2px solid rgba(35,103,209,.25) !important; border-color: var(--nx-blue) !important; }
+
+/* ── 7. SUBABAS E BOTÕES DE SELEÇÃO ────────────────────────────────────── */
+:root:root:root body .stab,
+:root:root:root body .sellin-fy-btn {
+  background: var(--nx-surface) !important;
+  border-color: var(--nx-border-2) !important;
+  color: var(--nx-muted) !important;
+}
+:root:root:root body .stab:hover:not(.active),
+:root:root:root body .sellin-fy-btn:hover:not(.active) {
+  background: var(--nx-surface-3) !important;
+  color: var(--nx-navy) !important;
+}
+:root:root:root body .stab.active,
+:root:root:root body .sellin-fy-btn.active {
+  background: var(--nx-navy) !important;
+  border-color: var(--nx-navy) !important;
+  color: #ffffff !important;
+}
+
+/* ── 8. TABELAS ────────────────────────────────────────────────────────── */
+:root:root:root body table th:not([style*="background"]) {
+  background-color: var(--nx-surface-3) !important;
+}
+:root:root:root body table th {
+  color: #44545f !important;
+  border-bottom: 1px solid var(--nx-border-2) !important;
+}
+:root:root:root body table td { border-color: var(--nx-grid) !important; }
+/* tabelas que já usam cabeçalho escuro → mesmo navy do cabeçalho */
+:root:root:root body .d-table th { background-color: var(--nx-navy) !important; color: #ffffff !important; }
+
+/* ── 9. TOOLTIPS HTML ──────────────────────────────────────────────────── */
+:root:root:root body .chartjs-tooltip {
+  background: var(--nx-surface) !important;
+  border: 1px solid var(--nx-border) !important;
+  color: var(--nx-text) !important;
+  box-shadow: var(--nx-shadow-sm) !important;
+}
+
+/* ── 10. TELA DE LOGIN ─────────────────────────────────────────────────── */
+:root:root:root body #login-overlay { background: var(--nx-bg) !important; }
+
+/* ── 11. FILTROS FIXOS EM AZUL — continuação do cabeçalho, presos logo abaixo das abas ──
+   Só CSS (nada de HTML/JS). Faixa navy de ponta a ponta = "aqui é filtro".
+   Em telas < 761 px continuam rolando com a página (não ocupam o celular). */
+@media (min-width: 761px) {
+  :root:root:root body #nq-fy-bar,
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title),
+  :root:root:root body #panel-sellout > .filters,
+  :root:root:root body #panel-cpt > .card.full > .card-header {
+    position: sticky !important;
+    top: calc(var(--header-h, 110px) + 31px) !important;
+    z-index: 90 !important;
+    background: linear-gradient(118deg, #102f52 0%, #143a62 60%, #1a4874 100%) !important;
+    border: 0 !important;
+    border-top: 1px solid rgba(255,255,255,.10) !important;
+    border-radius: 0 0 14px 14px !important;
+    box-shadow: 0 10px 24px rgba(11,31,49,.24) !important;
+    color: #ffffff !important;
+  }
+  /* encostar nas abas e ir de ponta a ponta (anula o recuo do painel) */
+  :root:root:root body #nq-fy-bar,
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title),
+  :root:root:root body #panel-sellout > .filters {
+    margin: -26px -24px 16px !important;
+    padding-left: 24px !important; padding-right: 24px !important;
+  }
+  :root:root:root body #panel-cpt > .card.full {
+    overflow: clip !important;            /* hidden impede o sticky; clip corta igual */
+    margin: -22px -18px 16px !important;
+    border-top-left-radius: 0 !important; border-top-right-radius: 0 !important;
+  }
+  :root:root:root body #panel-cpt > .card.full > .card-header {
+    margin: -20px -20px 16px !important;
+    padding: 14px 24px 12px !important;
+  }
+
+  /* textos claros sobre o azul (rótulos, títulos, ajuda) — campos e listas continuam brancos */
+  :root:root:root body #nq-fy-bar :is(span,div,label,b,strong,p,small):not(button *):not(select *):not(#nq-br-pop):not(#nq-br-pop *),
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title) :is(span,div,label,b,strong,p,small):not(button *):not(select *):not(#nq-br-pop):not(#nq-br-pop *),
+  :root:root:root body #panel-sellout > .filters :is(span,div,label,b,strong,p,small):not(button *):not(select *):not(#nq-br-pop):not(#nq-br-pop *),
+  :root:root:root body #panel-cpt > .card.full > .card-header :is(span,div,label,b,strong,p,small):not(button *):not(select *):not(#nq-br-pop):not(#nq-br-pop *) { color: rgba(255,255,255,.90) !important; }
+  :root:root:root body #nq-fy-bar #nq-fy-info,
+  :root:root:root body #sellin-main-sub,
+  :root:root:root body #panel-sellout > .filters .filter-label { color: rgba(255,255,255,.68) !important; }
+  :root:root:root body #sellin-main-title,
+  :root:root:root body #panel-cpt > .card.full > .card-header .card-title { color: #ffffff !important; }
+
+  /* botões de seleção (FY, clientes, compradores) no padrão das abas */
+  :root:root:root body #nq-fy-bar :is(.tgl,.stab),
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title) :is(.tgl,.stab),
+  :root:root:root body #panel-sellout > .filters :is(.tgl,.stab),
+  :root:root:root body #panel-cpt > .card.full > .card-header :is(.tgl,.stab) {
+    background: rgba(255,255,255,.08) !important;
+    border: 1px solid rgba(255,255,255,.22) !important;
+    color: rgba(255,255,255,.88) !important;
+  }
+  :root:root:root body #nq-fy-bar :is(.tgl,.stab):hover:not(.active),
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title) :is(.tgl,.stab):hover:not(.active),
+  :root:root:root body #panel-sellout > .filters :is(.tgl,.stab):hover:not(.active),
+  :root:root:root body #panel-cpt > .card.full > .card-header :is(.tgl,.stab):hover:not(.active) { background: rgba(255,255,255,.16) !important; color: #fff !important; }
+  :root:root:root body #nq-fy-bar :is(.tgl,.stab).active,
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title) :is(.tgl,.stab).active,
+  :root:root:root body #panel-sellout > .filters :is(.tgl,.stab).active,
+  :root:root:root body #panel-cpt > .card.full > .card-header :is(.tgl,.stab).active {
+    background: #ffffff !important; border-color: #ffffff !important; color: #17365d !important;
+    box-shadow: inset 0 -2px 0 #7ac6ef !important;
+  }
+  /* campos (selects e botões-lista) brancos com borda suave */
+  :root:root:root body #nq-fy-bar :is(select, button:not(.tgl):not(.stab)),
+  :root:root:root body #panel-sellin > div:has(#sellin-main-title) :is(select, button:not(.tgl):not(.stab)),
+  :root:root:root body #panel-sellout > .filters :is(select, button:not(.tgl):not(.stab)),
+  :root:root:root body #panel-cpt > .card.full > .card-header :is(select, button:not(.tgl):not(.stab)) { border-color: rgba(255,255,255,.35) !important; }
+}
+
+/* ── 12. Botão de imprimir do One Page oculto (pedido do Giovano 18/11; função op1Print continua no código) ── */
+:root:root:root body button.stab[onclick^="op1Print"] { display: none !important; }
+
+</style>
+
 </head>
 <body>
 
@@ -2671,7 +3050,7 @@ function showAccessDenied(){
       <h1 id="dash-main-title">Dashboard Sell Out — Farma Sul</h1>
       <div class="header-sub">Repelentes &amp; Inseticidas · Unidades &amp; Receita · 2024–2026</div>
     </div>
-    <span id="dash-update-badge" style="font-size:10px;font-weight:600;color:#34d399;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:4px;padding:3px 8px;white-space:nowrap;align-self:flex-start;">✓ Atualizado 17/11/2026</span>
+    <span id="dash-update-badge" style="font-size:10px;font-weight:600;color:#34d399;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:4px;padding:3px 8px;white-space:nowrap;align-self:flex-start;">✓ Atualizado 18/11/2026</span>
   </div>
 
   <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
@@ -2691,7 +3070,7 @@ function showAccessDenied(){
   <button class="ctab" onclick="switchClient('sellout',this)">Sell Out <span class="cdot cdot-live"></span></button>
   
   <button class="ctab" onclick="switchClient('cpt',this)">CPT Clientes <span class="cdot cdot-empty"></span></button>
-  <button id="btn-3d" class="ctab" style="display:none;" onclick="switchClient('3d',this)">3D <span class="cdot cdot-live"></span></button>
+  <button id="btn-3d" class="ctab" style="display:none;" onclick="switchClient('3d',this)">Visão Geral 3D <span class="cdot cdot-live"></span></button>
 
 </div>
 
@@ -22529,8 +22908,8 @@ const SJ_LOJAS_SKU = [
 /* ═════════════════════════════════════════════ */
 const NS = {
   total: {
-    vol:{ '2024':[15867,27073,6980,14640,25713,5961,3566,4704,8417,15813,16980,19481], '2025':[11612,13659,9532,6014,4160,1854,2774,3575,5936,8598,17978,25497], '2026':[13253,12543,14655,9724,2628,1817,1995,5873,5134,4054,4313,null] },
-    rec:{ '2024':[387279,737438,194592,458282,881746,183813,105919,144058,236598,412613,453962,557746], '2025':[385517.46,463370.5,343920.35,222814.98,143506.99,58676.06,79554.52,101077.45,180664.72,240714.34,475124.42,814118.61], '2026':[460506.77,409230.25,463039.03,315453.74,72504.36,35844.12,63846.69,165088.09,145660.41,156368.2,152923.07,null] },
+    vol:{ '2024':[15867,27073,6980,14640,25713,5961,3566,4704,8417,15813,16980,19481], '2025':[11612,13659,9532,6014,4160,1854,2774,3575,5936,8598,17978,25497], '2026':[13253,12543,14655,9724,2628,1817,1995,5873,5134,4054,4919,null] },
+    rec:{ '2024':[387279,737438,194592,458282,881746,183813,105919,144058,236598,412613,453962,557746], '2025':[385517.46,463370.5,343920.35,222814.98,143506.99,58676.06,79554.52,101077.45,180664.72,240714.34,475124.42,814118.61], '2026':[460506.77,409230.25,463039.03,315453.74,72504.36,35844.12,63846.69,165088.09,145660.41,156368.2,172533.31,null] },
     rank:{
       '2024':[['OFF Spray Family 170ML',26960,'#3b82f6'],['OFF Kids LV200ML',25306,'#60a5fa'],['OFF Locao Family 200ML',23584,'#818cf8'],['OFF Aero 165ML',12229,'#2dd4bf'],['OFF Gel Toque Leve 100G',9336,'#c084fc'],['EXPOSIS Spray Extreme',7057,'#34d399'],['OFF Gel Baby 117G',6129,'#2dd4bf'],['EXPOSIS Infantil Gel',5951,'#fb923c'],['RAID Multi Base D\'Agua',4634,'#f472b6'],['OFF Locao Longa Dur.',4140,'#facc15']],
       '2025':[['OFF Spray Family 170ML',23182,'#3b82f6'],['OFF Locao Family 200ML',17096,'#60a5fa'],['OFF Aero 165ML',14255,'#818cf8'],['OFF Kids LV200ML',13976,'#2dd4bf'],['OFF Locao Longa Dur.',6172,'#c084fc'],['OFF Gel Toque Leve 100G',5789,'#34d399'],['OFF Gel Baby 117G',5480,'#2dd4bf'],['EXPOSIS Spray Extreme',4909,'#fb923c'],['EXPOSIS Infantil Gel',3263,'#f472b6'],['EXPOSIS Icaridina',2361,'#facc15']],
@@ -22540,8 +22919,8 @@ const NS = {
   },
   // COMPRADOR ANDRE (OFF + EXPOSIS)
   andre: {
-    vol:{ '2024':[11491,20443,2553,11263,22027,4656,2745,3843,7170,14223,14373,17200], '2025':[10455,12274,8986,5771,4031,1811,2725,3508,5738,8269,17151,23201], '2026':[11234,11004,13123,8131,2293,1515,1555,4361,3982,3260,3824,null] },
-    rec:{ '2024':[304480,611663,105157,392296,804666,157284,90306,127313,209410,377861,399269,508328], '2025':[359115.86,432054.13,331338.36,217055.92,140401.44,57619.09,78449.97,99612.8,176213.7,231286.19,448776.31,740970.24], '2026':[406069.66,366294.82,418569.92,273295.94,64251.33,30741.72,56830.94,137351.91,126673.18,137652.55,140750.14,null] },
+    vol:{ '2024':[11491,20443,2553,11263,22027,4656,2745,3843,7170,14223,14373,17200], '2025':[10455,12274,8986,5771,4031,1811,2725,3508,5738,8269,17151,23201], '2026':[11234,11004,13123,8131,2293,1515,1555,4361,3982,3260,4398,null] },
+    rec:{ '2024':[304480,611663,105157,392296,804666,157284,90306,127313,209410,377861,399269,508328], '2025':[359115.86,432054.13,331338.36,217055.92,140401.44,57619.09,78449.97,99612.8,176213.7,231286.19,448776.31,740970.24], '2026':[406069.66,366294.82,418569.92,273295.94,64251.33,30741.72,56830.94,137351.91,126673.18,137652.55,159532.3,null] },
     rank:{
       '2024':[['OFF Spray Family 170ML',26960,'#3b82f6'],['OFF Kids LV200ML',25306,'#60a5fa'],['OFF Locao Family 200ML',23584,'#818cf8'],['OFF Aero 165ML',12229,'#2dd4bf'],['OFF Gel Toque Leve 100G',9336,'#c084fc'],['EXPOSIS Spray Extreme',7057,'#34d399'],['OFF Gel Baby 117G',6129,'#2dd4bf'],['EXPOSIS Infantil Gel',5951,'#fb923c'],['OFF Locao Longa Dur.',4140,'#f472b6'],['EXPOSIS Gel 100ML',3200,'#facc15']],
       '2025':[['OFF Spray Family 170ML',23182,'#3b82f6'],['OFF Locao Family 200ML',17096,'#60a5fa'],['OFF Aero 165ML',14255,'#818cf8'],['OFF Kids LV200ML',13976,'#2dd4bf'],['OFF Locao Longa Dur.',6172,'#c084fc'],['OFF Gel Toque Leve 100G',5789,'#34d399'],['OFF Gel Baby 117G',5480,'#2dd4bf'],['EXPOSIS Spray Extreme',4909,'#fb923c'],['EXPOSIS Infantil Gel',3263,'#f472b6'],['EXPOSIS Icaridina',2361,'#facc15']],
@@ -22551,8 +22930,8 @@ const NS = {
   },
   // COMPRADOR EDMAR (RAID + Eletricos)
   edmar: {
-    vol:{ '2024':[4376,6630,4427,3377,3686,1305,821,861,1247,1590,2607,2281], '2025':[1157,1385,546,243,129,43,49,67,198,329,827,2296], '2026':[2019,1539,1532,1593,335,302,440,1512,1152,794,489,null] },
-    rec:{ '2024':[82799,125775,89435,65986,77080,26529,15613,16745,27188,34752,54693,49418], '2025':[26401.6,31316.37,12581.99,5759.06,3105.55,1056.97,1104.55,1464.65,4451.02,9428.15,26348.11,73148.37], '2026':[54437.11,42935.43,44469.11,42157.8,8253.03,5102.4,7015.75,27736.18,18987.23,18715.65,12172.93,null] },
+    vol:{ '2024':[4376,6630,4427,3377,3686,1305,821,861,1247,1590,2607,2281], '2025':[1157,1385,546,243,129,43,49,67,198,329,827,2296], '2026':[2019,1539,1532,1593,335,302,440,1512,1152,794,521,null] },
+    rec:{ '2024':[82799,125775,89435,65986,77080,26529,15613,16745,27188,34752,54693,49418], '2025':[26401.6,31316.37,12581.99,5759.06,3105.55,1056.97,1104.55,1464.65,4451.02,9428.15,26348.11,73148.37], '2026':[54437.11,42935.43,44469.11,42157.8,8253.03,5102.4,7015.75,27736.18,18987.23,18715.65,13001.01,null] },
 rank:{
       '2024':[['RAID Multi Base D\'Agua',4634,'#3b82f6'],['RAID Elet Family Refil 45N',3200,'#60a5fa'],['RAID Aqua Protection',2800,'#818cf8'],['RAID Elet AP Refil 45N',2600,'#2dd4bf'],['RAID Elet Family 2un',2280,'#c084fc'],['RAID Multi Eucalipto',1900,'#34d399'],['EXPOSIS Elet Casa Refil',1800,'#2dd4bf'],['RAID Elet 2un',1600,'#fb923c'],['RAID Elet Refil 45N',1400,'#f472b6'],['EXPOSIS Elet AP Casa',1200,'#facc15']],
       '2025':[['RAID Multi Base D\'Agua',1197,'#3b82f6'],['RAID Multi Eucalipto',900,'#60a5fa'],['RAID Elet 2un',780,'#818cf8'],['RAID Elet Family 2un',640,'#2dd4bf'],['RAID Elet Family Refil',560,'#c084fc'],['RAID Elet AP Refil',480,'#34d399'],['RAID Aqua Protection',420,'#2dd4bf'],['EXPOSIS Elet Casa',380,'#fb923c'],['RAID Elet Refil',320,'#f472b6'],['EXPOSIS Elet AP Casa',260,'#facc15']],
