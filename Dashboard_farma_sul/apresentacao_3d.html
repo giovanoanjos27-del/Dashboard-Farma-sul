@@ -302,7 +302,7 @@ var SJI={r25:[32843,57150,167220,527457,951465], r26:[48877,144011.9,318513.46,3
 })();
 /* Mês parcial do Sell Out (SO_PARCIAL do dashboard): mes = índice 0–11, ate = 'dd/mm'. Snapshot; dentro do dashboard lê ao vivo. */
 var PARC={mes:10,ate:'17/11'};
-var PARCC={"GA": "14/11"}; /* data do parcial por cliente quando difere da geral (snapshot do SO_PARCIAL_CLI) */
+var PARCC={"GA": "14/11", "CL": "15/11"}; /* data do parcial por cliente quando difere da geral (snapshot do SO_PARCIAL_CLI) */
 function parcAte(id){ return (id&&PARCC[id])||PARC.ate; }
 var PARCN={SJ:'São João',NS:'Nissei',CL:'Clamed',PV:'Panvel',GAM:'DD-GAM',GA:'DD-Gaúcha',RM:'DD-Riomed'};
 function parcTxt(){ var x=[]; for(var k in PARCC) if(PARCC[k]!==PARC.ate) x.push((PARCN[k]||k)+' até '+PARCC[k]); return PARC.ate+(x.length?' ('+x.join(', ')+')':''); }
@@ -473,7 +473,11 @@ function tdModel(id){ var x=ESD[id], d=CALD.c[id]; if(!x||!d) return {none:1,mot
   var k=TDS.k==='r'?tdK(id):1, p=String(x.d).split('/'), pd=+p[0], pm=+p[1]-1, py=+p[2];
   var ms=tdHoriz().map(function(h){ var b=tdBase(id,h.mi,h.a), f=1, st=0;
     if(h.a<py||(h.a===py&&h.mi<pm)) f=0; else if(h.a===py&&h.mi===pm){ f=Math.max(0,(h.dM-pd)/h.dM); st=pd; }
-    return {lb:h.lb,mi:h.mi,a:h.a,dM:h.dM,ext:h.ext,base:b,v:b==null?0:b*k,f:f,st:st}; });
+    var v=b==null?0:b*k;
+    /* mês em andamento (ritmo atual): venda real até o dia de corte do cliente projetada p/ o mês inteiro no mesmo ritmo
+       (mesma conta do “↗ Nov” do Sell Out; antes = mês da temporada passada × ritmo Out+Nov, que subestimava Nov) */
+    if(TDS.k==='r'&&h.a===2026&&h.mi===PARC.mes&&d.u26[h.mi]){ var dEc=parseInt(parcAte(id),10); if(dEc>0&&dEc<h.dM) v=d.u26[h.mi]/dEc*h.dM; else if(dEc>=h.dM) v=d.u26[h.mi]; }
+    return {lb:h.lb,mi:h.mi,a:h.a,dM:h.dM,ext:h.ext,base:b,v:v,f:f,st:st}; });
   var shc=all?sv/all:0, R=tdRun(ms,shc,e0,TDS.a),
     SK=sk.map(function(s){ return {br:s[0],nm:s[1],est:s[2],vm:s[3],r:tdRun(ms,all?s[3]/all:0,s[2],TDS.a)}; });
   /* pedido = soma por SKU (estoque de um SKU não cobre a venda de outro) */

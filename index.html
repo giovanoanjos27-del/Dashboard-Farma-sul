@@ -54919,7 +54919,7 @@ function op1CobCharts(S){
 /* ═══ fim OP1 cobertura por loja ═══ */
 /* mês parcial do Sell Out: fica fora das comparações e aparece à parte (null quando o mês fechar) */
 var SO_PARCIAL = {mes:10, ate:'17/11'};
-var SO_PARCIAL_CLI = {ddgaucha:'14/11'}; /* data do parcial por cliente (valor do seletor do Sell Out) quando difere da geral */
+var SO_PARCIAL_CLI = {ddgaucha:'14/11', clamed:'15/11'}; /* data do parcial por cliente (valor do seletor do Sell Out) quando difere da geral */
 (function(){ if(typeof SO_PARCIAL==='undefined'||!SO_PARCIAL) return; var g=SO_PARCIAL.ate; /* SO_PARCIAL.ate = data do cliente selecionado; ateG = data geral */
   Object.defineProperty(SO_PARCIAL,'ateG',{value:g}); Object.defineProperty(SO_PARCIAL,'ate',{get:function(){ var s=document.getElementById('sellout-client-selector'), v=s&&s.value; return (v&&SO_PARCIAL_CLI[v])||g; }}); })();
 function soParcialDe(a){ var l=-1; (a||[]).forEach(function(v,i){ if(v!=null && v!==0) l=i; }); return (typeof SO_PARCIAL!=='undefined' && SO_PARCIAL && l===SO_PARCIAL.mes) ? {i:l, v:a[l]} : null; }
