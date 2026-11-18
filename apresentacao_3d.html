@@ -301,8 +301,13 @@ var SJI={r25:[32843,57150,167220,527457,951465], r26:[48877,144011.9,318513.46,3
   }catch(e){ /* fora do dashboard ou bloqueado (file://): usa o snapshot acima */ }
 })();
 /* Mês parcial do Sell Out (SO_PARCIAL do dashboard): mes = índice 0–11, ate = 'dd/mm'. Snapshot; dentro do dashboard lê ao vivo. */
-var PARC={mes:10,ate:'15/11'};
-try{ if(window.parent&&window.parent!==window){ var _sp=window.parent.eval('typeof SO_PARCIAL!=="undefined"?SO_PARCIAL:null'); if(_sp&&_sp.ate) PARC={mes:+_sp.mes,ate:String(_sp.ate)}; } }catch(e){}
+var PARC={mes:10,ate:'17/11'};
+var PARCC={"GA": "14/11"}; /* data do parcial por cliente quando difere da geral (snapshot do SO_PARCIAL_CLI) */
+function parcAte(id){ return (id&&PARCC[id])||PARC.ate; }
+var PARCN={SJ:'São João',NS:'Nissei',CL:'Clamed',PV:'Panvel',GAM:'DD-GAM',GA:'DD-Gaúcha',RM:'DD-Riomed'};
+function parcTxt(){ var x=[]; for(var k in PARCC) if(PARCC[k]!==PARC.ate) x.push((PARCN[k]||k)+' até '+PARCC[k]); return PARC.ate+(x.length?' ('+x.join(', ')+')':''); }
+try{ if(window.parent&&window.parent!==window){ var _sp=window.parent.eval('typeof SO_PARCIAL!=="undefined"?SO_PARCIAL:null'); if(_sp&&_sp.ate) PARC={mes:+_sp.mes,ate:String(_sp.ateG||_sp.ate)};
+  var _sc=window.parent.eval('typeof SO_PARCIAL_CLI!=="undefined"?SO_PARCIAL_CLI:null'), _mc={saojoao:'SJ',nissei:'NS',clamed:'CL',panvel:'PV',ddgam:'GAM',ddgaucha:'GA',ddriomed:'RM'}; if(_sc){ PARCC={}; for(var _k in _sc) if(_mc[_k]) PARCC[_mc[_k]]=String(_sc[_k]); } } }catch(e){}
 /* ── Sell In (caixas): FY27 real Jul/26 → mês atual × FY26 real mesmos meses. Snapshot 11/11/2026 (Nov/26 parcial) ── */
 var SI_IDS={'São João':'SJ','DD-GAM':'GAM','Nissei':'NS','Panvel':'PV','DD-Gaúcha':'GA','Clamed':'CL','DD-Riomed':'RM','Riomed':'RM'};
 var SI={MES:['Jul','Ago','Set','Out','Nov'], parcial:'Nov/26', ext25:[0,0,0,240,0], ext26:[0,0,0,0,0], extNomes:'Peniel', raw:{
@@ -440,7 +445,7 @@ function tdHoriz(){ var mi=PARC.mes, a=mi>=6?2026:2027, endA=mi>=6?a+1:a, r=[];
 function tdBase(id,mi,a){ var d=CALD.c[id], b=a-1; if(!d) return null;
   if(b===2025) return d.u25[mi]!=null?d.u25[mi]:(mi===11?DEZ25U[id]:null);
   if(b===2026) return d.u26[mi]!=null?d.u26[mi]:null; return null; }
-function tdK(id){ var d=CALD.c[id], m=PARC.mes, dE=parseInt(PARC.ate,10), dM=tdDim(m,2026), x=0, y=0;
+function tdK(id){ var d=CALD.c[id], m=PARC.mes, dE=parseInt(parcAte(id),10), dM=tdDim(m,2026), x=0, y=0;
   [m-1,m].forEach(function(i,j){ if(i<0||d.u26[i]==null||d.u25[i]==null) return; x+=d.u26[i]; y+=j?d.u25[i]*dE/dM:d.u25[i]; });
   return y?x/y:1; }
 /* roda o estoque mês a mês para uma fatia (sh) da venda do cliente */
@@ -494,7 +499,7 @@ function tdBars(){ var mi=TDS.m, H=tdMeses(), ml=H[mi].lb, fim=H[H.length-1].lb,
 var SIP={"SJ":{"h":23638.0,"p":35966.58,"r":26452.0},"GA":{"h":16407.0,"p":17324.65,"r":9579.0},"PV":{"h":11423.0,"p":12182.16,"r":2436.0},"GAM":{"h":49823.0,"p":54534.77,"r":26600.0},"NS":{"h":10920.0,"p":10920.52,"r":4193.0},"RM":{"h":6442.0,"p":6690.45,"r":3318.0},"CL":{"h":5135.0,"p":5135.0,"r":4407.0}}; /* Sell In FY27 por cliente (caixas): h = FY26 real Jul/25–Jun/26 · p = plano FY27 · r = realizado FY27 (SELLIN_DATA_FY27 do dashboard) */
 var UNCX=12; /* unidades por caixa (fator caixa da maioria dos SKUs; Pato Block = 24) */
 /* acumulado da temporada (FY = Jul→Jun) em unidades de Sell Out: FY26 inteiro, mesmo período (Jul → dia do parcial) e FY27 realizado + projeção da Tendência */
-function tdAcum(id,M){ var d=CALD.c[id]; if(!d||PARC.mes<6) return null; var dE=parseInt(PARC.ate,10), mP=PARC.mes, dM=new Date(2026,mP+1,0).getDate(), sh=1, i;
+function tdAcum(id,M){ var d=CALD.c[id]; if(!d||PARC.mes<6) return null; var dE=parseInt(parcAte(id),10), mP=PARC.mes, dM=new Date(2026,mP+1,0).getDate(), sh=1, i;
   if(ST.bs.length){ var x=ESD[id], all=0, sv=0; if(!x) return null; x.s.forEach(function(r){ all+=r[3]; if(ST.bs.indexOf(r[0])>=0) sv+=r[3]; }); sh=all?sv/all:0; }
   var t25=0, p25=0, r26=0, rest=0;
   for(i=6;i<12;i++) t25+=i===11?(d.u25[11]!=null?d.u25[11]:(DEZ25U[id]||0)):(d.u25[i]||0);
@@ -505,7 +510,7 @@ function tdAcum(id,M){ var d=CALD.c[id]; if(!d||PARC.mes<6) return null; var dE=
   return {t25:t25*sh,p25:p25*sh,r26:r26*sh,proj:r26*sh+rest,si:si}; }
 function tdAcumHtml(){ var U=function(v){ return Math.round(v).toLocaleString('pt-BR'); }, CX=function(v){ return Math.round(v/UNCX).toLocaleString('pt-BR'); };
   var falta=function(v,cx){ return v>0?'<b class="down">'+(cx?CX(v)+' cx':U(v))+'</b>':'<b class="up">✓ +'+(cx?CX(-v)+' cx':U(-v))+'</b>'; };
-  var marca=ST.bs.length>0, per='Jul–'+PARC.ate, rows=[], T={t25:0,p25:0,r26:0,proj:0,h:0,p:0,r:0};
+  var marca=ST.bs.length>0, per='Jul–'+parcTxt(), rows=[], T={t25:0,p25:0,r26:0,proj:0,h:0,p:0,r:0};
   bars.forEach(function(o){ var A=tdAcum(o.cid,o.c.M); if(!A) return; rows.push({id:o.cid,n:o.c.nome,A:A});
     T.t25+=A.t25; T.p25+=A.p25; T.r26+=A.r26; T.proj+=A.proj; if(A.si){ T.h+=A.si.h; T.p+=A.si.p; T.r+=A.si.r; } });
   rows.sort(function(a,b){ return b.A.t25-a.A.t25; });
@@ -595,7 +600,7 @@ function skTop(cid,ms,bs){ var d=skData(cid); if(!d) return null;
   ms.forEach(function(mi){
     if(d.u[mi]){ d.u[mi].forEach(function(v,i){ u[i]+=v; }); if(d.r[mi]) d.r[mi].forEach(function(v,i){ r[i]+=v; }); else rOk=false; }
     else { rOk=false; var m=skMix(d,mi), S=0; m.v.forEach(function(v){ S+=v; }); if(S&&T[mi]){ m.v.forEach(function(v,i){ u[i]+=v/S*T[mi]; }); est.push(NMF[mi]); fx[m.f]=1; } }
-    var kp=1; if(PARC&&PARC.ate&&mi===PARC.mes){ var dE=parseInt(PARC.ate,10), dM=new Date(2026,mi+1,0).getDate(); if(dE>0&&dE<dM) kp=dE/dM; } /* mês parcial: 2025 proporcional aos dias */
+    var kp=1; if(PARC&&PARC.ate&&mi===PARC.mes){ var dE=parseInt(parcAte(cid),10), dM=new Date(2026,mi+1,0).getDate(); if(dE>0&&dE<dM) kp=dE/dM; } /* mês parcial: 2025 proporcional aos dias */
     if(d.u25&&d.u25[mi]) d.u25[mi].forEach(function(v,i){ p[i]+=v*kp; }); else pOk=false; });
   var rows=d.s.map(function(x,i){ return {b:x[0],nm:x[1],u:u[i],r:rOk?r[i]:null,p:pOk?p[i]:null}; })
     .filter(function(x){ return (!bs.length||bs.indexOf(x.b)>=0)&&x.u>=.5; }).sort(function(a,b){ return b.u-a.u; });
@@ -629,9 +634,10 @@ function tendBar(c,TD){
   if(!TD||!c||c.none||c.sh||c.es) return null;
   var L=TD.L, r=(c.r26||[])[L], u=(c.u26||[])[L], a=(c[ST.m+'26']||[])[L];
   if(a==null||!a) return null;
-  var pm=(r&&u&&c.r26!==c.u26)?r/u:null, pu=u?u*TD.k:null;
-  var proj=ST.m==='u'?a*TD.k:(pm&&pu?pu*pm:a*TD.k);
-  return {cur:a,proj:proj,extra:proj-a,pm:pm,pu:pu,ud:u?u/TD.dE:null,p25:(c[ST.m+'25']||[])[L]||0,r:r,u:u};
+  var dE=parseInt(parcAte(c.id),10)||TD.dE, k=TD.dM/dE; /* cada cliente com o seu dia de corte (ex.: Gaúcha até 14/11) */
+  var pm=(r&&u&&c.r26!==c.u26)?r/u:null, pu=u?u*k:null;
+  var proj=ST.m==='u'?a*k:(pm&&pu?pu*pm:a*k);
+  return {dE:dE,ate:parcAte(c.id),cur:a,proj:proj,extra:proj-a,pm:pm,pu:pu,ud:u?u/dE:null,p25:(c[ST.m+'25']||[])[L]||0,r:r,u:u};
 }
 function bNome(){ return ST.bs.map(function(b){ return MARCAS.filter(function(m){return m[0]===b;})[0][1]; }).join(' + '); }
 function hbMode(){ return ST.f==='so'&&ST.bs.length===3&&['OFF!','EXPOSIS','RAID'].every(function(b){return ST.bs.indexOf(b)>=0;}); }
@@ -649,16 +655,16 @@ function cmpTxt(){ return (mbMode()||calMode())?'vs 2025':'vs FY26'; }
 var PLAB='Jul–'+MES[MES.length-1];
 
 /* mês parcial: o ano anterior entra proporcional aos dias decorridos (Nov/25 × 15/30), igual ao 'mesmo período' do portal */
-function parcK(i){
+function parcK(i,id){
   if(ST.f!=='so'||!PARC||!PARC.ate||i!==MES.length-1||MES[i]!==NMF[PARC.mes]) return 1;
-  var dE=parseInt(PARC.ate,10), dM=new Date(PARC.mes>=6?2026:2027,PARC.mes+1,0).getDate();
+  var dE=parseInt(parcAte(id),10), dM=new Date(PARC.mes>=6?2026:2027,PARC.mes+1,0).getDate();
   return (dE>0&&dE<dM)?dE/dM:1;
 }
 function val(c,ano){ // soma comparável: só meses com dado em 2026; mês parcial do ano anterior proporcional
   if(c.none) return {v:null,pend:0,ms:1};
   if(c.y26!==undefined && ST.p==='T') return {v:c['y'+ano],pend:0,ms:1};
   var a26=c[ST.m+'26'], a=c[ST.m+ano], ms=selMs(), s=0, n=0, pend=0;
-  ms.forEach(function(i){ if(a26[i]==null){pend++;return;} s+=(ano!=='26'&&!c.sh&&!c.es)?a[i]*parcK(i):a[i]; n++; });
+  ms.forEach(function(i){ if(a26[i]==null){pend++;return;} s+=(ano!=='26'&&!c.sh&&!c.es)?a[i]*parcK(i,c.id):a[i]; n++; });
   return {v:n?(c.sh?s/n:s):null, pend:pend, ms:ms.length}; /* share: média dos meses; valores e caixas: soma */
 }
 function fmt(v,c){
@@ -805,13 +811,13 @@ function update(){
       var rit=ST.m==='u'?Math.round(uu/TD.dE).toLocaleString('pt-BR')+' un/dia':(su?'preço médio R$ '+(sr/su).toFixed(2).replace('.',',')+'/un · '+Math.round(su/TD.dE).toLocaleString('pt-BR')+' un/dia':'');
       return '<div class="k tk"><div class="l">Tendência '+TD.mes+'/'+String(TD.ano).slice(2)+' · faltam '+TD.falta+' de '+TD.dM+' dias</div><div class="n">'+fmtK(pj)+'</div>'+
         '<div class="s '+(q!=null&&q<0?'down':'up')+'">'+(q!=null?pctTxt(q)+' vs '+TD.mes+'/25 cheio':'')+'</div>'+
-        '<div class="s" style="color:var(--mut)">até '+PARC.ate+': '+fmtK(cu)+(rit?' · '+rit:'')+ac+'</div></div>'; })();
+        '<div class="s" style="color:var(--mut)">até '+parcTxt()+': '+fmtK(cu)+(rit?' · '+rit:'')+ac+'</div></div>'; })();
   document.getElementById('nota').textContent=ST.f==='si'?'Sell In em caixas (real) · '+(calMode()?'ano-calendário '+PLAB+'/26 × '+PLAB+'/25 · ':'')+SI.parcial+' parcial, comparado com o mês cheio do '+(calMode()?'ano anterior':'FY26')+(SI.extNomes?' · total inclui '+SI.extNomes+' (sem barra)':'')+' · Sell In não tem quebra por marca. '
     :fullMode()?'Todas as marcas marcadas = Sell Out total do cliente por mês (igual a Todas), FY27 × FY26 até '+MES[MES.length-1]+'/26 (Nov/26 parcial × Nov/25 proporcional aos dias). '
     :HBm?'OFF + Exposis + Raid = linha HB do dashboard por mês, '+(calMode()?PLAB+'/26 × '+PLAB+'/25':'FY27 × FY26')+' (até '+MES[MES.length-1]+'/26; Nov/26 parcial × Nov/25 proporcional aos dias, como o “mesmo período” do portal) · São João só Isadora · DD-Gaúcha inclui Glade e GAM/Riomed incluem Lysoform/Pato residuais (o mensal não tem quebra por marca) · Clamed: receita Ago–Nov/26 estimada (unidades × R$ 31,45/un, preço da planilha). '
-    :MB?'Por marca, mês a mês: '+perLbl('/26')+' × mesmo período de 2025 · Nov/26 parcial até '+PARC.ate+' (× Nov/25 proporcional aos dias) · Jan–Set real por SKU em São João, Panvel e Clamed; estimado em Nissei, GAM, Gaúcha e Riomed (acumulado da marca no card Sell-out por Marca distribuído pela venda mensal do cliente) · Out/Nov = total do cliente quebrado por marca · São João = Isadora + Caroline · Clamed só em unidades (fora do total). '
-    :(ST.m==='r'&&pendAny)?(calMode()?'Ano-calendário: '+PLAB+'/26 × '+PLAB+'/25 · Nov/26 parcial (até '+PARC.ate+') × Nov/25 proporcional aos dias · ':'')+'Clamed: receita de Mai–Nov/26 estimada na planilha (unidades × R$ 31,45/un); o portal só manda unidades. ':(ST.m==='u'?'Panvel FY26 em unidades é estimado (receita ÷ ticket médio). ':'');
-  if(TD&&bars.some(function(o){ return o.td; })) document.getElementById('nota').textContent+='Tendência '+TD.mes+' (bloco tracejado no topo) = unidades vendidas até '+PARC.ate+' ÷ '+TD.dE+' dias × '+TD.dM+' dias × preço médio do mês (R$ ÷ un) de cada cliente; é o ritmo atual mantido nos '+TD.falta+' dias que faltam, comparado com '+TD.mes+'/25 cheio. ';
+    :MB?'Por marca, mês a mês: '+perLbl('/26')+' × mesmo período de 2025 · Nov/26 parcial até '+parcTxt()+' (× Nov/25 proporcional aos dias) · Jan–Set real por SKU em São João, Panvel e Clamed; estimado em Nissei, GAM, Gaúcha e Riomed (acumulado da marca no card Sell-out por Marca distribuído pela venda mensal do cliente) · Out/Nov = total do cliente quebrado por marca · São João = Isadora + Caroline · Clamed só em unidades (fora do total). '
+    :(ST.m==='r'&&pendAny)?(calMode()?'Ano-calendário: '+PLAB+'/26 × '+PLAB+'/25 · Nov/26 parcial (até '+parcTxt()+') × Nov/25 proporcional aos dias · ':'')+'Clamed: receita de Mai–Nov/26 estimada na planilha (unidades × R$ 31,45/un); o portal só manda unidades. ':(ST.m==='u'?'Panvel FY26 em unidades é estimado (receita ÷ ticket médio). ':'');
+  if(TD&&bars.some(function(o){ return o.td; })) document.getElementById('nota').textContent+='Tendência '+TD.mes+' (bloco tracejado no topo) = unidades vendidas até '+parcTxt()+' ÷ '+TD.dE+' dias × '+TD.dM+' dias × preço médio do mês (R$ ÷ un) de cada cliente; é o ritmo atual mantido nos '+TD.falta+' dias que faltam, comparado com '+TD.mes+'/25 cheio. ';
 }
 
 /* hover → detalhe */
@@ -838,8 +844,8 @@ function showDet(o){
     h+='<div class="mb"><span style="color:var(--mut)">'+lb[i]+'</span><div class="bars"><div class="b c" style="width:'+((a[i]||0)/(mx||1)*100)+'%"></div><div class="b a" style="width:'+((p[i]||0)/(mx||1)*100)+'%"></div></div><span class="r">'+fmt(a[i],c)+(q!=null?'<br><span class="'+(q>=0?'up':'down')+'">'+(c.sh?ppTxt(q):pctTxt(q))+'</span>':'')+'</span></div>'; }
   var td=o.td, TDi=td&&tendInfo();
   if(td&&TDi){ var q2=pct(td.proj,td.p25);
-    h+='<div class="sub" style="margin:10px 0 4px;color:#a5f3fc">Tendência '+TDi.mes+' · faltam '+TDi.falta+' de '+TDi.dM+' dias</div>'+
-      '<div class="mb" style="grid-template-columns:1fr auto"><span style="color:var(--mut)">até '+PARC.ate+'</span><span class="r">'+fmt(td.cur,c)+'</span></div>'+
+    h+='<div class="sub" style="margin:10px 0 4px;color:#a5f3fc">Tendência '+TDi.mes+' · faltam '+(TDi.dM-(td.dE||TDi.dE))+' de '+TDi.dM+' dias</div>'+
+      '<div class="mb" style="grid-template-columns:1fr auto"><span style="color:var(--mut)">até '+(td.ate||PARC.ate)+'</span><span class="r">'+fmt(td.cur,c)+'</span></div>'+
       (td.ud?'<div class="mb" style="grid-template-columns:1fr auto"><span style="color:var(--mut)">ritmo</span><span class="r">'+Math.round(td.ud).toLocaleString('pt-BR')+' un/dia</span></div>':'')+
       (td.pm?'<div class="mb" style="grid-template-columns:1fr auto"><span style="color:var(--mut)">preço médio</span><span class="r">R$ '+td.pm.toFixed(2).replace('.',',')+'/un</span></div>':'')+
       '<div class="mb" style="grid-template-columns:1fr auto"><span style="color:var(--mut)">projeção '+TDi.dM+' dias</span><span class="r">'+fmt(td.proj,c)+(td.pu&&ST.m==='r'?'<br><span style="color:var(--mut)">'+Math.round(td.pu).toLocaleString('pt-BR')+' un</span>':'')+'</span></div>'+
