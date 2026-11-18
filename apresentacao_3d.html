@@ -310,11 +310,7 @@ try{ if(window.parent&&window.parent!==window){ var _sp=window.parent.eval('type
   var _sc=window.parent.eval('typeof SO_PARCIAL_CLI!=="undefined"?SO_PARCIAL_CLI:null'), _mc={saojoao:'SJ',nissei:'NS',clamed:'CL',panvel:'PV',ddgam:'GAM',ddgaucha:'GA',ddriomed:'RM'}; if(_sc){ PARCC={}; for(var _k in _sc) if(_mc[_k]) PARCC[_mc[_k]]=String(_sc[_k]); } } }catch(e){}
 /* ── Sell In (caixas): FY27 real Jul/26 → mês atual × FY26 real mesmos meses. Snapshot 11/11/2026 (Nov/26 parcial) ── */
 var SI_IDS={'São João':'SJ','DD-GAM':'GAM','Nissei':'NS','Panvel':'PV','DD-Gaúcha':'GA','Clamed':'CL','DD-Riomed':'RM','Riomed':'RM'};
-var SI={MES:['Jul','Ago','Set','Out','Nov'], parcial:'Nov/26', ext25:[0,0,0,240,0], ext26:[0,0,0,0,0], extNomes:'Peniel', raw:{
-  SJ:{u25:[0,8132,3549,1659,1550],u26:[3231,13671,1849,4324,1691]}, GAM:{u25:[0,5256,7808,7258,5620],u26:[17157,0,0,5036,0]},
-  NS:{u25:[0,3490,2145,1476,1170],u26:[134,0,81,3978,0]}, PV:{u25:[0,0,1573,213,465],u26:[0,143,1365,14,923]},
-  GA:{u25:[5094,2523,335,436,252],u26:[274,8494,161,398,0]}, CL:{u25:[0,0,4731,80,0],u26:[0,0,4407,0,0]},
-  RM:{u25:[0,3743,296,0,1650],u26:[0,0,3198,75,79]} }};
+var SI={"MES":["Jul","Ago","Set","Out","Nov"],"parcial":"Nov/26","ext25":[0.0,0.0,0.0,240.0,0.0],"ext26":[0.0,0.0,0.0,0.0,0.0],"extNomes":"Peniel","raw":{"SJ":{"u25":[0.0,8132.0,3549.0,1659.0,1550.0],"u26":[3231.0,13671.0,1849.0,4324.0,3377.0]},"GA":{"u25":[5094.0,2523.0,335.0,436.0,252.0],"u26":[274.0,8494.0,161.0,398.0,252.0]},"PV":{"u25":[0.0,0.0,1573.0,213.0,465.0],"u26":[0.0,143.0,1365.0,14.0,914.0]},"GAM":{"u25":[0.0,5256.0,7808.0,7258.0,5620.0],"u26":[17157.0,0.0,0.0,5036.0,4407.0]},"NS":{"u25":[0.0,3490.0,2145.0,1476.0,1170.0],"u26":[134.0,0.0,81.0,3978.0,0.0]},"RM":{"u25":[0.0,3743.0,296.0,0.0,1650.0],"u26":[0.0,0.0,3198.0,75.0,45.0]},"CL":{"u25":[0.0,0.0,4731.0,80.0,0.0],"u26":[0.0,0.0,4407.0,0.0,0.0]}}};
 (function(){
   try{
     var P=window.parent; if(!P||P===window) return;
@@ -328,7 +324,7 @@ var SI={MES:['Jul','Ago','Set','Out','Nov'], parcial:'Nov/26', ext25:[0,0,0,240,
     SI={MES:NM.slice(0,n), parcial:String(lbl).charAt(0)+String(lbl).slice(1).toLowerCase(), ext25:e25, ext26:e26, extNomes:Object.keys(extra).join(', '), raw:raw};
   }catch(e){}
 })();
-var SICALD={"n":11,"raw":{"SJ":{"u25":[497.0,915.0,317.0,75.0,533.0,779.0,0.0,8132.0,3549.0,1659.0,1550.0],"u26":[1330.0,0.0,519.0,699.0,1001.0,628.0,3231.0,13671.0,1849.0,4324.0,1691.0]},"GA":{"u25":[1990.0,490.0,944.0,960.0,193.0,180.0,5094.0,2523.0,335.0,436.0,252.0],"u26":[1752.0,3585.0,165.0,484.0,283.0,396.0,274.0,8494.0,161.0,398.0,0.0]},"PV":{"u25":[1433.0,2084.0,3364.0,166.0,970.0,185.0,0.0,0.0,1573.0,213.0,465.0],"u26":[3869.0,2265.0,698.0,346.0,161.0,89.0,0.0,143.0,1365.0,14.0,923.0]},"GAM":{"u25":[4359.0,1701.0,5586.0,930.0,101.0,943.0,0.0,5256.0,7808.0,7258.0,5620.0],"u26":[11589.0,5598.0,2390.0,0.0,1208.0,0.0,17157.0,0.0,0.0,5036.0,0.0]},"NS":{"u25":[0.0,865.0,736.0,494.0,792.0,230.0,0.0,3490.0,2145.0,1476.0,1170.0],"u26":[2242.0,54.0,56.0,0.0,82.0,115.0,134.0,0.0,81.0,3978.0,0.0]},"RM":{"u25":[23.0,12.0,0.0,193.0,378.0,0.0,0.0,3743.0,296.0,0.0,1650.0],"u26":[0.0,0.0,405.0,0.0,0.0,110.0,0.0,0.0,3198.0,75.0,79.0]},"CL":{"u25":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4731.0,80.0,0.0],"u26":[300.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4407.0,0.0,0.0]}},"ext25":[0.0,299.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,240.0,0.0],"ext26":[0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,0,0],"extNomes":"Peniel"};
+var SICALD={"n":11,"raw":{"SJ":{"u25":[497.0,915.0,317.0,75.0,533.0,779.0,0.0,8132.0,3549.0,1659.0,1550.0],"u26":[1330.0,0.0,519.0,699.0,1001.0,628.0,3231.0,13671.0,1849.0,4324.0,3377.0]},"GA":{"u25":[1990.0,490.0,944.0,960.0,193.0,180.0,5094.0,2523.0,335.0,436.0,252.0],"u26":[1752.0,3585.0,165.0,484.0,283.0,396.0,274.0,8494.0,161.0,398.0,252.0]},"PV":{"u25":[1433.0,2084.0,3364.0,166.0,970.0,185.0,0.0,0.0,1573.0,213.0,465.0],"u26":[3869.0,2265.0,698.0,346.0,161.0,89.0,0.0,143.0,1365.0,14.0,914.0]},"GAM":{"u25":[4359.0,1701.0,5586.0,930.0,101.0,943.0,0.0,5256.0,7808.0,7258.0,5620.0],"u26":[11589.0,5598.0,2390.0,0.0,1208.0,0.0,17157.0,0.0,0.0,5036.0,4407.0]},"NS":{"u25":[0.0,865.0,736.0,494.0,792.0,230.0,0.0,3490.0,2145.0,1476.0,1170.0],"u26":[2242.0,54.0,56.0,0.0,82.0,115.0,134.0,0.0,81.0,3978.0,0.0]},"RM":{"u25":[23.0,12.0,0.0,193.0,378.0,0.0,0.0,3743.0,296.0,0.0,1650.0],"u26":[0.0,0.0,405.0,0.0,0.0,110.0,0.0,0.0,3198.0,75.0,45.0]},"CL":{"u25":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4731.0,80.0,0.0],"u26":[300.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4407.0,0.0,0.0]}},"ext25":[0.0,299.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,240.0,0.0],"ext26":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"extNomes":"Peniel"};
 /* ao vivo: ano-calendário do Sell In = FY26 (Jan–Jun/26 real, Jan–Jun/25 = hist) + FY27 (Jul→mês atual) */
 (function(){ try{ var P=window.parent; if(!P||P===window) return;
   var d27=P.eval('SELLIN_DATA_FY27'), d26=P.eval('SELLIN_DATA_FY26'), ma=P.eval('SELLIN_MES_ATUAL'), n=6+ma+1, raw={}, e25=[], e26=[], ex={}, f27={};
@@ -842,6 +838,17 @@ function showDet(o){
   if(c.none) h+='<div class="sub">Sem venda desta marca no cliente.</div>';
   else for(var i=0;i<lb.length;i++){ var q=c.sh?(a[i]==null||p[i]==null?null:a[i]-p[i]):pct(a[i],p[i]);
     h+='<div class="mb"><span style="color:var(--mut)">'+lb[i]+'</span><div class="bars"><div class="b c" style="width:'+((a[i]||0)/(mx||1)*100)+'%"></div><div class="b a" style="width:'+((p[i]||0)/(mx||1)*100)+'%"></div></div><span class="r">'+fmt(a[i],c)+(q!=null?'<br><span class="'+(q>=0?'up':'down')+'">'+(c.sh?ppTxt(q):pctTxt(q))+'</span>':'')+'</span></div>'; }
+  if(ST.f==='si'&&!c.none&&!c.sh){ /* resumo do Sell In: acumulado do período × FY26 mesmo período + quanto falta (pedido do Giovano 18/11) */
+    var sA=0,sP=0,nm=[]; for(var i=0;i<lb.length;i++){ if(a[i]==null) continue; sA+=a[i]||0; sP+=p[i]||0; nm.push(lb[i]); }
+    var per=nm.length>1?nm[0]+'–'+nm[nm.length-1]:(nm[0]||''), dif=sA-sP, cx=function(v){ return Math.round(v).toLocaleString('pt-BR')+' cx'; },
+        S=(typeof SIP!=='undefined'&&SIP[c.id])||null, row=function(l,v,cl){ return '<div class="mb" style="grid-template-columns:1fr auto"><span style="color:var(--mut)">'+l+'</span><span class="r'+(cl?' '+cl:'')+'">'+v+'</span></div>'; };
+    h+='<div class="sub" style="margin:10px 0 4px;color:#a5f3fc;border-top:1px solid rgba(103,232,249,.25);padding-top:8px">Acumulado '+per+' · FY27 × FY26</div>'+
+      row('FY27 '+per,'<b>'+cx(sA)+'</b>')+row('FY26 mesmo período',cx(sP))+
+      row(dif>=0?'sobrando vs FY26':'devendo vs FY26',(dif>=0?'▲ +':'▼ −')+cx(Math.abs(dif))+(sP?' ('+pctTxt(pct(sA,sP))+')':''),dif>=0?'up':'down');
+    if(S){ var fp=S.p-S.r, fh=S.h-S.r;
+      h+=row('plano FY27 '+cx(S.p),fp>0?'falta '+cx(fp)+' · '+Math.round(S.r/S.p*100)+'%':'✓ batido +'+cx(-fp),fp>0?'down':'up')+
+         row('FY26 inteiro '+cx(S.h),fh>0?'falta '+cx(fh)+' · '+Math.round(S.r/S.h*100)+'%':'✓ passou +'+cx(-fh),fh>0?'down':'up'); }
+  }
   var td=o.td, TDi=td&&tendInfo();
   if(td&&TDi){ var q2=pct(td.proj,td.p25);
     h+='<div class="sub" style="margin:10px 0 4px;color:#a5f3fc">Tendência '+TDi.mes+' · faltam '+(TDi.dM-(td.dE||TDi.dE))+' de '+TDi.dM+' dias</div>'+
