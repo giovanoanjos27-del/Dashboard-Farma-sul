@@ -539,7 +539,8 @@ function tdChart(){ var box=document.getElementById('tdc'); if(ST.f!=='td'){ box
   var sv=document.getElementById('tdcS'), Wd=sv.clientWidth||700, Hd=sv.clientHeight||190, one=TDS.c!=='all';
   var nome=one?C.filter(function(c){ return c.id===TDS.c; })[0].nome:'todos os clientes', H=tdMeses(), n=H.length, mi=TDS.m;
   var kk=one&&cs.length?cs[0].M.k:null, kTxt=TDS.k!=='r'?'venda = temporada passada':(one?(kk!=null?'ritmo '+pctTxt((kk-1)*100).replace(/[▲▼] /,'')+' vs temporada passada':''):'ritmo de cada cliente');
-  document.getElementById('tdcT').innerHTML='Plano · '+nome+' <span>· '+(ST.bs.length?bNome()+' · ':'')+kTxt+'</span>';
+  var LG='<span class="tlg" style="margin-left:14px;font-weight:600;letter-spacing:0;text-transform:none;color:#e6f1ff">'+'<b style="display:inline-block;width:18px;height:3px;background:#ffb547;vertical-align:middle;margin-right:5px;border-radius:2px"></b>estoque fim do mês'+'<b style="display:inline-block;width:18px;height:3px;background:#5aa9ff;vertical-align:middle;margin:0 5px 0 14px;border-radius:2px"></b>venda projetada'+'<span style="color:#67e8f9;margin-left:14px">pedido = compra p/ DOH '+TDS.a+'</span></span>';
+  document.getElementById('tdcT').innerHTML='Plano · '+nome+' <span>· '+(ST.bs.length?bNome()+' · ':'')+kTxt+'</span>'+LG;
   var AC=document.getElementById('tdcA'), acum=TDS.v==='a'; AC.hidden=!acum; sv.style.display=acum?'none':''; document.getElementById('tdcN').style.display=acum?'none':'';
   [].forEach.call(document.querySelectorAll('#tdcV button'),function(b){ b.classList.toggle('on',b.dataset.v===(TDS.v||'p')); });
   [].forEach.call(document.querySelectorAll('#tdcU button'),function(b){ b.classList.toggle('on',b.dataset.u===(TDS.u||'u')); }); document.getElementById('tdcU').style.display=acum?'none':'';
@@ -549,8 +550,10 @@ function tdChart(){ var box=document.getElementById('tdc'); if(ST.f!=='td'){ box
   for(var i=0;i<n;i++){ var e=0,v=0,vn=0,p=0,ru=[],er=0,vr=0,pr=0; cs.forEach(function(c){ var s=c.M.R.s, r=c.M.R.rup, pe=tdPE(c.id), pv=tdPV(c.id); e+=s[i].fim; v+=s[i].v; vn+=(s[i+1]||s[i]).v; p+=s[i].rep; er+=s[i].fim*pe; vr+=s[i].v*pv; pr+=s[i].rep*pe; if(r&&r.i===i) ru.push({n:c.nome,lb:r.lb}); });
     E.push(RS?er:e); V.push(RS?vr:v); D.push(vn?Math.round(e/(vn/30)):null); P.push(p); RU.push(ru); ER.push(er); VR.push(vr); PR.push(pr); }
   var kF=RS?kR:kU;
+  var unF=function(v){ return Math.round(v||0).toLocaleString('pt-BR'); }, cxF=function(v){ return Math.round((v||0)/UNCX).toLocaleString('pt-BR'); };
   var L=22, Rr=22, T=22, B=Hd<130?40:52, gw=(Wd-L-Rr)/n, mx=Math.max.apply(null,E.concat(V))*1.14||1;
-  var X=function(i){ return L+gw*(i+.5); }, Y=function(v){ return T+(Hd-T-B)*(1-v/mx); }, h='';
+  var X=function(i){ return L+gw*(i+.5); }, Y=function(v){ return T+(Hd-T-B)*(1-v/mx); }, h='', WIDE=gw>=135;
+  var ptF=function(v,i,tipo){ var t=RS?(WIDE?rsF(v):kR(v)):(WIDE?unF(v)+' un':kU(v)); return (i===0&&WIDE?tipo+' ':'')+t; };
   h+='<rect x="'+(X(mi)-gw/2+2)+'" y="2" width="'+(gw-4)+'" height="'+(Hd-4)+'" rx="8" fill="rgba(34,211,238,.09)" stroke="rgba(34,211,238,.6)"/>';
   RU.forEach(function(ru,i){ if(!ru.length) return; var x=X(i), w=Math.min(gw-10,150), t=one?'ruptura '+ru[0].lb.slice(0,5):ru.length+' ruptura'+(ru.length>1?'s':'');
     h+='<rect x="'+(x-gw/2+5)+'" y="'+(T-6)+'" width="'+(gw-10)+'" height="'+(Hd-T-B+12)+'" rx="6" fill="rgba(255,138,122,.07)" stroke="#ff8a7a" stroke-dasharray="4 3"/>'+
@@ -561,16 +564,16 @@ function tdChart(){ var box=document.getElementById('tdc'); if(ST.f!=='td'){ box
   h+='<path d="'+path(V)+'" fill="none" stroke="#5aa9ff" stroke-width="2.5"/><path d="'+path(E)+'" fill="none" stroke="#ffb547" stroke-width="2.5"/>';
   for(var i=0;i<n;i++){ var x=X(i), ye=Y(E[i]), yv=Y(V[i]), eUp=E[i]>=V[i], yU=Math.min(ye,yv), yL=Math.max(ye,yv)+17; if(yL>Hd-B+6) yL=yU-23;
     h+='<rect x="'+(x-4)+'" y="'+(yv-4)+'" width="8" height="8" fill="#5aa9ff"/><circle cx="'+x+'" cy="'+ye+'" r="4.5" fill="#ffb547"/>'+
-      (E[i]>0?'<text x="'+x+'" y="'+(eUp?ye-9:yL)+'" text-anchor="middle" fill="#ffc46b" font-size="10" font-weight="700">'+kF(E[i])+'</text>':'')+
-      '<text x="'+x+'" y="'+(eUp?yL:yv-9)+'" text-anchor="middle" fill="#8cc4ff" font-size="10" font-weight="700">'+kF(V[i])+'</text>';
+      (E[i]>0?'<text x="'+x+'" y="'+(eUp?ye-9:yL)+'" text-anchor="middle" fill="#ffc46b" font-size="10.5" font-weight="700">'+ptF(E[i],i,'estoque')+'</text>':'')+
+      '<text x="'+x+'" y="'+(eUp?yL:yv-9)+'" text-anchor="middle" fill="#8cc4ff" font-size="10.5" font-weight="700">'+ptF(V[i],i,'venda')+'</text>';
     var ru=one&&cs[0].M.R.rup&&cs[0].M.R.rup.i<=i, dc=ru||E[i]<=0?'#ff8a7a':D[i]==null?'#7d8ba3':D[i]<30?'#ff8a7a':D[i]<90?'#ffc46b':'#7ee0a1', yb=Hd-B+(Hd<130?14:19), ls=Hd<130?11:13;
     h+='<text x="'+x+'" y="'+yb+'" text-anchor="middle" fill="'+(i===mi?'#67e8f9':'#e6f1ff')+'" font-size="10.5" font-weight="800">'+H[i].lb+'</text>'+
       '<text x="'+x+'" y="'+(yb+ls)+'" text-anchor="middle" fill="'+dc+'" font-size="9.5" font-weight="700">'+(ru||E[i]<=0?'sem estoque':'DOH '+(D[i]==null?'—':D[i]))+'</text>'+
-      (P[i]>0?'<text x="'+x+'" y="'+(yb+2*ls)+'" text-anchor="middle" fill="#67e8f9" font-size="9.5" font-weight="700">+'+(RS?kR(PR[i]):kU(P[i])+' un')+'</text>':'')+
-      '<rect class="hit" data-i="'+i+'" x="'+(x-gw/2)+'" y="0" width="'+gw+'" height="'+Hd+'" fill="transparent" style="cursor:pointer"><title>'+H[i].lb+' · estoque fim ≈ '+rsF(ER[i])+' · venda proj. ≈ '+rsF(VR[i])+' · pedido p/ DOH '+TDS.a+': '+Math.round(P[i]).toLocaleString('pt-BR')+' un ≈ '+rsF(PR[i])+'</title></rect>'; }
+      (P[i]>0?'<text x="'+x+'" y="'+(yb+2*ls)+'" text-anchor="middle" fill="#67e8f9" font-size="9.5" font-weight="700">pedido '+(RS?(WIDE?rsF(PR[i]):kR(PR[i])):(WIDE?unF(P[i])+' un ≈ '+cxF(P[i])+' cx':kU(P[i])+' un'))+'</text>':'')+
+      '<rect class="hit" data-i="'+i+'" x="'+(x-gw/2)+'" y="0" width="'+gw+'" height="'+Hd+'" fill="transparent" style="cursor:pointer"><title>'+H[i].lb+' · estoque fim ≈ '+rsF(ER[i])+' · venda proj. ≈ '+rsF(VR[i])+' · pedido p/ DOH '+TDS.a+': '+Math.round(P[i]).toLocaleString('pt-BR')+' un (≈ '+cxF(P[i])+' cx de '+UNCX+') ≈ '+rsF(PR[i])+'</title></rect>'; }
   sv.setAttribute('viewBox','0 0 '+Wd+' '+Hd); sv.innerHTML=h;
   sv.setAttribute('aria-label','Estoque × venda projetada '+nome+': '+H.map(function(m,i){ return m.lb+' estoque '+kU(E[i])+', venda '+kU(V[i]); }).join('; '));
-  document.getElementById('tdcN').innerHTML=(RS?'Em R$: estoque × R$/un do estoque (portal a custo em São João e DD-GAM; demais preço médio de venda) · venda × preço médio de venda Jul–Nov/26 · ':'')+'<i style="background:#ffb547"></i>estoque no fim do mês sem novas compras · <i style="background:#5aa9ff"></i>venda projetada (mesmo mês da temporada passada × ritmo) · DOH = estoque ÷ venda do mês seguinte × 30 · “+un” = pedido (soma por SKU) no início do mês p/ fechar com DOH '+TDS.a+' · clique num mês para filtrar · SKU: venda rateada pelo mix da posição de estoque.'; }
+  document.getElementById('tdcN').innerHTML=(RS?'Em R$: estoque × R$/un do estoque (portal a custo em São João e DD-GAM; demais preço médio de venda) · venda × preço médio de venda Jul–Nov/26 · ':'')+'<i style="background:#ffb547"></i>estoque no fim do mês (sem novas compras) · <i style="background:#5aa9ff"></i>venda projetada (mesmo mês da temporada passada × ritmo) · DOH = estoque ÷ venda do mês seguinte × 30 · “+un” = pedido (soma por SKU) no início do mês p/ fechar com DOH '+TDS.a+' · clique num mês para filtrar · SKU: venda rateada pelo mix da posição de estoque.'; }
 function tdDet(o){ var c=o.c, M=c.M; det.classList.add('es-on');
   if(c.none){ det.innerHTML='<h3>'+c.nome+'</h3><div class="sub">'+M.motivo+'.</div>'; det.classList.add('on'); return; }
   var mi=TDS.m, H=tdMeses(), ml=H[mi].lb, fim=H[H.length-1].lb, N=10;
