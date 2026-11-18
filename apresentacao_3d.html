@@ -399,29 +399,38 @@ function esDS(){ var bs=ST.bs;
     sk.forEach(function(s){ e+=s[2]; v+=s[3]; var d=esSkD(s); if(d!=null&&d<30) cr++; else if(d!=null&&d<90) at++; });
     return {id:c.id,nome:c.nome,es:1,un:1,none:!sk.length,dt:x.d,sk:sk,cr:cr,at:at,y26:e,y25:v,u26:[e],u25:[v],r26:[e],r25:[v]}; })};
 }
+/* valor do estoque ≈ estoque (un) × preço médio de venda do cliente (R$/un do Sell Out Jul→mês atual de 2026) — escolha do Giovano 18/11 */
+function esPM(id){ var c=CALD.c[id]; if(!c) return null; var r=0,u=0; for(var i=6;i<c.r26.length;i++){ if(c.r26[i]&&c.u26[i]){ r+=c.r26[i]; u+=c.u26[i]; } } return u?r/u:null; }
+/* valor REAL do estoque informado pelo portal do cliente (prioridade sobre a estimativa): v = R$, u = un da mesma posição */
+var ESV={"GAM":{"v":2229258.60,"u":133486,"dt":"18/11","f":"portal GAM · Estoque e Vendas (preço de custo GAM)"},"SJ":{"v":3432017.50,"u":205185,"dt":"18/11","f":"Qlik São João · Indicadores Estoque (Estoque Custo; Isadora R$ 2.615.013 · Caroline R$ 817.004)"}};
+function esReal(id){ return (typeof ESV!=='undefined'&&ESV[id])||null; }
+function esVal(id,un){ var R=esReal(id); if(R&&R.u&&un) return ST.bs.length?un*R.v/R.u:R.v; /* sem filtro de marca = valor exato do portal; com marca = R$/un do portal × un da marca */ var pm=esPM(id); return pm&&un?un*pm:null; }
+function esLbl(id){ var R=esReal(id); return R?'R$ ':'≈ R$ '; }
+function esRS(v,id){ return v==null?'':(id?esLbl(id):'≈ R$ ')+Math.round(v).toLocaleString('pt-BR'); }
 function esBars(){
   var mx=0; bars.forEach(function(o){ if(!o.c.none) mx=Math.max(mx,o.c.y26||0,o.c.y25||0); });
   bars.map(function(o){ return {o:o,v:o.c.none?-1:o.c.y26}; }).sort(function(a,b){ return b.v-a.v; }).forEach(function(r,k){ r.o.rk=k; r.o.xt=-W/2+GAP*(k+.5); });
   bars.forEach(function(o){ var c=o.c;
     if(c.none){ o.ht=o.ght=.02; o.lb.innerHTML='<div class="v">—</div><div class="pend">'+(ESD[c.id]?'sem estoque da marca':'sem posição de estoque')+'</div>'; return; }
     var d=esDoh(c.y26,c.y25); o.ht=c.y26?c.y26/mx*HMAX:.02; o.ght=c.y25?c.y25/mx*HMAX:.02;
-    o.lb.innerHTML='<div class="v">'+fmt(c.y26,c)+'</div><div class="pv">venda/mês '+fmt(c.y25,c)+'</div>'+
+    var vl=esVal(c.id,c.y26);
+    o.lb.innerHTML='<div class="v">'+fmt(c.y26,c)+'</div>'+(vl?'<div class="pv" style="color:#e6f1ff;font-weight:700">'+esRS(vl,c.id)+(esReal(c.id)&&!ST.bs.length?' <span style="color:var(--mut);font-weight:400">portal '+esReal(c.id).dt+'</span>':'')+'</div>':'')+'<div class="pv">venda/mês '+fmt(c.y25,c)+'</div>'+
       (d!=null?'<div class="d '+esCls(d)+'">'+d.toLocaleString('pt-BR')+' dias de cobertura</div>':'')+
       '<div class="pend">posição '+String(c.dt).slice(0,5)+(esVelho(c.dt)?' · desatualizada':'')+(c.cr?' · '+c.cr+' SKU'+(c.cr>1?'s':'')+' < 30 d':'')+'</div>'; });
   var e=0, v=0, cr=0, n=0, best=null, wr=null, U={un:1};
-  bars.forEach(function(o){ var c=o.c; if(c.none) return; n++; e+=c.y26; v+=c.y25; cr+=c.cr; if(!best||c.y26>best.y26) best=c; if(c.cr&&(!wr||c.cr>wr.cr)) wr=c; });
+  var vt=0; bars.forEach(function(o){ var c=o.c; if(c.none) return; n++; e+=c.y26; v+=c.y25; cr+=c.cr; vt+=esVal(c.id,c.y26)||0; if(!best||c.y26>best.y26) best=c; if(c.cr&&(!wr||c.cr>wr.cr)) wr=c; });
   var d=esDoh(e,v), mn=ST.bs.length?' '+bNome():'', bd=best?esDoh(best.y26,best.y25):null;
   document.getElementById('kpis').innerHTML=
-    '<div class="k"><div class="l">Estoque'+mn+' · '+n+' clientes</div><div class="n">'+(best?fmt(e,U):'—')+'</div><div class="s '+esCls(d)+'">'+(d!=null?d.toLocaleString('pt-BR')+' dias de cobertura · venda/mês '+fmt(v,U):'')+'</div></div>'+
+    '<div class="k"><div class="l">Estoque'+mn+' · '+n+' clientes</div><div class="n">'+(best?fmt(e,U):'—')+'</div>'+(vt?'<div class="s" style="color:#e6f1ff;font-weight:700">'+esRS(vt)+' em estoque</div>':'')+'<div class="s '+esCls(d)+'">'+(d!=null?d.toLocaleString('pt-BR')+' dias de cobertura · venda/mês '+fmt(v,U):'')+'</div></div>'+
     '<div class="k"><div class="l">Maior estoque</div><div class="n" style="font-size:17px">'+(best?best.nome:'—')+'</div><div class="s" style="color:var(--mut)">'+(best?fmt(best.y26,U)+' · '+(best.y26/e*100).toFixed(0)+'% do total'+(bd!=null?' · '+bd+' dias':''):'')+'</div></div>'+
     '<div class="k"><div class="l">SKUs abaixo de 30 dias</div><div class="n" style="font-size:17px">'+cr+'</div><div class="s '+(cr?'down':'up')+'">'+(wr?'mais em '+wr.nome+' ('+wr.cr+')':'nenhum SKU em risco de ruptura')+'</div></div>';
-  document.getElementById('nota').textContent='Estoque em unidades na última posição de cada cliente (data na etiqueta; mais de 7 dias antes da mais recente = desatualizada) · barra sólida = estoque, contorno = venda do mês de referência na mesma escala · cobertura = estoque ÷ (venda ÷ 30) · SKU crítico < 30 dias, atenção < 90 · fonte: card Estoque do dashboard'+(FONTE.indexOf('snapshot')===0?' (snapshot)':'')+'. ';
+  document.getElementById('nota').textContent='Valor do estoque: real do portal onde existe (São João e DD-GAM, a preço de custo; R$/un do portal × estoque da etiqueta); demais ≈ estoque × preço médio de venda do cliente (R$ ÷ un do Sell Out Jul–Nov/26) · Estoque em unidades na última posição de cada cliente (data na etiqueta; mais de 7 dias antes da mais recente = desatualizada) · barra sólida = estoque, contorno = venda do mês de referência na mesma escala · cobertura = estoque ÷ (venda ÷ 30) · SKU crítico < 30 dias, atenção < 90 · fonte: card Estoque do dashboard'+(FONTE.indexOf('snapshot')===0?' (snapshot)':'')+'. ';
 }
 function esDet(o){ var c=o.c;
   if(c.none){ det.innerHTML='<h3>'+c.nome+'</h3><div class="sub">'+(ESD[c.id]?'Sem estoque desta marca no cliente.':'Sem posição de estoque.')+'</div>'; det.classList.add('on'); return; }
   var sk=c.sk.slice().sort(function(a,b){ var x=esSkD(a), y=esSkD(b), ca=x!=null&&x<30, cb=y!=null&&y<30; return ca!==cb?(ca?-1:1):b[2]-a[2]; });
   var mx=1, N=9; sk.forEach(function(s){ mx=Math.max(mx,s[2],s[3]); });
-  var h='<h3>'+c.nome+'</h3><div class="sub">Estoque por SKU · posição '+c.dt+(ST.bs.length?' · '+bNome():'')+' · '+sk.length+' SKUs · críticos primeiro</div>';
+  var _pm=esPM(c.id), _R=esReal(c.id), h='<h3>'+c.nome+'</h3>'+(_R?'<div class="sub" style="color:#e6f1ff">'+c.y26.toLocaleString('pt-BR')+' un · '+esRS(esVal(c.id,c.y26),c.id)+' · valor real: '+_R.f+', posição '+_R.dt+' = R$ '+Math.round(_R.v).toLocaleString('pt-BR')+' p/ '+_R.u.toLocaleString('pt-BR')+' un (R$ '+(_R.v/_R.u).toFixed(2).replace('.',',')+'/un)</div>':_pm?'<div class="sub" style="color:#e6f1ff">'+c.y26.toLocaleString('pt-BR')+' un · '+esRS(c.y26*_pm)+' (R$ '+_pm.toFixed(2).replace('.',',')+'/un, preço médio de venda Jul–Nov/26)</div>':'')+'<div class="sub">Estoque por SKU · posição '+c.dt+(ST.bs.length?' · '+bNome():'')+' · '+sk.length+' SKUs · críticos primeiro</div>';
   sk.slice(0,N).forEach(function(s){ var d=esSkD(s);
     h+='<div class="mb es"><div><span class="nmk" title="'+s[1].replace(/"/g,'')+'">'+esNm(s[1])+'</span><div class="bars"><div class="b c" style="width:'+(s[2]/mx*100)+'%"></div><div class="b a" style="width:'+(s[3]/mx*100)+'%"></div></div></div><span class="r">'+s[2].toLocaleString('pt-BR')+' un'+(d!=null?'<br><span class="'+esCls(d)+'">'+d.toLocaleString('pt-BR')+' d</span>':'<br><span style="color:var(--mut)">sem venda</span>')+'</span></div>'; });
   if(sk.length>N) h+='<div class="sub" style="margin:6px 0 0">+ '+(sk.length-N)+' SKUs · lista completa no card Estoque do dashboard</div>';
