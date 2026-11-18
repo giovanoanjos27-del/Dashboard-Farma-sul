@@ -26,6 +26,7 @@ def exportar(src=MAIN, saida=SAIDA):
     io.open(saida, "w", encoding="utf-8", newline="").write(h)
     if saida == SAIDA:  # mantém a versão com visual Nielsen sempre junto da cópia do Giovano
         try:
+            if PASTA not in sys.path: sys.path.insert(0, PASTA)
             import aplicar_tema_nielsen
             aplicar_tema_nielsen.aplicar()
         except Exception as e:
