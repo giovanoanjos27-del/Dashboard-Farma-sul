@@ -22912,36 +22912,6 @@ var pvLineMode = 'rec';
 var gamLineMode = 'rec';
 var gchLineMode = 'rec';
 
-function setSJLineMode(m,btn){
-  sjLineMode=m;
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  renderSJLine();
-}
-function setNSLineMode(m,btn){
-  nsLineMode=m;
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  renderNSLine();
-}
-function setPVLineMode(m,btn){
-  pvLineMode=m;
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  renderPVLine();
-}
-function setGAMLineMode(m,btn){
-  gamLineMode=m;
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  renderGAMLine();
-}
-function setGCHLineMode(m,btn){
-  gchLineMode=m;
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  renderGCHLine();
-}
 
 /* ═══════════ SÃO JOÃO ═══════════ */
 var sjBarMode='vol', sjLojaMetric='rec', sjLojaAno='todos';
@@ -23004,30 +22974,84 @@ function initSJ(){
   setTimeout(function(){ var el=document.getElementById('ed-sj-wrap'); if(el&&!el.innerHTML.trim()) renderEDShare('São João','sj'); }, 500);
 }
 
-function renderSJAnoBars(){
-  var isVol = sjBarMode==='vol';
-  var anos = ['2024','2025','2026*'];
-  var sum=function(arr){return arr.reduce(function(s,v){return s+(v||0);},0);};
-  var vals = isVol
-    ? [sum(sjGetVol('2024')), sum(sjGetVol('2025')), sum(sjGetVol('2026'))]
-    : [sum(sjGetRec('2024')), sum(sjGetRec('2025')), sum(sjGetRec('2026'))];
-  renderAnoChart('sj-ano-chart', anos, vals, isVol);
-}
-function setSJBarMode(m,btn){
-  sjBarMode=m;
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue'); renderSJAnoBars();
-}
 
 function renderDonutSJ(){
   var rows=(SJ_RANK[sjDonutYear]||SJ_RANK['2024']).slice(0,6);
   renderDonut('sj-donut','sj-donut-legend',rows.map(function(r){return{nome:r[0],val:r[1],color:r[2]};}));
 }
-function setSJDonutYear(y,btn){
-  sjDonutYear=y;
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue'); renderDonutSJ();
+
+/* ═══ Botões de alternância (Un|R$, ano, métrica) dos clientes — um só comportamento ═══
+   cada botão: guarda o valor, acende o botão clicado e redesenha o card.
+   'todos' = apaga todos os botões daquela função na página (não só os do grupo). */
+function nqTglGrupo(btn){ btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');}); btn.classList.add('active','blue'); }
+function nqTglTodos(nome, btn){ document.querySelectorAll('[onclick*="'+nome+'"]').forEach(function(b){ b.classList.remove('active','blue'); }); if(btn) btn.classList.add('active','blue'); }
+var NQ_TOGGLES = {
+  setSJLineMode:[function(v){sjLineMode=v;}, function(){renderSJLine();}],
+  setNSLineMode:[function(v){nsLineMode=v;}, function(){renderNSLine();}],
+  setPVLineMode:[function(v){pvLineMode=v;}, function(){renderPVLine();}],
+  setGAMLineMode:[function(v){gamLineMode=v;}, function(){renderGAMLine();}],
+  setGCHLineMode:[function(v){gchLineMode=v;}, function(){renderGCHLine();}],
+  setCLLineMode:[function(v){clLineMode=v;}, function(){renderCLLine();}],
+  setRIOLineMode:[function(v){rioLineMode=v;}, function(){renderRIOLine();}],
+  setSJCLineMode:[function(v){sjcLineMode=v;}, function(){renderSJCLine();}],
+  setSJBarMode:[function(v){sjBarMode=v;}, function(){renderSJAnoBars();}],
+  setNSBarMode:[function(v){nsBarMode=v;}, function(){renderNSAnoBars();}],
+  setCLBarMode:[function(v){clBarMode=v;}, function(){renderCLMesBars();}],
+  setPVBarMode:[function(v){pvBarMode=v;}, function(){renderPVAnoBars();}],
+  setGAMBarMode:[function(v){gamBarMode=v;}, function(){renderGAMAnoBars();}],
+  setGCHBarMode:[function(v){gchBarMode=v;}, function(){renderGCHAnoBars();}],
+  setRIOBarMode:[function(v){rioBarMode=v;}, function(){renderRIOMesBars();}],
+  setSJCBarMode:[function(v){sjcBarMode=v;}, function(){renderSJCAnoBars();}, 'todos'],
+  setSJRankYear:[function(v){sjRankYear=v;}, function(){renderSJRank();}],
+  setNSRankYear:[function(v){nsRankYear=v;}, function(){renderNSRank();}],
+  setPVRankYear:[function(v){pvRankYear=v;}, function(){renderPVRank();}],
+  setGAMRankYear:[function(v){gamRankYear=v;}, function(){renderGAMRank();}],
+  setGCHRankYear:[function(v){gchRankYear=v;}, function(){renderGCHPDVs();}],
+  setSJDonutYear:[function(v){sjDonutYear=v;}, function(){renderDonutSJ();}],
+  setNSDonutYear:[function(v){nsDonutYear=v;}, function(){renderNSDonut();}],
+  setPVDonutYear:[function(v){pvDonutYear=v;}, function(){renderPVDonut();}],
+  setGAMDonutYear:[function(v){gamDonutYear=v;}, function(){renderGAMDonut();}],
+  setSJMetaMetric:[function(v){sjMetaMetric=v;}, function(){renderSJMeta();}],
+  setNSMetaMetric:[function(v){nsMetaMetric=v;}, function(){renderNSMeta();}],
+  setCLMetaMetric:[function(v){clMetaMetric=v;}, function(){renderCLMeta();}],
+  setSJCMetaMetric:[function(v){sjcMetaMetric=v;}, function(){renderSJCMeta();}, 'todos'],
+  setGCHMetaMode:[function(v){gchMetaMode=v;}, function(){renderGCHMeta();}, 'todos'],
+  setRioMetaMode:[function(v){rioMetaMode=v;}, function(){renderRioMeta();}, 'todos'],
+  setPVMetaMode:[function(v){pvMetaMode=v;}, function(){renderPVMeta();}, 'todos'],
+  setGAMMetaMode:[function(v){gamMetaMode=v;}, function(){renderGAMMeta();}, 'todos'],
+  setSJLojaMetric:[function(v){sjLojaMetric=v;}, function(){renderSJLojas();}],
+  setGAMLojaMetric:[function(v){gamLojaMetric=v;}, function(){renderGAMClientes();}],
+  setGCHLojaMetric:[function(v){gchLojaMetric=v;}, function(){renderGCHPDVs();}]
+};
+Object.keys(NQ_TOGGLES).forEach(function(nome){ var t=NQ_TOGGLES[nome];
+  window[nome]=function(v, btn){ t[0](v); if(t[2]==='todos') nqTglTodos(nome, btn); else nqTglGrupo(btn); t[1](); };
+});
+
+/* ═══ Barras anuais (2024 · 2025 · 2026 até agora) — soma os dados do cliente ═══
+   modo = variável Un|R$ do card; vol/rec(ano) = array de 12 meses daquele ano; parcial = rótulo com o mês e a data do parcial */
+var ANO_BARS = {
+  SJ:  {canvas:'sj-ano-chart',  modo:function(){return sjBarMode;},  vol:function(y){return sjGetVol(y);}, rec:function(y){return sjGetRec(y);}},
+  SJC: {canvas:'sjc-ano-chart', modo:function(){return sjcBarMode;}, vol:function(y){return {'2024':SJC_VOL_24,'2025':SJC_VOL,'2026':SJC_VOL_26}[y];}, rec:function(y){return {'2024':SJC_REC_24,'2025':SJC_REC,'2026':SJC_REC_26}[y];}},
+  NS:  {canvas:'ns-ano-chart',  modo:function(){return nsBarMode;},  vol:function(y){return nsData().vol[y];}, rec:function(y){return nsData().rec[y];}},
+  PV:  {canvas:'pv-ano-chart',  modo:function(){return pvBarMode;},  vol:function(y){return PV_VOL[y];}, rec:function(y){return PV_REC[y];}},
+  GAM: {canvas:'gam-ano-chart', modo:function(){return gamBarMode;}, vol:function(y){return GAM_VOL[y];}, rec:function(y){return GAM_REC[y];}},
+  GCH: {canvas:'gch-ano-chart', modo:function(){return gchBarMode;}, vol:function(y){return GAUCHA_VOL[y];}, rec:function(y){return GAUCHA_REC[y];}},
+  CL:  {canvas:'cl-ano-chart',  modo:function(){return clBarMode;},  vol:function(y){return {'2024':CL_VOL_2024,'2025':CL_VOL_2025,'2026':CL_VOL_2026}[y];}, rec:function(y){return {'2024':CL_REC_2024,'2025':CL_REC_2025,'2026':CL_REC_2026}[y];}, parcial:true},
+  Rio: {canvas:'rio-ano-chart', modo:function(){return rioBarMode;}, vol:function(y){return {'2024':RIOMED_VOL_2024,'2025':RIOMED_VOL_2025,'2026':RIOMED_VOL_2026}[y];}, rec:function(y){return {'2024':RIOMED_REC_2024,'2025':RIOMED_REC_2025,'2026':RIOMED_REC_2026}[y];}, parcial:true}
+};
+function renderAnoBarsCli(k){
+  var c=ANO_BARS[k], isVol=c.modo()==='vol', serie=isVol?c.vol:c.rec;
+  var s=function(a){ return (a||[]).reduce(function(t,v){ return t+(v||0); },0); };
+  var anos=['2024','2025','2026*'];
+  if(c.parcial){
+    var a26=serie('2026'), l=-1; (a26||[]).forEach(function(v,i){ if(v) l=i; });
+    var M=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    var parc=(typeof SO_PARCIAL!=='undefined' && SO_PARCIAL && l===SO_PARCIAL.mes);
+    anos[2]='2026 (Jan–'+M[l]+(parc?' parcial até '+SO_PARCIAL.ate:'')+')';
+  }
+  renderAnoChart(c.canvas, anos, [s(serie('2024')), s(serie('2025')), s(serie('2026'))], isVol);
 }
+Object.keys(ANO_BARS).forEach(function(k){ window['render'+k+'AnoBars']=function(){ renderAnoBarsCli(k); }; });
 
 function renderSJLine(){
   var isVol = sjLineMode === 'vol';
@@ -23063,14 +23087,12 @@ function renderSJLojas(){
   });
   renderBars('sj-loja-bars',items,{isVol:sjLojaMetric==='vol',hbar:true});
 }
-function setSJLojaMetric(m,btn){sjLojaMetric=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderSJLojas();}
 function setSJLojaAno(a,btn){sjLojaAno=a;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderSJLojas();}
 
 function renderSJRank(){
   var rows=SJ_RANK_FULL[sjRankYear]||SJ_RANK_FULL['2024'];
   renderRankBars('sj-rank-bars',rows,sjRankMetric);
 }
-function setSJRankYear(y,btn){sjRankYear=y;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderSJRank();}
 function setSJRankMetric(m,btn){sjRankMetric=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderSJRank();}
 
 function renderSJMeta(){
@@ -23080,7 +23102,6 @@ function renderSJMeta(){
   var r26=isVol?sjGetVol('2026'):sjGetRec('2026');
   renderMetaTable('sj-meta-wrap',MESES,r24,r25,r26,isVol);
 }
-function setSJMetaMetric(m,btn){sjMetaMetric=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderSJMeta();}
 
 function switchSJCompradora(comp,btn){
   /* Chart.js safety: destruir charts ativas antes de re-render */
@@ -23164,19 +23185,11 @@ function initNissei(){
   setTimeout(function(){ var el=document.getElementById('ed-nissei-wrap'); if(el&&!el.innerHTML.trim()) renderEDShare('Nissei','nissei'); }, 500);
 }
 
-function renderNSAnoBars(){
-  var isVol = nsBarMode==='vol';
-  var anos = ['2024','2025','2026*'];
-  var vals = isVol ? [165195,113548,52803] : [4754046,3613790,1812261.81];
-  renderAnoChart('ns-ano-chart', anos, vals, isVol);
-}
-function setNSBarMode(m,btn){nsBarMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderNSAnoBars();}
 
 function renderNSDonut(){
   var rows=(nsData().rank[nsDonutYear]||nsData().rank['2024']).slice(0,6);
   renderDonut('ns-donut','ns-donut-legend',rows.map(function(r){return{nome:r[0],val:r[1],color:r[2]};}));
 }
-function setNSDonutYear(y,btn){nsDonutYear=y;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderNSDonut();}
 
 function renderNSLine(){
   var d=nsData();
@@ -23208,7 +23221,6 @@ function renderNSRank(){
   var rows=(nsData().rank[nsRankYear]||nsData().rank['2024']);
   renderRankBars('ns-rank-bars',rows,'vol');
 }
-function setNSRankYear(y,btn){nsRankYear=y;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderNSRank();}
 
 function switchNisseiComp(comp,btn){
   nsComprador=comp;
@@ -23966,19 +23978,7 @@ function renderCLLine(){
     {label:'2026', data:d26, color:'#34d399', dashed:true},
   ],'cl-line-legend', isVol);
 }
-function setCLLineMode(m,btn){clLineMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderCLLine();}
 
-function renderCLAnoBars(){
-  var isVol = clBarMode==='vol';
-  var s = function(a){ return (a||[]).reduce(function(t,v){ return t+(v||0); },0); };
-  var a26 = isVol?CL_VOL_2026:CL_REC_2026, l=-1; a26.forEach(function(v,i){ if(v) l=i; });
-  var M=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  var parc = (typeof SO_PARCIAL!=='undefined' && SO_PARCIAL && l===SO_PARCIAL.mes);
-  var anos = ['2024','2025','2026 (Jan–'+M[l]+(parc?' parcial até '+SO_PARCIAL.ate:'')+')'];
-  var vals = [s(isVol?CL_VOL_2024:CL_REC_2024), s(isVol?CL_VOL_2025:CL_REC_2025), s(a26)];
-  renderAnoChart('cl-ano-chart', anos, vals, isVol);
-}
-function setCLBarMode(m,btn){clBarMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderCLMesBars();}
 
 function renderCLMesBars(){
   var isVol = clBarMode === 'vol';
@@ -24727,19 +24727,11 @@ function initPanvel(){
   setTimeout(function(){ var el=document.getElementById('ed-panvel-wrap'); if(el&&!el.innerHTML.trim()) renderEDShare('Panvel','panvel'); }, 500);
 }
 
-function renderPVAnoBars(){
-  var isVol = pvBarMode==='vol';
-  var anos = ['2024','2025','2026*'];
-  var vals = isVol ? [229508,153987,70692] : [8778467,6070553.57,2673528.83];
-  renderAnoChart('pv-ano-chart', anos, vals, isVol);
-}
-function setPVBarMode(m,btn){pvBarMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderPVAnoBars();}
 
 function renderPVDonut(){
   var rows=(PV_RANK[pvDonutYear]||PV_RANK['2024']).slice(0,6);
   renderDonut('pv-donut','pv-donut-legend',rows.map(function(r){return{nome:r[0],val:r[1],color:r[2]};}));
 }
-function setPVDonutYear(y,btn){pvDonutYear=y;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderPVDonut();}
 
 function renderPVLine(){
   var isVol = pvLineMode === 'vol';
@@ -24781,7 +24773,6 @@ function renderPVRank(){
   var rows=(PV_RANK[pvRankYear]||PV_RANK['2024']);
   renderRankBars('pv-rank-bars',rows,'rec');
 }
-function setPVRankYear(y,btn){pvRankYear=y;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderPVRank();}
 
 /* ═══════════ DD-GAM ESTOQUE ═══════════ */
 const GAM_ESTOQUE = [
@@ -25457,19 +25448,11 @@ function initGAM(){
 
 }
 
-function renderGAMAnoBars(){
-  var isVol = gamBarMode==='vol';
-  var anos = ['2024','2025','2026*'];
-  var vals = isVol ? [347234,512401,244932] : [6774625,8367723,4216399.430000001];
-  renderAnoChart('gam-ano-chart', anos, vals, isVol);
-}
-function setGAMBarMode(m,btn){gamBarMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderGAMAnoBars();}
 
 function renderGAMDonut(){
   var rows=(GAM_RANK[gamDonutYear]||GAM_RANK['2024']).slice(0,6);
   renderDonut('gam-donut','gam-donut-legend',rows.map(function(r){return{nome:r[0],val:r[1],color:r[2]};}));
 }
-function setGAMDonutYear(y,btn){gamDonutYear=y;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderGAMDonut();}
 
 function renderGAMLine(){
   var isVol = gamLineMode === 'vol';
@@ -25493,7 +25476,6 @@ function renderGAMClientes(){
   });
   renderBars('gam-clientes-bars',items,{isVol:gamLojaMetric==='vol',hbar:true});
 }
-function setGAMLojaMetric(m,btn){gamLojaMetric=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderGAMClientes();}
 
 function renderGAMCidades(){
   var total=GAM_CIDADES.reduce(function(s,c){return s+c.rec;},0);
@@ -25513,7 +25495,6 @@ function renderGAMRank(){
   var rows=(GAM_RANK[gamRankYear]||GAM_RANK['2024']);
   renderRankBars('gam-rank-bars',rows,'vol');
 }
-function setGAMRankYear(y,btn){gamRankYear=y;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderGAMRank();}
 
 /* ═══════════ DD-GAÚCHA ESTOQUE ═══════════ */
 const GCH_ESTOQUE = [
@@ -25652,13 +25633,6 @@ function initGCH(){
   renderGCHEstoqueBarras();
 }
 
-function renderGCHAnoBars(){
-  var isVol = gchBarMode==='vol';
-  var anos = ['2024','2025','2026*'];
-  var vals = isVol ? [285777,208032,87440] : [5391920,3011631.08,1479401.92];
-  renderAnoChart('gch-ano-chart', anos, vals, isVol);
-}
-function setGCHBarMode(m,btn){gchBarMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderGCHAnoBars();}
 
 function renderGCHDonut(){
   var marcas=[
@@ -25695,8 +25669,6 @@ function renderGCHPDVs(){
   });
   renderBars('gch-pdv-bars',items,{isVol:isVol,hbar:true});
 }
-function setGCHRankYear(y,btn){gchRankYear=y;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderGCHPDVs();}
-function setGCHLojaMetric(m,btn){gchLojaMetric=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderGCHPDVs();}
 
 function renderGCHCidades(){
   renderUFBar('gch-uf-bar','gch-uf-legend',GAUCHA_CIDADES.map(function(c){return{uf:c.uf,rec:c.rec};}));
@@ -25713,12 +25685,6 @@ function renderGCHCidades(){
 function setGCHCidMetric(m,btn){gchCidMetric=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue','purple');});btn.classList.add('active','purple');renderGCHCidades();}
 
 var gchMetaMode = 'rec';
-function setGCHMetaMode(mode, btn){
-  gchMetaMode = mode;
-  document.querySelectorAll('[onclick*="setGCHMetaMode"]').forEach(function(b){ b.classList.remove('active','blue'); });
-  if(btn) btn.classList.add('active','blue');
-  renderGCHMeta();
-}
 function renderGCHMeta(){
   var isVol = gchMetaMode === 'vol';
   renderMetaTable('gch-meta-wrap', MESES,
@@ -25729,12 +25695,6 @@ function renderGCHMeta(){
 }
 
 var rioMetaMode = 'rec';
-function setRioMetaMode(mode, btn){
-  rioMetaMode = mode;
-  document.querySelectorAll('[onclick*="setRioMetaMode"]').forEach(function(b){ b.classList.remove('active','blue'); });
-  if(btn) btn.classList.add('active','blue');
-  renderRioMeta();
-}
 function renderRioMeta(){
   var isVol = rioMetaMode === 'vol';
   renderMetaTable('rio-meta-wrap', MESES,
@@ -26606,19 +26566,7 @@ function renderRIOLine(){
     {label:'2026', data:d26, color:'#34d399', dashed:true},
   ],'rio-line-legend', isVol);
 }
-function setRIOLineMode(m,btn){rioLineMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderRIOLine();}
 
-function renderRioAnoBars(){
-  var isVol = rioBarMode==='vol';
-  var s = function(a){ return (a||[]).reduce(function(t,v){ return t+(v||0); },0); };
-  var a26 = isVol?RIOMED_VOL_2026:RIOMED_REC_2026, l=-1; a26.forEach(function(v,i){ if(v) l=i; });
-  var M=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  var parc = (typeof SO_PARCIAL!=='undefined' && SO_PARCIAL && l===SO_PARCIAL.mes);
-  var anos = ['2024','2025','2026 (Jan–'+M[l]+(parc?' parcial até '+SO_PARCIAL.ate:'')+')'];
-  var vals = [s(isVol?RIOMED_VOL_2024:RIOMED_REC_2024), s(isVol?RIOMED_VOL_2025:RIOMED_REC_2025), s(a26)];
-  renderAnoChart('rio-ano-chart', anos, vals, isVol);
-}
-function setRIOBarMode(m,btn){rioBarMode=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderRIOMesBars();}
 
 function renderRIOMesBars(){
   var isVol = rioBarMode === 'vol';
@@ -39955,30 +39903,8 @@ function renderSJCRank2(){
 var sjcBarMode = 'vol';
 var sjcMetaMetric = 'rec';
 
-function setSJCBarMode(mode, btn){
-  sjcBarMode = mode;
-  var btns = document.querySelectorAll('[onclick*="setSJCBarMode"]');
-  btns.forEach(function(b){ b.classList.remove('active','blue'); });
-  if(btn){ btn.classList.add('active','blue'); }
-  renderSJCAnoBars();
-}
 
-function renderSJCAnoBars(){
-  var isVol = sjcBarMode === 'vol';
-  var sum = function(arr){ return arr.reduce(function(s,v){ return s+(v||0); }, 0); };
-  var vals = isVol
-    ? [sum(SJC_VOL_24), sum(SJC_VOL), sum(SJC_VOL_26)]
-    : [sum(SJC_REC_24), sum(SJC_REC), sum(SJC_REC_26)];
-  renderAnoChart('sjc-ano-chart', ['2024','2025','2026*'], vals, isVol);
-}
 
-function setSJCMetaMetric(mode, btn){
-  sjcMetaMetric = mode;
-  var btns = document.querySelectorAll('[onclick*="setSJCMetaMetric"]');
-  btns.forEach(function(b){ b.classList.remove('active','blue'); });
-  if(btn){ btn.classList.add('active','blue'); }
-  renderSJCMeta();
-}
 
 function renderSJCMeta(){
   var isVol = sjcMetaMetric === 'vol';
@@ -40144,12 +40070,6 @@ function renderSJCLine(){
     {label:'2025', data: isVol ? SJC_VOL    : SJC_REC,    color:'#2dd4bf'},
     {label:'2026', data: isVol ? SJC_VOL_26 : SJC_REC_26, color:'#34d399', dashed:true},
   ],'sjc-line-legend', isVol);
-}
-function setSJCLineMode(m,btn){
-  sjcLineMode=m;
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  renderSJCLine();
 }
 
 function renderSJCRank(){
@@ -41556,12 +41476,6 @@ var gchDNModo = 'off';
 
 
 var pvMetaMode = 'rec';
-function setPVMetaMode(mode, btn){
-  pvMetaMode = mode;
-  document.querySelectorAll('[onclick*="setPVMetaMode"]').forEach(function(b){ b.classList.remove('active','blue'); });
-  if(btn) btn.classList.add('active','blue');
-  renderPVMeta();
-}
 function renderPVMeta(){
   var isVol = pvMetaMode === 'vol';
   renderMetaTable('pv-meta-wrap', MESES,
@@ -41572,12 +41486,6 @@ function renderPVMeta(){
 }
 
 var gamMetaMode = 'rec';
-function setGAMMetaMode(mode, btn){
-  gamMetaMode = mode;
-  document.querySelectorAll('[onclick*="setGAMMetaMode"]').forEach(function(b){ b.classList.remove('active','blue'); });
-  if(btn) btn.classList.add('active','blue');
-  renderGAMMeta();
-}
 function renderGAMMeta(){
   var isVol = gamMetaMode === 'vol';
   renderMetaTable('gam-meta-wrap', MESES,
@@ -43940,12 +43848,6 @@ function renderNSMeta(){
   var r26 = isVol ? d.vol['2026'] : d.rec['2026'];
   renderMetaTable('ns-meta-wrap', MESES, r24, r25, r26, isVol);
 }
-function setNSMetaMetric(m, btn){
-  nsMetaMetric = m;
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active', 'blue');
-  renderNSMeta();
-}
 
 function renderCLMeta(){
   var isVol = clMetaMetric === 'vol';
@@ -43954,12 +43856,6 @@ function renderCLMeta(){
     isVol ? CL_VOL_2025 : CL_REC_2025,
     isVol ? CL_VOL_2026 : CL_REC_2026,
     isVol);
-}
-function setCLMetaMetric(m, btn){
-  clMetaMetric = m;
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  renderCLMeta();
 }
 
 /* ═══════════ NS FILIAL SKU TABLE ═══════════ */
