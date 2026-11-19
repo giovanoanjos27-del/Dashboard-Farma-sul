@@ -22975,10 +22975,6 @@ function initSJ(){
 }
 
 
-function renderDonutSJ(){
-  var rows=(SJ_RANK[sjDonutYear]||SJ_RANK['2024']).slice(0,6);
-  renderDonut('sj-donut','sj-donut-legend',rows.map(function(r){return{nome:r[0],val:r[1],color:r[2]};}));
-}
 
 /* ═══ Botões de alternância (Un|R$, ano, métrica) dos clientes — um só comportamento ═══
    cada botão: guarda o valor, acende o botão clicado e redesenha o card.
@@ -23082,6 +23078,21 @@ Object.keys(CLIENTES_SO).forEach(function(k){ var c=CLIENTES_SO[k];
   window['render'+(c.nomeLinha||k)+'Line']=function(){ renderLinhaCli(k); };
   window['render'+k+'Meta']=function(){ renderMetaCli(k); };
 });
+/* ranking e donut de SKUs: mesma fonte por cliente (ano escolhido, senão o padrão); a métrica vale só para o ranking */
+CLIENTES_SO.SJ.rank  = {fonte:function(){return SJ_RANK_FULL;}, fonteDonut:function(){return SJ_RANK;}, ano:function(){return sjRankYear;}, anoDonut:function(){return sjDonutYear;}, padrao:'2024', metrica:function(){return sjRankMetric;}, nomeDonut:'renderDonutSJ'};
+CLIENTES_SO.NS.rank  = {fonte:function(){return nsData().rank;}, ano:function(){return nsRankYear;}, anoDonut:function(){return nsDonutYear;}, padrao:'2024', metrica:function(){return 'vol';}};
+CLIENTES_SO.CL.rank  = {fonte:function(){return CL_RANK;}, ano:function(){return clRankKey;}, anoDonut:function(){return clRankKey;}, padrao:'2026', metrica:function(){return 'vol';}};
+CLIENTES_SO.PV.rank  = {fonte:function(){return PV_RANK;}, ano:function(){return pvRankYear;}, anoDonut:function(){return pvDonutYear;}, padrao:'2024', metrica:function(){return 'rec';}};
+CLIENTES_SO.GAM.rank = {fonte:function(){return GAM_RANK;}, ano:function(){return gamRankYear;}, anoDonut:function(){return gamDonutYear;}, padrao:'2024', metrica:function(){return 'vol';}};
+function renderRankCli(k){ var r=CLIENTES_SO[k].rank, f=r.fonte(); renderRankBars(CLIENTES_SO[k].pre+'-rank-bars', f[r.ano()]||f[r.padrao], r.metrica()); }
+function renderDonutCli(k){
+  var c=CLIENTES_SO[k], r=c.rank, f=r.fonteDonut?r.fonteDonut():r.fonte(), rows=(f[r.anoDonut()]||f[r.padrao]).slice(0,6);
+  renderDonut(c.pre+'-donut', c.pre+'-donut-legend', rows.map(function(x){return{nome:x[0],val:x[1],color:x[2]};}));
+}
+Object.keys(CLIENTES_SO).forEach(function(k){ var r=CLIENTES_SO[k].rank; if(!r) return;
+  window['render'+k+'Rank']=function(){ renderRankCli(k); };
+  window[r.nomeDonut||('render'+k+'Donut')]=function(){ renderDonutCli(k); };
+});
 
 
 function renderSJLojas(){
@@ -23108,10 +23119,6 @@ function renderSJLojas(){
 }
 function setSJLojaAno(a,btn){sjLojaAno=a;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderSJLojas();}
 
-function renderSJRank(){
-  var rows=SJ_RANK_FULL[sjRankYear]||SJ_RANK_FULL['2024'];
-  renderRankBars('sj-rank-bars',rows,sjRankMetric);
-}
 function setSJRankMetric(m,btn){sjRankMetric=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderSJRank();}
 
 
@@ -23198,10 +23205,6 @@ function initNissei(){
 }
 
 
-function renderNSDonut(){
-  var rows=(nsData().rank[nsDonutYear]||nsData().rank['2024']).slice(0,6);
-  renderDonut('ns-donut','ns-donut-legend',rows.map(function(r){return{nome:r[0],val:r[1],color:r[2]};}));
-}
 
 
 function renderNSLojas(){
@@ -23217,10 +23220,6 @@ function renderNSLojas(){
   renderBars('ns-loja-bars',items,{isVol:true,hbar:true});
 }
 
-function renderNSRank(){
-  var rows=(nsData().rank[nsRankYear]||nsData().rank['2024']);
-  renderRankBars('ns-rank-bars',rows,'vol');
-}
 
 function switchNisseiComp(comp,btn){
   nsComprador=comp;
@@ -23977,10 +23976,6 @@ function initClamed(){
   setTimeout(function(){ var el=document.getElementById('ed-clamed-wrap'); if(el&&!el.innerHTML.trim()) renderEDShare('Clamed','clamed'); }, 500);
 }
 
-function renderCLDonut(){
-  var rows=(CL_RANK[clRankKey]||CL_RANK['2026']).slice(0,6);
-  renderDonut('cl-donut','cl-donut-legend',rows.map(function(r){return{nome:r[0],val:r[1],color:r[2]};}));
-}
 function setCLRankKey(k,btn){clRankKey=k;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderCLDonut();renderCLRank();}
 
 function renderCLLojas(){
@@ -23991,10 +23986,6 @@ function renderCLLojas(){
   renderBars('cl-loja-bars',items,{isVol:true,hbar:true});
 }
 
-function renderCLRank(){
-  var rows=(CL_RANK[clRankKey]||CL_RANK['2026']);
-  renderRankBars('cl-rank-bars',rows,'vol');
-}
 
 /* ═══════════ PANVEL ESTOQUE ═══════════ */
 const PV_ESTOQUE = [
@@ -24643,10 +24634,6 @@ function initPanvel(){
 }
 
 
-function renderPVDonut(){
-  var rows=(PV_RANK[pvDonutYear]||PV_RANK['2024']).slice(0,6);
-  renderDonut('pv-donut','pv-donut-legend',rows.map(function(r){return{nome:r[0],val:r[1],color:r[2]};}));
-}
 
 
 var pvLojaMode='rec';
@@ -24673,10 +24660,6 @@ function renderPVLojas(){
   renderBars('pv-loja-bars',items,{hbar:true,isVol:!isRec});
 }
 
-function renderPVRank(){
-  var rows=(PV_RANK[pvRankYear]||PV_RANK['2024']);
-  renderRankBars('pv-rank-bars',rows,'rec');
-}
 
 /* ═══════════ DD-GAM ESTOQUE ═══════════ */
 const GAM_ESTOQUE = [
@@ -25309,10 +25292,6 @@ function initGAM(){
 }
 
 
-function renderGAMDonut(){
-  var rows=(GAM_RANK[gamDonutYear]||GAM_RANK['2024']).slice(0,6);
-  renderDonut('gam-donut','gam-donut-legend',rows.map(function(r){return{nome:r[0],val:r[1],color:r[2]};}));
-}
 
 
 function renderGAMClientes(){
@@ -25340,10 +25319,6 @@ function renderGAMCidades(){
 }
 function setGAMCidMetric(m,btn){gamCidMetric=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue','purple');});btn.classList.add('active','purple');renderGAMCidades();}
 
-function renderGAMRank(){
-  var rows=(GAM_RANK[gamRankYear]||GAM_RANK['2024']);
-  renderRankBars('gam-rank-bars',rows,'vol');
-}
 
 /* ═══════════ DD-GAÚCHA ESTOQUE ═══════════ */
 const GCH_ESTOQUE = [
