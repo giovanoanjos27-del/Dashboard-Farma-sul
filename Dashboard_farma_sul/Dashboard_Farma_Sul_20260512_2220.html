@@ -25127,16 +25127,15 @@ function renderGCHEstoqueLinha(){
   }});
 }
 
-function setGchEstoqueView(view, btn){
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  gchEstoqueView = view;
-  document.getElementById('gch-estoque-barras').style.display = view==='barras'?'block':'none';
-  document.getElementById('gch-estoque-linha').style.display  = view==='linha'?'block':'none';
-  var tendEl_gch = document.getElementById('gch-estoque-tend');
-  if(tendEl_gch) tendEl_gch.style.display = view==='tend'?'block':'none';
-  if(view==='linha') renderGCHEstoqueLinha(); else renderGCHEstoqueBarras();
+/* troca de visão do card de estoque: acende o botão, mostra o painel pre-estoque-<visão> (esconde os outros que
+   existirem) e desenha a visão; 'outra' = o que desenhar nas visões sem ação própria */
+var EST_VISOES = ['barras','linha','tend','cobertura','importancia'];
+function estVisao(pre, view, btn, acoes){
+  nqTglGrupo(btn);
+  EST_VISOES.forEach(function(v){ var e = document.getElementById(pre+'-estoque-'+v); if(e) e.style.display = v===view ? 'block' : 'none'; });
+  var f = acoes.hasOwnProperty(view) ? acoes[view] : acoes.outra; if(f) f();
 }
+function setGchEstoqueView(view, btn){ gchEstoqueView = view; estVisao('gch', view, btn, {linha:renderGCHEstoqueLinha, outra:renderGCHEstoqueBarras}); }
 
 /* ═══════════ DD-GAÚCHA ═══════════ */
 var gchBarMode='rec', gchRankYear='2026';
@@ -26011,16 +26010,7 @@ function renderRIOEstoqueLinha(){
   }});
 }
 
-function setRioEstoqueView(view, btn){
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  rioEstoqueView = view;
-  document.getElementById('rio-estoque-barras').style.display = view==='barras'?'block':'none';
-  document.getElementById('rio-estoque-linha').style.display  = view==='linha'?'block':'none';
-  var tendEl_rio = document.getElementById('rio-estoque-tend');
-  if(tendEl_rio) tendEl_rio.style.display = view==='tend'?'block':'none';
-  if(view==='linha') renderRIOEstoqueLinha(); else renderRIOEstoqueBarras();
-}
+function setRioEstoqueView(view, btn){ rioEstoqueView = view; estVisao('rio', view, btn, {linha:renderRIOEstoqueLinha, outra:renderRIOEstoqueBarras}); }
 
 /* ═══════════ DD-RIOMED ═══════════ */
 var rioLineMode = 'vol';
@@ -40641,22 +40631,8 @@ function renderSJEstoqueLinha(){
   });
 }
 
-function setSJEstoqueView(view, btn){
-  sjEstoqueView = view;
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  document.getElementById('sj-estoque-barras').style.display = view==='barras'?'block':'none';
-  document.getElementById('sj-estoque-linha').style.display  = view==='linha'?'block':'none';
-  var tendEl_sj = document.getElementById('sj-estoque-tend');
-  if(tendEl_sj) tendEl_sj.style.display = view==='tend'?'block':'none';
-  var cobEl = document.getElementById('sj-estoque-cobertura');
-  if(cobEl) cobEl.style.display = view==='cobertura'?'block':'none';
-  var sjImpEl = document.getElementById('sj-estoque-importancia');
-  if(sjImpEl) sjImpEl.style.display = view==='importancia'?'block':'none';
-  if(view==='linha') renderSJEstoqueLinha();
-  else if(view==='cobertura') renderCoberturaSKUBarsUnified('sj-cob-table', SJ_COBERTURA, 'São João (01/11/26)');
-  else if(view==='importancia'){ renderSJImpCluster(); }
-}
+function setSJEstoqueView(view, btn){ sjEstoqueView = view; estVisao('sj', view, btn, {linha:renderSJEstoqueLinha,
+  cobertura:function(){ renderCoberturaSKUBarsUnified('sj-cob-table', SJ_COBERTURA, 'São João (01/11/26)'); }, importancia:function(){ renderSJImpCluster(); }}); }
 
 /* ═══════════ ACOMPANHAMENTO OLs ═══════════ */
 const OL_DATA = {
@@ -40984,22 +40960,7 @@ function renderNsEstoqueLinha(){
   }});
 }
 
-function setNsEstoqueView(view, btn){
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  nsEstoqueView = view;
-  document.getElementById('ns-estoque-barras').style.display = view==='barras'?'block':'none';
-  document.getElementById('ns-estoque-linha').style.display  = view==='linha'?'block':'none';
-  var tendEl_ns = document.getElementById('ns-estoque-tend');
-  if(tendEl_ns) tendEl_ns.style.display = view==='tend'?'block':'none';
-  var cobEl = document.getElementById('ns-estoque-cobertura');
-  if(cobEl) cobEl.style.display = view==='cobertura'?'block':'none';
-  var impEl = document.getElementById('ns-estoque-importancia');
-  if(impEl) impEl.style.display = view==='importancia'?'block':'none';
-  
-  if(view==='linha') renderNsEstoqueLinha();
-  else if(view==='barras') renderNsEstoqueBarras();
-  else if(view==='cobertura'){
+function nsEstoqueCobertura(){
     var fsec = document.getElementById('ns-filial-section');
     if(fsec) fsec.style.display = 'none'; // reset filial view
     renderCoberturaSKUBarsUnified('ns-cob-table', NS_COBERTURA, 'Nissei (12/11/26)');
@@ -41019,42 +40980,15 @@ function setNsEstoqueView(view, btn){
       };
       el.appendChild(btn);
     }
-  }
-  else if(view==='importancia'){ renderNsImpCluster(); }
 }
+function setNsEstoqueView(view, btn){ nsEstoqueView = view; estVisao('ns', view, btn, {linha:renderNsEstoqueLinha, barras:renderNsEstoqueBarras,
+  cobertura:nsEstoqueCobertura, importancia:function(){ renderNsImpCluster(); }}); }
 
-function setClEstoqueView(view, btn){
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  clEstoqueView = view;
-  document.getElementById('cl-estoque-barras').style.display = view==='barras'?'block':'none';
-  document.getElementById('cl-estoque-linha').style.display  = view==='linha'?'block':'none';
-  var tendEl_cl = document.getElementById('cl-estoque-tend');
-  if(tendEl_cl) tendEl_cl.style.display = view==='tend'?'block':'none';
-  var clCobEl = document.getElementById('cl-estoque-cobertura');
-  if(clCobEl) clCobEl.style.display = view==='cobertura'?'block':'none';
-  if(view==='linha') renderClEstoqueLinha();
-  else if(view==='cobertura') renderCoberturaSKUBarsUnified('cl-cob-table', CL_COBERTURA, 'Clamed (Nov/26 até 15/11)');
-  else renderClEstoqueBarras();
-}
+function setClEstoqueView(view, btn){ clEstoqueView = view; estVisao('cl', view, btn, {linha:renderClEstoqueLinha,
+  cobertura:function(){ renderCoberturaSKUBarsUnified('cl-cob-table', CL_COBERTURA, 'Clamed (Nov/26 até 15/11)'); }, outra:renderClEstoqueBarras}); }
 
-function setPvEstoqueView(view, btn){
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  pvEstoqueView = view;
-  document.getElementById('pv-estoque-barras').style.display     = view==='barras'?'block':'none';
-  document.getElementById('pv-estoque-linha').style.display      = view==='linha'?'block':'none';
-  var tendEl_pv = document.getElementById('pv-estoque-tend');
-  if(tendEl_pv) tendEl_pv.style.display = view==='tend'?'block':'none';
-  var cobEl = document.getElementById('pv-estoque-cobertura');
-  if(cobEl) cobEl.style.display = view==='cobertura'?'block':'none';
-  var impEl = document.getElementById('pv-estoque-importancia');
-  if(impEl) impEl.style.display = view==='importancia'?'block':'none';
-  if(view==='linha') renderPVEstoqueLinha();
-  else if(view==='barras') renderPVEstoqueBarras();
-  else if(view==='cobertura') renderCoberturaSKUBarsUnified('pv-cob-table', PV_COBERTURA, 'Panvel (30/10/26)');
-  else if(view==='importancia'){ renderPVImpPublico(); renderPVImpEquip(); }
-}
+function setPvEstoqueView(view, btn){ pvEstoqueView = view; estVisao('pv', view, btn, {linha:renderPVEstoqueLinha, barras:renderPVEstoqueBarras,
+  cobertura:function(){ renderCoberturaSKUBarsUnified('pv-cob-table', PV_COBERTURA, 'Panvel (30/10/26)'); }, importancia:function(){ renderPVImpPublico(); renderPVImpEquip(); }}); }
 
 var PV_TIPO_PUBLICO = [
   {tipo:'MISTO TOP', fat_fev:438303.33, fat_mar:343537.10, vol_fev:11301, vol_mar:8002, lojas:366, var_pct:-21.6},
@@ -41131,16 +41065,7 @@ function renderPVImpEquip(){
   if(el) el.innerHTML = _pvImpTable(PV_EQUIPAMENTO, 'faixa');
 }
 
-function setGamEstoqueView(view, btn){
-  btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});
-  btn.classList.add('active','blue');
-  gamEstoqueView = view;
-  document.getElementById('gam-estoque-barras').style.display = view==='barras'?'block':'none';
-  document.getElementById('gam-estoque-linha').style.display  = view==='linha'?'block':'none';
-  var tendEl_gam = document.getElementById('gam-estoque-tend');
-  if(tendEl_gam) tendEl_gam.style.display = view==='tend'?'block':'none';
-  if(view==='linha') renderGAMEstoqueLinha(); else renderGAMEstoqueBarras();
-}
+function setGamEstoqueView(view, btn){ gamEstoqueView = view; estVisao('gam', view, btn, {linha:renderGAMEstoqueLinha, outra:renderGAMEstoqueBarras}); }
 
 /* ═══════ DN INTOCÁVEIS POR UF ═══════ */
 const DN_INTOC_GAM = {
