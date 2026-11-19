@@ -22648,20 +22648,31 @@ Object.keys(NQ_TOGGLES).forEach(function(nome){ var t=NQ_TOGGLES[nome];
   window[nome]=function(v, btn){ t[0](v); if(t[2]==='todos') nqTglTodos(nome, btn); else nqTglGrupo(btn); t[1](); };
 });
 
-/* ═══ Barras anuais (2024 · 2025 · 2026 até agora) — soma os dados do cliente ═══
-   modo = variável Un|R$ do card; vol/rec(ano) = array de 12 meses daquele ano; parcial = rótulo com o mês e a data do parcial */
-var ANO_BARS = {
-  SJ:  {canvas:'sj-ano-chart',  modo:function(){return sjBarMode;},  vol:function(y){return sjGetVol(y);}, rec:function(y){return sjGetRec(y);}},
-  SJC: {canvas:'sjc-ano-chart', modo:function(){return sjcBarMode;}, vol:function(y){return {'2024':SJC_VOL_24,'2025':SJC_VOL,'2026':SJC_VOL_26}[y];}, rec:function(y){return {'2024':SJC_REC_24,'2025':SJC_REC,'2026':SJC_REC_26}[y];}},
-  NS:  {canvas:'ns-ano-chart',  modo:function(){return nsBarMode;},  vol:function(y){return nsData().vol[y];}, rec:function(y){return nsData().rec[y];}},
-  PV:  {canvas:'pv-ano-chart',  modo:function(){return pvBarMode;},  vol:function(y){return PV_VOL[y];}, rec:function(y){return PV_REC[y];}},
-  GAM: {canvas:'gam-ano-chart', modo:function(){return gamBarMode;}, vol:function(y){return GAM_VOL[y];}, rec:function(y){return GAM_REC[y];}},
-  GCH: {canvas:'gch-ano-chart', modo:function(){return gchBarMode;}, vol:function(y){return GAUCHA_VOL[y];}, rec:function(y){return GAUCHA_REC[y];}},
-  CL:  {canvas:'cl-ano-chart',  modo:function(){return clBarMode;},  vol:function(y){return {'2024':CL_VOL_2024,'2025':CL_VOL_2025,'2026':CL_VOL_2026}[y];}, rec:function(y){return {'2024':CL_REC_2024,'2025':CL_REC_2025,'2026':CL_REC_2026}[y];}, parcial:true},
-  Rio: {canvas:'rio-ano-chart', modo:function(){return rioBarMode;}, vol:function(y){return {'2024':RIOMED_VOL_2024,'2025':RIOMED_VOL_2025,'2026':RIOMED_VOL_2026}[y];}, rec:function(y){return {'2024':RIOMED_REC_2024,'2025':RIOMED_REC_2025,'2026':RIOMED_REC_2026}[y];}, parcial:true}
+/* ═══ Cadastro de clientes do Sell Out (visão detalhada) ═══
+   pre = prefixo dos elementos (pre-ano-chart, pre-line, pre-meta-wrap); barra/linha/meta = modo Un|R$ de cada card;
+   vol/rec(ano) = os 12 meses daquele ano; parcial = rótulo 2026 com o mês e a data do parcial; cor24 = cor da linha de 2024 */
+var CLIENTES_SO = {
+  SJ:  {pre:'sj',  barra:function(){return sjBarMode;},  linha:function(){return sjLineMode;},  meta:function(){return sjMetaMetric;},
+        vol:function(y){return sjGetVol(y);}, rec:function(y){return sjGetRec(y);}},
+  SJC: {pre:'sjc', barra:function(){return sjcBarMode;}, linha:function(){return sjcLineMode;}, meta:function(){return sjcMetaMetric;}, cor24:'#D1D5DB',
+        vol:function(y){return {'2024':SJC_VOL_24,'2025':SJC_VOL,'2026':SJC_VOL_26}[y];}, rec:function(y){return {'2024':SJC_REC_24,'2025':SJC_REC,'2026':SJC_REC_26}[y];}},
+  NS:  {pre:'ns',  barra:function(){return nsBarMode;},  linha:function(){return nsLineMode;},  meta:function(){return nsMetaMetric;},
+        vol:function(y){return nsData().vol[y];}, rec:function(y){return nsData().rec[y];}},
+  PV:  {pre:'pv',  barra:function(){return pvBarMode;},  linha:function(){return pvLineMode;},  meta:function(){return pvMetaMode;},
+        vol:function(y){return PV_VOL[y];}, rec:function(y){return PV_REC[y];}},
+  GAM: {pre:'gam', barra:function(){return gamBarMode;}, linha:function(){return gamLineMode;}, meta:function(){return gamMetaMode;},
+        vol:function(y){return GAM_VOL[y];}, rec:function(y){return GAM_REC[y];}},
+  GCH: {pre:'gch', barra:function(){return gchBarMode;}, linha:function(){return gchLineMode;}, meta:function(){return gchMetaMode;},
+        vol:function(y){return GAUCHA_VOL[y];}, rec:function(y){return GAUCHA_REC[y];}},
+  CL:  {pre:'cl',  barra:function(){return clBarMode;},  linha:function(){return clLineMode;},  meta:function(){return clMetaMetric;}, parcial:true,
+        vol:function(y){return {'2024':CL_VOL_2024,'2025':CL_VOL_2025,'2026':CL_VOL_2026}[y];}, rec:function(y){return {'2024':CL_REC_2024,'2025':CL_REC_2025,'2026':CL_REC_2026}[y];}},
+  Rio: {pre:'rio', barra:function(){return rioBarMode;}, linha:function(){return rioLineMode;}, meta:function(){return rioMetaMode;}, parcial:true, nomeLinha:'RIO',
+        vol:function(y){return {'2024':RIOMED_VOL_2024,'2025':RIOMED_VOL_2025,'2026':RIOMED_VOL_2026}[y];}, rec:function(y){return {'2024':RIOMED_REC_2024,'2025':RIOMED_REC_2025,'2026':RIOMED_REC_2026}[y];}}
 };
+function soSerie(c, modo){ return modo==='vol' ? c.vol : c.rec; }
+/* barras anuais: 2024 · 2025 · 2026 até agora, somando os meses */
 function renderAnoBarsCli(k){
-  var c=ANO_BARS[k], isVol=c.modo()==='vol', serie=isVol?c.vol:c.rec;
+  var c=CLIENTES_SO[k], isVol=c.barra()==='vol', serie=soSerie(c, c.barra());
   var s=function(a){ return (a||[]).reduce(function(t,v){ return t+(v||0); },0); };
   var anos=['2024','2025','2026*'];
   if(c.parcial){
@@ -22670,21 +22681,29 @@ function renderAnoBarsCli(k){
     var parc=(typeof SO_PARCIAL!=='undefined' && SO_PARCIAL && l===SO_PARCIAL.mes);
     anos[2]='2026 (Jan–'+M[l]+(parc?' parcial até '+SO_PARCIAL.ate:'')+')';
   }
-  renderAnoChart(c.canvas, anos, [s(serie('2024')), s(serie('2025')), s(serie('2026'))], isVol);
+  renderAnoChart(c.pre+'-ano-chart', anos, [s(serie('2024')), s(serie('2025')), s(serie('2026'))], isVol);
 }
-Object.keys(ANO_BARS).forEach(function(k){ window['render'+k+'AnoBars']=function(){ renderAnoBarsCli(k); }; });
+/* linha mensal: 2024 · 2025 · 2026 (tracejada) */
+function renderLinhaCli(k){
+  var c=CLIENTES_SO[k], isVol=c.linha()==='vol', serie=soSerie(c, c.linha());
+  renderLineChart(c.pre+'-line',[
+    {label:'2024', data:serie('2024'), color:c.cor24||'#3b82f6'},
+    {label:'2025', data:serie('2025'), color:'#2dd4bf'},
+    {label:'2026', data:serie('2026'), color:'#34d399', dashed:true},
+  ], c.pre+'-line-legend', isVol);
+}
+/* tabela de meta mês a mês */
+function renderMetaCli(k){
+  var c=CLIENTES_SO[k], isVol=c.meta()==='vol', serie=soSerie(c, c.meta());
+  renderMetaTable(c.pre+'-meta-wrap', MESES, serie('2024'), serie('2025'), serie('2026'), isVol);
+}
+/* nomes antigos (usados nos onclick e no resto do código) */
+Object.keys(CLIENTES_SO).forEach(function(k){ var c=CLIENTES_SO[k];
+  window['render'+k+'AnoBars']=function(){ renderAnoBarsCli(k); };
+  window['render'+(c.nomeLinha||k)+'Line']=function(){ renderLinhaCli(k); };
+  window['render'+k+'Meta']=function(){ renderMetaCli(k); };
+});
 
-function renderSJLine(){
-  var isVol = sjLineMode === 'vol';
-  var d24 = isVol ? sjGetVol('2024') : sjGetRec('2024');
-  var d25 = isVol ? sjGetVol('2025') : sjGetRec('2025');
-  var d26 = isVol ? sjGetVol('2026') : sjGetRec('2026');
-  renderLineChart('sj-line',[
-    {label:'2024',data:d24,color:'#3b82f6'},
-    {label:'2025',data:d25,color:'#2dd4bf'},
-    {label:'2026',data:d26,color:'#34d399',dashed:true},
-  ],'sj-line-legend', isVol);
-}
 
 function renderSJLojas(){
   var total=SJ_LOJAS_SKU.reduce(function(s,l){return s+(sjLojaMetric==='rec'?l.rec.t:l.vol.t);},0);
@@ -22716,13 +22735,6 @@ function renderSJRank(){
 }
 function setSJRankMetric(m,btn){sjRankMetric=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue');});btn.classList.add('active','blue');renderSJRank();}
 
-function renderSJMeta(){
-  var isVol=sjMetaMetric==='vol';
-  var r24=isVol?sjGetVol('2024'):sjGetRec('2024');
-  var r25=isVol?sjGetVol('2025'):sjGetRec('2025');
-  var r26=isVol?sjGetVol('2026'):sjGetRec('2026');
-  renderMetaTable('sj-meta-wrap',MESES,r24,r25,r26,isVol);
-}
 
 function switchSJCompradora(comp,btn){
   /* Chart.js safety: destruir charts ativas antes de re-render */
@@ -22812,18 +22824,6 @@ function renderNSDonut(){
   renderDonut('ns-donut','ns-donut-legend',rows.map(function(r){return{nome:r[0],val:r[1],color:r[2]};}));
 }
 
-function renderNSLine(){
-  var d=nsData();
-  var isVol = nsLineMode === 'vol';
-  var d24 = isVol ? d.vol['2024'] : d.rec['2024'];
-  var d25 = isVol ? d.vol['2025'] : d.rec['2025'];
-  var d26 = isVol ? d.vol['2026'] : d.rec['2026'];
-  renderLineChart('ns-line',[
-    {label:'2024',data:d24,color:'#3b82f6'},
-    {label:'2025',data:d25,color:'#2dd4bf'},
-    {label:'2026',data:d26,color:'#34d399',dashed:true},
-  ],'ns-line-legend', isVol);
-}
 
 function renderNSLojas(){
   var items=NS_LOJAS.map(function(l,i){
@@ -23582,23 +23582,8 @@ function _cobKpi(label, val, sub, color){
 /* ═══════════ CLAMED ═══════════ */
 var clRankKey='2026';
 var clLineMode = 'vol';
-var clLineChart = null;
 var clBarMode = 'vol';
 
-function renderCLLine(){
-  var ctx = document.getElementById('cl-line');
-  if(!ctx) return;
-  if(clLineChart) clLineChart.destroy();
-  var isVol = clLineMode === 'vol';
-  var d24 = isVol ? CL_VOL_2024 : CL_REC_2024;
-  var d25 = isVol ? CL_VOL_2025 : CL_REC_2025;
-  var d26 = isVol ? CL_VOL_2026 : CL_REC_2026;
-  renderLineChart('cl-line',[
-    {label:'2024', data:d24, color:'#3b82f6'},
-    {label:'2025', data:d25, color:'#2dd4bf'},
-    {label:'2026', data:d26, color:'#34d399', dashed:true},
-  ],'cl-line-legend', isVol);
-}
 
 
 function renderCLMesBars(){
@@ -24354,17 +24339,6 @@ function renderPVDonut(){
   renderDonut('pv-donut','pv-donut-legend',rows.map(function(r){return{nome:r[0],val:r[1],color:r[2]};}));
 }
 
-function renderPVLine(){
-  var isVol = pvLineMode === 'vol';
-  var d24 = isVol ? PV_VOL['2024'] : PV_REC['2024'];
-  var d25 = isVol ? PV_VOL['2025'] : PV_REC['2025'];
-  var d26 = isVol ? PV_VOL['2026'] : PV_REC['2026'];
-  renderLineChart('pv-line',[
-    {label:'2024',data:d24,color:'#3b82f6'},
-    {label:'2025',data:d25,color:'#2dd4bf'},
-    {label:'2026',data:d26,color:'#34d399',dashed:true},
-  ],'pv-line-legend', isVol);
-}
 
 var pvLojaMode='rec';
 function setPVLojaMode(m,btn){
@@ -25075,17 +25049,6 @@ function renderGAMDonut(){
   renderDonut('gam-donut','gam-donut-legend',rows.map(function(r){return{nome:r[0],val:r[1],color:r[2]};}));
 }
 
-function renderGAMLine(){
-  var isVol = gamLineMode === 'vol';
-  var d24 = isVol ? GAM_VOL['2024'] : GAM_REC['2024'];
-  var d25 = isVol ? GAM_VOL['2025'] : GAM_REC['2025'];
-  var d26 = isVol ? GAM_VOL['2026'] : GAM_REC['2026'];
-  renderLineChart('gam-line',[
-    {label:'2024',data:d24,color:'#3b82f6'},
-    {label:'2025',data:d25,color:'#2dd4bf'},
-    {label:'2026',data:d26,color:'#34d399',dashed:true},
-  ],'gam-line-legend', isVol);
-}
 
 function renderGAMClientes(){
   var total=GAM_LOJAS.reduce(function(s,l){return s+l.rec;},0);
@@ -25265,17 +25228,6 @@ function renderGCHDonut(){
   renderDonut('gch-donut','gch-donut-legend',marcas);
 }
 
-function renderGCHLine(){
-  var isVol = gchLineMode === 'vol';
-  var d24 = isVol ? GAUCHA_VOL['2024'] : GAUCHA_REC['2024'];
-  var d25 = isVol ? GAUCHA_VOL['2025'] : GAUCHA_REC['2025'];
-  var d26 = isVol ? GAUCHA_VOL['2026'] : GAUCHA_REC['2026'];
-  renderLineChart('gch-line',[
-    {label:'2024',data:d24,color:'#3b82f6'},
-    {label:'2025',data:d25,color:'#2dd4bf'},
-    {label:'2026',data:d26,color:'#34d399',dashed:true},
-  ],'gch-line-legend', isVol);
-}
 
 var gchLojaMetric = 'rec';
 var gchCidMetric  = 'rec';
@@ -25306,24 +25258,8 @@ function renderGCHCidades(){
 function setGCHCidMetric(m,btn){gchCidMetric=m;btn.closest('.toggle-group').querySelectorAll('.tgl').forEach(function(b){b.classList.remove('active','blue','purple');});btn.classList.add('active','purple');renderGCHCidades();}
 
 var gchMetaMode = 'rec';
-function renderGCHMeta(){
-  var isVol = gchMetaMode === 'vol';
-  renderMetaTable('gch-meta-wrap', MESES,
-    isVol ? GAUCHA_VOL['2024'] : GAUCHA_REC['2024'],
-    isVol ? GAUCHA_VOL['2025'] : GAUCHA_REC['2025'],
-    isVol ? GAUCHA_VOL['2026'] : GAUCHA_REC['2026'],
-    isVol);
-}
 
 var rioMetaMode = 'rec';
-function renderRioMeta(){
-  var isVol = rioMetaMode === 'vol';
-  renderMetaTable('rio-meta-wrap', MESES,
-    isVol ? RIOMED_VOL_2024 : RIOMED_REC_2024,
-    isVol ? RIOMED_VOL_2025 : RIOMED_REC_2025,
-    isVol ? RIOMED_VOL_2026 : RIOMED_REC_2026,
-    isVol);
-}
 
 /* ═══════════ DD-RIOMED ESTOQUE ═══════════ */
 const RIO_ESTOQUE = [
@@ -26170,23 +26106,8 @@ function setRioEstoqueView(view, btn){
 
 /* ═══════════ DD-RIOMED ═══════════ */
 var rioLineMode = 'vol';
-var rioLineChart = null;
 var rioBarMode = 'vol';
 
-function renderRIOLine(){
-  var ctx = document.getElementById('rio-line');
-  if(!ctx) return;
-  if(rioLineChart) rioLineChart.destroy();
-  var isVol = rioLineMode === 'vol';
-  var d24 = isVol ? RIOMED_VOL_2024 : RIOMED_REC_2024;
-  var d25 = isVol ? RIOMED_VOL_2025 : RIOMED_REC_2025;
-  var d26 = isVol ? RIOMED_VOL_2026 : RIOMED_REC_2026;
-  renderLineChart('rio-line',[
-    {label:'2024', data:d24, color:'#3b82f6'},
-    {label:'2025', data:d25, color:'#2dd4bf'},
-    {label:'2026', data:d26, color:'#34d399', dashed:true},
-  ],'rio-line-legend', isVol);
-}
 
 
 function renderRIOMesBars(){
@@ -39527,13 +39448,6 @@ var sjcMetaMetric = 'rec';
 
 
 
-function renderSJCMeta(){
-  var isVol = sjcMetaMetric === 'vol';
-  var r24 = isVol ? SJC_VOL_24 : SJC_REC_24;
-  var r25 = isVol ? SJC_VOL    : SJC_REC;
-  var r26 = isVol ? SJC_VOL_26 : SJC_REC_26;
-  renderMetaTable('sjc-meta-wrap', MESES, r24, r25, r26, isVol);
-}
 
 function renderSJCEstoqueBarras(){
   var el = document.getElementById('sjc-estoque-bars');
@@ -39684,14 +39598,6 @@ function initCaroline(){
   renderSJCRank2();
 }
 
-function renderSJCLine(){
-  var isVol = sjcLineMode === 'vol';
-  renderLineChart('sjc-line',[
-    {label:'2024', data: isVol ? SJC_VOL_24 : SJC_REC_24, color:'#D1D5DB'},
-    {label:'2025', data: isVol ? SJC_VOL    : SJC_REC,    color:'#2dd4bf'},
-    {label:'2026', data: isVol ? SJC_VOL_26 : SJC_REC_26, color:'#34d399', dashed:true},
-  ],'sjc-line-legend', isVol);
-}
 
 function renderSJCRank(){
   var isVol = sjcRankMode === 'vol';
@@ -41097,24 +41003,8 @@ var gchDNModo = 'off';
 
 
 var pvMetaMode = 'rec';
-function renderPVMeta(){
-  var isVol = pvMetaMode === 'vol';
-  renderMetaTable('pv-meta-wrap', MESES,
-    isVol ? PV_VOL['2024'] : PV_REC['2024'],
-    isVol ? PV_VOL['2025'] : PV_REC['2025'],
-    isVol ? PV_VOL['2026'] : PV_REC['2026'],
-    isVol);
-}
 
 var gamMetaMode = 'rec';
-function renderGAMMeta(){
-  var isVol = gamMetaMode === 'vol';
-  renderMetaTable('gam-meta-wrap', MESES,
-    isVol ? GAM_VOL['2024'] : GAM_REC['2024'],
-    isVol ? GAM_VOL['2025'] : GAM_REC['2025'],
-    isVol ? GAM_VOL['2026'] : GAM_REC['2026'],
-    isVol);
-}
 
 var nsEstoqueView = 'barras';
 var nsEstoqueTab  = 'hb';
@@ -43461,23 +43351,7 @@ function checkVerbasPwd(){
   });
 }
 
-function renderNSMeta(){
-  var d = nsData();
-  var isVol = nsMetaMetric === 'vol';
-  var r24 = isVol ? d.vol['2024'] : d.rec['2024'];
-  var r25 = isVol ? d.vol['2025'] : d.rec['2025'];
-  var r26 = isVol ? d.vol['2026'] : d.rec['2026'];
-  renderMetaTable('ns-meta-wrap', MESES, r24, r25, r26, isVol);
-}
 
-function renderCLMeta(){
-  var isVol = clMetaMetric === 'vol';
-  renderMetaTable('cl-meta-wrap', MESES,
-    isVol ? CL_VOL_2024 : CL_REC_2024,
-    isVol ? CL_VOL_2025 : CL_REC_2025,
-    isVol ? CL_VOL_2026 : CL_REC_2026,
-    isVol);
-}
 
 /* ═══════════ NS FILIAL SKU TABLE ═══════════ */
 var nsFilialFilter = 'todos';
