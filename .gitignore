@@ -9,3 +9,12 @@
 !/Dashboard_farma_sul/*.py
 !/index.html
 !/arquivo_patches/
+# Pipeline diário de sell out (só os scripts .py; dados, JSON e relatórios dos portais ficam fora)
+!/Dashboard_farma_sul/_Recursos/
+/Dashboard_farma_sul/_Recursos/*
+!/Dashboard_farma_sul/_Recursos/sellout_diario/
+/Dashboard_farma_sul/_Recursos/sellout_diario/**
+!/Dashboard_farma_sul/_Recursos/sellout_diario/**/
+!/Dashboard_farma_sul/_Recursos/sellout_diario/**/*.py
+!/Dashboard_farma_sul/_Recursos/sellout_diario/arquivo/LEIAME.md
+**/__pycache__/
