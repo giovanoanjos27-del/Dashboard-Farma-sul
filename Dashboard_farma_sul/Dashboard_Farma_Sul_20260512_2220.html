@@ -23378,36 +23378,39 @@ const CL_COBERTURA = [
 var clEstoqueView  = 'barras';
 var clEstoqueChart = null;
 
-function renderClEstoqueBarras(){
-  var el = document.getElementById('cl-estoque-bars');
-  if(!el) return;
-  var maxEst = Math.max.apply(null, CL_ESTOQUE.map(function(d){return d.estoque;}));
-  var h = '';
-  CL_ESTOQUE.forEach(function(d,i){
-    var cob_real = calcCob(d.estoque, 'clamed');
-    var risco_real = calcRisco(cob_real);
-    var cor = risco_real==='critico'?'#06b6d4':risco_real==='atencao'?'#fbbf24':'#34d399';
-    var bg  = risco_real==='critico'?'border-left:2px solid #06b6d4;background:rgba(251,113,113,0.04);':
-              risco_real==='atencao'?'border-left:2px solid #fbbf24;background:rgba(251,191,36,0.04);':'';
-    var pct = Math.min(100,Math.round(d.estoque/maxEst*100));
-    var cobLabelStr = cobLabel(cob_real);
-    var alerta = risco_real!=='ok'?('<span style="font-size:9px;font-weight:700;background:'+cor+'22;color:'+cor+';border-radius:3px;padding:1px 5px;margin-left:6px;">'+cobLabelStr+'</span>'):'';
-    h += '<div class="bar-item" data-togglesel="1">';
-    h += '<div class="bar-item-header">';
-    h += '<span class="bar-rank" style="background:'+cor+'22;color:'+cor+';">'+(i+1)+'</span>';
-    h += '<span class="bar-name">'+d.sku+alerta+'</span>';
-    h += '<span class="u-lbl-muted">'+d.estoque.toLocaleString('pt-BR')+' un</span>';
-    h += '<span class="bar-val" style="color:'+cor+'">'+cobLabelStr+' cob.</span>';
-    h += '</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:'+cor+';" data-pct="'+pct+'"></div></div>';
-    h += '<div class="bar-expand">';
-    h += '<div class="expand-item">Estoque: <span class="expand-val" style="color:'+cor+'">'+d.estoque.toLocaleString('pt-BR')+' un</span></div>';
-    h += '<div class="expand-item">Venda Ref/mês: <span class="expand-val" style="color:#D1D5DB">'+VENDA_REF.clamed.venda_mes.toLocaleString('pt-BR')+' un ('+VENDA_REF.clamed.periodo+')</span></div>';
-    h += '<div class="expand-item">Cobertura Real: <span class="expand-val" style="color:'+cor+'">'+cobLabelStr+'</span></div>';
-    h += '</div></div>';
-  });
+/* ═══ Estoque por SKU (visão detalhada) — esqueleto comum da linha de barra ═══
+   cada cliente calcula os campos da linha (cor, selos, quantidade, valor, % da barra, detalhes);
+   estLinha monta o HTML e estMontar coloca na tela (clique seleciona, barra anima). */
+var EST_RISCO_COR = {critico:'#06b6d4', atencao:'#fbbf24'};
+var EST_RISCO_BG  = {critico:'border-left:2px solid #06b6d4;background:rgba(251,113,113,0.04);', atencao:'border-left:2px solid #fbbf24;background:rgba(251,191,36,0.04);'};
+function estSelo(txt, cor, margem){ return '<span style="font-size:9px;font-weight:700;background:'+cor+'22;color:'+cor+';border-radius:3px;padding:1px 5px;margin-left:'+margem+'px;">'+txt+'</span>'; }
+function estSeloPend(pend){ return pend>0 ? '<span style="font-size:9px;font-weight:700;background:rgba(251,191,36,0.15);color:#fbbf24;border-radius:3px;padding:1px 5px;margin-left:6px;">⏳ '+pend.toLocaleString('pt-BR')+' pend.</span>' : ''; }
+function estLinha(o){
+  return '<div class="bar-item" data-togglesel="1"'+(o.bg?' style="'+o.bg+'"':'')+'>'
+    +'<div class="bar-item-header">'
+    +'<span class="bar-rank" style="background:'+o.cor+'22;color:'+o.cor+';">'+o.rank+'</span>'
+    +'<span class="bar-name">'+o.nome+'</span>'
+    +'<span class="u-lbl-muted">'+o.qtd+'</span>'
+    +'<span class="bar-val" style="color:'+o.cor+'">'+o.valor+'</span>'
+    +'</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:'+o.cor+';'+(o.sombra?'box-shadow:0 0 6px '+o.cor+'44;':'')+'" data-pct="'+o.pct+'"></div></div>'
+    +'<div class="bar-expand">'+o.detalhes.map(function(x){ return '<div class="expand-item">'+x[0]+': <span class="expand-val" style="color:'+x[2]+'">'+x[1]+'</span></div>'; }).join('')+'</div></div>';
+}
+function estMontar(el, h){
   el.innerHTML = h;
-  el.querySelectorAll('[data-togglesel]').forEach(function(r){r.addEventListener('click',function(){this.classList.toggle('selected');});});
-  setTimeout(function(){el.querySelectorAll('.bar-fill').forEach(function(bar){bar.style.width=bar.getAttribute('data-pct')+'%';});},80);
+  el.querySelectorAll('[data-togglesel]').forEach(function(r){ r.addEventListener('click', function(){ this.classList.toggle('selected'); }); });
+  setTimeout(function(){ el.querySelectorAll('.bar-fill').forEach(function(bar){ bar.style.width = bar.getAttribute('data-pct')+'%'; }); }, 80);
+}
+function estUn(v){ return v.toLocaleString('pt-BR')+' un'; }
+
+function renderClEstoqueBarras(){
+  var el = document.getElementById('cl-estoque-bars'); if(!el) return;
+  var maxEst = Math.max.apply(null, CL_ESTOQUE.map(function(d){return d.estoque;}));
+  estMontar(el, CL_ESTOQUE.map(function(d,i){
+    var cob = calcCob(d.estoque, 'clamed'), risco = calcRisco(cob), cor = EST_RISCO_COR[risco]||'#34d399', c = cobLabel(cob);
+    return estLinha({cor:cor, bg:'' /* Clamed nunca destacou a linha (crítico/atenção) */, rank:i+1,
+      nome:d.sku+(risco!=='ok'?estSelo(c,cor,6):''), qtd:estUn(d.estoque), valor:c+' cob.', pct:Math.min(100,Math.round(d.estoque/maxEst*100)),
+      detalhes:[['Estoque',estUn(d.estoque),cor], ['Venda Ref/mês',estUn(VENDA_REF.clamed.venda_mes)+' ('+VENDA_REF.clamed.periodo+')','#D1D5DB'], ['Cobertura Real',c,cor]]});
+  }).join(''));
 }
 
 function renderClEstoqueLinha(){
@@ -24225,38 +24228,16 @@ var pvEstoqueView  = 'barras';
 var pvEstoqueChart = null;
 
 function renderPVEstoqueBarras(){
-  var el = document.getElementById('pv-estoque-bars');
-  if(!el) return;
+  var el = document.getElementById('pv-estoque-bars'); if(!el) return;
   var maxEst = Math.max.apply(null, PV_ESTOQUE.map(function(d){return d.estoque;}));
-  var h = '';
-  PV_ESTOQUE.slice().sort(function(a,b){return b.estoque-a.estoque;}).forEach(function(d,i){
-    var cob_real = calcCob(d.estoque, 'panvel');
-    var risco_real = calcRisco(cob_real);
-    var cor = risco_real==='critico'?'#06b6d4':risco_real==='atencao'?'#fbbf24':'#34d399';
-    var bg  = risco_real==='critico'?'border-left:2px solid #06b6d4;background:rgba(251,113,113,0.04);':
-              risco_real==='atencao'?'border-left:2px solid #fbbf24;background:rgba(251,191,36,0.04);':'';
-    var pct = d.estoque===0?0:Math.max(1,Math.round(d.estoque/maxEst*100));
-    var estLabel = d.estoque===0?'ZERADO':d.estoque.toLocaleString('pt-BR')+' un';
-    var pendBadge = d.pend>0?('<span style="font-size:9px;font-weight:700;background:rgba(251,191,36,0.15);color:#fbbf24;border-radius:3px;padding:1px 5px;margin-left:6px;">⏳ '+d.pend.toLocaleString('pt-BR')+' pend.</span>'):'';
-    var alertaBadge = risco_real!=='ok'?('<span style="font-size:9px;font-weight:700;background:'+cor+'22;color:'+cor+';border-radius:3px;padding:1px 5px;margin-left:4px;">'+(d.risco==='critico'?'⚡ CRÍTICO':'⚠ ATENÇÃO')+'</span>'):'';
-    h += '<div class="bar-item" data-togglesel="1" style="'+bg+'">';
-    h += '<div class="bar-item-header">';
-    h += '<span class="bar-rank" style="background:'+cor+'22;color:'+cor+';">'+(i+1)+'</span>';
-    h += '<span class="bar-name">'+d.sku+alertaBadge+pendBadge+'</span>';
-    h += '<span class="u-lbl-muted">'+estLabel+'</span>';
-    h += '<span class="bar-val" style="color:'+cor+'">'+d.marca+'</span>';
-    h += '</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:'+cor+';" data-pct="'+pct+'"></div></div>';
-    h += '<div class="bar-expand">';
-    h += '<div class="expand-item">Estoque Total: <span class="expand-val" style="color:'+cor+'">'+d.estoque.toLocaleString('pt-BR')+' un</span></div>';
-    h += '<div class="expand-item">CD RS: <span class="expand-val" style="color:#D1D5DB">'+d.cdRS.toLocaleString('pt-BR')+' un</span></div>';
-    h += '<div class="expand-item">CD PR: <span class="expand-val" style="color:#D1D5DB">'+d.cdPR.toLocaleString('pt-BR')+' un</span></div>';
-    h += '<div class="expand-item">Lojas: <span class="expand-val" style="color:#D1D5DB">'+d.lojas.toLocaleString('pt-BR')+' un</span></div>';
-    h += '<div class="expand-item">Pendências: <span class="expand-val" style="color:'+(d.pend>0?'#fbbf24':'#5a6478')+'">'+d.pend.toLocaleString('pt-BR')+' un</span></div>';
-    h += '</div></div>';
-  });
-  el.innerHTML = h;
-  el.querySelectorAll('[data-togglesel]').forEach(function(r){r.addEventListener('click',function(){this.classList.toggle('selected');});});
-  setTimeout(function(){el.querySelectorAll('.bar-fill').forEach(function(bar){bar.style.width=bar.getAttribute('data-pct')+'%';});},80);
+  estMontar(el, PV_ESTOQUE.slice().sort(function(a,b){return b.estoque-a.estoque;}).map(function(d,i){
+    var risco = calcRisco(calcCob(d.estoque, 'panvel')), cor = EST_RISCO_COR[risco]||'#34d399';
+    return estLinha({cor:cor, bg:EST_RISCO_BG[risco]||'', rank:i+1,
+      nome:d.sku+(risco!=='ok'?estSelo(d.risco==='critico'?'⚡ CRÍTICO':'⚠ ATENÇÃO',cor,4):'')+estSeloPend(d.pend),
+      qtd:d.estoque===0?'ZERADO':estUn(d.estoque), valor:d.marca, pct:d.estoque===0?0:Math.max(1,Math.round(d.estoque/maxEst*100)),
+      detalhes:[['Estoque Total',estUn(d.estoque),cor], ['CD RS',estUn(d.cdRS),'#D1D5DB'], ['CD PR',estUn(d.cdPR),'#D1D5DB'], ['Lojas',estUn(d.lojas),'#D1D5DB'],
+                ['Pendências',estUn(d.pend),d.pend>0?'#fbbf24':'#5a6478']]});
+  }).join(''));
 }
 
 function renderPVEstoqueLinha(){
@@ -24952,37 +24933,16 @@ var gamEstoqueView  = 'barras';
 var gamEstoqueChart = null;
 
 function renderGAMEstoqueBarras(){
-  var el = document.getElementById('gam-estoque-bars');
-  if(!el) return;
+  var el = document.getElementById('gam-estoque-bars'); if(!el) return;
   var maxEst = Math.max.apply(null, GAM_ESTOQUE.map(function(d){return d.estoque;}));
-  var h = '';
-  GAM_ESTOQUE.slice().sort(function(a,b){return b.estoque-a.estoque;}).forEach(function(d,i){
-    var cob_real = calcCob(d.estoque, 'ddgam');
-    var risco_real = calcRisco(cob_real);
-    var cor = risco_real==='critico'?'#06b6d4':risco_real==='atencao'?'#fbbf24':'#34d399';
-    var bg  = risco_real==='critico'?'border-left:2px solid #06b6d4;background:rgba(251,113,113,0.04);':
-              risco_real==='atencao'?'border-left:2px solid #fbbf24;background:rgba(251,191,36,0.04);':'';
-    var pct = d.estoque===0?0:Math.max(1,Math.round(d.estoque/maxEst*100));
-    var estLabel = d.estoque===0?'ZERADO':d.estoque.toLocaleString('pt-BR')+' un';
-    var pendBadge = d.pend>0?('<span style="font-size:9px;font-weight:700;background:rgba(251,191,36,0.15);color:#fbbf24;border-radius:3px;padding:1px 5px;margin-left:6px;">⏳ '+d.pend.toLocaleString('pt-BR')+' pend.</span>'):'';
-    var alertaBadge = risco_real!=='ok'?('<span style="font-size:9px;font-weight:700;background:'+cor+'22;color:'+cor+';border-radius:3px;padding:1px 5px;margin-left:4px;">'+(d.risco==='critico'?'⚡ CRÍTICO':'⚠ ATENÇÃO')+'</span>'):'';
-    h += '<div class="bar-item" data-togglesel="1" style="'+bg+'">';
-    h += '<div class="bar-item-header">';
-    h += '<span class="bar-rank" style="background:'+cor+'22;color:'+cor+';">'+(i+1)+'</span>';
-    h += '<span class="bar-name">'+d.sku+alertaBadge+pendBadge+'</span>';
-    h += '<span class="u-lbl-muted">'+estLabel+'</span>';
-    h += '<span class="bar-val" style="color:'+cor+'">'+d.marca+'</span>';
-    h += '</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:'+cor+';" data-pct="'+pct+'"></div></div>';
-    h += '<div class="bar-expand">';
-    h += '<div class="expand-item">Estoque Total: <span class="expand-val" style="color:'+cor+'">'+d.estoque.toLocaleString('pt-BR')+' un</span></div>';
-    h += '<div class="expand-item">Pendências: <span class="expand-val" style="color:'+(d.pend>0?'#fbbf24':'#5a6478')+'">'+d.pend.toLocaleString('pt-BR')+' un</span></div>';
-    h += '<div class="expand-item">Cobertura Real: <span class="expand-val" style="color:'+cor+'">'+cobLabel(cob_real)+' (ref: '+VENDA_REF.ddgam.periodo+')</span></div>';
-    h += '<div class="expand-item">Marca: <span class="expand-val" style="color:#D1D5DB">'+d.marca+'</span></div>';
-    h += '</div></div>';
-  });
-  el.innerHTML = h;
-  el.querySelectorAll('[data-togglesel]').forEach(function(r){r.addEventListener('click',function(){this.classList.toggle('selected');});});
-  setTimeout(function(){el.querySelectorAll('.bar-fill').forEach(function(bar){bar.style.width=bar.getAttribute('data-pct')+'%';});},80);
+  estMontar(el, GAM_ESTOQUE.slice().sort(function(a,b){return b.estoque-a.estoque;}).map(function(d,i){
+    var cob = calcCob(d.estoque, 'ddgam'), risco = calcRisco(cob), cor = EST_RISCO_COR[risco]||'#34d399';
+    return estLinha({cor:cor, bg:EST_RISCO_BG[risco]||'', rank:i+1,
+      nome:d.sku+(risco!=='ok'?estSelo(d.risco==='critico'?'⚡ CRÍTICO':'⚠ ATENÇÃO',cor,4):'')+estSeloPend(d.pend),
+      qtd:d.estoque===0?'ZERADO':estUn(d.estoque), valor:d.marca, pct:d.estoque===0?0:Math.max(1,Math.round(d.estoque/maxEst*100)),
+      detalhes:[['Estoque Total',estUn(d.estoque),cor], ['Pendências',estUn(d.pend),d.pend>0?'#fbbf24':'#5a6478'],
+                ['Cobertura Real',cobLabel(cob)+' (ref: '+VENDA_REF.ddgam.periodo+')',cor], ['Marca',d.marca,'#D1D5DB']]});
+  }).join(''));
 }
 
 function renderGAMEstoqueLinha(){
@@ -25129,40 +25089,19 @@ const GCH_ESTOQUE = [
 var gchEstoqueView  = 'barras';
 var gchEstoqueChart = null;
 
+var EST_MARCA_COR = {OFF:'#3b82f6', EXPOSIS:'#34d399', RAID:'#f97316', GLADE:'#2dd4bf', LYSOFORM:'#60a5fa', OUTROS:'#D1D5DB'};
 function renderGCHEstoqueBarras(){
-  var el = document.getElementById('gch-estoque-bars');
-  if(!el) return;
+  var el = document.getElementById('gch-estoque-bars'); if(!el) return;
   var maxEst = Math.max.apply(null, GCH_ESTOQUE.map(function(d){return d.estoque;}));
-  var MARCA_CORES = {OFF:'#3b82f6', EXPOSIS:'#34d399', RAID:'#f97316', GLADE:'#2dd4bf', LYSOFORM:'#60a5fa', OUTROS:'#D1D5DB'};
-  var h = '';
-  GCH_ESTOQUE.slice().sort(function(a,b){return b.estoque-a.estoque;}).forEach(function(d,i){
-    var cor = MARCA_CORES[d.marca] || '#D1D5DB';
-    var cob_real = d.dem > 0 ? Math.round((d.estoque / d.dem) * 30) : 999;
-    var risco_real = calcRisco(cob_real);
-    var cobStr = cobLabel(cob_real);
-    cor = risco_real==='critico'?'#06b6d4':risco_real==='atencao'?'#fbbf24':cor;
-    var bg = risco_real==='critico'?'border-left:2px solid #06b6d4;background:rgba(251,113,113,0.04);':
-             risco_real==='atencao'?'border-left:2px solid #fbbf24;background:rgba(251,191,36,0.04);':'';
-    var pct = Math.max(1, Math.round(d.estoque/maxEst*100));
-    var alertaBadge = risco_real!=='ok'?('<span style="font-size:9px;font-weight:700;background:'+cor+'22;color:'+cor+';border-radius:3px;padding:1px 5px;margin-left:4px;">'+(risco_real==='critico'?'⚡ CRÍTICO':'⚠ ATENÇÃO')+'</span>'):'';
-    var demBadge = d.dem>0?('<span style="font-size:9px;color:#fbbf24;margin-left:6px;">dem: '+d.dem.toLocaleString('pt-BR')+' un</span>'):'';
-    h += '<div class="bar-item" style="'+bg+'" data-togglesel="1">';
-    h += '<div class="bar-item-header">';
-    h += '<span class="bar-rank" style="background:'+cor+'22;color:'+cor+';">'+(GCH_ESTOQUE.length-i)+'</span>';
-    h += '<span class="bar-name">'+d.sku+alertaBadge+'</span>';
-    h += '<span class="u-lbl-muted">'+d.estoque.toLocaleString('pt-BR')+' un'+demBadge+'</span>';
-    h += '<span class="bar-val" style="color:'+cor+'">'+cobStr+' cob.</span>';
-    h += '</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:'+cor+';" data-pct="'+pct+'"></div></div>';
-    h += '<div class="bar-expand">';
-    h += '<div class="expand-item">Estoque: <span class="expand-val" style="color:'+cor+'">'+d.estoque.toLocaleString('pt-BR')+' un</span></div>';
-    h += '<div class="expand-item">Venda Set/26: <span class="expand-val" style="color:#fbbf24">'+d.dem.toLocaleString('pt-BR')+' un</span></div>';
-    h += '<div class="expand-item">Cobertura: <span class="expand-val" style="color:'+cor+'">'+cobStr+'</span></div>';
-    h += '<div class="expand-item">Marca: <span class="expand-val" style="color:#D1D5DB">'+d.marca+'</span></div>';
-    h += '</div></div>';
-  });
-  el.innerHTML = h;
-  el.querySelectorAll('[data-togglesel]').forEach(function(r){r.addEventListener('click',function(){this.classList.toggle('selected');});});
-  setTimeout(function(){el.querySelectorAll('.bar-fill').forEach(function(bar){bar.style.width=bar.getAttribute('data-pct')+'%';});},80);
+  estMontar(el, GCH_ESTOQUE.slice().sort(function(a,b){return b.estoque-a.estoque;}).map(function(d,i){
+    var cob = d.dem > 0 ? Math.round((d.estoque / d.dem) * 30) : 999, risco = calcRisco(cob), c = cobLabel(cob);
+    var cor = EST_RISCO_COR[risco] || EST_MARCA_COR[d.marca] || '#D1D5DB';
+    return estLinha({cor:cor, bg:EST_RISCO_BG[risco]||'', rank:GCH_ESTOQUE.length-i,
+      nome:d.sku+(risco!=='ok'?estSelo(risco==='critico'?'⚡ CRÍTICO':'⚠ ATENÇÃO',cor,4):''),
+      qtd:estUn(d.estoque)+(d.dem>0?'<span style="font-size:9px;color:#fbbf24;margin-left:6px;">dem: '+estUn(d.dem)+'</span>':''),
+      valor:c+' cob.', pct:Math.max(1, Math.round(d.estoque/maxEst*100)),
+      detalhes:[['Estoque',estUn(d.estoque),cor], ['Venda Set/26',estUn(d.dem),'#fbbf24'], ['Cobertura',c,cor], ['Marca',d.marca,'#D1D5DB']]});
+  }).join(''));
 }
 
 function renderGCHEstoqueLinha(){
@@ -26037,39 +25976,18 @@ var rioEstoqueView  = 'barras';
 var rioEstoqueChart = null;
 
 function renderRIOEstoqueBarras(){
-  var el = document.getElementById('rio-estoque-bars');
-  if(!el) return;
+  var el = document.getElementById('rio-estoque-bars'); if(!el) return;
   var maxEst = Math.max.apply(null, RIO_ESTOQUE.map(function(d){return d.estoque;}));
-  var MARCA_CORES = {OFF:'#3b82f6', EXPOSIS:'#34d399', RAID:'#f97316', GLADE:'#2dd4bf', LYSOFORM:'#60a5fa', OUTROS:'#D1D5DB'};
-  var h = '';
-  RIO_ESTOQUE.slice().sort(function(a,b){return b.estoque-a.estoque;}).forEach(function(d,i){
-    var cor = MARCA_CORES[d.marca] || '#D1D5DB';
-    var cob_real = d.vendaMar > 0 ? Math.round((d.estoque / d.vendaMar) * 30) : 999;
-    var risco_real = calcRisco(cob_real);
-    var cobStr = cobLabel(cob_real);
-    cor = risco_real==='critico'?'#06b6d4':risco_real==='atencao'?'#fbbf24':cor;
-    var bg = risco_real==='critico'?'border-left:2px solid #06b6d4;background:rgba(251,113,113,0.04);':
-             risco_real==='atencao'?'border-left:2px solid #fbbf24;background:rgba(251,191,36,0.04);':'';
-    var pct = Math.max(1, Math.round(d.estoque/maxEst*100));
-    var alertaBadge = risco_real!=='ok'?('<span style="font-size:9px;font-weight:700;background:'+cor+'22;color:'+cor+';border-radius:3px;padding:1px 5px;margin-left:4px;">'+(risco_real==='critico'?'⚡ CRÍTICO':'⚠ ATENÇÃO')+'</span>'):'';
-    var abrBadge = d.vendaAbr>0?('<span style="font-size:9px;color:#fbbf24;margin-left:6px;">nov: '+d.vendaAbr+' un</span>'):'';
-    h += '<div class="bar-item" style="'+bg+'" data-togglesel="1">';
-    h += '<div class="bar-item-header">';
-    h += '<span class="bar-rank" style="background:'+cor+'22;color:'+cor+';">'+(RIO_ESTOQUE.length-i)+'</span>';
-    h += '<span class="bar-name">'+d.sku+alertaBadge+'</span>';
-    h += '<span class="u-lbl-muted">'+d.estoque.toLocaleString('pt-BR')+' un'+abrBadge+'</span>';
-    h += '<span class="bar-val" style="color:'+cor+'">'+cobStr+' cob.</span>';
-    h += '</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:'+cor+';" data-pct="'+pct+'"></div></div>';
-    h += '<div class="bar-expand">';
-    h += '<div class="expand-item">Estoque atual: <span class="expand-val" style="color:'+cor+'">'+d.estoque.toLocaleString('pt-BR')+' un</span></div>';
-    h += '<div class="expand-item">Venda Out/26: <span class="expand-val" style="color:#D1D5DB">'+d.vendaMar.toLocaleString('pt-BR')+' un</span></div>';
-    h += '<div class="expand-item">Venda Nov/26 parcial: <span class="expand-val" style="color:#fbbf24">'+d.vendaAbr.toLocaleString('pt-BR')+' un</span></div>';
-    h += '<div class="expand-item">Cobertura: <span class="expand-val" style="color:'+cor+'">'+cobStr+' (ref: Out/26)</span></div>';
-    h += '</div></div>';
-  });
-  el.innerHTML = h;
-  el.querySelectorAll('[data-togglesel]').forEach(function(r){r.addEventListener('click',function(){this.classList.toggle('selected');});});
-  setTimeout(function(){el.querySelectorAll('.bar-fill').forEach(function(bar){bar.style.width=bar.getAttribute('data-pct')+'%';});},80);
+  estMontar(el, RIO_ESTOQUE.slice().sort(function(a,b){return b.estoque-a.estoque;}).map(function(d,i){
+    var cob = d.vendaMar > 0 ? Math.round((d.estoque / d.vendaMar) * 30) : 999, risco = calcRisco(cob), c = cobLabel(cob);
+    var cor = EST_RISCO_COR[risco] || EST_MARCA_COR[d.marca] || '#D1D5DB';
+    return estLinha({cor:cor, bg:EST_RISCO_BG[risco]||'', rank:RIO_ESTOQUE.length-i,
+      nome:d.sku+(risco!=='ok'?estSelo(risco==='critico'?'⚡ CRÍTICO':'⚠ ATENÇÃO',cor,4):''),
+      qtd:estUn(d.estoque)+(d.vendaAbr>0?'<span style="font-size:9px;color:#fbbf24;margin-left:6px;">nov: '+d.vendaAbr+' un</span>':''),
+      valor:c+' cob.', pct:Math.max(1, Math.round(d.estoque/maxEst*100)),
+      detalhes:[['Estoque atual',estUn(d.estoque),cor], ['Venda Out/26',estUn(d.vendaMar),'#D1D5DB'], ['Venda Nov/26 parcial',estUn(d.vendaAbr),'#fbbf24'],
+                ['Cobertura',c+' (ref: Out/26)',cor]]});
+  }).join(''));
 }
 
 function renderRIOEstoqueLinha(){
@@ -40628,41 +40546,16 @@ var sjEstoqueView = 'barras';
 var sjEstoqueChart = null;
 
 function renderSJEstoqueBarras(){
-  var el = document.getElementById('sj-estoque-bars');
-  if(!el) return;
-  var html = '';
-  SJ_ESTOQUE.forEach(function(d, i){
-    var cor = d.risco==='critico' ? '#06b6d4' : d.risco==='atencao' ? '#fbbf24' : '#34d399';
-    var bg  = d.risco==='critico' ? 'rgba(251,113,113,0.06);border-left:2px solid #06b6d4' :
-              d.risco==='atencao' ? 'rgba(251,191,36,0.06);border-left:2px solid #fbbf24'  :
-              d.intoc             ? 'rgba(251,191,36,0.03);border-left:2px solid rgba(251,191,36,0.3)' : '';
-    var pct = Math.min(100, Math.round(d.estoque / Math.max(1, Math.max.apply(null, SJ_ESTOQUE.map(function(x){return x.estoque;}))) * 100));
-    var cobLabel = d.cob >= 999 ? 'sem giro' : d.cob+'d';
-    var alerta = d.risco!=='ok' ? (' <span style="font-size:9px;font-weight:700;background:'+cor+'22;color:'+cor+';border-radius:3px;padding:1px 5px;">⚠ '+cobLabel+'</span>') : '';
-    var intocBadge = d.intoc ? ' <span class="intoc-badge">🏆</span>' : '';
-    html += '<div class="bar-item" style="'+bg+'" onclick="this.classList.toggle(\'selected\')">';
-    html += '<div class="bar-item-header">';
-    html += '<span class="bar-rank" style="background:'+cor+'22;color:'+cor+';">'+(i+1)+'</span>';
-    html += '<span class="bar-name">'+d.sku+intocBadge+alerta+'</span>';
-    html += '<span class="u-lbl-muted">'+d.estoque.toLocaleString('pt-BR')+' un</span>';
-    html += '<span class="bar-val" style="color:'+cor+'">'+cobLabel+' cob.</span>';
-    html += '</div>';
-    html += '<div class="bar-track">';
-    html += '<div class="bar-fill" style="width:0%;background:'+cor+';box-shadow:0 0 6px '+cor+'44;" data-pct="'+pct+'"></div>';
-    html += '</div>';
-    html += '<div class="bar-expand">';
-    html += '<div class="expand-item">Estoque: <span class="expand-val" style="color:'+cor+'">'+d.estoque.toLocaleString('pt-BR')+' un</span></div>';
-    html += '<div class="expand-item">Venda Set/26: <span class="expand-val" style="color:#D1D5DB">'+d.venda.toLocaleString('pt-BR')+' un/mês</span></div>';
-    html += '<div class="expand-item">Venda/dia: <span class="expand-val" style="color:#D1D5DB">'+Math.round(d.venda/30)+' un</span></div>';
-    html += '<div class="expand-item">Cobertura: <span class="expand-val" style="color:'+cor+'">'+cobLabel+'</span></div>';
-    html += '</div></div>';
-  });
-  el.innerHTML = html;
-  setTimeout(function(){
-    el.querySelectorAll('.bar-fill').forEach(function(bar){
-      bar.style.width = bar.getAttribute('data-pct')+'%';
-    });
-  }, 80);
+  var el = document.getElementById('sj-estoque-bars'); if(!el) return;
+  var maxEst = Math.max(1, Math.max.apply(null, SJ_ESTOQUE.map(function(x){return x.estoque;})));
+  estMontar(el, SJ_ESTOQUE.map(function(d,i){
+    var cor = EST_RISCO_COR[d.risco] || '#34d399', c = d.cob >= 999 ? 'sem giro' : d.cob+'d';
+    var bg = d.risco==='critico' ? 'border-left:2px solid #06b6d4' : d.risco==='atencao' ? 'border-left:2px solid #fbbf24' : d.intoc ? 'border-left:2px solid rgba(251,191,36,0.3)' : '';
+    return estLinha({cor:cor, bg:bg, rank:i+1, sombra:true,
+      nome:d.sku+(d.intoc?' <span class="intoc-badge">🏆</span>':'')+(d.risco!=='ok'?(' <span style="font-size:9px;font-weight:700;background:'+cor+'22;color:'+cor+';border-radius:3px;padding:1px 5px;">⚠ '+c+'</span>'):''),
+      qtd:estUn(d.estoque), valor:c+' cob.', pct:Math.min(100, Math.round(d.estoque / maxEst * 100)),
+      detalhes:[['Estoque',estUn(d.estoque),cor], ['Venda Set/26',d.venda.toLocaleString('pt-BR')+' un/mês','#D1D5DB'], ['Venda/dia',Math.round(d.venda/30)+' un','#D1D5DB'], ['Cobertura',c,cor]]});
+  }).join(''));
 }
 
 function renderSJEstoqueLinha(){
@@ -41011,36 +40904,16 @@ var nsEstoqueTab  = 'hb';
 var nsEstoqueChart = null;
 
 function renderNsEstoqueBarras(){
-  var el = document.getElementById('ns-estoque-bars');
-  if(!el) return;
+  var el = document.getElementById('ns-estoque-bars'); if(!el) return;
   var data = nsEstoqueTab === 'hb' ? NS_ESTOQUE_HB : NS_ESTOQUE_ED;
   var maxEst = Math.max.apply(null, data.map(function(d){return d.estoque;}));
-  var h = '';
-  data.forEach(function(d,i){
-    var cob_real = calcCob(d.estoque, 'nissei');
-    var risco_real = calcRisco(cob_real);
-    var cobStr = cobLabel(cob_real);
-    var cor = risco_real==='critico'?'#06b6d4':risco_real==='atencao'?'#fbbf24':'#34d399';
-    var bg  = risco_real==='critico'?'border-left:2px solid #06b6d4;background:rgba(251,113,113,0.04);':
-              risco_real==='atencao'?'border-left:2px solid #fbbf24;background:rgba(251,191,36,0.04);':'';
-    var pct = Math.min(100,Math.round(d.estoque/maxEst*100));
-    var alerta = risco_real!=='ok'?('<span style="font-size:9px;font-weight:700;background:'+cor+'22;color:'+cor+';border-radius:3px;padding:1px 5px;margin-left:6px;">'+(risco_real==='critico'?'⚡ CRÍTICO':'⚠ ATENÇÃO')+'</span>'):'';
-    h += '<div class="bar-item" style="'+bg+'" data-togglesel="1">';
-    h += '<div class="bar-item-header">';
-    h += '<span class="bar-rank" style="background:'+cor+'22;color:'+cor+';">'+(i+1)+'</span>';
-    h += '<span class="bar-name">'+d.sku+alerta+'</span>';
-    h += '<span class="u-lbl-muted">'+d.estoque.toLocaleString('pt-BR')+' un</span>';
-    h += '<span class="bar-val" style="color:'+cor+'">'+cobStr+' cob.</span>';
-    h += '</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:'+cor+';" data-pct="'+pct+'"></div></div>';
-    h += '<div class="bar-expand">';
-    h += '<div class="expand-item">Estoque: <span class="expand-val" style="color:'+cor+'">'+d.estoque.toLocaleString('pt-BR')+' un</span></div>';
-    h += '<div class="expand-item">Ref. Abr/2025: <span class="expand-val" style="color:#D1D5DB">'+VENDA_REF.nissei.venda_mes.toLocaleString('pt-BR')+' un (total cliente)</span></div>';
-    h += '<div class="expand-item">Cobertura Real: <span class="expand-val" style="color:'+cor+'">'+cobStr+'</span></div>';
-    h += '</div></div>';
-  });
-  el.innerHTML = h;
-  el.querySelectorAll('[data-togglesel]').forEach(function(r){r.addEventListener('click',function(){this.classList.toggle('selected');});});
-  setTimeout(function(){el.querySelectorAll('.bar-fill').forEach(function(bar){bar.style.width=bar.getAttribute('data-pct')+'%';});},80);
+  estMontar(el, data.map(function(d,i){
+    var cob = calcCob(d.estoque, 'nissei'), risco = calcRisco(cob), c = cobLabel(cob), cor = EST_RISCO_COR[risco]||'#34d399';
+    return estLinha({cor:cor, bg:EST_RISCO_BG[risco]||'', rank:i+1,
+      nome:d.sku+(risco!=='ok'?estSelo(risco==='critico'?'⚡ CRÍTICO':'⚠ ATENÇÃO',cor,6):''), qtd:estUn(d.estoque), valor:c+' cob.',
+      pct:Math.min(100,Math.round(d.estoque/maxEst*100)),
+      detalhes:[['Estoque',estUn(d.estoque),cor], ['Ref. Abr/2025',estUn(VENDA_REF.nissei.venda_mes)+' (total cliente)','#D1D5DB'], ['Cobertura Real',c,cor]]});
+  }).join(''));
 }
 
 function setNsEstoqueTab(tab, btn){
