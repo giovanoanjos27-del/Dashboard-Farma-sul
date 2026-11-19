@@ -1869,12 +1869,6 @@ body.nielsen-theme #ob-preco-diag {
 }
 body.nielsen-theme #ob-mkt-diag * { color: #1e293b; }
 
-/* OB selects restantes (obMarketSel, obMarketSel2) */
-body.nielsen-theme select[id^="obMarket"] {
-  background: #FFFFFF !important;
-  border: 1px solid #CBD5E1 !important;
-  color: #1E293B !important;
-}
 /* OB toggle-group buttons */
 body.nielsen-theme #panel-nielsen [data-ob] .toggle-group {
   border-color: rgba(59,130,246,0.3) !important;
@@ -1895,12 +1889,6 @@ body.nielsen-theme #panel-nielsen [data-ob] .card-sub   { color: #475569 !import
    PATCH 21 -- Remove text-shadow/filter artefatos tema claro Nielsen
    ================================================================ */
 #panel-nielsen * { text-shadow: none !important; }
-/* avgMarketSel option hover/selected no tema claro */
-body.nielsen-theme #avgMarketSel option:checked,
-body.nielsen-theme #avgMarketSel option:focus {
-  background: #2563EB !important;
-  color: #FFFFFF !important;
-}
 
 /* ================================================================
    PATCH 20 — Fixes residuais tema claro Nielsen
@@ -18192,96 +18180,7 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div class="card-sub" id="mso-sub">FYTD27 vs FYTD26 (Jul–Out) · Série Nov/25–Out/26 · OFF! · EXPOSIS · XO INSETO · SUPER REPELEX · SBP</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <select id="msoMarketSel" onchange="renderMSO()" style="font-size:11px;padding:6px 28px 6px 10px;border-radius:7px;border:0.5px solid rgba(251,191,36,0.3);background:#161B22;color:#e2e8f0;cursor:pointer;font-family:inherit;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23fbbf24'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 10px center;">
-          <option value="Farma Sul">Farma Sul</option>
-          <optgroup label="─ Farma Regional ─">
-          <option value="Farma CO">Farma CO</option>
-          <option value="Farma Gde RJ">Farma Gde RJ</option>
-          <option value="Farma Gde SP">Farma Gde SP</option>
-          <option value="Farma Int SP">Farma Int SP</option>
-          <option value="Farma MG+ES+Int RJ">Farma MG+ES+Int RJ</option>
-          <option value="Farma NE">Farma NE</option>
-          </optgroup>
-          <optgroup label="─ Farma Independente ─">
-          <option value="Farma Indep Sul">Farma Indep Sul</option>
-          <option value="Farma Indep CO">Farma Indep CO</option>
-          <option value="Farma Indep Gde RJ">Farma Indep Gde RJ</option>
-          <option value="Farma Indep Gde SP">Farma Indep Gde SP</option>
-          <option value="Farma Indep Int SP">Farma Indep Int SP</option>
-          <option value="Farma Indep MG+ES+Int RJ">Farma Indep MG+ES+Int RJ</option>
-          <option value="Farma Indep NE">Farma Indep NE</option>
-          </optgroup>
-          <optgroup label="─ Farma Moderno ─">
-          <option value="Farma Moderno Sul">Farma Moderno Sul</option>
-          <option value="Farma Moderno CO">Farma Moderno CO</option>
-          <option value="Farma Moderno Gde RJ">Farma Moderno Gde RJ</option>
-          <option value="Farma Moderno Gde SP">Farma Moderno Gde SP</option>
-          <option value="Farma Moderno Int SP">Farma Moderno Int SP</option>
-          <option value="Farma Moderno MG+ES+Int RJ">Farma Moderno MG+ES+Int RJ</option>
-          <option value="Farma Moderno NE">Farma Moderno NE</option>
-          </optgroup>
-          <optgroup label="─ T.BR Farma ─">
-          <option value="T.BR Farma" selected>T.BR Farma</option>
-          <option value="T.BR Farma Indep">T.BR Farma Indep</option>
-          <option value="T.BR Farma Moderno">T.BR Farma Moderno</option>
-          </optgroup>
-          <optgroup label="─ INFC Sul ─">
-          <option value="INFC RS">INFC RS</option>
-          <option value="INFC SC">INFC SC</option>
-          <option value="INFC PR">INFC PR</option>
-          <option value="INFC Curitiba">INFC Curitiba · base anterior</option>
-          <option value="INFC Porto Alegre">INFC Porto Alegre · base anterior</option>
-          <option value="INFC Sul">INFC Sul · base anterior · base anterior</option>
-          <option value="INFC Int PR">INFC Int PR · base anterior</option>
-          <option value="INFC Int RS">INFC Int RS · base anterior</option>
-          <option value="INFC Cidade Gde Sul">INFC Cidade Gde Sul · base anterior</option>
-          <option value="INFC Cidade Peq+Med Sul">INFC Cidade Peq+Med Sul · base anterior</option>
-          </optgroup>
-          <optgroup label="─ INFC Nacional ─">
-          <option value="INFC MG">INFC MG</option>
-          <option value="INFC CO">INFC CO</option>
-          <option value="INFC BA">INFC BA</option>
-          <option value="INFC Belo Horizonte">INFC Belo Horizonte · base anterior</option>
-          <option value="INFC CE">INFC CE</option>
-          <option value="INFC Cidade Gde Gde RJ">INFC Cidade Gde Gde RJ · base anterior</option>
-          <option value="INFC Cidade Gde CO">INFC Cidade Gde CO · base anterior</option>
-          <option value="INFC Cidade Gde Gde SP">INFC Cidade Gde Gde SP · base anterior</option>
-          <option value="INFC Cidade Gde Int SP">INFC Cidade Gde Int SP · base anterior</option>
-          <option value="INFC Cidade Gde MG+ES+Int RJ">INFC Cidade Gde MG+ES+Int RJ · base anterior</option>
-          <option value="INFC Cidade Gde NE">INFC Cidade Gde NE · base anterior</option>
-          <option value="INFC Cidade Peq+Med CO">INFC Cidade Peq+Med CO · base anterior</option>
-          <option value="INFC Cidade Peq+Med Int SP">INFC Cidade Peq+Med Int SP · base anterior</option>
-          <option value="INFC Cidade Peq+Med MG+ES+Int RJ">INFC Cidade Peq+Med MG+ES+Int RJ · base anterior</option>
-          <option value="INFC Cidade Peq+Med NE">INFC Cidade Peq+Med NE · base anterior</option>
-          <option value="INFC DF">INFC DF</option>
-          <option value="INFC Fortaleza">INFC Fortaleza · base anterior</option>
-          <option value="INFC GO">INFC GO</option>
-          <option value="INFC Gde RJ">INFC Gde RJ · base anterior</option>
-          <option value="INFC Gde SP">INFC Gde SP · base anterior</option>
-          <option value="INFC Int BA">INFC Int BA · base anterior</option>
-          <option value="INFC Int CE">INFC Int CE · base anterior</option>
-          <option value="INFC Int MG">INFC Int MG · base anterior</option>
-          <option value="INFC Int PE">INFC Int PE · base anterior</option>
-          <option value="INFC Int SP">INFC Int SP · base anterior</option>
-          <option value="INFC MA+PI">INFC MA+PI</option>
-          <option value="INFC MG+ES+Int RJ">INFC MG+ES+Int RJ · base anterior · base anterior</option>
-          <option value="INFC Man+Bel+Ana">INFC Man+Bel+Ana</option>
-          <option value="INFC Manaus">INFC Manaus</option>
-          <option value="INFC NE">INFC NE · base anterior</option>
-          <option value="INFC PE">INFC PE</option>
-          <option value="INFC Recife">INFC Recife · base anterior</option>
-          <option value="INFC SP">INFC SP · base anterior</option>
-          <option value="INFC Salvador">INFC Salvador · base anterior</option>
-          </optgroup>
-          <optgroup label="─ INA ─">
-          <option value="INA MG">INA MG</option>
-          <option value="INA Int MG">INA Int MG · base anterior</option>
-          <option value="INA MG+ES+Int RJ">INA MG+ES+Int RJ · base anterior</option>
-          </optgroup>
-          <optgroup label="─ T.BR INFC ─">
-          <option value="T.BR INFC">T.BR INFC · base anterior</option>
-          </optgroup>
-        </select>
+        <span data-nq-mkt="msoMarketSel" hidden></span>
         <select id="msoFySel" onchange="nqSetFY(this.value)" title="Ano fiscal" style="display:none;font-size:11px;font-weight:700;padding:6px 28px 6px 10px;border-radius:7px;border:0.5px solid rgba(251,191,36,0.5);background:#161B22;color:#fbbf24;cursor:pointer;font-family:inherit;">
           <option value="FY27" selected>FY27 · Jul–Out/26 vs Jul–Out/25</option>
           <option value="FY26">FY26 · Jul/25–Jun/26 vs FY25</option>
@@ -18328,91 +18227,7 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div style="font-size:11px;color:#475569;margin-top:3px;" id="mso2-card-sub">Acum Jan–Mar/25 vs Jan–Mar/26 &middot; NielsenIQ &middot; <span id="mso2-mkt-lbl">T.BR Farma</span></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <select id="mso2MarketSel" onchange="renderMSO2()" style="font-size:11px;padding:6px 28px 6px 10px;border-radius:7px;border:0.5px solid rgba(251,191,36,0.3);background:#161B22;color:#e2e8f0;cursor:pointer;font-family:inherit;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23fbbf24'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 10px center;">
-          <option value="Farma Sul">Farma Sul</option>
-          <optgroup label="─ Farma Regional ─">
-          <option value="Farma CO">Farma CO</option>
-          <option value="Farma Gde RJ">Farma Gde RJ</option>
-          <option value="Farma Gde SP">Farma Gde SP</option>
-          <option value="Farma Int SP">Farma Int SP</option>
-          <option value="Farma MG+ES+Int RJ">Farma MG+ES+Int RJ</option>
-          <option value="Farma NE">Farma NE</option>
-          </optgroup>
-          <optgroup label="─ Farma Independente ─">
-          <option value="Farma Indep Sul">Farma Indep Sul</option>
-          <option value="Farma Indep CO">Farma Indep CO</option>
-          <option value="Farma Indep Gde RJ">Farma Indep Gde RJ</option>
-          <option value="Farma Indep Gde SP">Farma Indep Gde SP</option>
-          <option value="Farma Indep Int SP">Farma Indep Int SP</option>
-          <option value="Farma Indep MG+ES+Int RJ">Farma Indep MG+ES+Int RJ</option>
-          <option value="Farma Indep NE">Farma Indep NE</option>
-          </optgroup>
-          <optgroup label="─ Farma Moderno ─">
-          <option value="Farma Moderno Sul">Farma Moderno Sul</option>
-          <option value="Farma Moderno CO">Farma Moderno CO</option>
-          <option value="Farma Moderno Gde RJ">Farma Moderno Gde RJ</option>
-          <option value="Farma Moderno Gde SP">Farma Moderno Gde SP</option>
-          <option value="Farma Moderno Int SP">Farma Moderno Int SP</option>
-          <option value="Farma Moderno MG+ES+Int RJ">Farma Moderno MG+ES+Int RJ</option>
-          <option value="Farma Moderno NE">Farma Moderno NE</option>
-          </optgroup>
-          <optgroup label="─ T.BR Farma ─">
-          <option value="T.BR Farma" selected>T.BR Farma</option>
-          <option value="T.BR Farma Indep">T.BR Farma Indep</option>
-          <option value="T.BR Farma Moderno">T.BR Farma Moderno</option>
-          </optgroup>
-          <optgroup label="─ INFC Sul ─">
-          <option value="INFC RS">INFC RS</option>
-          <option value="INFC SC">INFC SC</option>
-          <option value="INFC PR">INFC PR</option>
-          <option value="INFC Curitiba">INFC Curitiba · base anterior</option>
-          <option value="INFC Porto Alegre">INFC Porto Alegre · base anterior</option>
-          <option value="INFC Sul">INFC Sul · base anterior · base anterior</option>
-          <option value="INFC Int PR">INFC Int PR · base anterior</option>
-          <option value="INFC Int RS">INFC Int RS · base anterior</option>
-          <option value="INFC Cidade Gde Sul">INFC Cidade Gde Sul · base anterior</option>
-          <option value="INFC Cidade Peq+Med Sul">INFC Cidade Peq+Med Sul · base anterior</option>
-          </optgroup>
-          <optgroup label="─ INFC Nacional ─">
-          <option value="INFC MG">INFC MG</option>
-          <option value="INFC CO">INFC CO</option>
-          <option value="INFC BA">INFC BA</option>
-          <option value="INFC Belo Horizonte">INFC Belo Horizonte · base anterior</option>
-          <option value="INFC CE">INFC CE</option>
-          <option value="INFC Cidade Gde Gde RJ">INFC Cidade Gde Gde RJ · base anterior</option>
-          <option value="INFC Cidade Gde CO">INFC Cidade Gde CO · base anterior</option>
-          <option value="INFC Cidade Gde Gde SP">INFC Cidade Gde Gde SP · base anterior</option>
-          <option value="INFC Cidade Gde Int SP">INFC Cidade Gde Int SP · base anterior</option>
-          <option value="INFC Cidade Gde MG+ES+Int RJ">INFC Cidade Gde MG+ES+Int RJ · base anterior</option>
-          <option value="INFC Cidade Gde NE">INFC Cidade Gde NE · base anterior</option>
-          <option value="INFC Cidade Peq+Med CO">INFC Cidade Peq+Med CO · base anterior</option>
-          <option value="INFC Cidade Peq+Med Int SP">INFC Cidade Peq+Med Int SP · base anterior</option>
-          <option value="INFC Cidade Peq+Med MG+ES+Int RJ">INFC Cidade Peq+Med MG+ES+Int RJ · base anterior</option>
-          <option value="INFC Cidade Peq+Med NE">INFC Cidade Peq+Med NE · base anterior</option>
-          <option value="INFC DF">INFC DF</option>
-          <option value="INFC Fortaleza">INFC Fortaleza · base anterior</option>
-          <option value="INFC GO">INFC GO</option>
-          <option value="INFC Gde RJ">INFC Gde RJ · base anterior</option>
-          <option value="INFC Gde SP">INFC Gde SP · base anterior</option>
-          <option value="INFC Int BA">INFC Int BA · base anterior</option>
-          <option value="INFC Int CE">INFC Int CE · base anterior</option>
-          <option value="INFC Int MG">INFC Int MG · base anterior</option>
-          <option value="INFC Int PE">INFC Int PE · base anterior</option>
-          <option value="INFC Int SP">INFC Int SP · base anterior</option>
-          <option value="INFC MA+PI">INFC MA+PI</option>
-          <option value="INFC MG+ES+Int RJ">INFC MG+ES+Int RJ · base anterior · base anterior</option>
-          <option value="INFC Man+Bel+Ana">INFC Man+Bel+Ana</option>
-          <option value="INFC Manaus">INFC Manaus</option>
-          <option value="INFC NE">INFC NE · base anterior</option>
-          <option value="INFC PE">INFC PE</option>
-          <option value="INFC Recife">INFC Recife · base anterior</option>
-          <option value="INFC SP">INFC SP · base anterior</option>
-          <option value="INFC Salvador">INFC Salvador · base anterior</option>
-          </optgroup>
-          <optgroup label="─ T.BR INFC ─">
-          <option value="T.BR INFC">T.BR INFC · base anterior</option>
-          </optgroup>
-        </select>
+        <span data-nq-mkt="mso2MarketSel" hidden></span>
         <div class="toggle-group" style="display:flex;gap:0;border-radius:7px;overflow:hidden;border:0.5px solid rgba(251,191,36,0.3);">
           <button class="tgl active blue" id="mso2-mode-share" onclick="setMSO2Mode('share',this)" style="font-size:11px;padding:5px 12px;border:none;background:#161B22;color:#fbbf24;cursor:pointer;font-family:inherit;font-weight:700;">Share</button>
           <button class="tgl" id="mso2-mode-val" onclick="setMSO2Mode('val',this)" style="font-size:11px;padding:5px 12px;border:none;border-left:0.5px solid rgba(251,191,36,0.2);background:#161B22;color:#D1D5DB;cursor:pointer;font-family:inherit;font-weight:600;">R$ MM</button>
@@ -18455,9 +18270,6 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div class="card-title" id="mso-sku-jm-title">$ Share por SKU · Jul–Out/26 vs Jul–Out/25</div>
         <div id="mso-sku-jm-sub" class="card-sub">Share por SKU · média Jul–Out/26 vs Jul–Out/25 · Personal Repellent</div>
       </div>
-      <select id="msoSkuJMSel" onchange="renderMSOSkuJanMar()"
-        style="background:#161B22;border:1px solid rgba(52,211,153,0.3);border-radius:8px;color:#e2e8f0;font-size:11px;padding:6px 12px;cursor:pointer;min-width:160px;">
-      </select>
     </div>
     <div id="mso-sku-jm-kpis" style="margin-bottom:14px;"></div>
     <div style="display:flex;gap:16px;align-items:stretch;">
@@ -18493,91 +18305,7 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div style="font-size:11px;color:#475569;margin-top:3px;" id="mso3-card-sub">NielsenIQ (base Out/26) &middot; FYTD = Jul&ndash;Out &middot; <span id="mso3-mkt-lbl">T.BR Farma</span></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <select id="mso3MarketSel" onchange="renderMSO3()" style="font-size:11px;padding:6px 28px 6px 10px;border-radius:7px;border:0.5px solid rgba(251,191,36,0.3);background:#161B22;color:#e2e8f0;cursor:pointer;font-family:inherit;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23fbbf24'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 10px center;">
-          <option value="Farma Sul">Farma Sul</option>
-          <optgroup label="─ Farma Regional ─">
-          <option value="Farma CO">Farma CO</option>
-          <option value="Farma Gde RJ">Farma Gde RJ</option>
-          <option value="Farma Gde SP">Farma Gde SP</option>
-          <option value="Farma Int SP">Farma Int SP</option>
-          <option value="Farma MG+ES+Int RJ">Farma MG+ES+Int RJ</option>
-          <option value="Farma NE">Farma NE</option>
-          </optgroup>
-          <optgroup label="─ Farma Independente ─">
-          <option value="Farma Indep Sul">Farma Indep Sul</option>
-          <option value="Farma Indep CO">Farma Indep CO</option>
-          <option value="Farma Indep Gde RJ">Farma Indep Gde RJ</option>
-          <option value="Farma Indep Gde SP">Farma Indep Gde SP</option>
-          <option value="Farma Indep Int SP">Farma Indep Int SP</option>
-          <option value="Farma Indep MG+ES+Int RJ">Farma Indep MG+ES+Int RJ</option>
-          <option value="Farma Indep NE">Farma Indep NE</option>
-          </optgroup>
-          <optgroup label="─ Farma Moderno ─">
-          <option value="Farma Moderno Sul">Farma Moderno Sul</option>
-          <option value="Farma Moderno CO">Farma Moderno CO</option>
-          <option value="Farma Moderno Gde RJ">Farma Moderno Gde RJ</option>
-          <option value="Farma Moderno Gde SP">Farma Moderno Gde SP</option>
-          <option value="Farma Moderno Int SP">Farma Moderno Int SP</option>
-          <option value="Farma Moderno MG+ES+Int RJ">Farma Moderno MG+ES+Int RJ</option>
-          <option value="Farma Moderno NE">Farma Moderno NE</option>
-          </optgroup>
-          <optgroup label="─ T.BR Farma ─">
-          <option value="T.BR Farma" selected>T.BR Farma</option>
-          <option value="T.BR Farma Indep">T.BR Farma Indep</option>
-          <option value="T.BR Farma Moderno">T.BR Farma Moderno</option>
-          </optgroup>
-          <optgroup label="─ INFC Sul ─">
-          <option value="INFC RS">INFC RS</option>
-          <option value="INFC SC">INFC SC</option>
-          <option value="INFC PR">INFC PR</option>
-          <option value="INFC Curitiba">INFC Curitiba · base anterior</option>
-          <option value="INFC Porto Alegre">INFC Porto Alegre · base anterior</option>
-          <option value="INFC Sul">INFC Sul · base anterior · base anterior</option>
-          <option value="INFC Int PR">INFC Int PR · base anterior</option>
-          <option value="INFC Int RS">INFC Int RS · base anterior</option>
-          <option value="INFC Cidade Gde Sul">INFC Cidade Gde Sul · base anterior</option>
-          <option value="INFC Cidade Peq+Med Sul">INFC Cidade Peq+Med Sul · base anterior</option>
-          </optgroup>
-          <optgroup label="─ INFC Nacional ─">
-          <option value="INFC MG">INFC MG</option>
-          <option value="INFC CO">INFC CO</option>
-          <option value="INFC BA">INFC BA</option>
-          <option value="INFC Belo Horizonte">INFC Belo Horizonte · base anterior</option>
-          <option value="INFC CE">INFC CE</option>
-          <option value="INFC Cidade Gde Gde RJ">INFC Cidade Gde Gde RJ · base anterior</option>
-          <option value="INFC Cidade Gde CO">INFC Cidade Gde CO · base anterior</option>
-          <option value="INFC Cidade Gde Gde SP">INFC Cidade Gde Gde SP · base anterior</option>
-          <option value="INFC Cidade Gde Int SP">INFC Cidade Gde Int SP · base anterior</option>
-          <option value="INFC Cidade Gde MG+ES+Int RJ">INFC Cidade Gde MG+ES+Int RJ · base anterior</option>
-          <option value="INFC Cidade Gde NE">INFC Cidade Gde NE · base anterior</option>
-          <option value="INFC Cidade Peq+Med CO">INFC Cidade Peq+Med CO · base anterior</option>
-          <option value="INFC Cidade Peq+Med Int SP">INFC Cidade Peq+Med Int SP · base anterior</option>
-          <option value="INFC Cidade Peq+Med MG+ES+Int RJ">INFC Cidade Peq+Med MG+ES+Int RJ · base anterior</option>
-          <option value="INFC Cidade Peq+Med NE">INFC Cidade Peq+Med NE · base anterior</option>
-          <option value="INFC DF">INFC DF</option>
-          <option value="INFC Fortaleza">INFC Fortaleza · base anterior</option>
-          <option value="INFC GO">INFC GO</option>
-          <option value="INFC Gde RJ">INFC Gde RJ · base anterior</option>
-          <option value="INFC Gde SP">INFC Gde SP · base anterior</option>
-          <option value="INFC Int BA">INFC Int BA · base anterior</option>
-          <option value="INFC Int CE">INFC Int CE · base anterior</option>
-          <option value="INFC Int MG">INFC Int MG · base anterior</option>
-          <option value="INFC Int PE">INFC Int PE · base anterior</option>
-          <option value="INFC Int SP">INFC Int SP · base anterior</option>
-          <option value="INFC MA+PI">INFC MA+PI</option>
-          <option value="INFC MG+ES+Int RJ">INFC MG+ES+Int RJ · base anterior · base anterior</option>
-          <option value="INFC Man+Bel+Ana">INFC Man+Bel+Ana</option>
-          <option value="INFC Manaus">INFC Manaus</option>
-          <option value="INFC NE">INFC NE · base anterior</option>
-          <option value="INFC PE">INFC PE</option>
-          <option value="INFC Recife">INFC Recife · base anterior</option>
-          <option value="INFC SP">INFC SP · base anterior</option>
-          <option value="INFC Salvador">INFC Salvador · base anterior</option>
-          </optgroup>
-          <optgroup label="─ T.BR INFC ─">
-          <option value="T.BR INFC">T.BR INFC · base anterior</option>
-          </optgroup>
-        </select>
+        <span data-nq-mkt="mso3MarketSel" hidden></span>
         <div class="toggle-group" style="display:flex;gap:0;border-radius:7px;overflow:hidden;border:0.5px solid rgba(251,191,36,0.3);">
           <button class="tgl" id="mso3-mode-share" onclick="setMSO3Mode('share',this)" style="display:none;">Share</button>
           <button class="tgl active" id="mso3-mode-val" onclick="setMSO3Mode('val',this)" style="font-size:11px;padding:5px 12px;border:none;background:rgba(251,191,36,0.12);color:#fbbf24;cursor:pointer;font-family:inherit;font-weight:700;">R$ MM</button>
@@ -18613,106 +18341,6 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
       <div style="font-size:15px;font-weight:700;color:#f1f5f9;line-height:1.2;" id="sku-shr-title">$ Share por SKU · FYTD27 vs FYTD26</div>
       <div id="sku-shr-sub" style="font-size:11px;color:#475569;margin-top:3px;">Personal Repellent · NielsenIQ</div>
     </div>
-    <select id="skuShrMktSel" onchange="renderSkuShrCard()"
-      style="background:#161B22;color:#e2e8f0;border:0.5px solid rgba(251,191,36,0.3);border-radius:7px;padding:6px 28px 6px 10px;font-size:11px;cursor:pointer;font-family:inherit;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23fbbf24'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center">
-      <option value="T.BR Farma">T.BR Farma</option>
-      <option value="Farma Sul">Farma Sul</option>
-      <option value="INFC Sul">INFC Sul · base anterior · base anterior</option>
-      <optgroup label="─ Farma Regional ─">
-      <option value="Farma CO">Farma CO</option>
-      <option value="Farma Gde RJ">Farma Gde RJ</option>
-      <option value="Farma Gde SP">Farma Gde SP</option>
-      <option value="Farma Int SP">Farma Int SP</option>
-      <option value="Farma MG+ES+Int RJ">Farma MG+ES+Int RJ</option>
-      <option value="Farma NE">Farma NE</option>
-      </optgroup>
-      <optgroup label="─ Farma Independente ─">
-      <option value="Farma Indep Sul">Farma Indep Sul</option>
-      <option value="Farma Indep CO">Farma Indep CO</option>
-      <option value="Farma Indep Gde RJ">Farma Indep Gde RJ</option>
-      <option value="Farma Indep Gde SP">Farma Indep Gde SP</option>
-      <option value="Farma Indep Int SP">Farma Indep Int SP</option>
-      <option value="Farma Indep MG+ES+Int RJ">Farma Indep MG+ES+Int RJ</option>
-      <option value="Farma Indep NE">Farma Indep NE</option>
-      </optgroup>
-      <optgroup label="─ Farma Moderno ─">
-      <option value="Farma Moderno Sul">Farma Moderno Sul</option>
-      <option value="Farma Moderno CO">Farma Moderno CO</option>
-      <option value="Farma Moderno Gde RJ">Farma Moderno Gde RJ</option>
-      <option value="Farma Moderno Gde SP">Farma Moderno Gde SP</option>
-      <option value="Farma Moderno Int SP">Farma Moderno Int SP</option>
-      <option value="Farma Moderno MG+ES+Int RJ">Farma Moderno MG+ES+Int RJ</option>
-      <option value="Farma Moderno NE">Farma Moderno NE</option>
-      </optgroup>
-      <optgroup label="─ T.BR ─">
-      <option value="T.BR Farma">T.BR Farma</option>
-      <option value="T.BR Farma Indep">T.BR Farma Indep</option>
-      <option value="T.BR Farma Moderno">T.BR Farma Moderno</option>
-      <option value="T.BR INFC">T.BR INFC · base anterior</option>
-      </optgroup>
-      <optgroup label="─ INFC Sul ─">
-      <option value="INFC RS">INFC RS</option>
-      <option value="INFC SC">INFC SC</option>
-      <option value="INFC PR">INFC PR</option>
-      <option value="INFC Curitiba">INFC Curitiba · base anterior</option>
-      <option value="INFC Porto Alegre">INFC Porto Alegre · base anterior</option>
-      <option value="INFC Int PR">INFC Int PR · base anterior</option>
-      <option value="INFC Int RS">INFC Int RS · base anterior</option>
-      <option value="INFC Cidade Gde Sul">INFC Cidade Gde Sul · base anterior</option>
-      <option value="INFC Cidade Peq+Med Sul">INFC Cidade Peq+Med Sul · base anterior</option>
-      </optgroup>
-      <optgroup label="─ INA ─">
-      <option value="INA MG">INA MG</option>
-      <option value="INA Int MG">INA Int MG · base anterior</option>
-      <option value="INA MG+ES+Int RJ">INA MG+ES+Int RJ · base anterior</option>
-      </optgroup>
-      <optgroup label="─ INFC CO/GO/DF ─">
-      <option value="INFC CO">INFC CO</option>
-      <option value="INFC GO">INFC GO</option>
-      <option value="INFC DF">INFC DF</option>
-      </optgroup>
-      <optgroup label="─ INFC MG/ES ─">
-      <option value="INFC MG">INFC MG</option>
-      <option value="INFC Belo Horizonte">INFC Belo Horizonte · base anterior</option>
-      <option value="INFC Int MG">INFC Int MG · base anterior</option>
-      <option value="INFC MG+ES+Int RJ">INFC MG+ES+Int RJ · base anterior · base anterior</option>
-      </optgroup>
-      <optgroup label="─ INFC RJ/SP ─">
-      <option value="INFC Gde RJ">INFC Gde RJ · base anterior</option>
-      <option value="INFC SP">INFC SP · base anterior</option>
-      <option value="INFC Gde SP">INFC Gde SP · base anterior</option>
-      <option value="INFC Int SP">INFC Int SP · base anterior</option>
-      </optgroup>
-      <optgroup label="─ INFC NE ─">
-      <option value="INFC NE">INFC NE · base anterior</option>
-      <option value="INFC BA">INFC BA</option>
-      <option value="INFC CE">INFC CE</option>
-      <option value="INFC PE">INFC PE</option>
-      <option value="INFC MA+PI">INFC MA+PI</option>
-      <option value="INFC Salvador">INFC Salvador · base anterior</option>
-      <option value="INFC Fortaleza">INFC Fortaleza · base anterior</option>
-      <option value="INFC Recife">INFC Recife · base anterior</option>
-      <option value="INFC Int BA">INFC Int BA · base anterior</option>
-      <option value="INFC Int CE">INFC Int CE · base anterior</option>
-      <option value="INFC Int PE">INFC Int PE · base anterior</option>
-      </optgroup>
-      <optgroup label="─ INFC Norte ─">
-      <option value="INFC Man+Bel+Ana">INFC Man+Bel+Ana</option>
-      <option value="INFC Manaus">INFC Manaus</option>
-      </optgroup>
-      <optgroup label="─ INFC Cidades ─">
-      <option value="INFC Cidade Gde CO">INFC Cidade Gde CO · base anterior</option>
-      <option value="INFC Cidade Peq+Med CO">INFC Cidade Peq+Med CO · base anterior</option>
-      <option value="INFC Cidade Gde MG+ES+Int RJ">INFC Cidade Gde MG+ES+Int RJ · base anterior</option>
-      <option value="INFC Cidade Peq+Med MG+ES+Int RJ">INFC Cidade Peq+Med MG+ES+Int RJ · base anterior</option>
-      <option value="INFC Cidade Gde Gde RJ">INFC Cidade Gde Gde RJ · base anterior</option>
-      <option value="INFC Cidade Gde Gde SP">INFC Cidade Gde Gde SP · base anterior</option>
-      <option value="INFC Cidade Gde Int SP">INFC Cidade Gde Int SP · base anterior</option>
-      <option value="INFC Cidade Peq+Med Int SP">INFC Cidade Peq+Med Int SP · base anterior</option>
-      <option value="INFC Cidade Gde NE">INFC Cidade Gde NE · base anterior</option>
-      <option value="INFC Cidade Peq+Med NE">INFC Cidade Peq+Med NE · base anterior</option>
-      </optgroup>
-    </select>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
     <!-- Chart Left: Share FYTD26 -->
@@ -18787,95 +18415,6 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
       <div id="shr-trend-title" style="font-size:15px;font-weight:700;color:#f1f5f9;line-height:1.2;">Evolução mensal de $ Share · FY25 · FY26 · FY27</div>
       <div id="shr-trend-sub" style="font-size:11px;color:#475569;margin-top:3px;">Personal Repellent · NielsenIQ</div>
     </div>
-    <select id="shrTrendMktSel" onchange="renderShrTrend()"
-      style="background:#161B22;color:#e2e8f0;border:0.5px solid rgba(251,191,36,0.3);border-radius:7px;padding:6px 28px 6px 10px;font-size:11px;cursor:pointer;font-family:inherit;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23fbbf24'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center">
-              <optgroup label="── Total Brasil ──">
-        <option value="T.BR Farma">T.BR Farma</option>
-        <option value="T.BR Farma Moderno">T.BR Farma Moderno</option>
-        <option value="T.BR Farma Indep">T.BR Farma Indep</option>
-        <option value="T.BR INFC">T.BR INFC · base anterior</option>
-      </optgroup>
-      <optgroup label="── Farma Total ──">
-        <option value="Farma Sul">Farma Sul</option>
-        <option value="Farma CO">Farma CO</option>
-        <option value="Farma Gde RJ">Farma Gde RJ</option>
-        <option value="Farma Gde SP">Farma Gde SP</option>
-        <option value="Farma NE">Farma NE</option>
-        <option value="Farma Int SP">Farma Int SP</option>
-        <option value="Farma MG+ES+Int RJ">Farma MG+ES+Int RJ</option>
-      </optgroup>
-      <optgroup label="── Farma Independente ──">
-        <option value="Farma Indep Sul">Farma Indep Sul</option>
-        <option value="Farma Indep CO">Farma Indep CO</option>
-        <option value="Farma Indep Gde RJ">Farma Indep Gde RJ</option>
-        <option value="Farma Indep Gde SP">Farma Indep Gde SP</option>
-        <option value="Farma Indep Int SP">Farma Indep Int SP</option>
-        <option value="Farma Indep MG+ES+Int RJ">Farma Indep MG+ES+Int RJ</option>
-        <option value="Farma Indep NE">Farma Indep NE</option>
-      </optgroup>
-      <optgroup label="── Farma Moderno ──">
-        <option value="Farma Moderno Sul">Farma Moderno Sul</option>
-        <option value="Farma Moderno CO">Farma Moderno CO</option>
-        <option value="Farma Moderno Gde RJ">Farma Moderno Gde RJ</option>
-        <option value="Farma Moderno Gde SP">Farma Moderno Gde SP</option>
-        <option value="Farma Moderno Int SP">Farma Moderno Int SP</option>
-        <option value="Farma Moderno MG+ES+Int RJ">Farma Moderno MG+ES+Int RJ</option>
-        <option value="Farma Moderno NE">Farma Moderno NE</option>
-      </optgroup>
-      <optgroup label="── INFC Regional ──">
-        <option value="INFC Sul">INFC Sul · base anterior · base anterior</option>
-        <option value="INFC SC">INFC SC</option>
-        <option value="INFC RS">INFC RS</option>
-        <option value="INFC PR">INFC PR</option>
-        <option value="INFC MG">INFC MG</option>
-        <option value="INFC CO">INFC CO</option>
-        <option value="INFC BA">INFC BA</option>
-        <option value="INFC CE">INFC CE</option>
-        <option value="INFC DF">INFC DF</option>
-        <option value="INFC GO">INFC GO</option>
-        <option value="INFC Gde RJ">INFC Gde RJ · base anterior</option>
-        <option value="INFC Gde SP">INFC Gde SP · base anterior</option>
-        <option value="INFC NE">INFC NE · base anterior</option>
-        <option value="INFC Int SP">INFC Int SP · base anterior</option>
-        <option value="INFC MG+ES+Int RJ">INFC MG+ES+Int RJ · base anterior · base anterior</option>
-        <option value="INFC MA+PI">INFC MA+PI</option>
-        <option value="INFC Int BA">INFC Int BA · base anterior</option>
-        <option value="INFC Int CE">INFC Int CE · base anterior</option>
-        <option value="INFC Int MG">INFC Int MG · base anterior</option>
-        <option value="INFC Int PE">INFC Int PE · base anterior</option>
-        <option value="INFC Int PR">INFC Int PR · base anterior</option>
-        <option value="INFC Int RS">INFC Int RS · base anterior</option>
-        <option value="INFC SP">INFC SP · base anterior</option>
-        <option value="INFC PE">INFC PE</option>
-      </optgroup>
-      <optgroup label="── INFC Cidades/Segmentos ──">
-        <option value="INFC Belo Horizonte">INFC Belo Horizonte · base anterior</option>
-        <option value="INFC Curitiba">INFC Curitiba · base anterior</option>
-        <option value="INFC Fortaleza">INFC Fortaleza · base anterior</option>
-        <option value="INFC Man+Bel+Ana">INFC Man+Bel+Ana</option>
-        <option value="INFC Manaus">INFC Manaus</option>
-        <option value="INFC Porto Alegre">INFC Porto Alegre · base anterior</option>
-        <option value="INFC Recife">INFC Recife · base anterior</option>
-        <option value="INFC Salvador">INFC Salvador · base anterior</option>
-        <option value="INFC Cidade Gde CO">INFC Cidade Gde CO · base anterior</option>
-        <option value="INFC Cidade Gde Gde RJ">INFC Cidade Gde Gde RJ · base anterior</option>
-        <option value="INFC Cidade Gde Gde SP">INFC Cidade Gde Gde SP · base anterior</option>
-        <option value="INFC Cidade Gde Int SP">INFC Cidade Gde Int SP · base anterior</option>
-        <option value="INFC Cidade Gde MG+ES+Int RJ">INFC Cidade Gde MG+ES+Int RJ · base anterior</option>
-        <option value="INFC Cidade Gde NE">INFC Cidade Gde NE · base anterior</option>
-        <option value="INFC Cidade Gde Sul">INFC Cidade Gde Sul · base anterior</option>
-        <option value="INFC Cidade Peq+Med CO">INFC Cidade Peq+Med CO · base anterior</option>
-        <option value="INFC Cidade Peq+Med Int SP">INFC Cidade Peq+Med Int SP · base anterior</option>
-        <option value="INFC Cidade Peq+Med MG+ES+Int RJ">INFC Cidade Peq+Med MG+ES+Int RJ · base anterior</option>
-        <option value="INFC Cidade Peq+Med NE">INFC Cidade Peq+Med NE · base anterior</option>
-        <option value="INFC Cidade Peq+Med Sul">INFC Cidade Peq+Med Sul · base anterior</option>
-      </optgroup>
-      <optgroup label="── INA ──">
-        <option value="INA MG">INA MG</option>
-        <option value="INA Int MG">INA Int MG · base anterior</option>
-        <option value="INA MG+ES+Int RJ">INA MG+ES+Int RJ · base anterior</option>
-      </optgroup>
-    </select>
   </div>
   <!-- Brand filter buttons -->
   <div id="shr-brand-filters" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
@@ -18912,91 +18451,6 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div class="card-sub">Preço médio por unidade · OFF! Family Loção 200ml PR · OFF! Family Spray 170ml PR · Xô Loção 200ml · Xô Spray 200ml</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <select id="avgMarketSel" onchange="setAvgMarket(this.value)" style="font-size:11px;padding:6px 28px 6px 10px;border-radius:7px;border:1px solid #CBD5E1;background:#FFFFFF;color:#1E293B;cursor:pointer;font-family:inherit;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%231E293B'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 10px center;">
-          <option value="farmasul">Farma Sul</option>
-          <optgroup label="─ Farma Regional ─">
-          <option value="farma_co">Farma CO</option>
-          <option value="farma_gde_rj">Farma Gde RJ</option>
-          <option value="farma_gde_sp">Farma Gde SP</option>
-          <option value="farma_int_sp">Farma Int SP</option>
-          <option value="farma_mg">Farma MG+ES+Int RJ</option>
-          <option value="farma_ne">Farma NE</option>
-          </optgroup>
-          <optgroup label="─ Farma Independente ─">
-          <option value="farma_indep_co">Farma Indep CO</option>
-          <option value="farma_indep_gde_rj">Farma Indep Gde RJ</option>
-          <option value="farma_indep_gde_sp">Farma Indep Gde SP</option>
-          <option value="farma_indep_int_sp">Farma Indep Int SP</option>
-          <option value="farma_indep_mg">Farma Indep MG+ES+Int RJ</option>
-          <option value="farma_indep_ne">Farma Indep NE</option>
-          <option value="farma_indep_sul">Farma Indep Sul</option>
-          </optgroup>
-          <optgroup label="─ Farma Moderno ─">
-          <option value="farma_mod_co">Farma Moderno CO</option>
-          <option value="farma_mod_gde_rj">Farma Moderno Gde RJ</option>
-          <option value="farma_mod_gde_sp">Farma Moderno Gde SP</option>
-          <option value="farma_mod_int_sp">Farma Moderno Int SP</option>
-          <option value="farma_mod_mg">Farma Moderno MG+ES+Int RJ</option>
-          <option value="farma_mod_ne">Farma Moderno NE</option>
-          <option value="farma_mod_sul">Farma Moderno Sul</option>
-          </optgroup>
-          <optgroup label="─ T.BR Farma ─">
-          <option value="tbr_farma" selected>T.BR Farma</option>
-          <option value="tbr_farma_indep">T.BR Farma Indep</option>
-          <option value="tbr_farma_mod">T.BR Farma Moderno</option>
-          </optgroup>
-          <optgroup label="─ INFC Sul ─">
-          <option value="rs">INFC RS</option>
-          <option value="sc">INFC SC</option>
-          <option value="pr">INFC PR</option>
-          <option value="infc_cwb">INFC Curitiba · base anterior</option>
-          <option value="infc_poa">INFC Porto Alegre · base anterior</option>
-          <option value="infc_sul">INFC Sul · base anterior</option>
-          <option value="infc_int_pr">INFC Int PR · base anterior</option>
-          <option value="infc_int_rs">INFC Int RS · base anterior</option>
-          <option value="infc_cg_sul">INFC Cidade Gde Sul · base anterior</option>
-          <option value="infc_cp_sul">INFC Cidade Peq+Med Sul · base anterior</option>
-          </optgroup>
-          <optgroup label="─ INFC Nacional ─">
-          <option value="infc_mg">INFC MG</option>
-          <option value="infc_co">INFC CO</option>
-          <option value="infc_ba">INFC BA</option>
-          <option value="infc_bh">INFC Belo Horizonte · base anterior</option>
-          <option value="infc_ce">INFC CE</option>
-          <option value="infc_cg_gde_rj">INFC Cidade Gde Gde RJ · base anterior</option>
-          <option value="infc_cg_co">INFC Cidade Gde CO · base anterior</option>
-          <option value="infc_cg_gde_sp">INFC Cidade Gde Gde SP · base anterior</option>
-          <option value="infc_cg_int_sp">INFC Cidade Gde Int SP · base anterior</option>
-          <option value="infc_cg_mg">INFC Cidade Gde MG+ES+Int RJ · base anterior</option>
-          <option value="infc_cg_ne">INFC Cidade Gde NE · base anterior</option>
-          <option value="infc_cp_co">INFC Cidade Peq+Med CO · base anterior</option>
-          <option value="infc_cp_int_sp">INFC Cidade Peq+Med Int SP · base anterior</option>
-          <option value="infc_cp_mg">INFC Cidade Peq+Med MG+ES+Int RJ · base anterior</option>
-          <option value="infc_cp_ne">INFC Cidade Peq+Med NE · base anterior</option>
-          <option value="infc_df">INFC DF</option>
-          <option value="infc_for">INFC Fortaleza · base anterior</option>
-          <option value="infc_go">INFC GO</option>
-          <option value="infc_gde_rj">INFC Gde RJ · base anterior</option>
-          <option value="infc_gde_sp">INFC Gde SP · base anterior</option>
-          <option value="infc_int_ba">INFC Int BA · base anterior</option>
-          <option value="infc_int_ce">INFC Int CE · base anterior</option>
-          <option value="infc_int_mg">INFC Int MG · base anterior</option>
-          <option value="infc_int_pe">INFC Int PE · base anterior</option>
-          <option value="infc_int_sp">INFC Int SP · base anterior</option>
-          <option value="infc_mapi">INFC MA+PI</option>
-          <option value="infc_mg_es">INFC MG+ES+Int RJ · base anterior</option>
-          <option value="infc_man_bel">INFC Man+Bel+Ana</option>
-          <option value="infc_manaus">INFC Manaus</option>
-          <option value="infc_ne">INFC NE · base anterior</option>
-          <option value="infc_pe">INFC PE</option>
-          <option value="infc_recife">INFC Recife · base anterior</option>
-          <option value="infc_sp">INFC SP · base anterior</option>
-          <option value="infc_salvador">INFC Salvador · base anterior</option>
-          </optgroup>
-          <optgroup label="─ T.BR INFC ─">
-          <option value="tbr_infc">T.BR INFC · base anterior</option>
-          </optgroup>
-        </select>
       </div>
     </div>
     <div style="position:relative;width:100%;height:300px;"><canvas id="avgPriceChart" width="1792" height="375" style="display: block; box-sizing: border-box; height: 300px; width: 1433px;"></canvas></div>
@@ -19012,88 +18466,8 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div class="card-title" id="elet-card-title">$ Share por Fabricante — FYTD26 vs FYTD27 (Jul–Out)</div>
         <div class="card-sub" id="elet-mkt-sub">FYTD27 = Jul–Out/26 vs FYTD26 = Jul–Out/25 · Electric Liquid · NielsenIQ · T.BR Farma</div>
       </div>
-      <!-- Market filter dropdown -->
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <select id="eletMarketSel" onchange="eletSetMarket()" style="font-size:11px;padding:6px 28px 6px 10px;border-radius:7px;border:0.5px solid rgba(251,191,36,0.3);background:#161B22;color:#e2e8f0;cursor:pointer;font-family:inherit;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23fbbf24'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 10px center;">
-          <optgroup label="── Farma ──">
-            <option value="Farma CO">Farma CO</option>
-            <option value="Farma Gde RJ">Farma Gde RJ</option>
-            <option value="Farma Gde SP">Farma Gde SP</option>
-            <option value="Farma Indep CO">Farma Indep CO</option>
-            <option value="Farma Indep Gde RJ">Farma Indep Gde RJ</option>
-            <option value="Farma Indep Gde SP">Farma Indep Gde SP</option>
-            <option value="Farma Indep Int SP">Farma Indep Int SP</option>
-            <option value="Farma Indep MG+ES+Int RJ">Farma Indep MG+ES+Int RJ</option>
-            <option value="Farma Indep NE">Farma Indep NE</option>
-            <option value="Farma Indep Sul">Farma Indep Sul</option>
-            <option value="Farma Int SP">Farma Int SP</option>
-            <option value="Farma MG+ES+Int RJ">Farma MG+ES+Int RJ</option>
-            <option value="Farma Moderno CO">Farma Moderno CO</option>
-            <option value="Farma Moderno Gde RJ">Farma Moderno Gde RJ</option>
-            <option value="Farma Moderno Gde SP">Farma Moderno Gde SP</option>
-            <option value="Farma Moderno Int SP">Farma Moderno Int SP</option>
-            <option value="Farma Moderno MG+ES+Int RJ">Farma Moderno MG+ES+Int RJ</option>
-            <option value="Farma Moderno NE">Farma Moderno NE</option>
-            <option value="Farma Moderno Sul">Farma Moderno Sul</option>
-            <option value="Farma NE">Farma NE</option>
-            <option value="Farma Sul">Farma Sul</option>
-            <option value="T.BR Farma" selected>T.BR Farma</option>
-            <option value="T.BR Farma Indep">T.BR Farma Indep</option>
-            <option value="T.BR Farma Moderno">T.BR Farma Moderno</option>
-          </optgroup>
-          <optgroup label="── INFC ──">
-            <option value="INFC RS">INFC RS</option>
-            <option value="INFC SC">INFC SC</option>
-            <option value="INFC MG">INFC MG</option>
-            <option value="INFC CO">INFC CO</option>
-            <option value="INFC BA">INFC BA</option>
-            <option value="INFC Belo Horizonte">INFC Belo Horizonte · base anterior</option>
-            <option value="INFC CE">INFC CE</option>
-            <option value="INFC Cidade Gde Gde RJ">INFC Cidade Gde Gde RJ · base anterior</option>
-            <option value="INFC Cidade Gde CO">INFC Cidade Gde CO · base anterior</option>
-            <option value="INFC Cidade Gde Gde SP">INFC Cidade Gde Gde SP · base anterior</option>
-            <option value="INFC Cidade Gde Int SP">INFC Cidade Gde Int SP · base anterior</option>
-            <option value="INFC Cidade Gde MG+ES+Int RJ">INFC Cidade Gde MG+ES+Int RJ · base anterior</option>
-            <option value="INFC Cidade Gde NE">INFC Cidade Gde NE · base anterior</option>
-            <option value="INFC Cidade Gde Sul">INFC Cidade Gde Sul · base anterior</option>
-            <option value="INFC Cidade Peq+Med CO">INFC Cidade Peq+Med CO · base anterior</option>
-            <option value="INFC Cidade Peq+Med Int SP">INFC Cidade Peq+Med Int SP · base anterior</option>
-            <option value="INFC Cidade Peq+Med MG+ES+Int RJ">INFC Cidade Peq+Med MG+ES+Int RJ · base anterior</option>
-            <option value="INFC Cidade Peq+Med NE">INFC Cidade Peq+Med NE · base anterior</option>
-            <option value="INFC Cidade Peq+Med Sul">INFC Cidade Peq+Med Sul · base anterior</option>
-            <option value="INFC Curitiba">INFC Curitiba · base anterior</option>
-            <option value="INFC DF">INFC DF</option>
-            <option value="INFC Fortaleza">INFC Fortaleza · base anterior</option>
-            <option value="INFC GO">INFC GO</option>
-            <option value="INFC Gde RJ">INFC Gde RJ · base anterior</option>
-            <option value="INFC Gde SP">INFC Gde SP · base anterior</option>
-            <option value="INFC Int BA">INFC Int BA · base anterior</option>
-            <option value="INFC Int CE">INFC Int CE · base anterior</option>
-            <option value="INFC Int MG">INFC Int MG · base anterior</option>
-            <option value="INFC Int PE">INFC Int PE · base anterior</option>
-            <option value="INFC Int PR">INFC Int PR · base anterior</option>
-            <option value="INFC Int RS">INFC Int RS · base anterior</option>
-            <option value="INFC Int SP">INFC Int SP · base anterior</option>
-            <option value="INFC MA+PI">INFC MA+PI</option>
-            <option value="INFC MG+ES+Int RJ">INFC MG+ES+Int RJ · base anterior · base anterior</option>
-            <option value="INFC Man+Bel+Ana">INFC Man+Bel+Ana</option>
-            <option value="INFC Manaus">INFC Manaus</option>
-            <option value="INFC NE">INFC NE · base anterior</option>
-            <option value="INFC PE">INFC PE</option>
-            <option value="INFC PR">INFC PR</option>
-            <option value="INFC Porto Alegre">INFC Porto Alegre · base anterior</option>
-            <option value="INFC Recife">INFC Recife · base anterior</option>
-            <option value="INFC SP">INFC SP · base anterior</option>
-            <option value="INFC Salvador">INFC Salvador · base anterior</option>
-            <option value="INFC Sul">INFC Sul · base anterior · base anterior</option>
-            <option value="T.BR INFC">T.BR INFC · base anterior</option>
-          </optgroup>
-          <optgroup label="── INA ──">
-            <option value="INA Int MG">INA Int MG · base anterior</option>
-            <option value="INA MG">INA MG</option>
-            <option value="INA MG+ES+Int RJ">INA MG+ES+Int RJ · base anterior</option>
-          </optgroup>
-        </select>
+        <span data-nq-mkt="eletMarketSel" hidden></span>
       </div>
     </div>
     <!-- Headline dinâmico -->
@@ -19229,91 +18603,6 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         <div class="card-sub">Fev/26 (R$ MM) · Variação Jan/26 → Fev/26 (pp) · OFF! Personal Repellent</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <select id="msoAreaSel" onchange="renderMSOArea()" style="font-size:11px;padding:6px 28px 6px 10px;border-radius:7px;border:0.5px solid rgba(103,232,249,0.3);background:#161B22;color:#e2e8f0;cursor:pointer;font-family:inherit;appearance:none;background-image:url(" data:image="" svg+xml,%3csvg="" xmlns="http://www.w3.org/2000/svg" width="10" height="6" %3e%3cpath="" d="M0 0l5 6 5-6z" fill="%2338bdf8" %3e%3c="" svg%3e");background-repeat:no-repeat;background-position:right="" 10px="" center;"="">
-          <optgroup label="── Farma Regional ──" style="color:#94A3B8;">
-            <option value="Farma Sul">Farma Sul</option>
-            <option value="Farma CO">Farma CO</option>
-            <option value="Farma Gde RJ">Farma Gde RJ</option>
-            <option value="Farma Gde SP">Farma Gde SP</option>
-            <option value="Farma Int SP">Farma Int SP</option>
-            <option value="Farma MG+ES+Int RJ">Farma MG+ES+Int RJ</option>
-            <option value="Farma NE">Farma NE</option>
-          </optgroup>
-          <optgroup label="── Farma Independente ──" style="color:#94A3B8;">
-            <option value="Farma Indep Sul">Farma Indep Sul</option>
-            <option value="Farma Indep CO">Farma Indep CO</option>
-            <option value="Farma Indep Gde RJ">Farma Indep Gde RJ</option>
-            <option value="Farma Indep Gde SP">Farma Indep Gde SP</option>
-            <option value="Farma Indep Int SP">Farma Indep Int SP</option>
-            <option value="Farma Indep MG+ES+Int RJ">Farma Indep MG+ES+Int RJ</option>
-            <option value="Farma Indep NE">Farma Indep NE</option>
-          </optgroup>
-          <optgroup label="── Farma Moderno ──" style="color:#94A3B8;">
-            <option value="Farma Moderno Sul">Farma Moderno Sul</option>
-            <option value="Farma Moderno CO">Farma Moderno CO</option>
-            <option value="Farma Moderno Gde RJ">Farma Moderno Gde RJ</option>
-            <option value="Farma Moderno Gde SP">Farma Moderno Gde SP</option>
-            <option value="Farma Moderno Int SP">Farma Moderno Int SP</option>
-            <option value="Farma Moderno MG+ES+Int RJ">Farma Moderno MG+ES+Int RJ</option>
-            <option value="Farma Moderno NE">Farma Moderno NE</option>
-          </optgroup>
-          <optgroup label="── T.BR Farma ──" style="color:#94A3B8;">
-            <option value="T.BR Farma">T.BR Farma</option>
-            <option value="T.BR Farma Indep">T.BR Farma Indep</option>
-            <option value="T.BR Farma Moderno">T.BR Farma Moderno</option>
-          </optgroup>
-          <optgroup label="── INFC Sul ──" style="color:#94A3B8;">
-            <option value="INFC RS">INFC RS</option>
-            <option value="INFC SC">INFC SC</option>
-            <option value="INFC PR">INFC PR</option>
-            <option value="INFC Curitiba">INFC Curitiba · base anterior</option>
-            <option value="INFC Porto Alegre">INFC Porto Alegre · base anterior</option>
-            <option value="INFC Sul">INFC Sul · base anterior · base anterior</option>
-            <option value="INFC Int PR">INFC Int PR · base anterior</option>
-            <option value="INFC Int RS">INFC Int RS · base anterior</option>
-            <option value="INFC Cidade Gde Sul">INFC Cidade Gde Sul · base anterior</option>
-            <option value="INFC Cidade Peq+Med Sul">INFC Cidade Peq+Med Sul · base anterior</option>
-          </optgroup>
-          <optgroup label="── INFC Nacional ──" style="color:#94A3B8;">
-            <option value="INFC MG">INFC MG</option>
-            <option value="INFC CO">INFC CO</option>
-            <option value="INFC BA">INFC BA</option>
-            <option value="INFC Belo Horizonte">INFC Belo Horizonte · base anterior</option>
-            <option value="INFC CE">INFC CE</option>
-            <option value="INFC Cidade Gde Gde RJ">INFC Cidade Gde Gde RJ · base anterior</option>
-            <option value="INFC Cidade Gde CO">INFC Cidade Gde CO · base anterior</option>
-            <option value="INFC Cidade Gde Gde SP">INFC Cidade Gde Gde SP · base anterior</option>
-            <option value="INFC Cidade Gde Int SP">INFC Cidade Gde Int SP · base anterior</option>
-            <option value="INFC Cidade Gde MG+ES+Int RJ">INFC Cidade Gde MG+ES+Int RJ · base anterior</option>
-            <option value="INFC Cidade Gde NE">INFC Cidade Gde NE · base anterior</option>
-            <option value="INFC Cidade Peq+Med CO">INFC Cidade Peq+Med CO · base anterior</option>
-            <option value="INFC Cidade Peq+Med Int SP">INFC Cidade Peq+Med Int SP · base anterior</option>
-            <option value="INFC Cidade Peq+Med MG+ES+Int RJ">INFC Cidade Peq+Med MG+ES+Int RJ · base anterior</option>
-            <option value="INFC Cidade Peq+Med NE">INFC Cidade Peq+Med NE · base anterior</option>
-            <option value="INFC DF">INFC DF</option>
-            <option value="INFC Fortaleza">INFC Fortaleza · base anterior</option>
-            <option value="INFC GO">INFC GO</option>
-            <option value="INFC Gde RJ">INFC Gde RJ · base anterior</option>
-            <option value="INFC Gde SP">INFC Gde SP · base anterior</option>
-            <option value="INFC Int BA">INFC Int BA · base anterior</option>
-            <option value="INFC Int CE">INFC Int CE · base anterior</option>
-            <option value="INFC Int MG">INFC Int MG · base anterior</option>
-            <option value="INFC Int PE">INFC Int PE · base anterior</option>
-            <option value="INFC Int SP">INFC Int SP · base anterior</option>
-            <option value="INFC MA+PI">INFC MA+PI</option>
-            <option value="INFC MG+ES+Int RJ">INFC MG+ES+Int RJ · base anterior · base anterior</option>
-            <option value="INFC Man+Bel+Ana">INFC Man+Bel+Ana</option>
-            <option value="INFC Manaus">INFC Manaus</option>
-            <option value="INFC NE">INFC NE · base anterior</option>
-            <option value="INFC PE">INFC PE</option>
-            <option value="INFC Recife">INFC Recife · base anterior</option>
-            <option value="INFC SP">INFC SP · base anterior</option>
-            <option value="INFC Salvador">INFC Salvador · base anterior</option>
-          </optgroup>
-          <optgroup label="── T.BR INFC ──" style="color:#94A3B8;">
-            <option value="T.BR INFC">T.BR INFC · base anterior</option>
-          </optgroup>
-        </select>
       </div>
     </div>
     <!-- KPIs -->
@@ -19350,59 +18639,6 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
           <div class="card-title" id="ob-share-title">Products vs Participação em Valor — Evolução Nov/25–Out/26</div>
           <div class="card-sub">% Share · NielsenIQ · Odor Block · <span id="ob-share-mkt-lbl">T.BR Farma</span> · Categoria: T. Odor Block</div>
         </div>
-        <select id="obMarketSel" onchange="obMarket1=this.value;renderOBShare()" style="font-size:11px;padding:6px 28px 6px 10px;border-radius:7px;border:1px solid rgba(96,165,250,0.3);background:#161B22;color:#e2e8f0;cursor:pointer;outline:none;min-width:140px;">
-          <option value="T.BR Farma">T.BR Farma</option>
-<option value="AS+Farma AL">AS+F AL</option>
-<option value="AS+Farma BA">AS+F BA</option>
-<option value="AS+Farma Belem">AS+F Belem</option>
-<option value="AS+Farma CO">AS+F CO</option>
-<option value="AS+Farma Campo Grande">AS+F Campo Grande</option>
-<option value="AS+Farma Cuiaba">AS+F Cuiaba</option>
-<option value="AS+Farma DF">AS+F DF</option>
-<option value="AS+Farma ES">AS+F ES</option>
-<option value="AS+Farma GO">AS+F GO</option>
-<option value="AS+Farma Gde RJ">AS+F Gde RJ</option>
-<option value="AS+Farma Gde SP">AS+F Gde SP</option>
-<option value="AS+Farma Int SP">AS+F Int SP</option>
-<option value="AS+Farma MG">AS+F MG</option>
-<option value="AS+Farma MG+ES+Int RJ">AS+F MG+ES+Int RJ</option>
-<option value="AS+Farma MS">AS+F MS</option>
-<option value="AS+Farma Man+Bel+Ana">AS+F Man+Bel+Ana</option>
-<option value="AS+Farma Manaus">AS+F Manaus</option>
-<option value="AS+Farma NE">AS+F NE</option>
-<option value="AS+Farma PB">AS+F PB</option>
-<option value="AS+Farma PE">AS+F PE</option>
-<option value="AS+Farma PI">AS+F PI</option>
-<option value="AS+Farma PR">AS+F PR</option>
-<option value="AS+Farma RJ">AS+F RJ</option>
-<option value="AS+Farma SC">AS+F SC</option>
-<option value="AS+Farma SE">AS+F SE</option>
-<option value="AS+Farma SP">AS+F SP</option>
-<option value="AS+Farma Sul">AS+F Sul</option>
-<option value="Farma CO">Farma CO</option>
-<option value="Farma Gde RJ">Farma Gde RJ</option>
-<option value="Farma Gde SP">Farma Gde SP</option>
-<option value="Farma Int SP">Farma Int SP</option>
-<option value="Farma MG">Farma MG</option>
-<option value="Farma MG+ES+Int RJ">Farma MG+ES+Int RJ</option>
-<option value="Farma NE">Farma NE</option>
-<option value="Farma PR">Farma PR</option>
-<option value="Farma RJ">Farma RJ</option>
-<option value="Farma RS">Farma RS</option>
-<option value="Farma SC">Farma SC</option>
-<option value="Farma Sul">Farma Sul</option>
-<option value="T.BR AS+Farma">T.BR AS+Farma</option>
-          <optgroup label="Base anterior (até Jun/26) — AS+C&amp;C+Farma">
-            <option value="AS+C&amp;C+Farma Sul">AS+C&amp;C+Farma Sul · base anterior (até Jun/26)</option>
-            <option value="AS+C&amp;C+Farma Gde SP">AS+C&amp;C+Farma Gde SP · base anterior (até Jun/26)</option>
-            <option value="AS+C&amp;C+Farma Gde RJ">AS+C&amp;C+Farma Gde RJ · base anterior (até Jun/26)</option>
-            <option value="AS+C&amp;C+Farma NE">AS+C&amp;C+Farma NE · base anterior (até Jun/26)</option>
-            <option value="AS+C&amp;C+Farma CO">AS+C&amp;C+Farma CO · base anterior (até Jun/26)</option>
-            <option value="AS+C&amp;C+Farma MG+ES+Int RJ">AS+C&amp;C+Farma MG+ES+Int RJ · base anterior (até Jun/26)</option>
-            <option value="AS+C&amp;C+Farma Int SP">AS+C&amp;C+Farma Int SP · base anterior (até Jun/26)</option>
-            <option value="T.BR AS+C&amp;C+Farma">T.BR AS+C&amp;C+Farma · base anterior (até Jun/26)</option>
-          </optgroup>
-</select>
       </div>
       <div id="ob-share-kpis" style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px;"><div style="background:#FFFFFF;border-radius:8px;padding:10px 12px;border:1px solid #DCE3EC;border-top:2px solid #60a5fa;"><div style="font-size:9px;font-weight:700;letter-spacing:0.08em;color:#334155;margin-bottom:3px;">Block Algodão</div><div style="font-size:18px;font-weight:800;color:#60a5fa;line-height:1;">2.3%</div><div style="font-size:9px;color:#94A3B8;margin-top:2px;">▼0.34pp vs mês ant.</div></div><div style="background:#FFFFFF;border-radius:8px;padding:10px 12px;border:1px solid #DCE3EC;border-top:2px solid #2dd4bf;"><div style="font-size:9px;font-weight:700;letter-spacing:0.08em;color:#334155;margin-bottom:3px;">Block Lavanda</div><div style="font-size:18px;font-weight:800;color:#2dd4bf;line-height:1;">2.5%</div><div style="font-size:9px;color:#94A3B8;margin-top:2px;">▼0.52pp vs mês ant.</div></div><div style="background:#FFFFFF;border-radius:8px;padding:10px 12px;border:1px solid #DCE3EC;border-top:2px solid #34d399;"><div style="font-size:9px;font-weight:700;letter-spacing:0.08em;color:#334155;margin-bottom:3px;">Block Eucalipto</div><div style="font-size:18px;font-weight:800;color:#34d399;line-height:1;">1.3%</div><div style="font-size:9px;color:#94A3B8;margin-top:2px;">▼0.33pp vs mês ant.</div></div><div style="background:#FFFFFF;border-radius:8px;padding:10px 12px;border:1px solid #DCE3EC;border-top:2px solid #06b6d4;"><div style="font-size:9px;font-weight:700;letter-spacing:0.08em;color:#334155;margin-bottom:3px;">Freeco</div><div style="font-size:18px;font-weight:800;color:#06b6d4;line-height:1;">87.4%</div><div style="font-size:9px;color:#94A3B8;margin-top:2px;">▲+2.03pp vs mês ant.</div></div><div style="background:#FFFFFF;border-radius:8px;padding:10px 12px;border:1px solid #DCE3EC;border-top:2px solid #5a6478;"><div style="font-size:9px;font-weight:700;letter-spacing:0.08em;color:#334155;margin-bottom:3px;">All Others</div><div style="font-size:18px;font-weight:800;color:#94A3B8;line-height:1;">6.5%</div><div style="font-size:9px;color:#94A3B8;margin-top:2px;">▼0.83pp vs mês ant.</div></div></div>
       <div style="position:relative;width:100%;height:280px;"><canvas id="ob-share-chart" width="1792" height="350" style="display: block; box-sizing: border-box; height: 280px; width: 1433px;"></canvas></div>
@@ -19417,59 +18653,6 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
           <div class="card-title" id="ob-preco-title">Products vs Preço Médio Unidades — Evolução Nov/25–Out/26</div>
           <div class="card-sub">R$ por unidade · NielsenIQ · Pato Block vs Freeco vs All Others</div>
         </div>
-        <select id="obMarketSel2" onchange="obMarket2=this.value;renderOBPreco()" style="font-size:11px;padding:6px 28px 6px 10px;border-radius:7px;border:1px solid rgba(45,212,191,0.3);background:#161B22;color:#e2e8f0;cursor:pointer;outline:none;min-width:140px;">
-          <option value="T.BR Farma">T.BR Farma</option>
-<option value="AS+Farma AL">AS+F AL</option>
-<option value="AS+Farma BA">AS+F BA</option>
-<option value="AS+Farma Belem">AS+F Belem</option>
-<option value="AS+Farma CO">AS+F CO</option>
-<option value="AS+Farma Campo Grande">AS+F Campo Grande</option>
-<option value="AS+Farma Cuiaba">AS+F Cuiaba</option>
-<option value="AS+Farma DF">AS+F DF</option>
-<option value="AS+Farma ES">AS+F ES</option>
-<option value="AS+Farma GO">AS+F GO</option>
-<option value="AS+Farma Gde RJ">AS+F Gde RJ</option>
-<option value="AS+Farma Gde SP">AS+F Gde SP</option>
-<option value="AS+Farma Int SP">AS+F Int SP</option>
-<option value="AS+Farma MG">AS+F MG</option>
-<option value="AS+Farma MG+ES+Int RJ">AS+F MG+ES+Int RJ</option>
-<option value="AS+Farma MS">AS+F MS</option>
-<option value="AS+Farma Man+Bel+Ana">AS+F Man+Bel+Ana</option>
-<option value="AS+Farma Manaus">AS+F Manaus</option>
-<option value="AS+Farma NE">AS+F NE</option>
-<option value="AS+Farma PB">AS+F PB</option>
-<option value="AS+Farma PE">AS+F PE</option>
-<option value="AS+Farma PI">AS+F PI</option>
-<option value="AS+Farma PR">AS+F PR</option>
-<option value="AS+Farma RJ">AS+F RJ</option>
-<option value="AS+Farma SC">AS+F SC</option>
-<option value="AS+Farma SE">AS+F SE</option>
-<option value="AS+Farma SP">AS+F SP</option>
-<option value="AS+Farma Sul">AS+F Sul</option>
-<option value="Farma CO">Farma CO</option>
-<option value="Farma Gde RJ">Farma Gde RJ</option>
-<option value="Farma Gde SP">Farma Gde SP</option>
-<option value="Farma Int SP">Farma Int SP</option>
-<option value="Farma MG">Farma MG</option>
-<option value="Farma MG+ES+Int RJ">Farma MG+ES+Int RJ</option>
-<option value="Farma NE">Farma NE</option>
-<option value="Farma PR">Farma PR</option>
-<option value="Farma RJ">Farma RJ</option>
-<option value="Farma RS">Farma RS</option>
-<option value="Farma SC">Farma SC</option>
-<option value="Farma Sul">Farma Sul</option>
-<option value="T.BR AS+Farma">T.BR AS+Farma</option>
-          <optgroup label="Base anterior (até Jun/26) — AS+C&amp;C+Farma">
-            <option value="AS+C&amp;C+Farma Sul">AS+C&amp;C+Farma Sul · base anterior (até Jun/26)</option>
-            <option value="AS+C&amp;C+Farma Gde SP">AS+C&amp;C+Farma Gde SP · base anterior (até Jun/26)</option>
-            <option value="AS+C&amp;C+Farma Gde RJ">AS+C&amp;C+Farma Gde RJ · base anterior (até Jun/26)</option>
-            <option value="AS+C&amp;C+Farma NE">AS+C&amp;C+Farma NE · base anterior (até Jun/26)</option>
-            <option value="AS+C&amp;C+Farma CO">AS+C&amp;C+Farma CO · base anterior (até Jun/26)</option>
-            <option value="AS+C&amp;C+Farma MG+ES+Int RJ">AS+C&amp;C+Farma MG+ES+Int RJ · base anterior (até Jun/26)</option>
-            <option value="AS+C&amp;C+Farma Int SP">AS+C&amp;C+Farma Int SP · base anterior (até Jun/26)</option>
-            <option value="T.BR AS+C&amp;C+Farma">T.BR AS+C&amp;C+Farma · base anterior (até Jun/26)</option>
-          </optgroup>
-</select>
       </div>
       <div id="ob-preco-kpis" style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px;"><div style="background:#FFFFFF;border-radius:8px;padding:10px 12px;border:1px solid #DCE3EC;border-top:2px solid #60a5fa;"><div style="font-size:9px;font-weight:700;letter-spacing:0.08em;color:#334155;margin-bottom:3px;">Block Algodão</div><div style="font-size:18px;font-weight:800;color:#60a5fa;line-height:1;">R$ 20.63</div><div style="font-size:9px;color:#94A3B8;margin-top:2px;">▲+1.9% vs mês ant.</div></div><div style="background:#FFFFFF;border-radius:8px;padding:10px 12px;border:1px solid #DCE3EC;border-top:2px solid #2dd4bf;"><div style="font-size:9px;font-weight:700;letter-spacing:0.08em;color:#334155;margin-bottom:3px;">Block Lavanda</div><div style="font-size:18px;font-weight:800;color:#2dd4bf;line-height:1;">R$ 20.50</div><div style="font-size:9px;color:#94A3B8;margin-top:2px;">▲+2.2% vs mês ant.</div></div><div style="background:#FFFFFF;border-radius:8px;padding:10px 12px;border:1px solid #DCE3EC;border-top:2px solid #34d399;"><div style="font-size:9px;font-weight:700;letter-spacing:0.08em;color:#334155;margin-bottom:3px;">Block Eucalipto</div><div style="font-size:18px;font-weight:800;color:#34d399;line-height:1;">R$ 20.62</div><div style="font-size:9px;color:#94A3B8;margin-top:2px;">▲+2.4% vs mês ant.</div></div><div style="background:#FFFFFF;border-radius:8px;padding:10px 12px;border:1px solid #DCE3EC;border-top:2px solid #06b6d4;"><div style="font-size:9px;font-weight:700;letter-spacing:0.08em;color:#334155;margin-bottom:3px;">Freeco</div><div style="font-size:18px;font-weight:800;color:#06b6d4;line-height:1;">R$ 17.38</div><div style="font-size:9px;color:#94A3B8;margin-top:2px;">▼3.4% vs mês ant.</div></div><div style="background:#FFFFFF;border-radius:8px;padding:10px 12px;border:1px solid #DCE3EC;border-top:2px solid #5a6478;"><div style="font-size:9px;font-weight:700;letter-spacing:0.08em;color:#334155;margin-bottom:3px;">All Others</div><div style="font-size:18px;font-weight:800;color:#94A3B8;line-height:1;">R$ 15.96</div><div style="font-size:9px;color:#94A3B8;margin-top:2px;">▼9% vs mês ant.</div></div></div>
       <div style="position:relative;width:100%;height:280px;"><canvas id="ob-preco-chart" width="1792" height="350" style="display: block; box-sizing: border-box; height: 280px; width: 1433px;"></canvas></div>
@@ -19490,60 +18673,6 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
             <button id="ob-mkt-btn-valor" class="tgl active green" onclick="setOBMercadoMetric('valor',this)" style="font-size:10px;padding:5px 12px;border:none;cursor:pointer;background:rgba(52,211,153,0.18);color:#34d399;font-weight:700;">R$ Valor</button>
             <button id="ob-mkt-btn-unid" class="tgl" onclick="setOBMercadoMetric('unid',this)" style="font-size:10px;padding:5px 12px;border:none;cursor:pointer;background:transparent;color:#94A3B8;font-weight:600;">UNID</button>
           </div>
-          <!-- Seletor de Mercado -->
-          <select id="obMarketSel4" onchange="obMarket4=this.value;renderOBMercado()" style="font-size:11px;padding:6px 10px;border-radius:7px;border:1px solid #CBD5E1;background:#FFFFFF;color:#1E293B;cursor:pointer;outline:none;min-width:140px;">
-            <option value="T.BR Farma">T.BR Farma</option>
-<option value="AS+Farma AL">AS+F AL</option>
-<option value="AS+Farma BA">AS+F BA</option>
-<option value="AS+Farma Belem">AS+F Belem</option>
-<option value="AS+Farma CO">AS+F CO</option>
-<option value="AS+Farma Campo Grande">AS+F Campo Grande</option>
-<option value="AS+Farma Cuiaba">AS+F Cuiaba</option>
-<option value="AS+Farma DF">AS+F DF</option>
-<option value="AS+Farma ES">AS+F ES</option>
-<option value="AS+Farma GO">AS+F GO</option>
-<option value="AS+Farma Gde RJ">AS+F Gde RJ</option>
-<option value="AS+Farma Gde SP">AS+F Gde SP</option>
-<option value="AS+Farma Int SP">AS+F Int SP</option>
-<option value="AS+Farma MG">AS+F MG</option>
-<option value="AS+Farma MG+ES+Int RJ">AS+F MG+ES+Int RJ</option>
-<option value="AS+Farma MS">AS+F MS</option>
-<option value="AS+Farma Man+Bel+Ana">AS+F Man+Bel+Ana</option>
-<option value="AS+Farma Manaus">AS+F Manaus</option>
-<option value="AS+Farma NE">AS+F NE</option>
-<option value="AS+Farma PB">AS+F PB</option>
-<option value="AS+Farma PE">AS+F PE</option>
-<option value="AS+Farma PI">AS+F PI</option>
-<option value="AS+Farma PR">AS+F PR</option>
-<option value="AS+Farma RJ">AS+F RJ</option>
-<option value="AS+Farma SC">AS+F SC</option>
-<option value="AS+Farma SE">AS+F SE</option>
-<option value="AS+Farma SP">AS+F SP</option>
-<option value="AS+Farma Sul">AS+F Sul</option>
-<option value="Farma CO">Farma CO</option>
-<option value="Farma Gde RJ">Farma Gde RJ</option>
-<option value="Farma Gde SP">Farma Gde SP</option>
-<option value="Farma Int SP">Farma Int SP</option>
-<option value="Farma MG">Farma MG</option>
-<option value="Farma MG+ES+Int RJ">Farma MG+ES+Int RJ</option>
-<option value="Farma NE">Farma NE</option>
-<option value="Farma PR">Farma PR</option>
-<option value="Farma RJ">Farma RJ</option>
-<option value="Farma RS">Farma RS</option>
-<option value="Farma SC">Farma SC</option>
-<option value="Farma Sul">Farma Sul</option>
-<option value="T.BR AS+Farma">T.BR AS+Farma</option>
-            <optgroup label="Base anterior (até Jun/26) — AS+C&amp;C+Farma">
-              <option value="AS+C&amp;C+Farma Sul">AS+C&amp;C+Farma Sul · base anterior (até Jun/26)</option>
-              <option value="AS+C&amp;C+Farma Gde SP">AS+C&amp;C+Farma Gde SP · base anterior (até Jun/26)</option>
-              <option value="AS+C&amp;C+Farma Gde RJ">AS+C&amp;C+Farma Gde RJ · base anterior (até Jun/26)</option>
-              <option value="AS+C&amp;C+Farma NE">AS+C&amp;C+Farma NE · base anterior (até Jun/26)</option>
-              <option value="AS+C&amp;C+Farma CO">AS+C&amp;C+Farma CO · base anterior (até Jun/26)</option>
-              <option value="AS+C&amp;C+Farma MG+ES+Int RJ">AS+C&amp;C+Farma MG+ES+Int RJ · base anterior (até Jun/26)</option>
-              <option value="AS+C&amp;C+Farma Int SP">AS+C&amp;C+Farma Int SP · base anterior (até Jun/26)</option>
-              <option value="T.BR AS+C&amp;C+Farma">T.BR AS+C&amp;C+Farma · base anterior (até Jun/26)</option>
-            </optgroup>
-</select>
         </div>
       </div>
 
@@ -28314,9 +27443,7 @@ var avgMarket = 'farmasul';
 var avgChart  = null;
 
 function setAvgMarket(mkt){
-  avgMarket = mkt;
-  var sel = document.getElementById('avgMarketSel');
-  if(sel && sel.value !== mkt) sel.value = mkt;
+  avgMarket = mkt; NQ_MKT_CARD.avgMarketSel = mkt;
   renderAvgPriceChart();
   setTimeout(renderAvgInsight, 200);
 }
@@ -29152,7 +28279,7 @@ const MSO_COLORS = {'OFF!':'#fbbf24','EXPOSIS':'#3b82f6','XO INSETO':'#ef4444','
 var msoBarChart = null, msoLineChart = null;
 
 function renderMSO(){
-  var mkt = document.getElementById('msoMarketSel').value;
+  var mkt = nqMkt('msoMarketSel','T.BR Farma');
   var d = MKTSHARE_OVERVIEW[mkt];
   if(!d) return;
   var _F = nqFY(mkt);
@@ -29591,18 +28718,33 @@ function nqSetFY(v){
 var NQ_MKT_SELS = {msoMarketSel:'Share por Marca', mso2MarketSel:'Share mensal', mso3MarketSel:'Venda FYTD', msoAreaSel:'Por Área',
   msoSkuJMSel:'SKU média', skuShrMktSel:'Share por SKU', shrTrendMktSel:'Série mensal', eletMarketSel:'Elétricos',
   avgMarketSel:'Preço médio', obMarketSel:'Odor Block · share', obMarketSel2:'Odor Block · preço', obMarketSel4:'Odor Block · mercado'};
+/* mercados de cada card = as chaves dos dados que ele desenha */
+var NQ_MKT_FONTE = {msoMarketSel:function(){return MKTSHARE_OVERVIEW;}, mso2MarketSel:function(){return MSO_AREA;}, mso3MarketSel:function(){return MSO_AREA;},
+  msoAreaSel:function(){return MSO_AREA;}, msoSkuJMSel:function(){return typeof SKU_MKT_MONTHLY!=='undefined'?SKU_MKT_MONTHLY:{'T.BR Farma':1};},
+  skuShrMktSel:function(){return SKU_MKT_DATA;}, shrTrendMktSel:function(){return SHR_TREND_DATA;}, eletMarketSel:function(){return ELET_MKT_DATA;},
+  avgMarketSel:function(){return AVG_DATA;}, obMarketSel:function(){return OB_DATA;}, obMarketSel2:function(){return OB_DATA;}, obMarketSel4:function(){return OB_DATA;}};
+/* o que redesenhar quando o mercado do card muda */
+var NQ_MKT_RENDER = {msoMarketSel:function(){renderMSO();}, mso2MarketSel:function(){renderMSO2();}, mso3MarketSel:function(){renderMSO3();},
+  msoAreaSel:function(){renderMSOArea();}, msoSkuJMSel:function(){renderMSOSkuJanMar();}, skuShrMktSel:function(){renderSkuShrCard();},
+  shrTrendMktSel:function(){renderShrTrend();}, eletMarketSel:function(){eletSetMarket();}, avgMarketSel:function(v){setAvgMarket(v);},
+  obMarketSel:function(v){obMarket1=v;renderOBShare();}, obMarketSel2:function(v){obMarket2=v;renderOBPreco();}, obMarketSel4:function(v){obMarket4=v;renderOBMercado();}};
+/* preço médio usa códigos (farmasul…): nome do mercado de cada código */
+var AVG_MKT_NOME = {"farmasul":"Farma Sul","farma_co":"Farma CO","farma_gde_rj":"Farma Gde RJ","farma_gde_sp":"Farma Gde SP","farma_int_sp":"Farma Int SP","farma_mg":"Farma MG+ES+Int RJ","farma_ne":"Farma NE","farma_indep_co":"Farma Indep CO","farma_indep_gde_rj":"Farma Indep Gde RJ","farma_indep_gde_sp":"Farma Indep Gde SP","farma_indep_int_sp":"Farma Indep Int SP","farma_indep_mg":"Farma Indep MG+ES+Int RJ","farma_indep_ne":"Farma Indep NE","farma_indep_sul":"Farma Indep Sul","farma_mod_co":"Farma Moderno CO","farma_mod_gde_rj":"Farma Moderno Gde RJ","farma_mod_gde_sp":"Farma Moderno Gde SP","farma_mod_int_sp":"Farma Moderno Int SP","farma_mod_mg":"Farma Moderno MG+ES+Int RJ","farma_mod_ne":"Farma Moderno NE","farma_mod_sul":"Farma Moderno Sul","tbr_farma":"T.BR Farma","tbr_farma_indep":"T.BR Farma Indep","tbr_farma_mod":"T.BR Farma Moderno","rs":"INFC RS","sc":"INFC SC","pr":"INFC PR","infc_cwb":"INFC Curitiba · base anterior","infc_poa":"INFC Porto Alegre · base anterior","infc_sul":"INFC Sul · base anterior","infc_int_pr":"INFC Int PR · base anterior","infc_int_rs":"INFC Int RS · base anterior","infc_cg_sul":"INFC Cidade Gde Sul · base anterior","infc_cp_sul":"INFC Cidade Peq+Med Sul · base anterior","infc_mg":"INFC MG","infc_co":"INFC CO","infc_ba":"INFC BA","infc_bh":"INFC Belo Horizonte · base anterior","infc_ce":"INFC CE","infc_cg_gde_rj":"INFC Cidade Gde Gde RJ · base anterior","infc_cg_co":"INFC Cidade Gde CO · base anterior","infc_cg_gde_sp":"INFC Cidade Gde Gde SP · base anterior","infc_cg_int_sp":"INFC Cidade Gde Int SP · base anterior","infc_cg_mg":"INFC Cidade Gde MG+ES+Int RJ · base anterior","infc_cg_ne":"INFC Cidade Gde NE · base anterior","infc_cp_co":"INFC Cidade Peq+Med CO · base anterior","infc_cp_int_sp":"INFC Cidade Peq+Med Int SP · base anterior","infc_cp_mg":"INFC Cidade Peq+Med MG+ES+Int RJ · base anterior","infc_cp_ne":"INFC Cidade Peq+Med NE · base anterior","infc_df":"INFC DF","infc_for":"INFC Fortaleza · base anterior","infc_go":"INFC GO","infc_gde_rj":"INFC Gde RJ · base anterior","infc_gde_sp":"INFC Gde SP · base anterior","infc_int_ba":"INFC Int BA · base anterior","infc_int_ce":"INFC Int CE · base anterior","infc_int_mg":"INFC Int MG · base anterior","infc_int_pe":"INFC Int PE · base anterior","infc_int_sp":"INFC Int SP · base anterior","infc_mapi":"INFC MA+PI","infc_mg_es":"INFC MG+ES+Int RJ · base anterior","infc_man_bel":"INFC Man+Bel+Ana","infc_manaus":"INFC Manaus","infc_ne":"INFC NE · base anterior","infc_pe":"INFC PE","infc_recife":"INFC Recife · base anterior","infc_sp":"INFC SP · base anterior","infc_salvador":"INFC Salvador · base anterior","tbr_infc":"T.BR INFC · base anterior"};
+/* mercado atual de cada card (o filtro do topo escolhe; o card fica no anterior quando não tem o mercado) */
+var NQ_MKT_CARD = {msoMarketSel:'T.BR Farma', mso2MarketSel:'T.BR Farma', mso3MarketSel:'T.BR Farma', msoAreaSel:'T.BR Farma', msoSkuJMSel:'T.BR Farma',
+  skuShrMktSel:'T.BR Farma', shrTrendMktSel:'T.BR Farma', eletMarketSel:'T.BR Farma', avgMarketSel:'tbr_farma', obMarketSel:'T.BR Farma',
+  obMarketSel2:'T.BR Farma', obMarketSel4:'T.BR Farma'};
+function nqMkt(id, padrao){ return NQ_MKT_CARD[id] || padrao; }
 function nqMktNorm(t){ return String(t||'').split(' · ')[0].trim(); }
 function nqSetMkt(m){
-  if(typeof initMSOSkuJM==='function') try{ initMSOSkuJM(); }catch(e){}
   var g=document.getElementById('nqMktSel'); if(g && g.value!==m) g.value=m;
   var falta=[];
   Object.keys(NQ_MKT_SELS).forEach(function(id){
-    var s=document.getElementById(id); if(!s) return;
-    var os=[].slice.call(s.options);
-    var o=os.filter(function(x){return x.value===m;})[0] || os.filter(function(x){return nqMktNorm(x.textContent)===m;})[0];
-    if(!o){ falta.push(NQ_MKT_SELS[id]); return; }
-    s.value=o.value;
-    try{ if(typeof s.onchange==='function') s.onchange.call(s); }catch(e){ console.warn('nqSetMkt '+id, e); }
+    var ks=Object.keys(NQ_MKT_FONTE[id]()), nome=function(k){ return id==='avgMarketSel' ? (AVG_MKT_NOME[k]||k) : k; };
+    var v = ks.indexOf(m)>=0 ? m : ks.filter(function(k){ return nqMktNorm(nome(k))===m; })[0];
+    if(!v){ falta.push(NQ_MKT_SELS[id]); return; }
+    NQ_MKT_CARD[id]=v;
+    try{ NQ_MKT_RENDER[id](v); }catch(e){ console.warn('nqSetMkt '+id, e); }
   });
   var w=document.getElementById('nq-mkt-warn');
   if(w) w.textContent = falta.length ? '⚠ sem dados de '+m+' em: '+falta.join(', ')+' (mantido o mercado anterior)' : '';
@@ -29612,7 +28754,6 @@ function nqInitCal(){ try{ var c=nqCalP(); [['nqFySel',' (ano-calendário)'],['m
 function nqInitMkt(){
   nqInitCal();
   var g=document.getElementById('nqMktSel'); if(!g) return;
-  Object.keys(NQ_MKT_SELS).forEach(function(id){ var s=document.getElementById(id); if(s) s.style.display='none'; });
   nqSetMkt(g.value||'T.BR Farma');
 }
 window.addEventListener('load', function(){ setTimeout(nqInitMkt, 400); });
@@ -29721,8 +28862,7 @@ function setMSO2Mode(mode, btn){
 }
 
 function renderMSO2(){
-  var sel = document.getElementById('mso2MarketSel') || document.getElementById('msoMarketSel');
-  var mkt = sel ? sel.value : 'Farma Sul';
+  var mkt = nqMkt('mso2MarketSel','T.BR Farma');
   if(!nqIsOld(mkt) && NQ_PR.mk[mkt]){ if(mso2BarChart){try{mso2BarChart.destroy();}catch(e){} mso2BarChart=null;} if(mso2LineChart){try{mso2LineChart.destroy();}catch(e){} mso2LineChart=null;} nqRenderMSO2(mkt); return; }
   var isShare = mso2Mode === 'share';
   var isVal   = mso2Mode === 'val';
@@ -30473,7 +29613,7 @@ const MSO_AREA_MKTS = ['Farma Indep Sul','Farma Moderno Sul','Farma Sul','INFC I
 var msoAreaBarVal = null, msoAreaBarVar = null, msoAreaMode = 'val';
 
 function renderMSOArea(){
-  var selMkt = document.getElementById('msoAreaSel').value;
+  var selMkt = nqMkt('msoAreaSel','T.BR Farma');
   if(!nqIsOld(selMkt) && NQ_PR.mk[selMkt]){ nqRenderMSOArea(selMkt); return; }
   var d = MSO_AREA[selMkt];
   /* sem dados — mostrar aviso no MSO Area (não tocar em outros cards) */
@@ -34834,8 +33974,7 @@ function renderAnoChart(canvasId, anos, vals, isVol, colors){
 function renderMSO2Insight(){
   var el = document.getElementById('mso2-insight');
   if(!el) return;
-  var sel = document.getElementById('mso2MarketSel') || document.getElementById('msoMarketSel');
-  var mkt = sel ? sel.value : 'Farma Sul';
+  var mkt = nqMkt('mso2MarketSel','T.BR Farma');
   if(!nqIsOld(mkt) && NQ_PR.mk[mkt]) return; /* base nova: diagnóstico feito em nqRenderMSO2 */
 
   function col(v){ return v>=0?'#34d399':'#ef4444'; }
@@ -35802,8 +34941,7 @@ function setMSO3Mode(mode, btn){
 
 
 function renderMSO3(){
-  var sel = document.getElementById('mso3MarketSel');
-  var mkt = sel ? sel.value : 'T.BR Farma';
+  var mkt = nqMkt('mso3MarketSel','T.BR Farma');
   if(!nqIsOld(mkt) && NQ_PR.mk[mkt]){ nqRenderMSO3(mkt); return; }
   if(mso3Mode === 'share') mso3Mode = 'val';
   var isVal = mso3Mode === 'val';
@@ -36144,8 +35282,7 @@ function renderMSO3(){
 function renderAvgInsight(){
   var el = document.getElementById('avg-insight');
   if(!el) return;
-  var _avgSel = document.getElementById('avgMarketSel');
-  var mktLabel = (_avgSel && _avgSel.selectedIndex >= 0) ? _avgSel.options[_avgSel.selectedIndex].text : avgMarket;
+  var mktLabel = AVG_MKT_NOME[avgMarket] || avgMarket;
   var d = AVG_DATA[avgMarket] || AVG_DATA['farmasul'];
   if(!d) return;
   var diagLabel = mktLabel;
@@ -39876,8 +39013,7 @@ if(ELET_MKT_DATA["INA Int MG"]){ELET_MKT_DATA["INA Int MG"].fytd26=[44.61,0,44.6
 if(ELET_MKT_DATA["INA MG+ES+Int RJ"]){ELET_MKT_DATA["INA MG+ES+Int RJ"].fytd26=[44.29,0,44.29,28.98,27.75];ELET_MKT_DATA["INA MG+ES+Int RJ"].fytd25=[40.56,0,40.56,30.81,29.95];}
 // === end ELET FYTD2 ===
 function renderEletricosCard(){
-  var sel = document.getElementById('eletMarketSel');
-  var mkt = (sel ? sel.value : null) || 'T.BR Farma';
+  var mkt = nqMkt('eletMarketSel','T.BR Farma');
   var d = ELET_MKT_DATA[mkt];
   if(!d) return;
   var _E26 = nqIsOld(mkt) || (typeof NQ_FY!=='undefined'&&NQ_FY==='FY26');
@@ -46371,10 +45507,6 @@ var iqviaNacViewMode = 'opp'; /* opp | posit | compare */
 /* ═══ ODOR BLOCK NIELSEN RENDER ═══ */
 
 function initOdorBlock(){
-  var s1=document.getElementById('obMarketSel'); if(s1) s1.value=obMarket1;
-  var s2=document.getElementById('obMarketSel2'); if(s2) s2.value=obMarket2;
-  var s3=document.getElementById('obMarketSel3'); if(s3) s3.value=obMarket3;
-  var s4=document.getElementById('obMarketSel4'); if(s4) s4.value=obMarket4;
   renderOBShare();
   renderOBPreco();
   renderOBVendas();
@@ -49558,7 +48690,7 @@ function setShrBrand(brand, btn){
 }
 
 function renderShrTrend(){
-  var mkt=(document.getElementById('shrTrendMktSel')||{value:'T.BR Farma'}).value;
+  var mkt=nqMkt('shrTrendMktSel','T.BR Farma');
   _shrTrendMkt=mkt;
   var sub=document.getElementById('shr-trend-sub');
   if(sub) sub.textContent='Série mensal por marca · '+mkt+' · Personal Repellent · '+nqFY(mkt).p2+' · '+nqFY(mkt).p+' · '+nqFY(mkt).c+nqFY(mkt).base;
@@ -50166,7 +49298,7 @@ function renderAreaDecomp(){
 }
 
 function renderSkuShrCard(){
-  var mkt = (document.getElementById('skuShrMktSel')||{value:'T.BR Farma'}).value||'T.BR Farma';
+  var mkt = nqMkt('skuShrMktSel','T.BR Farma');
   var sub = document.getElementById('sku-shr-sub');
   var _F = nqFY(mkt);
   if(sub) sub.textContent = 'Share por SKU · '+_F.fc+' vs '+_F.fp+' ('+_F.per+') · '+mkt+' · Personal Repellent'+_F.base;
@@ -50306,21 +49438,13 @@ var curSection = 'share';
 
 /* ═══ MARKET SHARE POR SKU — Jan-Mar (mso-sku-jm-card) ═══ */
 var _msoSkuJMChartL=null,_msoSkuJMChartR=null;
-function initMSOSkuJM(){
-  var sel=document.getElementById('msoSkuJMSel');
-  if(!sel||sel.options.length>0)return;
-  var mks=typeof SKU_MKT_MONTHLY!=='undefined'?Object.keys(SKU_MKT_MONTHLY):['T.BR Farma'];
-  mks.forEach(function(m){var o=document.createElement('option');o.value=m;o.textContent=m;if(m==='T.BR Farma')o.selected=true;sel.appendChild(o);});
-}
 /* ano-calendário corrente em NQ_PR.meses: Jan–último mês vs mesmos meses do ano anterior */
 function nqCal(){ var L=NQ_PR.meses.length-1, p=NQ_PR.meses[L].split('/'), m=p[0], y=+p[1], i0=NQ_PR.meses.indexOf('Jan/'+y);
   var ms=NQ_PR.meses.slice(i0,L+1).map(function(x){return x.split('/')[0];});
   var f=function(yy){ return ms.length>1 ? 'Jan–'+m+'/'+yy : m+'/'+yy; };
   return {ms:ms, perC:f(y), perP:f(y-1)}; }
 function renderMSOSkuJanMar(){
-  initMSOSkuJM();
-  var sel=document.getElementById('msoSkuJMSel');
-  var mkt=sel?sel.value:'T.BR Farma';
+  var mkt=nqMkt('msoSkuJMSel','T.BR Farma');
   var sub=document.getElementById('mso-sku-jm-sub');
   var _cal=!nqIsOld(mkt)&&typeof SKU_MKT_CAL!=='undefined'&&SKU_MKT_CAL[mkt], _C=_cal?nqCal():null;
   var _o=nqIsOld(mkt), _f6=!_o&&NQ_FY==='FY26', _fr=!_o&&NQ_FY==='ROLL', _l25=_o?'Jan-Mai/25':(_f6?'FY25':(_fr?nqL12().perP:'Jul–Out/25')), _l26=_o?'Jan-Jun/26':(_f6?'FY26':(_fr?nqL12().perC:'Jul–Out/26'));
@@ -50405,8 +49529,7 @@ function renderMSOSkuJanMar(){
 
 /* ═══ Análise Curto Prazo — Market Share por SKU (mensal) ═══ */
 function renderShrSTSKU(){
-  var sel=document.getElementById('msoSkuJMSel');
-  var mkt=sel?sel.value:'T.BR Farma';
+  var mkt=nqMkt('msoSkuJMSel','T.BR Farma');
   if(typeof SKU_SHR_MM==='undefined'||!SKU_SHR_MM[mkt])return;
   var d=SKU_SHR_MM[mkt];
   var _M=(nqIsOld(mkt)||NQ_FY==='FY26')?['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26']:['Mai/26','Jun/26','Jul/26','Ago/26','Set/26','Out/26']; var _s=function(i){return _M[i].split('/')[0];};
@@ -51235,7 +50358,7 @@ function injectBtn(){
     +'background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.35);color:#fbbf24;'
     +'border-radius:6px;padding:6px 14px;cursor:pointer;font-family:inherit;transition:background 0.2s;';
   cards.forEach(function(c){
-    var sel = document.getElementById(c.selId);
+    var sel = document.querySelector('[data-nq-mkt="'+c.selId+'"]');
     if(!sel || document.getElementById(c.btnId)) return;
     var btn = document.createElement('button');
     btn.id = c.btnId;
@@ -51285,8 +50408,7 @@ function loadExcelJS(cb){
 
 /* ── 4. Capturar estado atual ── */
 function getState(selId, cardNum){
-  var sel = document.getElementById(selId || 'msoMarketSel');
-  var market = sel ? sel.value : 'T.BR Farma';
+  var market = nqMkt(selId || 'msoMarketSel', 'T.BR Farma');
   /* Ler modo R$/Un do card 3 */
   var mode = 'val';
   if(selId === 'mso3MarketSel' && typeof mso3Mode !== 'undefined') mode = mso3Mode;
