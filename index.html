@@ -23755,7 +23755,6 @@ const CL_COBERTURA = [
 ];
 
 var clEstoqueView  = 'barras';
-var clEstoqueChart = null;
 
 /* ═══ Estoque por SKU (visão detalhada) — esqueleto comum da linha de barra ═══
    cada cliente calcula os campos da linha (cor, selos, quantidade, valor, % da barra, detalhes);
@@ -23792,33 +23791,6 @@ function renderClEstoqueBarras(){
   }).join(''));
 }
 
-function renderClEstoqueLinha(){
-  var ctx = document.getElementById('cl-estoque-chart');
-  if(!ctx) return;
-  if(clEstoqueChart) clEstoqueChart.destroy();
-  var skus = CL_ESTOQUE.filter(function(d){return d.venda>0;}).slice(0,12);
-  var labels = skus.map(function(d){return d.sku.length>20?d.sku.substring(0,20)+'…':d.sku;});
-  var cores  = skus.map(function(d){return d.risco==='critico'?'#06b6d4':d.risco==='atencao'?'#fbbf24':'#34d399';});
-  clEstoqueChart = new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[
-    {label:'Estoque Atual (un)',data:skus.map(function(d){return d.estoque;}),backgroundColor:cores.map(function(c){return c+'88';}),borderColor:cores,borderWidth:2,borderRadius:5,yAxisID:'y'},
-    {label:'Cobertura (dias)',data:skus.map(function(d){return d.cob>=999?null:Math.min(d.cob,250);}),type:'line',borderColor:'#2dd4bf',backgroundColor:'transparent',pointBackgroundColor:cores,pointRadius:6,pointBorderWidth:2,borderWidth:2,tension:0.3,yAxisID:'y2'}
-  ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{
-      legend:{display:true,position:'top',labels:{color:'#D1D5DB',font:{size:10},boxWidth:10}},
-      tooltip:{backgroundColor:'#1F2937',titleColor:'#e2e8f0',bodyColor:'#D1D5DB',borderColor:'rgba(255,255,255,0.13)',borderWidth:1,
-        callbacks:{label:function(c){if(c.datasetIndex===0)return ' Estoque: '+c.raw.toLocaleString('pt-BR')+' un';return ' Cobertura: '+(c.raw!=null?c.raw+'d':'-');}}},
-      annotation:{annotations:{
-        linha30:{type:'line',yMin:30,yMax:30,yScaleID:'y2',borderColor:'#fbbf24',borderWidth:1.5,borderDash:[6,4],label:{content:'30d',display:true,color:'#fbbf24',font:{size:9},position:'start'}},
-        linha15:{type:'line',yMin:15,yMax:15,yScaleID:'y2',borderColor:'#06b6d4',borderWidth:1.5,borderDash:[6,4],label:{content:'15d crítico',display:true,color:'#06b6d4',font:{size:9},position:'end'}}
-      }}
-    },
-    scales:{
-      x:{grid:{color:'rgba(148,163,184,0.08)'},ticks:{color:'#475569',font:{size:9},maxRotation:35}},
-      y:{position:'left',grid:{color:'rgba(148,163,184,0.08)'},ticks:{color:'#475569',font:{size:9},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}},title:{display:true,text:'Estoque (un)',color:'#475569',font:{size:9}}},
-      y2:{position:'right',grid:{display:false},ticks:{color:'#2dd4bf',font:{size:9},callback:function(v){return v+'d';}},title:{display:true,text:'Cobertura (dias)',color:'#2dd4bf',font:{size:9}},min:0,max:250}
-    }
-  }});
-}
 
 /* ═══════════ COBERTURA REAL — CRUZAMENTO COM VENDAS ═══════════ */
 /*
@@ -24604,7 +24576,6 @@ const PV_ESTOQUE = [
 ];
 
 var pvEstoqueView  = 'barras';
-var pvEstoqueChart = null;
 
 function renderPVEstoqueBarras(){
   var el = document.getElementById('pv-estoque-bars'); if(!el) return;
@@ -24619,28 +24590,6 @@ function renderPVEstoqueBarras(){
   }).join(''));
 }
 
-function renderPVEstoqueLinha(){
-  var ctx = document.getElementById('pv-estoque-chart');
-  if(!ctx) return;
-  if(pvEstoqueChart) pvEstoqueChart.destroy();
-  var skus = PV_ESTOQUE.filter(function(d){return d.estoque>0;}).sort(function(a,b){return b.estoque-a.estoque;}).slice(0,14);
-  var labels = skus.map(function(d){return d.sku.length>22?d.sku.substring(0,22)+'…':d.sku;});
-  var cores  = skus.map(function(d){return d.risco==='critico'?'#06b6d4':d.risco==='atencao'?'#fbbf24':'#34d399';});
-  pvEstoqueChart = new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[
-    {label:'Estoque Total (un)',data:skus.map(function(d){return d.estoque;}),backgroundColor:cores.map(function(c){return c+'88';}),borderColor:cores,borderWidth:2,borderRadius:5,yAxisID:'y'},
-    {label:'Pendências (un)',data:skus.map(function(d){return d.pend>0?d.pend:null;}),type:'line',borderColor:'#fbbf24',backgroundColor:'transparent',pointBackgroundColor:'#fbbf24',pointRadius:7,pointBorderWidth:2,borderWidth:2,tension:0.3,yAxisID:'y'}
-  ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{
-      legend:{display:true,position:'top',labels:{color:'#D1D5DB',font:{size:10},boxWidth:10}},
-      tooltip:{backgroundColor:'#1F2937',titleColor:'#e2e8f0',bodyColor:'#D1D5DB',borderColor:'rgba(255,255,255,0.13)',borderWidth:1,
-        callbacks:{label:function(c){if(c.datasetIndex===0)return ' Estoque: '+c.raw.toLocaleString('pt-BR')+' un';return ' Pendência: '+c.raw.toLocaleString('pt-BR')+' un';}}}
-    },
-    scales:{
-      x:{grid:{color:'rgba(148,163,184,0.08)'},ticks:{color:'#475569',font:{size:9},maxRotation:35}},
-      y:{position:'left',grid:{color:'rgba(148,163,184,0.08)'},ticks:{color:'#475569',font:{size:9},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}},title:{display:true,text:'Estoque (un)',color:'#475569',font:{size:9}}}
-    }
-  }});
-}
 
 /* ═══════════ PANVEL ═══════════ */
 var pvBarMode='rec', pvDonutYear='2024', pvRankYear='2024';
@@ -25309,7 +25258,6 @@ const GAM_ESTOQUE = [
 ];
 
 var gamEstoqueView  = 'barras';
-var gamEstoqueChart = null;
 
 function renderGAMEstoqueBarras(){
   var el = document.getElementById('gam-estoque-bars'); if(!el) return;
@@ -25324,28 +25272,6 @@ function renderGAMEstoqueBarras(){
   }).join(''));
 }
 
-function renderGAMEstoqueLinha(){
-  var ctx = document.getElementById('gam-estoque-chart');
-  if(!ctx) return;
-  if(gamEstoqueChart) gamEstoqueChart.destroy();
-  var skus = GAM_ESTOQUE.filter(function(d){return d.estoque>0;}).sort(function(a,b){return b.estoque-a.estoque;}).slice(0,14);
-  var labels = skus.map(function(d){return d.sku.length>22?d.sku.substring(0,22)+'…':d.sku;});
-  var cores  = skus.map(function(d){return d.risco==='critico'?'#06b6d4':d.risco==='atencao'?'#fbbf24':'#34d399';});
-  gamEstoqueChart = new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[
-    {label:'Estoque Total (un)',data:skus.map(function(d){return d.estoque;}),backgroundColor:cores.map(function(c){return c+'88';}),borderColor:cores,borderWidth:2,borderRadius:5,yAxisID:'y'},
-    {label:'Pendências (un)',data:skus.map(function(d){return d.pend>0?d.pend:null;}),type:'line',borderColor:'#fbbf24',backgroundColor:'transparent',pointBackgroundColor:'#fbbf24',pointRadius:7,pointBorderWidth:2,borderWidth:2,tension:0.3,yAxisID:'y'}
-  ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{
-      legend:{display:true,position:'top',labels:{color:'#D1D5DB',font:{size:10},boxWidth:10}},
-      tooltip:{backgroundColor:'#1F2937',titleColor:'#e2e8f0',bodyColor:'#D1D5DB',borderColor:'rgba(255,255,255,0.13)',borderWidth:1,
-        callbacks:{label:function(c){if(c.datasetIndex===0)return ' Estoque: '+c.raw.toLocaleString('pt-BR')+' un';return ' Pendência: '+c.raw.toLocaleString('pt-BR')+' un';}}}
-    },
-    scales:{
-      x:{grid:{color:'rgba(148,163,184,0.08)'},ticks:{color:'#475569',font:{size:9},maxRotation:35}},
-      y:{position:'left',grid:{color:'rgba(148,163,184,0.08)'},ticks:{color:'#475569',font:{size:9},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}},title:{display:true,text:'Unidades',color:'#475569',font:{size:9}}}
-    }
-  }});
-}
 
 /* ═══════════ DD-GAM ═══════════ */
 var gamBarMode='rec', gamDonutYear='2024', gamRankYear='2024', gamLojaMetric='rec', gamCidMetric='rec';
@@ -25466,7 +25392,6 @@ const GCH_ESTOQUE = [
 ];
 
 var gchEstoqueView  = 'barras';
-var gchEstoqueChart = null;
 
 var EST_MARCA_COR = {OFF:'#3b82f6', EXPOSIS:'#34d399', RAID:'#f97316', GLADE:'#2dd4bf', LYSOFORM:'#60a5fa', OUTROS:'#D1D5DB'};
 function renderGCHEstoqueBarras(){
@@ -25483,28 +25408,6 @@ function renderGCHEstoqueBarras(){
   }).join(''));
 }
 
-function renderGCHEstoqueLinha(){
-  var ctx = document.getElementById('gch-estoque-chart');
-  if(!ctx) return;
-  if(gchEstoqueChart) gchEstoqueChart.destroy();
-  var MARCA_CORES = {OFF:'#3b82f6', EXPOSIS:'#34d399', RAID:'#f97316', GLADE:'#2dd4bf', LYSOFORM:'#60a5fa', OUTROS:'#D1D5DB'};
-  var skus = GCH_ESTOQUE.filter(function(d){return d.estoque>0;}).sort(function(a,b){return b.estoque-a.estoque;}).slice(0,14);
-  var labels = skus.map(function(d){return d.sku.length>22?d.sku.substring(0,22)+'…':d.sku;});
-  var cores = skus.map(function(d){return MARCA_CORES[d.marca]||'#D1D5DB';});
-  gchEstoqueChart = new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[
-    {label:'Estoque (un)',data:skus.map(function(d){return d.estoque;}),backgroundColor:cores.map(function(c){return c+'88';}),borderColor:cores,borderWidth:2,borderRadius:5,yAxisID:'y'},
-    {label:'Cobertura (d)',data:skus.map(function(d){return d.cob>=999?null:Math.min(d.cob,600);}),type:'line',borderColor:'#fbbf24',backgroundColor:'transparent',pointBackgroundColor:cores,pointRadius:5,borderWidth:2,tension:0.3,yAxisID:'y2'}
-  ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:true,position:'top',labels:{color:'#D1D5DB',font:{size:10},boxWidth:10}},
-      tooltip:{backgroundColor:'#1F2937',titleColor:'#e2e8f0',bodyColor:'#D1D5DB',borderColor:'rgba(255,255,255,0.13)',borderWidth:1,
-        callbacks:{label:function(c){if(c.datasetIndex===0)return ' Estoque: '+c.raw.toLocaleString('pt-BR')+' un';return ' Cobertura: '+(c.raw!=null?c.raw+'d':'-');}}}},
-    scales:{
-      x:{grid:{color:'rgba(148,163,184,0.08)'},ticks:{color:'#475569',font:{size:9},maxRotation:35}},
-      y:{position:'left',grid:{color:'rgba(148,163,184,0.08)'},ticks:{color:'#475569',font:{size:9},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}},title:{display:true,text:'Estoque (un)',color:'#475569',font:{size:9}}},
-      y2:{position:'right',grid:{display:false},ticks:{color:'#fbbf24',font:{size:9},callback:function(v){return v+'d';}},title:{display:true,text:'Cobertura (d)',color:'#fbbf24',font:{size:9}},min:0,max:600}
-    }
-  }});
-}
 
 /* troca de visão do card de estoque: acende o botão, mostra o painel pre-estoque-<visão> (esconde os outros que
    existirem) e desenha a visão; 'outra' = o que desenhar nas visões sem ação própria */
@@ -25514,7 +25417,7 @@ function estVisao(pre, view, btn, acoes){
   EST_VISOES.forEach(function(v){ var e = document.getElementById(pre+'-estoque-'+v); if(e) e.style.display = v===view ? 'block' : 'none'; });
   var f = acoes.hasOwnProperty(view) ? acoes[view] : acoes.outra; if(f) f();
 }
-function setGchEstoqueView(view, btn){ gchEstoqueView = view; estVisao('gch', view, btn, {linha:renderGCHEstoqueLinha, outra:renderGCHEstoqueBarras}); }
+function setGchEstoqueView(view, btn){ gchEstoqueView = view; estVisao('gch', view, btn, {outra:renderGCHEstoqueBarras}); }
 
 /* ═══════════ DD-GAÚCHA ═══════════ */
 var gchBarMode='rec', gchRankYear='2026';
@@ -26351,7 +26254,6 @@ const RIO_ESTOQUE = [
 ];
 
 var rioEstoqueView  = 'barras';
-var rioEstoqueChart = null;
 
 function renderRIOEstoqueBarras(){
   var el = document.getElementById('rio-estoque-bars'); if(!el) return;
@@ -26368,28 +26270,8 @@ function renderRIOEstoqueBarras(){
   }).join(''));
 }
 
-function renderRIOEstoqueLinha(){
-  var ctx = document.getElementById('rio-estoque-chart');
-  if(!ctx) return;
-  if(rioEstoqueChart) rioEstoqueChart.destroy();
-  var MARCA_CORES = {OFF:'#3b82f6', EXPOSIS:'#34d399', RAID:'#f97316', GLADE:'#2dd4bf', LYSOFORM:'#60a5fa', OUTROS:'#D1D5DB'};
-  var skus = RIO_ESTOQUE.filter(function(d){return d.estoque>0;}).sort(function(a,b){return b.estoque-a.estoque;}).slice(0,14);
-  var labels = skus.map(function(d){return d.sku.length>22?d.sku.substring(0,22)+'…':d.sku;});
-  var cores = skus.map(function(d){return MARCA_CORES[d.marca]||'#D1D5DB';});
-  rioEstoqueChart = new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[
-    {label:'Estoque Abr/26',data:skus.map(function(d){return d.estoque;}),backgroundColor:cores.map(function(c){return c+'88';}),borderColor:cores,borderWidth:2,borderRadius:5,yAxisID:'y'},
-    {label:'Venda Mar/26',data:skus.map(function(d){return d.vendaMar;}),type:'line',borderColor:'#fbbf24',backgroundColor:'transparent',pointBackgroundColor:cores,pointRadius:5,borderWidth:2,tension:0.3,yAxisID:'y'}
-  ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:true,position:'top',labels:{color:'#D1D5DB',font:{size:10},boxWidth:10}},
-      tooltip:{backgroundColor:'#1F2937',titleColor:'#e2e8f0',bodyColor:'#D1D5DB',borderColor:'rgba(255,255,255,0.13)',borderWidth:1}},
-    scales:{
-      x:{grid:{color:'rgba(148,163,184,0.08)'},ticks:{color:'#475569',font:{size:9},maxRotation:35}},
-      y:{grid:{color:'rgba(148,163,184,0.08)'},ticks:{color:'#475569',font:{size:9},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}}}
-    }
-  }});
-}
 
-function setRioEstoqueView(view, btn){ rioEstoqueView = view; estVisao('rio', view, btn, {linha:renderRIOEstoqueLinha, outra:renderRIOEstoqueBarras}); }
+function setRioEstoqueView(view, btn){ rioEstoqueView = view; estVisao('rio', view, btn, {outra:renderRIOEstoqueBarras}); }
 
 /* ═══════════ DD-RIOMED ═══════════ */
 var rioLineMode = 'vol';
@@ -39692,7 +39574,6 @@ function setSJCEstoqueView(v, btn){
     btn.classList.add('active','blue');
   }
   if(v==='barras') renderSJCEstoqueBarras();
-  if(v==='linha')  renderSJCEstoqueLinha();
   if(v==='cobertura') renderSJCCobertura();
 }
 
@@ -39777,24 +39658,6 @@ function renderSJCEstoqueBarras(){
   el.innerHTML = h || '<div style="color:#94A3B8;font-size:12px;padding:20px;text-align:center;">Sem dados</div>';
 }
 
-function renderSJCEstoqueLinha(){
-  var existing = Chart.getChart(document.getElementById('sjc-estoque-chart'));
-  if(existing) existing.destroy();
-  var data = SJC_ESTOQUE;
-  var labels = data.map(function(d){return d.sku.length>18?d.sku.substring(0,18)+'…':d.sku;});
-  new Chart(document.getElementById('sjc-estoque-chart'),{
-    type:'bar',
-    data:{labels:labels, datasets:[
-      {label:'Estoque', data:data.map(function(d){return d.estoque;}), backgroundColor:'rgba(52,211,153,0.6)', borderColor:'#34d399', borderWidth:1.5, borderRadius:8, order:2},
-      {label:'Giro 30d', data:data.map(function(d){return d.giro;}), type:'line', borderColor:'#fbbf24', backgroundColor:'transparent', borderWidth:2, pointRadius:3, tension:0.3, order:1},
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:true,position:'top',labels:{color:'#334155',font:{size:10},boxWidth:10}},
-        tooltip:{backgroundColor:'#0a1218',titleColor:'#e2e8f0',bodyColor:'#D1D5DB',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}},
-      scales:{x:{grid:{display:false},ticks:{color:'#4a6b65',font:{size:9},maxRotation:45},border:{display:false}},
-        y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b65',font:{size:9}},border:{display:false},beginAtZero:true}}}
-  });
-}
 
 ﻿function renderSJCCobertura(){
   var el = document.getElementById('sjc-cob-table');
@@ -40912,7 +40775,6 @@ const SJ_ESTOQUE = [
 ];
 
 var sjEstoqueView = 'barras';
-var sjEstoqueChart = null;
 
 function renderSJEstoqueBarras(){
   var el = document.getElementById('sj-estoque-bars'); if(!el) return;
@@ -40927,91 +40789,8 @@ function renderSJEstoqueBarras(){
   }).join(''));
 }
 
-function renderSJEstoqueLinha(){
-  var ctx = document.getElementById('sj-estoque-chart');
-  if(!ctx) return;
-  if(sjEstoqueChart) sjEstoqueChart.destroy();
 
-  // Apenas SKUs com venda > 0, ordenados por cobertura
-  var skus = SJ_ESTOQUE.filter(function(d){return d.venda>0;}).slice(0,12);
-  var labels = skus.map(function(d){return d.sku.length>20?d.sku.substring(0,20)+'…':d.sku;});
-
-  // Projeção: estoque nos próximos 3 meses (90 dias)
-  // Linha de estoque atual, linha de venda acumulada
-  var estoqueAtual = skus.map(function(d){return d.estoque;});
-  var cobertura    = skus.map(function(d){return d.cob>=999?null:d.cob;});
-  var cores        = skus.map(function(d){
-    return d.risco==='critico'?'#06b6d4':d.risco==='atencao'?'#fbbf24':'#34d399';
-  });
-
-  sjEstoqueChart = new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels: labels,
-      datasets:[
-        {
-          label:'Estoque Atual (un)',
-          data: estoqueAtual,
-          backgroundColor: cores.map(function(c){return c+'88';}),
-          borderColor: cores,
-          borderWidth: 2,
-          borderRadius: 5,
-          yAxisID:'y',
-        },
-        {
-          label:'Cobertura (dias)',
-          data: cobertura,
-          type:'line',
-          borderColor:'#2dd4bf',
-          backgroundColor:'transparent',
-          pointBackgroundColor: cores,
-          pointRadius: 6,
-          pointBorderWidth: 2,
-          borderWidth: 2,
-          tension: 0.3,
-          yAxisID:'y2',
-        }
-      ]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{display:true,position:'top',labels:{color:'#D1D5DB',font:{size:10},boxWidth:10}},
-        tooltip:{
-          backgroundColor:'#1F2937',titleColor:'#e2e8f0',bodyColor:'#D1D5DB',
-          borderColor:'rgba(255,255,255,0.13)',borderWidth:1,
-          callbacks:{
-            label:function(c){
-              if(c.datasetIndex===0) return ' Estoque: '+c.raw.toLocaleString('pt-BR')+' un';
-              return ' Cobertura: '+(c.raw!=null?c.raw+'d':'—');
-            }
-          }
-        },
-        annotation:{
-          annotations:{
-            linha30:{type:'line',yMin:30,yMax:30,yScaleID:'y2',borderColor:'#fbbf24',borderWidth:1.5,borderDash:[6,4],
-              label:{content:'30 dias',display:true,color:'#fbbf24',font:{size:9}}},
-            linha15:{type:'line',yMin:15,yMax:15,yScaleID:'y2',borderColor:'#06b6d4',borderWidth:1.5,borderDash:[6,4],
-              label:{content:'15 dias (crítico)',display:true,color:'#06b6d4',font:{size:9}}}
-          }
-        }
-      },
-      scales:{
-        x:{grid:{color:'rgba(148,163,184,0.08)'},ticks:{color:'#475569',font:{size:9},maxRotation:35}},
-        y:{position:'left',grid:{color:'rgba(148,163,184,0.08)'},
-           ticks:{color:'#475569',font:{size:9},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}},
-           title:{display:true,text:'Estoque (un)',color:'#475569',font:{size:9}}},
-        y2:{position:'right',grid:{display:false},
-            ticks:{color:'#2dd4bf',font:{size:9},callback:function(v){return v+'d';}},
-            title:{display:true,text:'Cobertura (dias)',color:'#2dd4bf',font:{size:9}},
-            min:0, max:120}
-      }
-    }
-  });
-}
-
-function setSJEstoqueView(view, btn){ sjEstoqueView = view; estVisao('sj', view, btn, {linha:renderSJEstoqueLinha,
-  cobertura:function(){ renderCoberturaSKUBarsUnified('sj-cob-table', SJ_COBERTURA, 'São João (01/11/26)'); }, importancia:function(){ renderSJImpCluster(); }}); }
+function setSJEstoqueView(view, btn){ sjEstoqueView = view; estVisao('sj', view, btn, {cobertura:function(){ renderCoberturaSKUBarsUnified('sj-cob-table', SJ_COBERTURA, 'São João (01/11/26)'); }, importancia:function(){ renderSJImpCluster(); }}); }
 
 /* ═══════════ ACOMPANHAMENTO OLs ═══════════ */
 const OL_DATA = {
@@ -41256,7 +41035,6 @@ var gamMetaMode = 'rec';
 
 var nsEstoqueView = 'barras';
 var nsEstoqueTab  = 'hb';
-var nsEstoqueChart = null;
 
 function renderNsEstoqueBarras(){
   var el = document.getElementById('ns-estoque-bars'); if(!el) return;
@@ -41277,7 +41055,6 @@ function setNsEstoqueTab(tab, btn){
   btn.classList.add('active','blue');
 
   if(nsEstoqueView==='barras')  renderNsEstoqueBarras();
-  else if(nsEstoqueView==='linha') renderNsEstoqueLinha();
   else if(nsEstoqueView==='tend')  setEstoqueTend('ns', null); /* atualiza Ruptura com dados do comprador */
 
   /* Atualiza label do header de Ruptura */
@@ -41308,36 +41085,6 @@ function updateNsEstoqueKPIs(){
   if(el4) el4.textContent = cob>0 ? cob+' dias' : '—';
 }
 
-function renderNsEstoqueLinha(){
-  var ctx = document.getElementById('ns-estoque-chart');
-  if(!ctx) return;
-  if(nsEstoqueChart) nsEstoqueChart.destroy();
-  var data = nsEstoqueTab==='hb' ? NS_ESTOQUE_HB : NS_ESTOQUE_ED;
-  var skus = data.filter(function(d){return d.venda>0;}).slice(0,12);
-  var labels = skus.map(function(d){return d.sku.length>20?d.sku.substring(0,20)+'…':d.sku;});
-  var estoqueAtual = skus.map(function(d){return d.estoque;});
-  var cobertura    = skus.map(function(d){return d.cob>=999?null:Math.min(d.cob,120);});
-  var cores = skus.map(function(d){return d.risco==='critico'?'#06b6d4':d.risco==='atencao'?'#fbbf24':'#34d399';});
-  nsEstoqueChart = new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[
-    {label:'Estoque Atual (un)',data:estoqueAtual,backgroundColor:cores.map(function(c){return c+'88';}),borderColor:cores,borderWidth:2,borderRadius:5,yAxisID:'y'},
-    {label:'Cobertura (dias)',data:cobertura,type:'line',borderColor:'#2dd4bf',backgroundColor:'transparent',pointBackgroundColor:cores,pointRadius:6,pointBorderWidth:2,borderWidth:2,tension:0.3,yAxisID:'y2'}
-  ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{
-      legend:{display:true,position:'top',labels:{color:'#D1D5DB',font:{size:10},boxWidth:10}},
-      tooltip:{backgroundColor:'#1F2937',titleColor:'#e2e8f0',bodyColor:'#D1D5DB',borderColor:'rgba(255,255,255,0.13)',borderWidth:1,
-        callbacks:{label:function(c){if(c.datasetIndex===0)return ' Estoque: '+c.raw.toLocaleString('pt-BR')+' un';return ' Cobertura: '+(c.raw!=null?c.raw+'d':'-');}}},
-      annotation:{annotations:{
-        linha30:{type:'line',yMin:30,yMax:30,yScaleID:'y2',borderColor:'#fbbf24',borderWidth:1.5,borderDash:[6,4],label:{content:'30d',display:true,color:'#fbbf24',font:{size:9},position:'start'}},
-        linha15:{type:'line',yMin:15,yMax:15,yScaleID:'y2',borderColor:'#06b6d4',borderWidth:1.5,borderDash:[6,4],label:{content:'15d critico',display:true,color:'#06b6d4',font:{size:9},position:'end'}}
-      }}
-    },
-    scales:{
-      x:{grid:{color:'rgba(148,163,184,0.08)'},ticks:{color:'#475569',font:{size:9},maxRotation:35}},
-      y:{position:'left',grid:{color:'rgba(148,163,184,0.08)'},ticks:{color:'#475569',font:{size:9},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}},title:{display:true,text:'Estoque (un)',color:'#475569',font:{size:9}}},
-      y2:{position:'right',grid:{display:false},ticks:{color:'#2dd4bf',font:{size:9},callback:function(v){return v+'d';}},title:{display:true,text:'Cobertura (dias)',color:'#2dd4bf',font:{size:9}},min:0,max:120}
-    }
-  }});
-}
 
 function nsEstoqueCobertura(){
     var fsec = document.getElementById('ns-filial-section');
@@ -41360,13 +41107,12 @@ function nsEstoqueCobertura(){
       el.appendChild(btn);
     }
 }
-function setNsEstoqueView(view, btn){ nsEstoqueView = view; estVisao('ns', view, btn, {linha:renderNsEstoqueLinha, barras:renderNsEstoqueBarras,
+function setNsEstoqueView(view, btn){ nsEstoqueView = view; estVisao('ns', view, btn, {barras:renderNsEstoqueBarras,
   cobertura:nsEstoqueCobertura, importancia:function(){ renderNsImpCluster(); }}); }
 
-function setClEstoqueView(view, btn){ clEstoqueView = view; estVisao('cl', view, btn, {linha:renderClEstoqueLinha,
-  cobertura:function(){ renderCoberturaSKUBarsUnified('cl-cob-table', CL_COBERTURA, 'Clamed (Nov/26 até 15/11)'); }, outra:renderClEstoqueBarras}); }
+function setClEstoqueView(view, btn){ clEstoqueView = view; estVisao('cl', view, btn, {cobertura:function(){ renderCoberturaSKUBarsUnified('cl-cob-table', CL_COBERTURA, 'Clamed (Nov/26 até 15/11)'); }, outra:renderClEstoqueBarras}); }
 
-function setPvEstoqueView(view, btn){ pvEstoqueView = view; estVisao('pv', view, btn, {linha:renderPVEstoqueLinha, barras:renderPVEstoqueBarras,
+function setPvEstoqueView(view, btn){ pvEstoqueView = view; estVisao('pv', view, btn, {barras:renderPVEstoqueBarras,
   cobertura:function(){ renderCoberturaSKUBarsUnified('pv-cob-table', PV_COBERTURA, 'Panvel (30/10/26)'); }, importancia:function(){ renderPVImpPublico(); renderPVImpEquip(); }}); }
 
 var PV_TIPO_PUBLICO = [
@@ -41444,7 +41190,7 @@ function renderPVImpEquip(){
   if(el) el.innerHTML = _pvImpTable(PV_EQUIPAMENTO, 'faixa');
 }
 
-function setGamEstoqueView(view, btn){ gamEstoqueView = view; estVisao('gam', view, btn, {linha:renderGAMEstoqueLinha, outra:renderGAMEstoqueBarras}); }
+function setGamEstoqueView(view, btn){ gamEstoqueView = view; estVisao('gam', view, btn, {outra:renderGAMEstoqueBarras}); }
 
 /* ═══════ DN INTOCÁVEIS POR UF ═══════ */
 const DN_INTOC_GAM = {
