@@ -10,7 +10,7 @@ from datetime import datetime
 DASHBOARD_DIR = r"C:\Users\valqu\OneDrive\Documentos\Claude\Projects\projeto Dashboard_farma_sul\Dashboard_farma_sul"
 VERSOES_DIR   = os.path.join(DASHBOARD_DIR, "versoes")
 DOWNLOADS_DIR = r"C:\Users\valqu\Downloads"
-SOURCE_FILE   = os.path.join(DASHBOARD_DIR, "Dashboard_Farma_Sul_20260512_2220.html")
+SOURCE_FILE   = os.path.join(DASHBOARD_DIR, "_Recursos/base/Dashboard_base.html")
 ANCHOR        = "<!-- VERBAS -->"
 
 now_str  = datetime.now().strftime("%Y%m%d_%H%M")

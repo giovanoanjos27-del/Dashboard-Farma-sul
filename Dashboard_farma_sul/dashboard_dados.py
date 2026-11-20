@@ -18,7 +18,7 @@ Linha de comando (célula avulsa na planilha, com backup):
 import os, re, sys, shutil, zipfile, datetime
 
 PASTA = os.path.dirname(os.path.abspath(__file__))                 # .../Dashboard_farma_sul
-HTML = os.path.join(PASTA, "Dashboard_Farma_Sul_20260512_2220.html")
+HTML = os.path.join(PASTA, "_Recursos/base/Dashboard_base.html")
 XLSX = os.path.join(PASTA, "Planilha_Mestre_FarmaSul_Giovano.xlsx")
 VERS = os.path.join(PASTA, "versoes")
 

@@ -17,7 +17,7 @@ EXP_PATH  = r'_Recursos\Giovano SCJ\Expandindo Distribuição Farma - Abril (FY2
 GAM_HIST  = r'_Recursos\Giovano SCJ\gam\vendas gam ano\RELATÓRIO GIOVANO 2024x2025.xlsx'
 GAM_2026  = r'_Recursos\Giovano SCJ\gam\vendas gam ano\CERAS JOHNSON jan-fev-mar-abri-2026.xlsx'
 GAUCHA_P  = r'_Recursos\Giovano SCJ\GAUCHA\positivação gaucha.xlsx'
-HTML_FILE = 'Dashboard_Farma_Sul_20260512_2220.html'
+HTML_FILE = '_Recursos/base/Dashboard_base.html'
 
 EAN_LOCAO = 7894650005712
 EAN_SPRAY = 7894650009567

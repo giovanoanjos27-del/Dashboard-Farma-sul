@@ -2,7 +2,7 @@
 alinhado à ordem de SKUs de SKU_MKT_MONTHLY. Fonte: Base Giovano (25-05).xlsx."""
 import pandas as pd, os, re, json
 
-HTML='Dashboard_Farma_Sul_20260512_2220.html'
+HTML='_Recursos/base/Dashboard_base.html'
 SRC=os.path.join('_Recursos','Giovano SCJ','Base Giovano (25-05).xlsx')
 
 # 1) ler SKU_MKT_MONTHLY do HTML

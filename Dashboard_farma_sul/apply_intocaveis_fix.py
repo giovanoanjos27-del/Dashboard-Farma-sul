@@ -6,7 +6,7 @@ Aplica correções ao HTML:
 import re, shutil
 from datetime import datetime
 
-HTML_FILE = 'Dashboard_Farma_Sul_20260512_2220.html'
+HTML_FILE = '_Recursos/base/Dashboard_base.html'
 JS_FILE   = '_temp_intoc_grupos.js'
 
 with open(HTML_FILE, encoding='utf-8') as f:

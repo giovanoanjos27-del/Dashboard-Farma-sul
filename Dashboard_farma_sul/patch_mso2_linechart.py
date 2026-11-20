@@ -8,7 +8,7 @@ import os
 import shutil
 from datetime import datetime
 
-SRC = r"C:\Users\valqu\OneDrive\Documentos\Claude\Projects\projeto Dashboard_farma_sul\Dashboard_farma_sul\Dashboard_Farma_Sul_20260512_2220.html"
+SRC = r"C:\Users\valqu\OneDrive\Documentos\Claude\Projects\projeto Dashboard_farma_sul\Dashboard_farma_sul\_Recursos/base/Dashboard_base.html"
 VERSIONS_DIR = r"C:\Users\valqu\OneDrive\Documentos\Claude\Projects\projeto Dashboard_farma_sul\Dashboard_farma_sul\versoes"
 
 # ── anchors ───────────────────────────────────────────────────────────────────
