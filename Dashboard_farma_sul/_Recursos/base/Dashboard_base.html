@@ -51042,6 +51042,13 @@ function _cpt2CadGrp(g, ljF){ var c=CPT2_CAD_GRUPO[g]; if(!c) return 0; if(_cpt2
 function _cpt2CadSoma(idx){ var all={}, lg={}, s=0; idx.forEach(function(i){ var k=CPT2_KEYS[i]; all[k[0]+'|'+k[3]+'|'+k[2]+'|'+k[4]]=k[4]; });
   Object.keys(all).forEach(function(k){ var x=CPT2_LOJAS[k]; if(x) lg[all[k]]=(lg[all[k]]||0)+x[0]; });
   var g={}; idx.forEach(function(i){ g[CPT2_KEYS[i][4]]=1; }); Object.keys(g).forEach(function(k){ s+=_cpt2CadGrp(k, lg[k]||0); }); return s; }
+/* com filtro de OL a linha da tabela é a bandeira (cliente do OL); sem OL, o grupo econômico */
+function _cpt2PorBan(){ return (typeof CPT2_MS!=='undefined') && CPT2_MS.ol.length>0; }
+function _cpt2LinhaDe(i){ var k=CPT2_KEYS[i]; return _cpt2PorBan() ? k[2] : (k[4]||_cpt2GrpDe(k[2])); }
+function _cpt2BanGrp(b){ var m=_cpt2BanGrp._m; if(!m){ m=_cpt2BanGrp._m={}; var best={};
+  Object.keys(CPT2_LOJAS).forEach(function(k){ var p=k.split('|'), g=p[3]; if(g==='N/I') return; var x=(best[p[2]]=best[p[2]]||{}); x[g]=(x[g]||0)+CPT2_LOJAS[k][0]; });
+  Object.keys(best).forEach(function(bb){ var x=best[bb]; m[bb]=Object.keys(x).sort(function(a,c){ return x[c]-x[a]; })[0]; }); }
+  return m[b] || b; }
 function _cpt2CadPre(){ return _cpt2CadOk() ? '' : '≈ '; }
 /* ── Diagnóstico do filtro: quem caiu e quanto (ano fiscal atual × anterior, mesmos meses) ── */
 /* ── CPT2 · MÊS A MÊS — mercado (categoria) × SCJ por bandeira ─────────────────────
@@ -51252,13 +51259,13 @@ function _cpt2RenderDiag(idx){
   var sum = function(a, o){ var s=0; for(var m=0;m<n;m++) s += (a[o+m]||0); return s; };
   /* dimensão: cliente (bandeira); com 1 bandeira só → UF; com 1 UF só → cidade */
   var bans={}, ufs={};
-  idx.forEach(function(i){ bans[(CPT2_KEYS[i][4]||_cpt2GrpDe(CPT2_KEYS[i][2]))]=1; ufs[CPT2_KEYS[i][0]]=1; });   /* conta grupos econômicos */
+  idx.forEach(function(i){ bans[_cpt2LinhaDe(i)]=1; ufs[CPT2_KEYS[i][0]]=1; });   /* conta grupos econômicos */
   var _ufFil = (typeof CPT2_MS!=='undefined') && (CPT2_MS.uf.length || CPT2_MS.cid.length);  /* abre por UF/cidade só com filtro de UF ou cidade */
   var dimI = (Object.keys(bans).length>1 || !_ufFil) ? 2 : (Object.keys(ufs).length>1 ? 0 : 1);
   var dimNome = ['UF','Cidade','Cliente'][dimI===2?2:dimI];
   var g = {};
   idx.forEach(function(i){
-    var k = dimI===2 ? (CPT2_KEYS[i][4]||_cpt2GrpDe(CPT2_KEYS[i][2])) : CPT2_KEYS[i][dimI], f = CPT2_FAB[i], c = CPT2_CAT[i];   /* linha = grupo econômico */
+    var k = dimI===2 ? _cpt2LinhaDe(i) : CPT2_KEYS[i][dimI], f = CPT2_FAB[i], c = CPT2_CAT[i];   /* linha = grupo econômico */
     var o = g[k] || (g[k] = {k:k, fp:0, fc:0, cp:0, cc:0, uf:{}, lk:{}, bn:{}, mfp:[], mfc:[], mcp:[], mcc:[]});
     o.bn[CPT2_KEYS[i][2]] = 1;
     for(var z=0;z<n;z++){ o.mfp[z]=(o.mfp[z]||0)+(f[z]||0); o.mfc[z]=(o.mfc[z]||0)+(f[12+z]||0); o.mcp[z]=(o.mcp[z]||0)+(c[z]||0); o.mcc[z]=(o.mcc[z]||0)+(c[12+z]||0); }
@@ -51321,7 +51328,7 @@ function _cpt2RenderDiag(idx){
     return s + (U.length>4 ? ' <span style="color:#64748B;" title="'+U.slice(4).map(function(x){ return x.u+' '+pc(x.v); }).join(', ')+'">+'+(U.length-4)+'</span>' : ''); };
   var comUF = dimI!==0, comReg = true, comLj = dimI!==1 && typeof CPT2_LOJAS!=='undefined';
   var lj = function(o){ var t=0, s=0; Object.keys(o.lk).forEach(function(k){ var x=CPT2_LOJAS[k]; if(x){ t+=x[0]; s+=x[1]; } }); return [t,s]; };
-  var ljTd = function(o){ var x=lj(o), cd=(dimI===2) ? _cpt2CadGrp(o.k, x[0]) : null;
+  var ljTd = function(o){ var x=lj(o), cd=(dimI===2) ? (_cpt2PorBan() ? Math.min(CPT2_CAD_GRUPO[_cpt2BanGrp(o.k)]||0, _cpt2CadGrp(_cpt2BanGrp(o.k), x[0])) : _cpt2CadGrp(o.k, x[0])) : null;
     if(cd) return td('<b>'+_cpt2CadPre()+cd.toLocaleString('pt-BR')+'</b> <span style="color:#64748B;font-size:10px;">cadastro · '+x[0].toLocaleString('pt-BR')+' c/ venda · '+x[1].toLocaleString('pt-BR')+' c/ SCJ</span>','right','#0D1B2E');
     if(!x[0]) return td('—','right','#94A3B8');
     return td('<b>'+x[0].toLocaleString('pt-BR')+'</b> <span style="color:#64748B;font-size:10px;">· '+x[1].toLocaleString('pt-BR')+' c/ SCJ ('+Math.round(x[1]/x[0]*100)+'%)</span>','right','#0D1B2E'); };
@@ -51378,8 +51385,8 @@ function _cpt2RenderDiag(idx){
         +(function(x){ return x.replace('<div class="kpi-cell" style="', '<div class="kpi-cell" title="Clique para ver só os que caíram" onclick="window._cpt2DiagSel=(window._cpt2DiagSel===\'queda\'?\'todos\':\'queda\');window._cpt2DiagAll=false;_cpt2Render();" style="cursor:pointer;'+((window._cpt2DiagSel==='queda')?'box-shadow:0 0 0 2px #DC2626;':'')); })(chip(dimNome==='Cliente'?'Grupos em queda':(dimNome==='UF'?'UFs em queda':'Cidades em queda'), caiu.length+' de '+L.length, caiu.length?'#ef4444':'#34d399', 'perda '+fR2(perda)+' · ganho '+fR2(ganho)))
       +'</div>'+_cpt2DiagInsight(idx, T, tv, cv, shP, shC, caiu, subiu, F, dimNome)+'</div>'
     +'<div style="font-size:11.5px;color:#0D1B2E;line-height:1.5;padding:8px 12px;border-radius:8px;background:rgba(29,111,168,0.07);border-left:3px solid #1D6FA8;margin-bottom:10px;">'+frase+'</div>'
-    +(L.length ? '<div style="font-size:9.5px;font-weight:700;letter-spacing:0.06em;color:#475569;text-transform:uppercase;margin:0 0 6px;display:flex;align-items:center;flex-wrap:wrap;gap:4px;">'+(dimNome==='Cliente'?'Grupos econômicos':dimNome==='UF'?'Estados':'Cidades')+' do filtro — por importância da categoria (maior → menor)'+_segs+'</div><div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:720px;"><thead><tr>'
-        +th(dimNome==='Cliente'?'Grupo econômico':dimNome,'left')+(comReg?th('Região','left'):'')+(comUF?th('Estado (var. · lojas) — maior impacto 1º','left'):'')+(comLj?th('Lojas'):'')+th('Dem. Cat '+P)+th('Dem. Fab '+P)+'<th style="text-align:center;padding:6px 10px;font-size:9px;font-weight:700;letter-spacing:0.06em;color:#1D6FA8;text-transform:uppercase;border-bottom:1px solid rgba(94,153,208,0.35);background:rgba(29,111,168,0.08);">Mercado (categoria) × '+_c2M()+' — var. %</th>'+'<th title="Categoria (repelentes) da linha ÷ categoria do filtro, '+C+'" style="text-align:right;white-space:nowrap;padding:6px 10px;font-size:9px;font-weight:700;letter-spacing:0.06em;color:#4F46E5;text-transform:uppercase;border-bottom:1px solid rgba(94,153,208,0.35);">Imp. categoria</th>'+th('Dem. Cat '+C)+th('Dem. Fab '+C)+th('Δ R$')+th('Var. %')+th('Δ Share')+th('Peso (perda / ganho)','left')
+    +(L.length ? '<div style="font-size:9.5px;font-weight:700;letter-spacing:0.06em;color:#475569;text-transform:uppercase;margin:0 0 6px;display:flex;align-items:center;flex-wrap:wrap;gap:4px;">'+(dimNome==='Cliente'?(_cpt2PorBan()?'Clientes do OL (bandeiras)':'Grupos econômicos'):dimNome==='UF'?'Estados':'Cidades')+' do filtro — por importância da categoria (maior → menor)'+_segs+'</div><div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:720px;"><thead><tr>'
+        +th(dimNome==='Cliente'?(_cpt2PorBan()?'Cliente (bandeira)':'Grupo econômico'):dimNome,'left')+(comReg?th('Região','left'):'')+(comUF?th('Estado (var. · lojas) — maior impacto 1º','left'):'')+(comLj?th('Lojas'):'')+th('Dem. Cat '+P)+th('Dem. Fab '+P)+'<th style="text-align:center;padding:6px 10px;font-size:9px;font-weight:700;letter-spacing:0.06em;color:#1D6FA8;text-transform:uppercase;border-bottom:1px solid rgba(94,153,208,0.35);background:rgba(29,111,168,0.08);">Mercado (categoria) × '+_c2M()+' — var. %</th>'+'<th title="Categoria (repelentes) da linha ÷ categoria do filtro, '+C+'" style="text-align:right;white-space:nowrap;padding:6px 10px;font-size:9px;font-weight:700;letter-spacing:0.06em;color:#4F46E5;text-transform:uppercase;border-bottom:1px solid rgba(94,153,208,0.35);">Imp. categoria</th>'+th('Dem. Cat '+C)+th('Dem. Fab '+C)+th('Δ R$')+th('Var. %')+th('Δ Share')+th('Peso (perda / ganho)','left')
         +'</tr></thead><tbody>'+rows+'</tbody>'+totRow()+'</table></div>'
         +(ord.length>10 ? '<button onclick="window._cpt2DiagAll=!window._cpt2DiagAll;_cpt2Render();" style="margin-top:6px;padding:4px 10px;border-radius:6px;border:1px solid rgba(29,111,168,0.45);background:#FFFFFF;color:#1D6FA8;font-size:9.5px;font-weight:700;cursor:pointer;">'
           +(window._cpt2DiagAll ? '▲ Mostrar só os 10 primeiros' : '▼ Ver todos os '+ord.length+' ('+caiu.length+' em queda)')+'</button>' : '')
