@@ -19665,6 +19665,7 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
     </div>
     <div id="sj-cob-table"></div>
   </div>
+  <div id="sj-intoc-estq" class="so-intoc-estq"></div>
 
   <div id="sj-estoque-importancia" style="display:none;padding:6px 0;">
     <div style="font-size:10px;color:#94A3B8;margin-bottom:12px;">
@@ -19934,6 +19935,7 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
       <div id="ns-filial-table-wrap" style="max-height:420px;overflow-y:auto;"></div>
     </div>
   </div>
+  <div id="ns-intoc-estq" class="so-intoc-estq"></div>
 
   <!-- IMPORTÂNCIA POR CLUSTER E TAMANHO (dentro do card único) -->
   <div id="ns-estoque-importancia" style="display:none;padding:6px 0;">
@@ -20167,6 +20169,7 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
     </div>
     <div id="cl-cob-table"></div>
   </div>
+  <div id="cl-intoc-estq" class="so-intoc-estq"></div>
 
   <div class="cards-row">
     <div class="card">
@@ -20365,6 +20368,7 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
     </div>
     <div id="pv-cob-table"></div>
   </div>
+  <div id="pv-intoc-estq" class="so-intoc-estq"></div>
 
   <!-- IMPORTÂNCIA DAS LOJAS PANVEL -->
   <div id="pv-estoque-importancia" style="display:none;padding:6px 0;">
@@ -51401,13 +51405,16 @@ function _cpt2IntBaseSet(b){ _cpt2IntBase = b; _cpt2IntSet(_cpt2IntDim); }
 function _cpt2IntOrdSet(o){ _cpt2IntOrd = o; _cpt2IntSet(_cpt2IntDim); }
 function _cpt2IntSet(d){ _cpt2IntDim = d; try{ _cpt2RenderIntoc(_cpt2GetIndices()); }catch(e){ console.warn('cpt2 intocáveis', e); } }
 var _CPT2_REDE_NOME = {"GRUPO SAO JOAO": "SÃO JOÃO", "GRUPO NISSEI SA": "NISSEI", "GRUPO PANVEL": "PANVEL", "GRUPO CLAMED": "CLAMED"};
+/* estoque dos intocáveis por loja no Sell Out de cada cliente (análise detalhada) */
+function _soIntocEstqRender(){ var A={"sj": "GRUPO SAO JOAO", "ns": "GRUPO NISSEI SA", "cl": "GRUPO CLAMED", "pv": "GRUPO PANVEL"}; Object.keys(A).forEach(function(p){ var e=document.getElementById(p+'-intoc-estq'); if(e && typeof CPT2_REDE_ESTQ!=='undefined' && CPT2_REDE_ESTQ[A[p]]) e.innerHTML=_cpt2RedeEstqHtml(null, A[p]); }); }
+window.addEventListener('load', function(){ try{ _soIntocEstqRender(); }catch(e){ console.warn('[dashboard]', e); } });
 function _cpt2SjEstqHtml(idx){
   if(typeof CPT2_REDE_ESTQ==='undefined') return '';
   var gs = {}; idx.forEach(function(i){ var g=CPT2_KEYS[i][4]; if(CPT2_REDE_ESTQ[g]) gs[g]=1; });
   return Object.keys(CPT2_REDE_ESTQ).filter(function(g){ return gs[g]; }).map(function(g){ return _cpt2RedeEstqHtml(idx, g); }).join('');
 }
 function _cpt2RedeEstqHtml(idx, G){
-  var ufs = {}; idx.forEach(function(i){ if(CPT2_KEYS[i][4]===G) ufs[CPT2_KEYS[i][0]]=1; });
+  var ufs = {}; if(idx) idx.forEach(function(i){ if(CPT2_KEYS[i][4]===G) ufs[CPT2_KEYS[i][0]]=1; }); else Object.keys(CPT2_REDE_ESTQ[G].uf).forEach(function(u){ ufs[u]=1; });
   var E = CPT2_REDE_ESTQ[G], U = Object.keys(E.uf).filter(function(u){ return ufs[u] || u==='Todas'; }).sort(), T=[0,0,0,0,0,0,0,0,0];
   U.forEach(function(u){ for(var j=0;j<9;j++) T[j]+=E.uf[u][j]; });
   var pc = function(n,d){ return d>0 ? (n/d*100).toFixed(1).replace('.',',')+'%' : '—'; };
@@ -51421,7 +51428,7 @@ function _cpt2RedeEstqHtml(idx, G){
   var lista = F.map(function(f){ return '<tr>'+t(f[0],'left')+t(f[1],'left')+t(ok(f[2]),'center')+t(ok(f[3]),'center')+t(ok(f[4]),'center')+t(f[5]?'':'<span style="color:#94A3B8;">sem SCJ em estoque</span>','left')+'</tr>'; }).join('');
   return '<div style="margin-top:14px;border:1px solid rgba(15,118,110,0.30);border-radius:10px;padding:10px 12px;background:#FFFFFF;">'
     +'<div style="font-size:10px;font-weight:800;letter-spacing:0.1em;color:#0F766E;">📦 ESTOQUE DOS INTOCÁVEIS NAS LOJAS · '+(_CPT2_REDE_NOME[G]||G)+' · '+E.data+'</div>'
-    +'<div style="font-size:10px;color:#475569;margin:3px 0 8px;">'+(E.fonte||'')+', loja a loja (sem CD). % sobre as lojas que trabalham SCJ (com algum produto SCJ em estoque). Aqui conta quem <b>tem na prateleira</b>; o painel acima conta quem <b>vendeu</b> (IQVIA).</div>'
+    +'<div style="font-size:10px;color:#475569;margin:3px 0 8px;">'+(E.fonte||'')+', loja a loja (sem CD). % sobre as lojas que trabalham SCJ (com algum produto SCJ em estoque). Aqui conta quem <b>tem na prateleira</b>; a distribuição por venda (IQVIA) está no CPT Clientes.</div>'
     +'<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:11px;">'
     +'<thead><tr>'+th('UF','left')+th('Lojas ativas')+th('Trabalham SCJ')+th('Loção Family 200 OE')+th('Kids 200 (grátis 117)')+th('Spray Family 170 OE')+th('Os 3 em estoque')+th('Só 2 · só 1 · nenhum')+'</tr></thead><tbody>'
     +U.map(function(u){ return linha(u,E.uf[u]); }).join('')+(U.length>1?linha('Total',T,true):'')+'</tbody></table></div>'
@@ -51484,7 +51491,6 @@ function _cpt2RenderIntoc(idx){
     +'<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:11px;background:#FFFFFF;">'
       +'<thead><tr>'+th(dim==='uf'?'UF':(dim==='ban'?((_cpt2IntDim==='grp')?'Cliente (bandeira)':'Bandeira'):'Grupo econômico'),'left')+th('Total de lojas (cadastro)')+th('Lojas c/ venda cat.')+th('Lojas c/ SCJ')+th(NOMES[0])+th(NOMES[1])+th(NOMES[2])+th('Média dos 3 SKUs')+'</tr></thead>'
       +'<tbody>'+rows+'<tr style="background:rgba(29,111,168,0.08);">'+td('Total do filtro ('+L.length+')','left',true)+td(Math.round(T.cad).toLocaleString('pt-BR'),'right',true)+td(T.c.toLocaleString('pt-BR'),'right',true)+td(T.s.toLocaleString('pt-BR'),'right',true)+cel(T.v[0],den(T),true)+cel(T.v[1],den(T),true)+cel(T.v[2],den(T),true)+med(T.v,den(T),true)+'</tr></tbody></table></div>'+'<div style="font-size:10px;color:#475569;margin-top:6px;">📌 <b>Média dos 3 SKUs</b> = presença média de cada intocável. Pelo menos 1 e os 3 juntos estão nos cartões acima.</div>'
-    +_cpt2SjEstqHtml(idx)
     +(L.length>max ? '<button onclick="window._cpt2IntAll=!window._cpt2IntAll;_cpt2IntSet(_cpt2IntDim)" style="margin-top:6px;padding:4px 10px;border-radius:6px;border:1px solid rgba(29,111,168,0.45);background:#FFFFFF;color:#1D6FA8;font-size:9.5px;font-weight:700;cursor:pointer;">'+(window._cpt2IntAll?'▲ Mostrar só os '+max+' maiores':'▼ Ver todos os '+L.length)+'</button>' : '')
     +'</div>';
 }
