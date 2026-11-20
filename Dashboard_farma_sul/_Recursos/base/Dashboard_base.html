@@ -51027,7 +51027,7 @@ function _cpt2RenderIntoc(idx){
   var IN = mes ? CPT2_INTOC : CPT2_INTOC_YTD, LJ = mes ? CPT2_LOJAS : CPT2_LOJAS_YTD, PER = mes ? 'OUT/26' : 'JUL–OUT/26';
   var NOTA = mes ? 'lojas com venda no mês' : 'lojas com venda em algum mês de Jul a Out'+((typeof CPT2_FY!=='undefined' && CPT2_FY!=='FY27') ? ' — este período não existe na edição; mostrando Jul–Out' : '');
   var all = {}; idx.forEach(function(i){ var k=CPT2_KEYS[i]; all[k[0]+'|'+k[3]+'|'+k[2]+'|'+k[4]] = k; });
-  var dim = _cpt2IntDim, g = {}, T = {c:0, s:0, v:[0,0,0,0,0,0]};
+  var dim = (_cpt2IntDim==='grp' && typeof _cpt2PorBan==='function' && _cpt2PorBan()) ? 'ban' : _cpt2IntDim, g = {}, T = {c:0, s:0, v:[0,0,0,0,0,0]};   /* OL regional: clientes do OL = bandeiras */
   Object.keys(all).forEach(function(key){
     var k = all[key], lj = LJ[key] || [0,0], it = IN[key] || [0,0,0,0,0,0];
     if(!lj[0] && !it[3]) return;
@@ -51044,7 +51044,7 @@ function _cpt2RenderIntoc(idx){
   var td = function(t,al,b){ return '<td style="padding:5px 10px;text-align:'+(al||'right')+';white-space:nowrap;border-bottom:0.5px solid rgba(94,153,208,0.18);color:#0D1B2E;'+(b?'font-weight:800;':'')+'">'+t+'</td>'; };
   var th = function(t,al){ return '<th style="padding:6px 10px;text-align:'+(al||'right')+';font-size:9px;font-weight:700;letter-spacing:0.06em;color:#1D6FA8;text-transform:uppercase;border-bottom:1px solid rgba(94,153,208,0.4);white-space:nowrap;">'+t+'</th>'; };
   var NOMES = ['Loção Family 30% 200ml','Loção Kids 200ml','Spray Family Oferta 170ml','Pelo menos 1 intocável','2 ou mais intocáveis','Os 3 intocáveis juntos'];
-  var btn = function(d,t){ return '<button onclick="_cpt2IntSet(\''+d+'\')" style="border:1px solid '+(dim===d?'#1D6FA8':'rgba(148,163,184,0.45)')+';background:'+(dim===d?'#1D6FA81A':'#FFFFFF')+';color:'+(dim===d?'#1D6FA8':'#475569')+';border-radius:14px;padding:3px 11px;font-size:10px;font-weight:700;cursor:pointer;">'+t+'</button>'; };
+  var btn = function(d,t){ var dimB = _cpt2IntDim; return '<button onclick="_cpt2IntSet(\''+d+'\')" style="border:1px solid '+(dimB===d?'#1D6FA8':'rgba(148,163,184,0.45)')+';background:'+(dimB===d?'#1D6FA81A':'#FFFFFF')+';color:'+(dimB===d?'#1D6FA8':'#475569')+';border-radius:14px;padding:3px 11px;font-size:10px;font-weight:700;cursor:pointer;">'+t+'</button>'; };
   var obtn = function(o,t){ var on=_cpt2IntOrd===o; return '<button onclick="_cpt2IntOrdSet(\''+o+'\')" style="border:1px solid '+(on?'#059669':'rgba(148,163,184,0.45)')+';background:'+(on?'#0596691A':'#FFFFFF')+';color:'+(on?'#059669':'#475569')+';border-radius:14px;padding:3px 11px;font-size:10px;font-weight:700;cursor:pointer;">'+t+'</button>'; };
   var chips = NOMES.map(function(n,j){ if(j===4) return ''; var p=pct(T.v[j],T.c); return '<div style="flex:1 1 150px;background:#FFFFFF;border:1px solid rgba(94,153,208,0.30);border-radius:10px;padding:8px 12px;">'
       +'<div style="font-size:9px;font-weight:700;letter-spacing:0.06em;color:#475569;text-transform:uppercase;">'+n+'</div>'
@@ -51058,10 +51058,10 @@ function _cpt2RenderIntoc(idx){
     +'<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">'
       +'<div><div style="font-size:10px;font-weight:800;letter-spacing:0.1em;color:#1D6FA8;">🏆 DISTRIBUIÇÃO DOS INTOCÁVEIS · '+PER+'</div>'
       +'<div style="font-size:10px;color:#475569;margin-top:3px;">DN = lojas com o SKU ÷ '+NOTA+' (IQVIA CPT 202610) · ≥2 e os 3 juntos por interseção dos exports em pares · respeita os filtros acima</div></div>'
-      +'<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">'+btn('grp','Grupo econômico')+btn('ban','Bandeira')+btn('uf','UF')+'<span style="font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;margin-left:8px;">Ordenar</span>'+obtn('lojas','Mais lojas')+obtn('os3d','▲ % com os 3')+obtn('os3a','▼ % com os 3')+'</div></div>'
+      +'<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">'+btn('grp',(typeof _cpt2PorBan==='function' && _cpt2PorBan())?'Cliente do OL':'Grupo econômico')+btn('ban','Bandeira')+btn('uf','UF')+'<span style="font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;margin-left:8px;">Ordenar</span>'+obtn('lojas','Mais lojas')+obtn('os3d','▲ % com os 3')+obtn('os3a','▼ % com os 3')+'</div></div>'
     +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">'+chips+'</div>'
     +'<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:11px;background:#FFFFFF;">'
-      +'<thead><tr>'+th(dim==='uf'?'UF':(dim==='ban'?'Bandeira':'Grupo econômico'),'left')+th('Lojas c/ venda cat.')+th('Lojas c/ SCJ')+th(NOMES[0])+th(NOMES[1])+th(NOMES[2])+th('≥ 1 intocável')+th('≥ 2')+th('Os 3 juntos')+'</tr></thead>'
+      +'<thead><tr>'+th(dim==='uf'?'UF':(dim==='ban'?((_cpt2IntDim==='grp')?'Cliente (bandeira)':'Bandeira'):'Grupo econômico'),'left')+th('Lojas c/ venda cat.')+th('Lojas c/ SCJ')+th(NOMES[0])+th(NOMES[1])+th(NOMES[2])+th('≥ 1 intocável')+th('≥ 2')+th('Os 3 juntos')+'</tr></thead>'
       +'<tbody>'+rows+'<tr style="background:rgba(29,111,168,0.08);">'+td('Total do filtro ('+L.length+')','left',true)+td(T.c.toLocaleString('pt-BR'),'right',true)+td(T.s.toLocaleString('pt-BR'),'right',true)+cel(T.v[0],T.c,true)+cel(T.v[1],T.c,true)+cel(T.v[2],T.c,true)+cel(T.v[3],T.c,true)+cel(T.v[4],T.c,true)+cel(T.v[5],T.c,true)+'</tr></tbody></table></div>'
     +(L.length>max ? '<button onclick="window._cpt2IntAll=!window._cpt2IntAll;_cpt2IntSet(_cpt2IntDim)" style="margin-top:6px;padding:4px 10px;border-radius:6px;border:1px solid rgba(29,111,168,0.45);background:#FFFFFF;color:#1D6FA8;font-size:9.5px;font-weight:700;cursor:pointer;">'+(window._cpt2IntAll?'▲ Mostrar só os '+max+' maiores':'▼ Ver todos os '+L.length)+'</button>' : '')
     +'</div>';
