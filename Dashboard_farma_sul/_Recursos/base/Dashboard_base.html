@@ -51047,7 +51047,7 @@ function _cpt2CadSoma(idx){ var all={}, lg={}, s=0; idx.forEach(function(i){ var
   Object.keys(all).forEach(function(k){ var x=CPT2_LOJAS[k]; if(x) lg[all[k]]=(lg[all[k]]||0)+x[0]; });
   var g={}; idx.forEach(function(i){ g[CPT2_KEYS[i][4]]=1; }); Object.keys(g).forEach(function(k){ s+=_cpt2CadGrp(k, lg[k]||0); }); return s; }
 /* com filtro de OL a linha da tabela é a bandeira (cliente do OL); sem OL, o grupo econômico */
-function _cpt2PorBan(){ return (typeof CPT2_MS!=='undefined') && CPT2_MS.ol.length>0; }
+function _cpt2PorBan(){ return (typeof CPT2_MS!=='undefined') && CPT2_MS.ol.length>0 && CPT2_MS.ol.every(function(o){ return /^(OL |Base\/)/.test(o); }); }   /* executivos: por grupo econômico */
 function _cpt2LinhaDe(i){ var k=CPT2_KEYS[i]; return _cpt2PorBan() ? k[2] : (k[4]||_cpt2GrpDe(k[2])); }
 function _cpt2BanGrp(b){ var m=_cpt2BanGrp._m; if(!m){ m=_cpt2BanGrp._m={}; var best={};
   Object.keys(CPT2_LOJAS).forEach(function(k){ var p=k.split('|'), g=p[3]; if(g==='N/I') return; var x=(best[p[2]]=best[p[2]]||{}); x[g]=(x[g]||0)+CPT2_LOJAS[k][0]; });
