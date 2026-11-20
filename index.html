@@ -51418,7 +51418,7 @@ function _cpt2RenderIntoc(idx){
   var td = function(t,al,b){ return '<td style="padding:5px 10px;text-align:'+(al||'right')+';white-space:nowrap;border-bottom:0.5px solid rgba(94,153,208,0.18);color:#0D1B2E;'+(b?'font-weight:800;':'')+'">'+t+'</td>'; };
   var th = function(t,al){ return '<th style="padding:6px 10px;text-align:'+(al||'right')+';font-size:9px;font-weight:700;letter-spacing:0.06em;color:#1D6FA8;text-transform:uppercase;border-bottom:1px solid rgba(94,153,208,0.4);white-space:nowrap;">'+t+'</th>'; };
   var NOMES = ['Loção Family 30% 200ml','Loção Kids 200ml','Spray Family Oferta 170ml','Pelo menos 1 intocável'];
-  var btn = function(d,t){ return '<button onclick="_cpt2IntSet(\''+d+'\')" style="padding:4px 10px;border-radius:999px;font-size:10px;font-weight:700;cursor:pointer;border:1px solid rgba(29,111,168,0.45);'+(dim===d?'background:#1D6FA8;color:#FFFFFF;':'background:#FFFFFF;color:#1D6FA8;')+'">'+t+'</button>'; };
+  var btn = function(d,t){ return '<button onclick="_cpt2IntSet(\''+d+'\')" style="border:1px solid '+(dim===d?'#1D6FA8':'rgba(148,163,184,0.45)')+';background:'+(dim===d?'#1D6FA81A':'#FFFFFF')+';color:'+(dim===d?'#1D6FA8':'#475569')+';border-radius:14px;padding:3px 11px;font-size:10px;font-weight:700;cursor:pointer;">'+t+'</button>'; };
   var chips = NOMES.map(function(n,j){ var p=pct(T.v[j],T.c); return '<div style="flex:1 1 150px;background:#FFFFFF;border:1px solid rgba(94,153,208,0.30);border-radius:10px;padding:8px 12px;">'
       +'<div style="font-size:9px;font-weight:700;letter-spacing:0.06em;color:#475569;text-transform:uppercase;">'+n+'</div>'
       +'<div style="font-size:19px;font-weight:800;color:'+cor(p)+';">'+(p==null?'—':p.toFixed(1).replace('.',',')+'%')+'</div>'
@@ -53054,6 +53054,7 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
 
 </script>
 <!-- </ACUM_FY27> -->
+<style>/* sem fresta entre cabeçalho e abas (altura fracionada do cabeçalho): faixa de 2 px da cor das abas logo abaixo */ :root:root:root:root body div.header{box-shadow:0 2px 0 0 #153B63 !important;}</style>
 <script type="text/plain" id="h3d-embed"><!doctype html>
 <html lang="pt-BR">
 <head>
