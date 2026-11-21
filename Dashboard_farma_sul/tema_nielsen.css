@@ -289,3 +289,28 @@
 
 /* ── 12. Botão de imprimir do One Page oculto (pedido do Giovano 18/11; função op1Print continua no código) ── */
 :root:root:root body button.stab[onclick^="op1Print"] { display: none !important; }
+
+/* ── 13. CELULAR (≤ 760 px) — blocos de colunas fixas passam a quebrar linha (skill erros-dashboard 21/11) ──
+   Só afeta telas estreitas; desktop igual. Antes a página ficava mais larga que a tela (Sell In 890 px, CPT 1.048 px, Nielsen 469 px). */
+@media (max-width: 760px) {
+  :root:root:root body #sellin-kpis-total,
+  :root:root:root body #mso-kpis,
+  :root:root:root body #cpt2-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  :root:root:root body [style*="grid-template-columns:240px 1fr"],
+  :root:root:root body [style*="grid-template-columns:1fr 340px"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  :root:root:root body #mso2-table { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+  :root:root:root body [style*="grid-template-columns:repeat(5,1fr);gap:1px"] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  :root:root:root body #nq-fy-bar select,
+  :root:root:root body #nqMktSel { max-width: 100% !important; min-width: 0 !important; }
+  :root:root:root body .card-header { flex-wrap: wrap !important; }
+  :root:root:root body #shr-trend-charts { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  :root:root:root body #elet-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  :root:root:root body #shr-diagnostico { overflow-x: auto !important; }
+  /* "tabelas" montadas com grade de 5 colunas: rolagem lateral em vez de alargar a página */
+  :root:root:root body div:has(> [style*="grid-template-columns:repeat(5,1fr);border-bottom"]) { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+  :root:root:root body [style*="grid-template-columns:repeat(5,1fr);border-bottom"] { min-width: 620px; }
+}

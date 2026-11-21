@@ -18741,7 +18741,7 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
   </div>
   </div>
   
-<div id="ed-atrib-slot-caroline"></div>
+<!-- slot ed-atrib-slot-caroline duplicado removido (21/11) -->
 </div>
   <div id="sj-isadora-content">
     <!-- KPIs -->
@@ -20554,6 +20554,7 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
         </div>
       </div>
       <div style="position:relative;height:260px;"><canvas id="rio-ano-chart"></canvas></div>
+    </div><!-- fecha card Receita por Ano (estava fechando depois do estoque) -->
   <!-- GESTÃO DE ESTOQUE DD-RIOMED -->
   
 
@@ -20594,8 +20595,6 @@ window.NF.axisVol  = function(v){ return v>=1000?(v/1000).toFixed(0)+'M':v+'K'; 
       <div style="position:relative;width:100%;height:300px;"><canvas id="rio-tend-chart"></canvas></div>
       <div id="rio-tend-insight"></div>
     </div></div>
-
-    </div>
     
 <!-- ONE PAGE · SELL OUT POR MARCA · ddriomed -->
 <div class="card full so-op" style="grid-column:1/-1;margin-bottom:14px;">
@@ -43212,12 +43211,13 @@ function makeSparkline(data, color, W, H){
   var lx = W, ly = (H - ((vals[vals.length-1]-mn)/rng)*(H-4) - 2).toFixed(1);
   var rgb = color.replace('#','');
   var r=parseInt(rgb.slice(0,2),16), g=parseInt(rgb.slice(2,4),16), b=parseInt(rgb.slice(4,6),16);
+  var _sgId='sg'+r+g+b+'_'+(window.__sgN=(window.__sgN||0)+1); /* id único por sparkline (antes repetia e o gradiente podia não aparecer) */
   return '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" style="overflow:visible;" xmlns="http://www.w3.org/2000/svg">'
-    +'<defs><linearGradient id="sg'+r+g+b+'" x1="0" y1="0" x2="0" y2="1">'
+    +'<defs><linearGradient id="'+_sgId+'" x1="0" y1="0" x2="0" y2="1">'
     +'<stop offset="0%" stop-color="'+color+'" stop-opacity="0.35"/>'
     +'<stop offset="100%" stop-color="'+color+'" stop-opacity="0.0"/>'
     +'</linearGradient></defs>'
-    +'<polygon points="0,'+H+' '+pts+' '+W+','+H+'" fill="url(#sg'+r+g+b+')" opacity="0.7"/>'
+    +'<polygon points="0,'+H+' '+pts+' '+W+','+H+'" fill="url(#'+_sgId+')" opacity="0.7"/>'
     +'<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>'
     +'<circle cx="'+lx+'" cy="'+ly+'" r="2.5" fill="'+color+'" opacity="1"/>'
     +'</svg>';
@@ -52169,7 +52169,12 @@ function op1Pct(p,d){ if(p==null||!isFinite(p)) return 'n/d'; return (p>=0?'+':'
 function op1K(metric,v){ /* valores do SO_OP: R$ mil ou un */ if(metric!=='val') return (v>=0?'+':'−')+op1Num(Math.abs(v))+' un'; return (v>=0?'+':'−')+'R$ '+op1Num(Math.abs(v),0)+'k'; }
 function op1Cor(v){ return v==null ? OP1_C.mut : v<0 ? OP1_C.neg : OP1_C.pos; }
 
-function op1Chart(id,cfg){ if(OP1.charts[id]){ try{OP1.charts[id].destroy();}catch(e){ console.warn('[dashboard]', e); } } var c=document.getElementById(id); if(!c) return null; OP1.charts[id]=new Chart(c,cfg); return OP1.charts[id]; }
+function op1Chart(id,cfg){ if(OP1.charts[id]){ try{OP1.charts[id].destroy();}catch(e){ console.warn('[dashboard]', e); } } var c=document.getElementById(id); if(!c) return null; var _par=c.parentElement, _ov=_par&&_par.querySelector('.op1-semdados'); if(_ov) _ov.remove();
+  OP1.charts[id]=new Chart(c,cfg);
+  var _vz=((cfg&&cfg.data&&cfg.data.datasets)||[]).every(function(d){ return !(d.data||[]).some(function(v){ var y=(v&&typeof v==='object')?v.y:v; return y!=null&&+y!==0; }); });
+  if(_vz&&_par){ if(getComputedStyle(_par).position==='static') _par.style.position='relative'; var _m=document.createElement('div'); _m.className='op1-semdados'; _m.textContent='Sem venda no período';
+    _m.style.cssText='position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-style:italic;color:#64748b;pointer-events:none;'; _par.appendChild(_m); }
+  return OP1.charts[id]; }
 
 /* plugin: rótulos de variação % sobre os pontos de 2026 + faixa dos meses projetados */
 var op1LinePlugin = {id:'op1line', afterDatasetsDraw:function(ch){
