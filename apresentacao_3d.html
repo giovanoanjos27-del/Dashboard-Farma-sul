@@ -619,7 +619,7 @@ function skTop(cid,ms,bs){ var d=skData(cid); if(!d) return null;
   ms.forEach(function(mi){
     if(d.u[mi]){ d.u[mi].forEach(function(v,i){ u[i]+=v; }); if(d.r[mi]) d.r[mi].forEach(function(v,i){ r[i]+=v; }); else rOk=false; }
     else { rOk=false; var m=skMix(d,mi), S=0; m.v.forEach(function(v){ S+=v; }); if(S&&T[mi]){ m.v.forEach(function(v,i){ u[i]+=v/S*T[mi]; }); est.push(NMF[mi]); fx[m.f]=1; } }
-    var kp=1; if(PARC&&PARC.ate&&mi===PARC.mes){ var dE=parseInt(parcAte(cid),10), dM=new Date(2026,mi+1,0).getDate(); if(dE>0&&dE<dM) kp=dE/dM; } /* mês parcial: 2025 proporcional aos dias */
+    var kp=1; if(!PARC_CHEIO&&PARC&&PARC.ate&&mi===PARC.mes){ var dE=parseInt(parcAte(cid),10), dM=new Date(2026,mi+1,0).getDate(); if(dE>0&&dE<dM) kp=dE/dM; } /* mês parcial: 2025 proporcional aos dias */
     if(d.u25&&d.u25[mi]) d.u25[mi].forEach(function(v,i){ p[i]+=v*kp; }); else pOk=false; });
   var rows=d.s.map(function(x,i){ return {b:x[0],nm:x[1],u:u[i],r:rOk?r[i]:null,p:pOk?p[i]:null}; })
     .filter(function(x){ return (!bs.length||bs.indexOf(x.b)>=0)&&x.u>=.5; }).sort(function(a,b){ return b.u-a.u; });
@@ -674,7 +674,10 @@ function cmpTxt(){ return (mbMode()||calMode())?'vs 2025':'vs FY26'; }
 var PLAB='Jul–'+MES[MES.length-1];
 
 /* mês parcial: o ano anterior entra proporcional aos dias decorridos (Nov/25 × 15/30), igual ao 'mesmo período' do portal */
+/* Giovano 23/11/2026: comparar o mês parcial com o mês de 2025 INTEIRO (PARC_CHEIO=true); false volta ao proporcional aos dias */
+var PARC_CHEIO=true;
 function parcK(i,id){
+  if(PARC_CHEIO) return 1;
   if(ST.f!=='so'||!PARC||!PARC.ate||i!==MES.length-1||MES[i]!==NMF[PARC.mes]) return 1;
   var dE=parseInt(parcAte(id),10), dM=new Date(PARC.mes>=6?2026:2027,PARC.mes+1,0).getDate();
   return (dE>0&&dE<dM)?dE/dM:1;
@@ -832,10 +835,10 @@ function update(){
         '<div class="s '+(q!=null&&q<0?'down':'up')+'">'+(q!=null?pctTxt(q)+' vs '+TD.mes+'/25 cheio':'')+'</div>'+
         '<div class="s" style="color:var(--mut)">até '+parcTxt()+': '+fmtK(cu)+(rit?' · '+rit:'')+ac+'</div></div>'; })();
   document.getElementById('nota').textContent=ST.f==='si'?'Sell In em caixas (real) · '+(calMode()?'ano-calendário '+PLAB+'/26 × '+PLAB+'/25 · ':'')+SI.parcial+' parcial, comparado com o mês cheio do '+(calMode()?'ano anterior':'FY26')+(SI.extNomes?' · total inclui '+SI.extNomes+' (sem barra)':'')+' · Sell In não tem quebra por marca. '
-    :fullMode()?'Todas as marcas marcadas = Sell Out total do cliente por mês (igual a Todas), FY27 × FY26 até '+MES[MES.length-1]+'/26 (Nov/26 parcial × Nov/25 proporcional aos dias). '
-    :HBm?'OFF + Exposis + Raid = linha HB do dashboard por mês, '+(calMode()?PLAB+'/26 × '+PLAB+'/25':'FY27 × FY26')+' (até '+MES[MES.length-1]+'/26; Nov/26 parcial × Nov/25 proporcional aos dias, como o “mesmo período” do portal) · São João só Isadora · DD-Gaúcha inclui Glade e GAM/Riomed incluem Lysoform/Pato residuais (o mensal não tem quebra por marca) · Clamed: receita Ago–Nov/26 estimada (unidades × R$ 31,45/un, preço da planilha). '
-    :MB?'Por marca, mês a mês: '+perLbl('/26')+' × mesmo período de 2025 · Nov/26 parcial até '+parcTxt()+' (× Nov/25 proporcional aos dias) · Jan–Set real por SKU em São João, Panvel e Clamed; estimado em Nissei, GAM, Gaúcha e Riomed (acumulado da marca no card Sell-out por Marca distribuído pela venda mensal do cliente) · Out/Nov = total do cliente quebrado por marca · São João = Isadora + Caroline · Clamed só em unidades (fora do total). '
-    :(ST.m==='r'&&pendAny)?(calMode()?'Ano-calendário: '+PLAB+'/26 × '+PLAB+'/25 · Nov/26 parcial (até '+parcTxt()+') × Nov/25 proporcional aos dias · ':'')+'Clamed: receita de Mai–Nov/26 estimada na planilha (unidades × R$ 31,45/un); o portal só manda unidades. ':(ST.m==='u'?'Panvel FY26 em unidades é estimado (receita ÷ ticket médio). ':'');
+    :fullMode()?'Todas as marcas marcadas = Sell Out total do cliente por mês (igual a Todas), FY27 × FY26 até '+MES[MES.length-1]+'/26 (Nov/26 parcial × Nov/25 inteiro). '
+    :HBm?'OFF + Exposis + Raid = linha HB do dashboard por mês, '+(calMode()?PLAB+'/26 × '+PLAB+'/25':'FY27 × FY26')+' (até '+MES[MES.length-1]+'/26; Nov/26 parcial × Nov/25 inteiro) · São João só Isadora · DD-Gaúcha inclui Glade e GAM/Riomed incluem Lysoform/Pato residuais (o mensal não tem quebra por marca) · Clamed: receita Ago–Nov/26 estimada (unidades × R$ 31,45/un, preço da planilha). '
+    :MB?'Por marca, mês a mês: '+perLbl('/26')+' × mesmo período de 2025 · Nov/26 parcial até '+parcTxt()+' (× Nov/25 inteiro) · Jan–Set real por SKU em São João, Panvel e Clamed; estimado em Nissei, GAM, Gaúcha e Riomed (acumulado da marca no card Sell-out por Marca distribuído pela venda mensal do cliente) · Out/Nov = total do cliente quebrado por marca · São João = Isadora + Caroline · Clamed só em unidades (fora do total). '
+    :(ST.m==='r'&&pendAny)?(calMode()?'Ano-calendário: '+PLAB+'/26 × '+PLAB+'/25 · Nov/26 parcial (até '+parcTxt()+') × Nov/25 inteiro · ':'')+'Clamed: receita de Mai–Nov/26 estimada na planilha (unidades × R$ 31,45/un); o portal só manda unidades. ':(ST.m==='u'?'Panvel FY26 em unidades é estimado (receita ÷ ticket médio). ':'');
   if(TD&&bars.some(function(o){ return o.td; })) document.getElementById('nota').textContent+='Tendência '+TD.mes+' (bloco tracejado no topo) = unidades vendidas até '+parcTxt()+' ÷ '+TD.dE+' dias × '+TD.dM+' dias × preço médio do mês (R$ ÷ un) de cada cliente; é o ritmo atual mantido nos '+TD.falta+' dias que faltam, comparado com '+TD.mes+'/25 cheio. ';
 }
 
