@@ -1,5 +1,5 @@
 """Araujo › One Page no modelo 'One Page SC Johnson & Araújo' (24/11/2026):
-  · seletor Total · Perfumaria · Conveniência (abre em Perfumaria, como o One Page da SCJ/JBP)
+  · seletor Total · Perfumaria · Conveniência (abre em Total, com todas as marcas; Perfumaria traz a meta JBP)
   · Perfumaria: marcas OFF! e Exposis por SUB CATEGORIA (OFF Loção, OFF Spray…, Kit Exposis somado)
   · meta JBP Perfumaria na linha do Sell-out Total + 'vs Meta YTD' e frase no texto
     Jan–Abr = R$ 3.298.849 (slide One Page Abril/26) rateado pelo desenho do gráfico; Mai ≈ venda Mai/26 ÷ 1,61 (e-mail: +61% vs meta);
@@ -76,15 +76,15 @@ rep("/* Araujo: estoque por loja 29/05/26 (DADO ARAUJO 29-05) × venda Mai/26 */
     "/* Araujo por setor (Perfumaria = repelentes OFF!/Exposis · Conveniência = Raid, Baygon, Lysoform, Glade, Pato, Bravo) e meta JBP Perfumaria */\n"
     "var ARAUJO_SETOR = " + json.dumps(SETOR, separators=(",", ":")) + ";\n"
     "var ARAUJO_JBP = {perfumaria:" + json.dumps(jbp) + ", fonte:'Jan–Abr R$ 3.298.849 (One Page Abril/26) · Mai pelo e-mail (+61% vs meta) · Jun–Dez aproximados do gráfico do JBP'};\n"
-    "var araSetor = 'perfumaria';\n"
+    "var araSetor = 'total';\n"
     "function setAraSetor(s, btn){ araSetor = s; var r=document.getElementById('ara-setor-row'); if(r) r.querySelectorAll('.stab').forEach(function(b){ b.classList.toggle('active', b===btn); }); if(typeof op1Render==='function') op1Render(); }\n"
     "/* Araujo: estoque por loja 29/05/26 (DADO ARAUJO 29-05) × venda Mai/26 */")
 # seletor no topo do Sell Out
 rep("    <!-- Filtro compradora SJ — inline com CLIENTE, visível só quando SJ ativo -->",
     """    <!-- Setor Araujo — visível só com Araujo (One Page) -->
     <div id="ara-setor-row" style="display:none;align-items:center;gap:4px;border-left:2px solid rgba(94,153,208,0.55);padding-left:12px;margin-left:4px;">
-      <button class="stab" onclick="setAraSetor('total',this)">Araujo Total</button>
-      <button class="stab active" onclick="setAraSetor('perfumaria',this)">Perfumaria</button>
+      <button class="stab active" onclick="setAraSetor('total',this)">Araujo Total</button>
+      <button class="stab" onclick="setAraSetor('perfumaria',this)">Perfumaria</button>
       <button class="stab" onclick="setAraSetor('conveniencia',this)">Conveniência</button>
     </div>
     <!-- Filtro compradora SJ — inline com CLIENTE, visível só quando SJ ativo -->""")
