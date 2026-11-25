@@ -54466,4 +54466,65 @@ function opPptInit(){
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(opPptInit, 2400); }); else setTimeout(opPptInit, 2400);
 </script>
 <!-- ONEPAGE-PPT-FIM -->
+<!-- JBP-PPT-INI -->
+<script>
+/* JBP 2027 → PPT por cliente/comprador/setor (gerado por _Recursos/Revisao_Negocios/embutir_jbp.py; arquivos em jbp/ na raiz do site) */
+var JBPPPT = {
+  saojoao:{row:'#sj-compradora-row', ops:[['SaoJoao_Isadora','Isadora'],['SaoJoao_Caroline','Caroline']]},
+  nissei:{row:'#ns-compradora-row', ops:[['Nissei_Jhonatam','Jhonatam'],['Nissei_Edmar','Edmar']]},
+  araujo:{row:'#ara-setor-row', ops:[['Araujo_Perfumaria','Perfumaria'],['Araujo_Conveniencia','Conveniência']]},
+  panvel:{ops:[['Panvel','Panvel']]}, clamed:{ops:[['Clamed','Clamed']]}
+};
+function jbpPasta(){ return /Dashboard_FarmaSul_Giovano\.html$/i.test(decodeURIComponent(location.pathname)) ? '../jbp/' : 'jbp/'; }
+function jbpBaixar(arq){
+  var a = document.createElement('a'); a.href = jbpPasta()+'JBP2027_'+arq+'.pptx'; a.download = 'JBP 2027 '+arq.replace('_',' - ').replace('SaoJoao','São João').replace('Conveniencia','Conveniência')+'.pptx';
+  document.body.appendChild(a); a.click(); setTimeout(function(){ a.remove(); }, 500);
+}
+function jbpCli(){ var s=document.getElementById('sellout-client-selector'); return s ? s.value : ''; }
+function jbpMenuFecha(){ var m=document.getElementById('jbp-ppt-menu'); if(m) m.remove(); }
+function jbpClique(ev){
+  ev.stopPropagation();
+  var cfg = JBPPPT[jbpCli()]; if(!cfg) return;
+  if(cfg.ops.length===1){ jbpBaixar(cfg.ops[0][0]); return; }
+  if(document.getElementById('jbp-ppt-menu')){ jbpMenuFecha(); return; }
+  var b = document.getElementById('jbp-ppt-btn'), r = b.getBoundingClientRect(), m = document.createElement('div');
+  m.id = 'jbp-ppt-menu';
+  m.style.cssText = 'position:fixed;z-index:99999;top:'+(r.bottom+4)+'px;left:'+r.left+'px;background:#fff;border:1px solid #CBD5E1;border-radius:8px;box-shadow:0 8px 24px rgba(15,23,42,.18);padding:4px;min-width:'+r.width+'px;font:600 12px Inter,Arial;';
+  cfg.ops.concat([['__todos','Os dois (2 arquivos)']]).forEach(function(o){
+    var it = document.createElement('div');
+    it.textContent = o[0]==='__todos' ? o[1] : 'JBP 2027 '+o[1];
+    it.style.cssText = 'padding:8px 12px;border-radius:6px;cursor:pointer;color:#0D1B2E;white-space:nowrap;';
+    it.onmouseenter = function(){ it.style.background='#EFF6FF'; }; it.onmouseleave = function(){ it.style.background=''; };
+    it.onclick = function(e){ e.stopPropagation(); jbpMenuFecha();
+      if(o[0]==='__todos'){ cfg.ops.forEach(function(x,i){ setTimeout(function(){ jbpBaixar(x[0]); }, i*900); }); } else jbpBaixar(o[0]); };
+    m.appendChild(it);
+  });
+  document.body.appendChild(m);
+}
+document.addEventListener('click', jbpMenuFecha);
+function jbpSync(){
+  var tg = document.getElementById('op1-tg'); if(!tg) return;
+  var b = document.getElementById('jbp-ppt-btn');
+  if(!b){
+    b = document.createElement('button'); b.id = 'jbp-ppt-btn'; b.className = 'stab';
+    b.title = 'Baixar o modelo de JBP 2027 (PowerPoint) deste cliente / comprador / setor';
+    b.textContent = '⬇ JBP 2027 (PPT)'; b.onclick = jbpClique;
+    tg.insertBefore(b, tg.firstChild);
+  }
+  var cli = jbpCli(), mg = typeof _loginRole!=='undefined' && _loginRole==='mg';
+  b.style.display = (JBPPPT[cli] && (!mg || cli==='araujo')) ? '' : 'none';
+  jbpMenuFecha();
+}
+function jbpInit(){
+  if(!document.getElementById('op1-tg')){ setTimeout(jbpInit, 500); return; }
+  var fn = window.switchSellOutClient;
+  if(typeof fn==='function' && !fn._jbp){
+    var w = function(){ var r = fn.apply(this, arguments); jbpSync(); return r; }; w._jbp = true; w._op1 = fn._op1; w._revppt = fn._revppt; w._opppt = fn._opppt;
+    window.switchSellOutClient = w;
+  }
+  jbpSync();
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(jbpInit, 2600); }); else setTimeout(jbpInit, 2600);
+</script>
+<!-- JBP-PPT-FIM -->
 </body></html>
