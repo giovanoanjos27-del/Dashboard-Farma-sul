@@ -54373,50 +54373,41 @@ var OPPPT_NOME = {saojoao:'São João', nissei:'Nissei', panvel:'Panvel', clamed
 function opPptEspera(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
 function opPptCli(){ var s=document.getElementById('sellout-client-selector'); return s ? s.value : ''; }
 function opPptClicaSub(cfg, sub){ var b=document.querySelectorAll(cfg.row+' .stab')[cfg.idx[sub]]; if(b) b.click(); }
-/* Divide o One Page em páginas 16:9: faixa de título em todas; seções inteiras enquanto couberem;
-   seção maior que a página é quebrada entre os blocos, repetindo o título da seção. Saída: [[ [y0,y1] em px do canvas ], …] */
-function opPptPaginas(host, S){
-  var t0 = host.getBoundingClientRect().top, H = host.scrollHeight, kids = [].slice.call(host.children);
-  var tops = kids.map(function(k){ return k.getBoundingClientRect().top - t0; });
-  var faixa = function(i){ return [tops[i], i+1<kids.length ? tops[i+1] : H]; };
-  var i0 = kids.findIndex(function(k){ return k.classList.contains('op1-sec'); }); if(i0<0) i0 = kids.length;
-  var cab = [0, i0<kids.length ? tops[i0] : H], cabH = cab[1]-cab[0];
-  var maxC = host.offsetWidth*(7.1/12.93) - cabH;
-  var secs = [], s = null;
-  for(var i=i0;i<kids.length;i++){ if(kids[i].classList.contains('op1-sec') || !s){ s = []; secs.push(s); } s.push(faixa(i)); }
-  var alt = function(rs){ return rs.reduce(function(a,r){ return a+(r[1]-r[0]); },0); };
-  var pags = [], cur = [];
-  secs.forEach(function(sec){
-    var h = alt(sec);
-    if(h <= maxC){ if(cur.length && alt(cur)+h > maxC){ pags.push(cur); cur = []; } cur = cur.concat(sec); return; }
-    if(cur.length){ pags.push(cur); cur = []; }
-    var ch = [sec[0]];
-    sec.slice(1).forEach(function(r){ if(ch.length>1 && alt(ch)+(r[1]-r[0]) > maxC){ pags.push(ch); ch = [sec[0]]; } ch.push(r); });
-    pags.push(ch);
-  });
-  if(cur.length) pags.push(cur);
-  if(!pags.length) pags = [[]];
-  return pags.map(function(pg){ return [cab].concat(pg).map(function(r){ return [Math.round(r[0]*S), Math.round(r[1]*S)]; }); });
+/* Formato do One Page de referência (Farmacias_Sao_Joao_OnePage_Isadora_Out26.pptx): 1 slide vertical, 13,33 pol de largura,
+   proporção ~1:2 (26,6 pol de altura). A altura do One Page quase não muda com a largura, então na captura o One Page é
+   alargado até essa proporção, fotografado e devolvido à largura da tela. */
+var OPPPT_RATIO = 26.613/13.333, OPPPT_LARG = 13.333;
+async function opPptLargura(host){
+  var w = host.offsetWidth;
+  for(var k=0;k<3;k++){
+    var alvo = Math.max(w, Math.round(host.scrollHeight/OPPPT_RATIO));
+    if(Math.abs(alvo-w) < 40) break;
+    host.style.width = alvo+'px'; w = alvo;
+    await opPptEspera(700); op1Render(); await opPptEspera(1300);
+  }
+  return w;
 }
 async function opPptGerar(cli, sub, subNome){
   var host = document.getElementById('so-op1'); if(!host) return;
-  var cfg = OPPPT[cli], modo0 = OP1.mode, sub0 = cfg.cur ? cfg.cur() : null;
+  var cfg = OPPPT[cli], modo0 = OP1.mode, sub0 = cfg.cur ? cfg.cur() : null, larg0 = host.style.width;
   if(OP1.mode!=='op') op1SetMode('op');
   if(sub && sub0!==sub) opPptClicaSub(cfg, sub);
   await opPptEspera(1400);
-  if(document.fonts && document.fonts.ready) await document.fonts.ready;
-  var S = 2, cv = await html2canvas(host, {scale:S, backgroundColor:'#ffffff', logging:false, useCORS:true,
-                                          windowWidth:document.documentElement.scrollWidth});
-  var p = new PptxGenJS(); p.layout = 'LAYOUT_WIDE';   /* 13,33 × 7,5 pol (16:9) */
+  try{
+    var w = await opPptLargura(host);
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    var cv = await html2canvas(host, {scale:1.8, backgroundColor:'#ffffff', logging:false, useCORS:true,
+                                      windowWidth:Math.max(document.documentElement.scrollWidth, w+80)});
+  } finally {
+    host.style.width = larg0; op1Render();
+  }
+  var W = OPPPT_LARG, H = W*cv.height/cv.width;
+  if(H > 56){ W = W*56/H; H = 56; }
+  var p = new PptxGenJS();
+  p.defineLayout({name:'ONEPAGE', width:W, height:H}); p.layout = 'ONEPAGE';
   p.author = 'Giovano Anjos'; p.company = 'SC Johnson'; p.title = 'One Page '+OPPPT_NOME[cli]+(subNome?' – '+subNome:'');
-  opPptPaginas(host, S).forEach(function(pg){
-    var hPx = pg.reduce(function(s,r){ return s+(r[1]-r[0]); },0), c = document.createElement('canvas');
-    c.width = cv.width; c.height = hPx; var ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0,0,c.width,c.height);
-    var y = 0; pg.forEach(function(r){ ctx.drawImage(cv, 0, r[0], cv.width, r[1]-r[0], 0, y, cv.width, r[1]-r[0]); y += r[1]-r[0]; });
-    var mx = 0.2, aw = 13.333-2*mx, ah = 7.5-2*mx, k = Math.min(aw/c.width, ah/c.height), w = c.width*k, h = c.height*k;
-    var png = c.toDataURL('image/jpeg', 0.92); if(window._opPptDebug) window._opPptDebug.push(png);
-    p.addSlide().addImage({data:png, x:(13.333-w)/2, y:mx, w:w, h:h, altText:p.title});
-  });
+  var img = cv.toDataURL('image/jpeg', 0.92); if(window._opPptDebug) window._opPptDebug.push(img);
+  p.addSlide().addImage({data:img, x:0, y:0, w:W, h:H, altText:p.title});
   var d = new Date(), dt = ('0'+d.getDate()).slice(-2)+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+d.getFullYear();
   await p.writeFile({fileName:'One Page '+OPPPT_NOME[cli]+(subNome?' - '+subNome:'')+' '+dt+'.pptx'});
   if(sub && sub0!==sub) opPptClicaSub(cfg, sub0);
