@@ -54529,7 +54529,7 @@ var JBPPPT = {
 };
 function jbpPasta(){ return /Dashboard_FarmaSul_Giovano\.html$/i.test(decodeURIComponent(location.pathname)) ? '../jbp/' : 'jbp/'; }
 function jbpBaixar(arq){
-  var a = document.createElement('a'); a.href = jbpPasta()+'JBP2027_'+arq+'.pptx'+(location.protocol.indexOf('http')===0 ? '?v=1795780341' : ''); a.download = 'JBP 2027 '+arq.replace('_',' - ').replace('SaoJoao','São João').replace('Conveniencia','Conveniência')+'.pptx';
+  var a = document.createElement('a'); a.href = jbpPasta()+'JBP2027_'+arq+'.pptx'+(location.protocol.indexOf('http')===0 ? '?v=1795780715' : ''); a.download = 'JBP 2027 '+arq.replace('_',' - ').replace('SaoJoao','São João').replace('Conveniencia','Conveniência')+'.pptx';
   document.body.appendChild(a); a.click(); setTimeout(function(){ a.remove(); }, 500);
 }
 function jbpCli(){ var s=document.getElementById('sellout-client-selector'); return s ? s.value : ''; }
