@@ -22470,7 +22470,7 @@ const GAM_CIDADES = [
 const GAUCHA_REC = {
   '2024':[null,null,313079,1162355,123331,415037,181437,441358,1351749,585654,499280,318640],
   '2025':[363534,376375,262908.42,193266.5,97947.16,48305,33717,26887,332149,514813,361218,400511],
-  '2026':[415756,222894,306025.24,427404.11,107322.57,50785.47,54261.59,98748.75,420390.89,165716.77,439319.59,null]
+  '2026':[415756,222894,306025.24,427404.11,107322.57,50785.47,54261.59,98748.75,420390.89,165716.77,582101.93,null]
 };
 
 
@@ -22480,7 +22480,7 @@ const GAUCHA_REC = {
 const GAUCHA_VOL = {
   '2024':[null,null,19554,47863,8247,19740,9313,23295,73553,35309,28954,19949],
   '2025':[21971,24876,17266,13574,7515,4344,2889,3150,26067,35201,24764,26415],
-  '2026':[26019,13265,18517,23649,5990,2683,2489,4429,24038,8936,26633,null]
+  '2026':[26019,13265,18517,23649,5990,2683,2489,4429,24038,8936,36015,null]
 };
 
 const GAUCHA_PDVS = {
@@ -54284,7 +54284,7 @@ function op1CobCharts(S){
 /* ═══ fim OP1 cobertura por loja ═══ */
 /* mês parcial do Sell Out: fica fora das comparações e aparece à parte (null quando o mês fechar) */
 var SO_PARCIAL = {mes:10, ate:'26/11'};
-var SO_PARCIAL_CLI = {'clamed': '15/11', 'ddriomed': '19/11', 'ddgaucha': '20/11'}; /* data do parcial por cliente (valor do seletor do Sell Out) quando difere da geral */
+var SO_PARCIAL_CLI = {'clamed': '15/11', 'ddriomed': '19/11'}; /* data do parcial por cliente (valor do seletor do Sell Out) quando difere da geral */
 (function(){ if(typeof SO_PARCIAL==='undefined'||!SO_PARCIAL) return; var g=SO_PARCIAL.ate; /* SO_PARCIAL.ate = data do cliente selecionado; ateG = data geral */
   Object.defineProperty(SO_PARCIAL,'ateG',{value:g}); Object.defineProperty(SO_PARCIAL,'ate',{get:function(){ var s=document.getElementById('sellout-client-selector'), v=s&&s.value; return (v&&SO_PARCIAL_CLI[v])||g; }}); })();
 function soParcialDe(a){ var l=-1; (a||[]).forEach(function(v,i){ if(v!=null && v!==0) l=i; }); return (typeof SO_PARCIAL!=='undefined' && SO_PARCIAL && l===SO_PARCIAL.mes) ? {i:l, v:a[l]} : null; }
